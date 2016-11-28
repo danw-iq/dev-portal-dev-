@@ -1,0 +1,92 @@
+---
+title:  {{title | fixTitle }}
+permalink: /api/{{title | replace(" ", "-") }}/
+tags: []
+keywords: 
+audience: 
+last_updated: {{title | insertDate }}
+summary: 
+rouge: false
+---
+%7B% include linkrefs.html %%7D
+
+{% for item in documentation %}{% if item.title == "overview" %}## Overview
+
+{{item.content}}{% endif %}{% endfor %}
+
+## Endpoint Format
+
+You will provide the endpoint for iQmetrix. We recommend keeping the endpoint simple, such as:
+
+{{ baseUri }}
+
+{% for item in documentation %}{% if item.title == "authentication" %}## Authentication
+
+{{item.content}}{% endif %}{% endfor %}
+
+## Resources
+
+{% if schemas %}{% for schema in schemas %}{% for name, obj in schema %}{{ obj | printResourceTable(name, title) }}
+{% endfor %}{% endfor %}{% endif %}
+
+{% for item in documentation %}{% if item.title == "enumerations" %}{{item.content}}{% endif %}{% endfor %}
+
+## Requests
+
+{% for resource in resources %}{% for method in resource.methods %}## {{method.displayName}}
+
+{{method.description}}
+
+#### Request
+
+The specification for the request must be in the format below:
+
+    {{method.method | upper }} {{resource.relativeUri}}
+
+#### Headers
+
+{% for header, headerObj in method.headers %}* `{{header}}: {{headerObj.example}}`
+{% endfor %}
+
+{% if resource.uriParameters %}
+
+#### URI Parameters
+
+{% for parameter, objParameter in resource.uriParameters %}* `{{parameter}}` ({% if objParameter.required %}**Required**{% else %}Optional{% endif %}) {% if objParameter.description %} - {{objParameter.description}} {% endif %}{% endfor %}{% endif %}
+
+{% if method.body["application/json"].schema %}
+#### Request Parameters
+
+{{ method.body["application/json"].schema | printRequestParameters(title, method.method) }}{% elif method.body["multipart/form-data"] %}#### Request Parameters{{ method.body["multipart/form-data"].formParameters | printFormParameters() }}{% elif method.body["application/x-www-form-urlencoded"] %}
+
+#### Request Parameters
+
+{{ method.body["application/x-www-form-urlencoded"].formParameters | printFormParameters() }}{% endif %}
+
+###### Example
+
+<pre>
+{{method.method | upper }} {{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}
+{% if method.headers %}{% for header, headerObj in method.headers %}{{header}}: {{headerObj.example}}
+{% endfor %}{% endif %}
+{% if method.body["application/json"].example %}{{ method.body["application/json"].example }}
+{% elif method.body["application/json"].schema %}{% if method.method == "put" %}{{ method.body["application/json"].schema | printExample(title, false) }}{% else %}{{ method.body["application/json"].schema | printExample(title, true) }}{% endif %}{% endif %}
+</pre>
+
+#### Response
+
+The specification of the response must be in the format below:
+
+{% for code, body in method.responses %}{% if body %}{% for body, schema in body %}{% for scheme, schemeProperties in schema %}{% if schemeProperties.schema %}{{ schemeProperties.schema | printResponseSchemaSpecification(method.method) }}{% endif %}
+
+###### Example
+
+<pre>
+HTTP {{code}} Content-Type: {{scheme}}
+</pre>
+<pre>
+{% if schemeProperties.example %}{{ schemeProperties.example }}{% elif schemeProperties.schema %}{{ schemeProperties.schema | printExample(title, null) }}{% endif %}
+</pre>
+
+{% endfor %}{% endfor %}
+{% endif %}{% endfor %}{% endfor %}{% endfor %}

@@ -1,0 +1,309 @@
+#%RAML 0.8
+title: Customized Reports
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - SalesExtendedDetailReportData: |
+        {
+          "name": "SalesExtendedDetailReportData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ChannelName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Name of a Channel in RQ", "example": "English Channel" },
+            "Cost": {  "type": "decimal", "database": "MONEY", "description": "Cost", "example": "14.5" },
+            "CustomerID": {  "type": "integer", "database": "INTEGER", "description": "Identifier of a customer in RQ", "example": "85259" },
+            "CustomerName": {  "type": "string", "database": "VARCHAR(101)", "description": "Name of a customer in RQ", "example": "John Tester" },
+            "DateCreated": {  "type": "DateTime", "database": "DATETIME", "description": "Sale date", "example": "2016-06-07T16:17:36.643" },
+            "EmployeeID": {  "type": "integer", "database": "INTEGER", "description": "Identifier of an employee in RQ", "example": "3302" },
+            "EmployeeName": {  "type": "string", "database": "VARCHAR(51)", "description": "Name of an employee in RQ", "example": "iQmetrix Employee" },
+            "InvoiceNumber": {  "type": "string", "database": "VARCHAR(14)", "description": "Invoice number", "example": "77123IN1" },
+            "LineID": {  "type": "integer", "database": "BIGINT", "description": "", "example": "1" },
+            "Price": {  "type": "decimal", "database": "MONEY", "description": "Price", "example": "29.99" },
+            "ProductSKU": {  "type": "string", "database": "VARCHAR(32)", "description": "Product SKU", "example": "ASLCAP000089" },
+            "Quantity": {  "type": "integer", "database": "INTEGER", "description": "Quantity", "example": "1" },
+            "RQPriority": {  "type": "integer", "database": "INTEGER", "description": "", "example": "1" },
+            "SerialNumber": {  "type": "string", "description": "Serial number", "database": "VARCHAR (100) ", "example": "2222222" },          
+            "StoreID": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "6680" },
+            "StoreName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Name of a store in RQ", "example": "100: Pair Up Wireless LLC - Garland" }
+          }
+        } 
+        
+
+    
+
+    
+    - SecurityAuditReportPivotData: |
+        {
+            "type": "array",
+            "name": "SecurityAuditReportPivotData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "This resource will include every security role in your RQ database.",
+            "properties": { 
+              "ModuleName": { "type": "string", "database": "VARCHAR(MAX)", "example": "A/R: A/R Master List", "description": "Name of a security module in RQ" },  
+              "SecurityRoleName": { "type": "string", "database": "VARCHAR(MAX)", "example": "No Access", "description": "Access for the given security role for this security module" }
+            }  
+          }       
+        
+
+    
+
+    
+    - SecurityAuditReportData: |
+        {      
+            "type": "array",
+            "name": "SecurityAuditReportData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "RoleDescription": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Administrator", "description": "Name of a role in RQ" },  
+              "ModuleName": { "type": "string", "database": "VARCHAR(MAX)", "example": "Inventory: Starting Inventory Count Import", "description": "Name of a security module in RQ" },  
+              "SecurityLevel": { "type": "string", "database": "VARCHAR(MAX)", "example": "Full Access", "description": "Security level for the module (ModuleName) for a security role (RoleDescription)" }  
+            }  
+          }      
+        
+
+    
+
+
+/customizedreports/SalesExtendedDetailReport?StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Sales Extended Detail Report
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ChannelName":"English Channel","Cost":14.5,"CustomerID":85259,"CustomerName":"John Tester","DateCreated":"2016-06-07T16:17:36.643","EmployeeID":3302,"EmployeeName":"iQmetrix Employee","InvoiceNumber":"77123IN1","LineID":1,"Price":29.99,"ProductSKU":"ASLCAP000089","Quantity":1,"RQPriority":1,"SerialNumber":"2222222","StoreID":6680,"StoreName":"100: Pair Up Wireless LLC - Garland"}]
+                            schema: |
+                                {"name":"SalesExtendedDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ChannelName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a Channel in RQ","example":"English Channel"},"Cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"14.5"},"CustomerID":{"type":"integer","database":"INTEGER","description":"Identifier of a customer in RQ","example":"85259"},"CustomerName":{"type":"string","database":"VARCHAR(101)","description":"Name of a customer in RQ","example":"John Tester"},"DateCreated":{"type":"DateTime","database":"DATETIME","description":"Sale date","example":"2016-06-07T16:17:36.643"},"EmployeeID":{"type":"integer","database":"INTEGER","description":"Identifier of an employee in RQ","example":"3302"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Name of an employee in RQ","example":"iQmetrix Employee"},"InvoiceNumber":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"77123IN1"},"LineID":{"type":"integer","database":"BIGINT","description":"","example":"1"},"Price":{"type":"decimal","database":"MONEY","description":"Price","example":"29.99"},"ProductSKU":{"type":"string","database":"VARCHAR(32)","description":"Product SKU","example":"ASLCAP000089"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQPriority":{"type":"integer","database":"INTEGER","description":"","example":"1"},"SerialNumber":{"type":"string","description":"Serial number","database":"VARCHAR (100) ","example":"2222222"},"StoreID":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"6680"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a store in RQ","example":"100: Pair Up Wireless LLC - Garland"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ChannelName":"English Channel","Cost":14.5,"CustomerID":85259,"CustomerName":"John Tester","DateCreated":"2016-06-07T16:17:36.643","EmployeeID":3302,"EmployeeName":"iQmetrix Employee","InvoiceNumber":"77123IN1","LineID":1,"Price":29.99,"ProductSKU":"ASLCAP000089","Quantity":1,"RQPriority":1,"SerialNumber":"2222222","StoreID":6680,"StoreName":"100: Pair Up Wireless LLC - Garland"}]
+                            schema: |
+                                {"name":"SalesExtendedDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ChannelName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a Channel in RQ","example":"English Channel"},"Cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"14.5"},"CustomerID":{"type":"integer","database":"INTEGER","description":"Identifier of a customer in RQ","example":"85259"},"CustomerName":{"type":"string","database":"VARCHAR(101)","description":"Name of a customer in RQ","example":"John Tester"},"DateCreated":{"type":"DateTime","database":"DATETIME","description":"Sale date","example":"2016-06-07T16:17:36.643"},"EmployeeID":{"type":"integer","database":"INTEGER","description":"Identifier of an employee in RQ","example":"3302"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Name of an employee in RQ","example":"iQmetrix Employee"},"InvoiceNumber":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"77123IN1"},"LineID":{"type":"integer","database":"BIGINT","description":"","example":"1"},"Price":{"type":"decimal","database":"MONEY","description":"Price","example":"29.99"},"ProductSKU":{"type":"string","database":"VARCHAR(32)","description":"Product SKU","example":"ASLCAP000089"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQPriority":{"type":"integer","database":"INTEGER","description":"","example":"1"},"SerialNumber":{"type":"string","description":"Serial number","database":"VARCHAR (100) ","example":"2222222"},"StoreID":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"6680"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a store in RQ","example":"100: Pair Up Wireless LLC - Garland"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ChannelName":"English Channel","Cost":14.5,"CustomerID":85259,"CustomerName":"John Tester","DateCreated":"2016-06-07T16:17:36.643","EmployeeID":3302,"EmployeeName":"iQmetrix Employee","InvoiceNumber":"77123IN1","LineID":1,"Price":29.99,"ProductSKU":"ASLCAP000089","Quantity":1,"RQPriority":1,"SerialNumber":"2222222","StoreID":6680,"StoreName":"100: Pair Up Wireless LLC - Garland"}]
+                            schema: |
+                                {"name":"SalesExtendedDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ChannelName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a Channel in RQ","example":"English Channel"},"Cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"14.5"},"CustomerID":{"type":"integer","database":"INTEGER","description":"Identifier of a customer in RQ","example":"85259"},"CustomerName":{"type":"string","database":"VARCHAR(101)","description":"Name of a customer in RQ","example":"John Tester"},"DateCreated":{"type":"DateTime","database":"DATETIME","description":"Sale date","example":"2016-06-07T16:17:36.643"},"EmployeeID":{"type":"integer","database":"INTEGER","description":"Identifier of an employee in RQ","example":"3302"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Name of an employee in RQ","example":"iQmetrix Employee"},"InvoiceNumber":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"77123IN1"},"LineID":{"type":"integer","database":"BIGINT","description":"","example":"1"},"Price":{"type":"decimal","database":"MONEY","description":"Price","example":"29.99"},"ProductSKU":{"type":"string","database":"VARCHAR(32)","description":"Product SKU","example":"ASLCAP000089"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQPriority":{"type":"integer","database":"INTEGER","description":"","example":"1"},"SerialNumber":{"type":"string","description":"Serial number","database":"VARCHAR (100) ","example":"2222222"},"StoreID":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"6680"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a store in RQ","example":"100: Pair Up Wireless LLC - Garland"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ChannelName":"English Channel","Cost":14.5,"CustomerID":85259,"CustomerName":"John Tester","DateCreated":"2016-06-07T16:17:36.643","EmployeeID":3302,"EmployeeName":"iQmetrix Employee","InvoiceNumber":"77123IN1","LineID":1,"Price":29.99,"ProductSKU":"ASLCAP000089","Quantity":1,"RQPriority":1,"SerialNumber":"2222222","StoreID":6680,"StoreName":"100: Pair Up Wireless LLC - Garland"}]
+                            schema: |
+                                {"name":"SalesExtendedDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ChannelName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a Channel in RQ","example":"English Channel"},"Cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"14.5"},"CustomerID":{"type":"integer","database":"INTEGER","description":"Identifier of a customer in RQ","example":"85259"},"CustomerName":{"type":"string","database":"VARCHAR(101)","description":"Name of a customer in RQ","example":"John Tester"},"DateCreated":{"type":"DateTime","database":"DATETIME","description":"Sale date","example":"2016-06-07T16:17:36.643"},"EmployeeID":{"type":"integer","database":"INTEGER","description":"Identifier of an employee in RQ","example":"3302"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Name of an employee in RQ","example":"iQmetrix Employee"},"InvoiceNumber":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"77123IN1"},"LineID":{"type":"integer","database":"BIGINT","description":"","example":"1"},"Price":{"type":"decimal","database":"MONEY","description":"Price","example":"29.99"},"ProductSKU":{"type":"string","database":"VARCHAR(32)","description":"Product SKU","example":"ASLCAP000089"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQPriority":{"type":"integer","database":"INTEGER","description":"","example":"1"},"SerialNumber":{"type":"string","description":"Serial number","database":"VARCHAR (100) ","example":"2222222"},"StoreID":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"6680"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a store in RQ","example":"100: Pair Up Wireless LLC - Garland"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ChannelName":"English Channel","Cost":14.5,"CustomerID":85259,"CustomerName":"John Tester","DateCreated":"2016-06-07T16:17:36.643","EmployeeID":3302,"EmployeeName":"iQmetrix Employee","InvoiceNumber":"77123IN1","LineID":1,"Price":29.99,"ProductSKU":"ASLCAP000089","Quantity":1,"RQPriority":1,"SerialNumber":"2222222","StoreID":6680,"StoreName":"100: Pair Up Wireless LLC - Garland"}]
+                            schema: |
+                                {"name":"SalesExtendedDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ChannelName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a Channel in RQ","example":"English Channel"},"Cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"14.5"},"CustomerID":{"type":"integer","database":"INTEGER","description":"Identifier of a customer in RQ","example":"85259"},"CustomerName":{"type":"string","database":"VARCHAR(101)","description":"Name of a customer in RQ","example":"John Tester"},"DateCreated":{"type":"DateTime","database":"DATETIME","description":"Sale date","example":"2016-06-07T16:17:36.643"},"EmployeeID":{"type":"integer","database":"INTEGER","description":"Identifier of an employee in RQ","example":"3302"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Name of an employee in RQ","example":"iQmetrix Employee"},"InvoiceNumber":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"77123IN1"},"LineID":{"type":"integer","database":"BIGINT","description":"","example":"1"},"Price":{"type":"decimal","database":"MONEY","description":"Price","example":"29.99"},"ProductSKU":{"type":"string","database":"VARCHAR(32)","description":"Product SKU","example":"ASLCAP000089"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQPriority":{"type":"integer","database":"INTEGER","description":"","example":"1"},"SerialNumber":{"type":"string","description":"Serial number","database":"VARCHAR (100) ","example":"2222222"},"StoreID":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"6680"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a store in RQ","example":"100: Pair Up Wireless LLC - Garland"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ChannelName":"English Channel","Cost":14.5,"CustomerID":85259,"CustomerName":"John Tester","DateCreated":"2016-06-07T16:17:36.643","EmployeeID":3302,"EmployeeName":"iQmetrix Employee","InvoiceNumber":"77123IN1","LineID":1,"Price":29.99,"ProductSKU":"ASLCAP000089","Quantity":1,"RQPriority":1,"SerialNumber":"2222222","StoreID":6680,"StoreName":"100: Pair Up Wireless LLC - Garland"}]
+                            schema: |
+                                {"name":"SalesExtendedDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ChannelName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a Channel in RQ","example":"English Channel"},"Cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"14.5"},"CustomerID":{"type":"integer","database":"INTEGER","description":"Identifier of a customer in RQ","example":"85259"},"CustomerName":{"type":"string","database":"VARCHAR(101)","description":"Name of a customer in RQ","example":"John Tester"},"DateCreated":{"type":"DateTime","database":"DATETIME","description":"Sale date","example":"2016-06-07T16:17:36.643"},"EmployeeID":{"type":"integer","database":"INTEGER","description":"Identifier of an employee in RQ","example":"3302"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Name of an employee in RQ","example":"iQmetrix Employee"},"InvoiceNumber":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"77123IN1"},"LineID":{"type":"integer","database":"BIGINT","description":"","example":"1"},"Price":{"type":"decimal","database":"MONEY","description":"Price","example":"29.99"},"ProductSKU":{"type":"string","database":"VARCHAR(32)","description":"Product SKU","example":"ASLCAP000089"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQPriority":{"type":"integer","database":"INTEGER","description":"","example":"1"},"SerialNumber":{"type":"string","description":"Serial number","database":"VARCHAR (100) ","example":"2222222"},"StoreID":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"6680"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a store in RQ","example":"100: Pair Up Wireless LLC - Garland"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/customizedreports/SecurityAuditReport?Pivot={Pivot}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        Pivot:
+            displayName: Pivot
+            type: string
+            example: false
+            required: true
+            description: Acceptable values include true to return <a href='http://developers.iqmetrix.com/api/Customized-Reports/#securityauditreportpivotdata'>SecurityAuditReportPivotData</a> or false to return <a href='http://developers.iqmetrix.com/api/Customized-Reports/#securityauditreportdata'>SecurityAuditReportData</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Security Audit Report
+                
+        
+        description: |            
+            
+            This report allows you to see all security role, module and level combinations that have been configured in RQ.
+            
+            For more information on configuring security in RQ, see [Setting Security Roles and Descriptions](https://support.iqmetrix.com/hc/en-us/articles/228837967-Settings-Security-Roles-and-Descriptions).
+            
+            Note that this report has multiple responses, depending on the Pivot value specified. 
+            
+            | Data | Pivot | Response |
+            |:-----|:------|:---------|
+            | A resource for each security module in RQ | true | <a href='http://developers.iqmetrix.com/api/Customized-Reports/#securityauditreportpivotdata'>SecurityAuditReportPivotData</a> |
+            | A resource for each security role/module combination in RQ | false | <a href='http://developers.iqmetrix.com/api/Customized-Reports/#securityauditreportdata'>SecurityAuditReportData</a> |
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"RoleDescription":"Administrator","ModuleName":"Inventory: Starting Inventory Count Import","SecurityLevel":"Full Access"}]
+                            schema: |
+                                {"type":"array","name":"SecurityAuditReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"RoleDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Administrator","description":"Name of a role in RQ"},"ModuleName":{"type":"string","database":"VARCHAR(MAX)","example":"Inventory: Starting Inventory Count Import","description":"Name of a security module in RQ"},"SecurityLevel":{"type":"string","database":"VARCHAR(MAX)","example":"Full Access","description":"Security level for the module (ModuleName) for a security role (RoleDescription)"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"RoleDescription":"Administrator","ModuleName":"Inventory: Starting Inventory Count Import","SecurityLevel":"Full Access"}]
+                            schema: |
+                                {"type":"array","name":"SecurityAuditReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"RoleDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Administrator","description":"Name of a role in RQ"},"ModuleName":{"type":"string","database":"VARCHAR(MAX)","example":"Inventory: Starting Inventory Count Import","description":"Name of a security module in RQ"},"SecurityLevel":{"type":"string","database":"VARCHAR(MAX)","example":"Full Access","description":"Security level for the module (ModuleName) for a security role (RoleDescription)"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"RoleDescription":"Administrator","ModuleName":"Inventory: Starting Inventory Count Import","SecurityLevel":"Full Access"}]
+                            schema: |
+                                {"type":"array","name":"SecurityAuditReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"RoleDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Administrator","description":"Name of a role in RQ"},"ModuleName":{"type":"string","database":"VARCHAR(MAX)","example":"Inventory: Starting Inventory Count Import","description":"Name of a security module in RQ"},"SecurityLevel":{"type":"string","database":"VARCHAR(MAX)","example":"Full Access","description":"Security level for the module (ModuleName) for a security role (RoleDescription)"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"RoleDescription":"Administrator","ModuleName":"Inventory: Starting Inventory Count Import","SecurityLevel":"Full Access"}]
+                            schema: |
+                                {"type":"array","name":"SecurityAuditReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"RoleDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Administrator","description":"Name of a role in RQ"},"ModuleName":{"type":"string","database":"VARCHAR(MAX)","example":"Inventory: Starting Inventory Count Import","description":"Name of a security module in RQ"},"SecurityLevel":{"type":"string","database":"VARCHAR(MAX)","example":"Full Access","description":"Security level for the module (ModuleName) for a security role (RoleDescription)"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"RoleDescription":"Administrator","ModuleName":"Inventory: Starting Inventory Count Import","SecurityLevel":"Full Access"}]
+                            schema: |
+                                {"type":"array","name":"SecurityAuditReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"RoleDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Administrator","description":"Name of a role in RQ"},"ModuleName":{"type":"string","database":"VARCHAR(MAX)","example":"Inventory: Starting Inventory Count Import","description":"Name of a security module in RQ"},"SecurityLevel":{"type":"string","database":"VARCHAR(MAX)","example":"Full Access","description":"Security level for the module (ModuleName) for a security role (RoleDescription)"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"RoleDescription":"Administrator","ModuleName":"Inventory: Starting Inventory Count Import","SecurityLevel":"Full Access"}]
+                            schema: |
+                                {"type":"array","name":"SecurityAuditReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"RoleDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Administrator","description":"Name of a role in RQ"},"ModuleName":{"type":"string","database":"VARCHAR(MAX)","example":"Inventory: Starting Inventory Count Import","description":"Name of a security module in RQ"},"SecurityLevel":{"type":"string","database":"VARCHAR(MAX)","example":"Full Access","description":"Security level for the module (ModuleName) for a security role (RoleDescription)"}}}
+                            
+                        
+                    
+                
+            
+    

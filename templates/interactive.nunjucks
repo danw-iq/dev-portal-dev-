@@ -1,0 +1,13 @@
+---
+title: Interactive Console
+permalink: /interactive/{{title | replace(" ", "-") }}/
+tags: []
+keywords: 
+audience: 
+last_updated: 03-03-2016
+summary: 
+metadata: false
+noPopUp: true
+---
+
+%7B%  include custom/interactive.html url="{{title | replace(" ", "-") }}.raml" %%7D

@@ -1,0 +1,186 @@
+#%RAML 0.8
+title: field-definitions
+version: v1
+baseUri: https://productlibrary{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: | 
+      Product Library
+  - title: overview
+    content: |
+      A **Field Definition** defines both how {{Product}} specification details are displayed on a screen, such as a website, and how it is stored in the Product Library.
+
+      As an example, the following Field Definition describes how battery capacity for a product might be displayed.
+
+      ```csharp
+      {
+          "Id": 58,
+          "StringId": "BatteryCapacity",
+          "InputType": "Float",
+          "IsRequired": false,
+          "LanguageInvariantUnit": "mAh",
+          "DisplayName": "Battery Capacity",
+          "Unit": "mAh",
+          "Options": []
+      }
+      ```
+
+      Using this Field Definition, below is one possible way to display this information on a screen, such as on a "Product Detail" page for a product in an e-commerce site.
+
+      In this example, we are using an example value of 1800. 
+
+      ```html
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <div class="panel-title">Battery</div>
+          </div>
+          <table class="table">
+              <tbody>
+                  <tr>
+                      <td class="name">Battery Capacity</td>
+                      <td class="value">1800 mAh</td>
+                  </tr>             
+              </tbody>
+          </table>
+      </div>
+      ```
+
+      The result displayed on the page, with some styling, is shown below
+      
+      <img src="{{ "/images/fielddefinition.png" | prepend: site.url }}" />
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 404` | `Document not found` | Ensure FieldDefinitionId is correct |
+  - title: enumerations
+    content: |
+        ## Enumerations
+
+        ### InputTypes
+
+        | Name |
+        |:-------|
+        | Currency | 
+        | Date | 
+        | Float | 
+        | Integer | 
+        | MultiSelect | 
+        | SingleSelect | 
+        | TextSingleLine | 
+        | TextMultipleLine | 
+        | YesNo | 
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json     
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+    - singularEndpointReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json     
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - FieldDefinition: |
+      {
+        "name": "FieldDefinition",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "{{note}} Use the <strong>StringId</strong> identifier instead of <strong>Id</strong>, as Id may change across Environments {{end}}",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "1" }, 
+          "StringId": { "type": "string",  "description": "Consistent identifier across all [Environments](/#environments)", "example": "Product Name" }, 
+          "InputType": { "type": "string",  "description": "Type of UI element this FieldDefinition uses, see [InputTypes](#inputypes) for a list of acceptable values", "example": "TestSingleLine" }, 
+          "IsRequired": { "type": "boolean", "description": "A flag to indicate if the input represented by this FieldDefinition can be empty (false) or not (true)", "example": "true" }, 
+          "LanguageInvariantUnit": { "type": "string",  "description": "Unit", "example": "mm", "hideFromExample": "true" }, 
+          "DisplayName": { "type": "string",  "description": "Value to be displayed in the UI", "example": "Product Name" }, 
+          "Options": { "type": "array", "arrayType": "object","description": "List of Options, only used when InputType is SingleSelect or MultiSelect", "ref": "field-definitions.Option", "isNested": "true" }, 
+          "LanguageInvariantName": { "type": "string",  "description": "This is a legacy property that should not be used" }
+        }
+      }
+  - Option: |
+      {
+        "exclude": "true",
+        "name": "Option",        
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "1", "hideFromExample": "true" }, 
+          "Value": { "type": "String", "description": "Value", "example": "Blue", "hideFromExample": "true" }          
+        }
+      }        
+  - FieldDefinitionArray: |
+      {
+        "exclude": "true",
+        "name": "FieldDefinition",        
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+/FieldDefinitions:
+  type:
+    collectionReadOnly:
+      resource: FieldDefinitionArray
+  get:
+    displayName: Getting All Field Definitions 
+/FieldDefinitions({FieldDefinitionId}):
+  uriParameters:
+    FieldDefinitionId:
+      displayName: FieldDefinitionId
+      type: integer
+      example: 1
+      description: Identifier for the {{FieldDefinition}}
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: FieldDefinition
+  get:
+    displayName: Getting a Field Definition

@@ -1,0 +1,90 @@
+#%RAML 0.8
+title: {{title}}
+baseUri: {{baseUri | replace("{UrlSuffix}", "demo")}}
+schemas: 
+{% for schema in schemas %}
+    {% for a, b in schema %}
+    - {{a}}: |
+        {{b | prefixAll(8) }}
+    {% endfor %}
+{% endfor %}
+{% for resource in resources %}
+{{resource.relativeUri}}:
+    {% if resource.description %}
+    description: {{resource.description}}
+    {% endif %}
+    uriParameters:
+        {% for parameter, objParameter in resource.uriParameters %}
+        {{parameter}}:
+            displayName: {{objParameter.displayName}}
+            type: {{objParameter.type}}
+            example: {{objParameter.example | printIfDate() }}
+            required: {{objParameter.required}}
+            description: {{objParameter.description}}
+        {% endfor %}  
+    {% for method in resource.methods %}  
+    {{method.method}}:
+        {% if method.displayName %}
+        displayName: {{method.displayName}}
+        {% endif %}        
+        {% if method.description %}
+        description: |            
+            {{method.description | prefixAll (12)}}
+        {% endif %}
+        headers:
+            {% for header, headerObj in method.headers %}
+            {{header}}:
+                example: {{headerObj.example}}
+            {% endfor %}
+        body:
+            {% for bodyType, bodyObj in method.body %}
+            {{bodyType}}:
+                {% if bodyObj.formParameters %}{% for formParams, formObj in bodyObj %}
+                {{formParams}}:
+                    {% for paramName, paramObj in formObj %}
+                    {{paramName}}:
+                        displayName: {{paramObj.displayName}}
+                        description: |
+                            {{paramObj.description}}
+                        required: {{paramObj.required}}
+                        type: {{paramObj.type}}
+                        example: {{paramObj.example}}
+                    {% endfor %}
+                {% endfor %}{% endif %}
+                {% if bodyObj.example %}
+                example: |
+                    {{bodyObj.example | prefixAll(20) }}
+                {% elif bodyObj.schema %}
+                example: |  
+                    {% if method.method == "put" %}
+                    {{ bodyObj.schema | printExample(title, false, 10) }}
+                    {% else %}
+                    {{ bodyObj.schema | printExample(title, true, 10) }}
+                    {% endif %}
+                schema: |
+                    {{bodyObj.schema | fixSchema() }}
+                {% endif %}
+            {% endfor %}
+        responses:
+            {% for code, responseObj in method.responses %}
+            {{code}}:
+                {% for body, responseType in responseObj %}
+                {{body}}:
+                    {% for type, schemaObj in responseType %}
+                    {{type}}:
+                        {% if schemaObj.example %}
+                            example: |
+                                {{ schemaObj.example | prefixAll(32) }}                        
+                        {% elif schemaObj.schema %}
+                            {% for schemaName, schema in schemaObj %}
+                            example: |
+                                {{ schema | printExample(title, false, 22)}}
+                            schema: |
+                                {{ schema | fixSchema() }}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+    {% endfor %}
+{% endfor %}

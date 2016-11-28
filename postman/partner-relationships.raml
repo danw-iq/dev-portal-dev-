@@ -1,0 +1,139 @@
+#%RAML 0.8
+title: partner relationships
+baseUri: https://entitymanagerdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - _links: |
+        {
+          "name": "_links",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null"},
+            "self": { "type": "string", "putDescription": "The request that returned these results. If the request was made without $top or $skip, these will be filled in with the values that were used.", "example": "/v1/Partners(36)/Relationships/Companies?$skip=0&$top=10"},
+            "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null"}
+          },
+          "required": ["self"]
+        }
+        
+
+    
+
+    
+    - _metadata: |
+        {
+          "name": "_metadata",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "count": { "type": "integer", "putDescription": "The total number of results returned from the request", "example": "15"},
+            "skip": { "type": "integer", "putDescription": "Value of skip in the request URI, if not specified the value will be 0", "example": "0"},
+            "top": { "type": "integer", "putDescription": "Value of top in the request URI, if not specified the value will be 20", "example": "5"}
+          }
+        }            
+        
+
+    
+
+    
+    - Relationship: |
+        {
+          "name": "Relationship",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CompanyId": { "type": "integer", "description": "Identifier for a Company", "ref": "company tree.Company.Id" },
+            "CompanyName": { "type": "string", "description": "Company Name", "ref": "company tree.Company.Name" },          
+            "CreatedUtc": { "type": "datetime", "description": "Date and time the Relationship was created, in UTC", "example": "2015-01-14T11:22:50.568Z" },
+            "RelationshipId": { "type": "integer", "description": "Unique Identifier", "example": "123" }
+          }
+        }
+        
+
+    
+
+    
+    - RelationshipResponse: |
+        {
+          "name": "RelationshipResponse",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "_metadata": { "type": "object", "ref": "partner relationships._metadata" },
+            "_links": { "type": "object", "ref": "partner relationships._links" },
+            "items": { "type": "array", "arrayType": "object", "ref": "partner relationships.Relationship" }
+          }
+        }    
+        
+
+    
+
+
+/Partners({PartnerId})/Relationships/Companies?$skip={Skip}&$top={Top}:
+    
+    uriParameters:
+        
+        PartnerId:
+            displayName: PartnerId
+            type: integer
+            example: 36
+            required: true
+            description: Identifier for the Partner
+        
+        Skip:
+            displayName: skip
+            type: integer
+            example: 1
+            required: false
+            description: Number of records to skip, defaults to 0
+        
+        Top:
+            displayName: top
+            type: integer
+            example: 10
+            required: false
+            description: Number of records to take, defaults to 20
+          
+      
+    get:
+        
+        displayName: Getting Company Relationships for a Partner
+                
+        
+        description: |            
+            This request can be used by Partners to get a list of Companies they have established a Relationship with in the iQmetrix ecosystem.
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"_metadata":{"count":15,"skip":0,"top":5},"_links":{"prev":"null","self":"/v1/Partners(36)/Relationships/Companies?$skip=0&$top=10","next":"null"},"items":[{"CompanyId":14146,"CompanyName":"Kentel Corp","CreatedUtc":"2015-01-14T11:22:50.568Z","RelationshipId":123}]}
+                            schema: |
+                                {"name":"RelationshipResponse","exclude":"true","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"_metadata":{"type":"object","ref":"partner relationships._metadata","properties":{"count":{"type":"integer","putDescription":"The total number of results returned from the request","example":"15","name":"count"},"skip":{"type":"integer","putDescription":"Value of skip in the request URI, if not specified the value will be 0","example":"0","name":"skip"},"top":{"type":"integer","putDescription":"Value of top in the request URI, if not specified the value will be 20","example":"5","name":"top"}}},"_links":{"type":"object","ref":"partner relationships._links","properties":{"prev":{"type":"string","putDescription":"Refers to a resource containing the previous page of results, null if there is no previous page","example":"null","name":"prev"},"self":{"type":"string","putDescription":"The request that returned these results. If the request was made without $top or $skip, these will be filled in with the values that were used.","example":"/v1/Partners(36)/Relationships/Companies?$skip=0&$top=10","name":"self"},"next":{"type":"string","putDescription":"Refers to a resource containing the next page of results, null if this is the last page","example":"null","name":"next"}},"required":["self"]},"items":{"type":"array","arrayType":"object","ref":"partner relationships.Relationship","properties":{"CompanyId":{"type":"integer","description":"Identifier for a Company","ref":"company tree.Company.Id","example":"14146","name":"CompanyId"},"CompanyName":{"type":"string","description":"Company Name","ref":"company tree.Company.Name","example":"Kentel Corp","name":"CompanyName"},"CreatedUtc":{"type":"datetime","description":"Date and time the Relationship was created, in UTC","example":"2015-01-14T11:22:50.568Z","name":"CreatedUtc"},"RelationshipId":{"type":"integer","description":"Unique Identifier","example":"123","name":"RelationshipId"}}}}}
+                            
+                        
+                    
+                
+            
+    

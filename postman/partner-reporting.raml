@@ -1,0 +1,253 @@
+#%RAML 0.8
+title: partner reporting
+baseUri: https://reportingdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - _links: |
+        {
+          "name": "_links",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Relative URL's used for Pagination",
+          "properties": {
+            "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null"},
+            "self": { "type": "string", "putDescription": "The request that returned these results", "example": "/v1/partners(36)/salesTransactions?startDate=2015-12-03&endDate=2015-12-30$skip=0&$top=5"},
+            "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null"}
+          },
+          "required": ["self"]
+        }
+        
+
+    
+
+    
+    - _metadata: |
+        {
+          "name": "_metadata",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Data representing Pagination details",
+          "properties": {
+            "count": { "type": "integer", "putDescription": "The total number of results returned from the request", "example": "1"},
+            "skip": { "type": "integer", "putDescription": "Value of skip in the request URI, if not specified the value will be 0", "example": "0"},
+            "top": { "type": "integer", "putDescription": "Value of top in the request URI, if not specified the value will be 30", "example": "5"}
+          }
+        }
+        
+
+    
+
+    
+    - SearchSchema: |
+        { 
+          "name": "SearchSchema",
+          "exclude": "true",        
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "partner reporting._links" },
+            "_metadata": { "type": "object", "putDescription": "Data representing Pagination details", "ref": "partner reporting._metadata" },
+            "items": { "type": "array", "arrayType": "object", "ref": "partner reporting.Transaction"}
+          }
+        }
+        
+
+    
+
+    
+    - Transaction: |
+        {
+          "name": "Transaction",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CompanyId": { "type": "integer", "description": "Identifier for the Dealer", "example": "1548"},
+            "CompanyName": { "type": "string", "description": "Dealer name", "example": "CompanyA"},
+            "StoreId": { "type": "integer", "description": "Identifier for a [Location](/api/company-tree/#location) where the Transaction took place", "example": "548"},
+            "StoreName": { "type": "string", "description": "Name of the [Location](/api/company-tree/#location) where the Transaction took place", "example": "Vancouver City Centre Mall"},
+            "RQEmployeeId": { "type": "integer", "description": "Identifier of the sales person who tendered the Transaction. EmployeeId in RQ. Only unique in the context of a dealer", "example": "897"},
+            "SalesPersonName": { "type": "string", "description": "Name of the sales person who tendered the Transaction", "example": "Mike Johnson"},
+            "InvoiceId": { "type": "string", "description": "Identifier of the Invoice. Only unique in the context of a dealer", "example": "36977459"},
+            "OriginalInvoiceId": { "type": "string", "description": "When SalesTransactionType is Refund, this property is the InvoiceId of the original invoice. Only unique in the context of a dealer", "example": "36977400"},
+            "SalesTransactionDateTime": { "type": "datetime", "description": "Date when the Transaction occured (store local time)", "example": "2015-12-03 17:35:00.000"},
+            "SalesTransactionType": { "type": "string", "description": "Type of Transaction (i.e. Sales, Refund)", "example": "Sales"},
+            "ProductName": { "type": "string", "description": "Name of the Product on the Transaction", "example": "Samsung Galaxy S4 16GB - Black Mist"},
+            "ProductSku": { "type": "string", "description": "Product SKU saved in RQ dealer database", "example": "WDDDSM000146" }, 
+            "ProductLibrarySlug": { "type": "string", "description": "iQmetrix internal product unique identifier.", "example": "M3310-V1-E13076"},
+            "Quantity": { "type": "integer", "description": "Number of items sold on the Transaction", "example": "1" },
+            "UnitCost": { "type": "decimal", "description": "The unit cost of the Product", "example": "5.99" },
+            "GrossProfit": { "type": "decimal", "description": "Gross profit from the Transaction", "example": "4.99" },
+            "TotalSales": { "type": "decimal", "description": "Total sales from the Transaction", "example": "19.99" },
+            "SerialNumber": { "type": "string", "description": "Serial Number of the Product on the Transaction", "example": "359367059548016"},
+            "ManufacturerName": { "type": "string", "description": "Name of the [Manufacturer](/api/entity-store/#manufacturer) of the Product on the Transaction", "example": "Samsung"},
+            "ActivationType": { "type": "string", "description": "Activation type of the Transaction. See [ActivationTypes](/api/carrier-integration/#activationtype) for a list of acceptable values", "example": "New Activation"},
+            "CarrierName": { "type": "string", "description": "Name of the Carrier", "example": "Sasktel Mobility"}
+          }
+        }       
+        
+
+    
+
+
+/partners({PartnerId})/salesTransactions?startDate={StartDate}&endDate={EndDate}&$skip={Skip}&$top={Top}:
+    
+    uriParameters:
+        
+        PartnerId:
+            displayName: PartnerId
+            type: integer
+            example: 36
+            required: true
+            description: Identifier for the Partner
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 2015-12-2
+            required: true
+            description: Date at which to begin search request
+        
+        EndDate:
+            displayName: EndDate
+            type: string
+            example: 2015-12-29
+            required: true
+            description: Date at which to end search request
+        
+        Skip:
+            displayName: Skip
+            type: integer
+            example: 0
+            required: false
+            description: Number of records to skip
+        
+        Top:
+            displayName: Top
+            type: integer
+            example: 10
+            required: false
+            description: Number of records to take. Must be in the range [1-100]. Defaults to 20.
+          
+      
+    get:
+        
+        displayName: Getting Sales Transactions
+                
+        
+        description: |            
+            This report will return sales data for both **physical** products and **non-physical** products, such as activations, upgrades and refunds.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                  "_links": {
+                                    "prev": null,
+                                    "self": "/v1/partners(36)/salesTransactions?$skip=0&$top=10&StartDate=2015-10-03T17:35:00.000Z&EndDate=2016-12-30T12:00:00.000Z",
+                                    "next": "/v1/partners(36)/salesTransactions?$skip=10&$top=10&StartDate=2015-10-03T17:35:00.000Z&EndDate=2016-12-30T12:00:00.000Z"
+                                  },
+                                  "_metadata": {
+                                    "count": 100,
+                                    "skip": 0,
+                                    "top": 10
+                                  },
+                                  "items": [
+                                    {
+                                      "CompanyId": 1548,
+                                      "CompanyName": "CompanyA",
+                                      "StoreId": 548,
+                                      "StoreName": "Vancouver City Centre Mall",
+                                      "RQEmployeeId": 897,
+                                      "SalesPersonName": "Mike Johnson",
+                                      "InvoiceId": "36977459",
+                                      "OriginalInvoiceId": "36977400",
+                                      "SalesTransactionDateTime": "2015-12-03 17:35:00.000",
+                                      "SalesTransactionType": "Sales",
+                                      "ProductName": "Samsung Galaxy S4 16GB - Black Mist",
+                                      "ProductSku": "WDDDSM000146",
+                                      "Quantity": 1,
+                                      "TotalSales": 35.99,
+                                      "UnitCost": 5.7,
+                                      "GrossProfit": 30.29,
+                                      "ProductLibrarySlug": "M3310-V1-E13076",
+                                      "SerialNumber": "359367059548016",
+                                      "ManufacturerName": "Samsung",
+                                      "ActivationType": "New Activation",
+                                      "CarrierName": "Sasktel Mobility"
+                                    },          
+                                    {
+                                      "CompanyId": "1548",
+                                      "CompanyName": "CompanyA",
+                                      "StoreId": 548,
+                                      "StoreName": "White Rock",
+                                      "RQEmployeeId": 397,
+                                      "SalesPersonName": "Jane Smith",
+                                      "InvoiceId": 19949,
+                                      "OriginalInvoiceId": 1994546,
+                                      "SalesTransactionDateTime": "2015-10-03 10:4:00.000",
+                                      "SalesTransactionType": "Refund",
+                                      "ProductName": "$10 Fido Device Protection (iPhone and select Premium Tab) Term",
+                                      "ProductSKU": "FDFERB000195",
+                                      "Quantity": -1,
+                                      "TotalSales": -25,
+                                      "UnitCost": 0,
+                                      "GrossProfit": -25,
+                                      "ProductLibrarySlug": null,
+                                      "SerialNumber": "6047236477",
+                                      "ManufacturerName": "",
+                                      "ActivationType": "NotSet",
+                                      "CarrierName": null
+                                    },
+                                    {
+                                      "CompanyId": "1548",
+                                      "CompanyName": "CompanyA",
+                                      "StoreId": 542,
+                                      "StoreName": "Kinetic - Mission",
+                                      "RQEmployeeId": 415,
+                                      "SalesPersonName": "John Smith",
+                                      "InvoiceId": 1994908,
+                                      "OriginalInvoiceId": 1994908,
+                                      "SalesTransactionDateTime": "2015-10-03 10:45:00.000",
+                                      "SalesTransactionType": "Sales",
+                                      "ProductName": "Sony Xperia TL",
+                                      "ProductSKU": "DHADSO000045",
+                                      "Quantity": 1,
+                                      "TotalSales": 0,
+                                      "UnitCost": 300,
+                                      "GrossProfit": -300,
+                                      "ProductLibrarySlug": "M73",
+                                      "SerialNumber": "352226073857091",
+                                      "ManufacturerName": "Sony Ericsson",
+                                      "ActivationType": "Upgrade",
+                                      "CarrierName": "Rogers Wireless Inc."
+                                    }
+                                  ]
+                                }
+                                
+                        
+                        
+                    
+                
+            
+    

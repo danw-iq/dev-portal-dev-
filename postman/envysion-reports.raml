@@ -1,0 +1,1790 @@
+#%RAML 0.8
+title: Envysion Reports
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - Category: |
+        {
+          "name": "Category",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CategoryNumber": { "type": "string", "description": "Identifier for the Category", "database": "NVARCHAR (100)", "example": "10101012" },
+            "Category": { "type": "string", "description": "Category Name", "database": "NVARCHAR (MAX)", "example": "Financing" },
+            "CategoryPath": { "type": "string", "description": "Category", "database": "NVARCHAR (MAX)", "example": ">> Activations >> Financing" }
+          }
+        }  
+        
+
+    
+
+    
+    - Store: |
+        {
+          "name": "Store",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "StoreID": { "type": "integer", "description": "Identifier for a Store in RQ", "example": "1" },
+            "City": { "type": "string", "description": "City", "example": "Phoenix" },
+            "Address": { "type": "string", "description": "Address", "example": "27617 Commerce Center Dr" },
+            "StoreName": { "type": "string", "description": "Store name", "example": "Altera Kiosk" }
+          }
+        }    
+        
+
+    
+
+    
+    - CashIn: |
+        {
+          "name": "CashIn",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "amount": {  "type": "decimal", "database": "MONEY", "description": "Cash in amount", "example": "0" },
+            "cash_in_id": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier in RQ", "example": "6882" },
+            "comment": {  "type": "string", "database": "VARCHAR(2000)", "description": "Comment", "example": "" },
+            "employee_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "4" },
+            "employee_id_2": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "4" },
+            "employee_name": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Name of employee who performed cash in", "example": "John Tester" },
+            "employee_name_2": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Name of employee who verified cash in", "example": "John Tester" },
+            "in_date": {  "type": "datetime", "database": "DATETIME", "description": "Cash in date", "example": "2009-10-27T09:35:30.767" },
+            "store_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" },
+            "terminal_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a terminal in RQ", "example": "0" }
+          }
+        }    
+        
+
+    
+
+    
+    - CashOut: |
+        {
+          "name": "CashOut",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "amount": {  "type": "integer", "database": "MONEY", "description": "Cash out amount", "example": "332478" },
+            "cash_out_id": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier in RQ", "example": "104253" },
+            "comment": {  "type": "string", "database": "VARCHAR(5000)", "description": "Comment", "example": "b" },
+            "employee_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "2863" },
+            "employee_id_2": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "2863" },
+            "employee_name": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Name of employee who performed cash out", "example": "iQmetrix Employee" },
+            "employee_name_2": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Name of employee who verified cash out", "example": "iQmetrix Employee" },
+            "out_date": {  "type": "datetime", "database": "DATETIME", "description": "Cash out date", "example": "2011-04-13T11:35:23.32" },
+            "store_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" },
+            "terminal_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a terminal in RQ", "example": "0" }
+          }
+        }          
+        
+
+    
+
+    
+    - OriginalSalesInvoice: |
+        {
+          "name": "OriginalSalesInvoice",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "invoice_id": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier in RQ", "example": "1265314" },
+            "orig_date": {  "type": "datetime", "database": "DATETIME", "description": "Invoice date", "example": "2013-04-09T08:23:51.93" },
+            "orig_employee_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "45" },
+            "orig_employee_name": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Name of employee on invoice", "example": "iQmetrix Employee" },
+            "orig_invoice_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier of invoice in RQ", "example": "1265312" },
+            "orig_receipt": {  "type": "string", "database": "VARCHAR(14)", "description": "Receipt number", "example": "00001IN1805" },
+            "orig_store_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" },
+            "orig_terminal_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a terminal in RQ", "example": "0" },
+            "orig_workstation": {  "type": "string", "database": "VARCHAR(50)", "description": "Workstation", "example": "null" },
+            "store_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" }
+          }
+        }  
+        
+
+    
+
+    
+    - PunchClockEntry: |
+        {
+          "name": "PunchClockEntry",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "employee_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "2" },
+            "employee_name": {  "type": "string", "database": "NVARCHAR (MAX)", "description": "Name of employee on punch", "example": "iQmetrix Employee" },
+            "employee_verified": {  "type": "boolean", "database": "BIT", "description": "A flag to indicate employee verification of punch", "example": "true" },
+            "in_comment": {  "type": "string", "database": "VARCHAR(100)", "description": "Comment for punch in", "example": "" },
+            "manager_verified": {  "type": "integer", "database": "BIT", "description": "A flag to indicate manager verification of punch", "example": "false" },
+            "out_comment": {  "type": "string", "database": "VARCHAR(100)", "description": "Comment for punch out", "example": "Auto-Punch Out" },
+            "punch_id": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier for punch in RQ", "example": "7341" },
+            "statue": {  "type": "integer", "database": "TINYINT", "description": "Standard = 1, Edited = 1, Added = 2, Deleted = 3", "example": "1" },
+            "store_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" },
+            "time_in": {  "type": "datetime", "database": "DATETIME", "description": "Punch in time", "example": "2010-01-04T08:00:00" },
+            "time_out": {  "type": "datetime", "database": "DATETIME", "description": "Punch out time", "example": "2010-01-04T12:33:00" }
+          }
+        }  
+        
+
+    
+
+    
+    - PunchClockEntryRevision: |
+        {
+          "name": "PunchClockEntryRevision",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "comment": {  "type": "string", "database": "VARCHAR(255)", "description": "Revision comment", "example": "wrong location - entered correctly at corporate office" },
+            "employee": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Employee on revision", "example": "Cathy Day" },
+            "employee_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "107" },
+            "orig_time_in": {  "type": "datetime", "database": "DATETIME", "description": "Original punch in time", "example": "2010-01-04T06:12:52.79" },
+            "orig_time_out": {  "type": "datetime", "database": "DATETIME", "description": "Original punch out time", "example": "2010-01-04T15:06:36.677" },
+            "punch_id": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier for punch in RQ", "example": "6276" },
+            "revised_by_employee": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Employee making revision", "example": "Dayle Paulson" },
+            "revised_by_employee_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "7" },
+            "revised_date": {  "type": "datetime", "database": "DATETIME", "description": "Date and time punch was revised", "example": "2010-01-14T16:06:18.25" },
+            "revised_time_in": {  "type": "datetime", "database": "DATETIME", "description": "Revised punch in", "example": "null" },
+            "revised_time_out": {  "type": "datetime", "database": "DATETIME", "description": "Revised punch out", "example": "null" },
+            "revision_id": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier in RQ", "example": "1567" },
+            "revision_type": {  "type": "integer", "database": "TINYINT", "description": "Not Specified = 0, Edit = 1, Addition = 2, Deletion = 3", "example": "3" },
+            "store_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" }
+          }
+        }        
+        
+
+    
+
+    
+    - SaleInvoiceCoupon: |
+        {
+          "name": "SaleInvoiceCoupon",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Amount": {  "type": "decimal", "database": "MONEY", "description": "Amount on coupon", "example": "3.5" },
+            "DateCreated": {  "type": "datetime", "database": "DATETIME", "description": "Date created", "example": "2012-06-11T13:13:51.74" },
+            "Description": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Description", "example": "Normal Coupon" },
+            "InvoiceIDByStore": {  "type": "string", "database": "VARCHAR(14)", "description": "Invoice ", "example": "00001IN1001" },
+            "SaleInvoiceID": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier in RQ", "example": "1263859" },
+            "StoreID1": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" }
+          }
+        }   
+        
+
+    
+
+    
+    - SaleInvoicePayment: |
+        {
+          "name": "SaleInvoicePayment",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "amount": {  "type": "decimal", "database": "MONEY", "description": "Amount", "example": "152.25" },
+            "change_amount": {  "type": "decimal", "database": "MONEY", "description": "Change given", "example": "0" },
+            "comments": {  "type": "string", "database": "TEXT", "description": "Comments", "example": "" },
+            "customer_id": {  "type": "string", "database": "INTEGER", "description": "Identifier for a customer in RQ", "example": "null" },
+            "customer_member_num": {  "type": "string", "database": "VARCHAR(30)", "description": "Customer member number in RQ", "example": "null" },
+            "employee_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "4" },
+            "employee_name": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Name of employee in RQ", "example": "John Tester" },
+            "employee_name_3": {  "type": "string", "database": "VARCHAR(MAX)", "description": "Name of employee in RQ", "example": "John Tester" },
+            "invoice_id": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier in RQ", "example": "524371" },
+            "is_bill_payment": {  "type": "integer", "database": "BIT", "description": "A flag to indicate if this is a bill payment", "example": "0" },
+            "payment_type": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Payment type", "example": "Cash" },
+            "receipt_number": {  "type": "string", "database": "VARCHAR(14)", "description": "Receipt number", "example": "00001IN117" },
+            "store_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" },
+            "terminal_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a terminal in RQ", "example": "0" },
+            "trans_create_time": {  "type": "datetime", "database": "DATETIME", "description": "Transaction created time", "example": "2010-03-10T15:20:19.323" },
+            "trans_logged_time": {  "type": "datetime", "database": "DATETIME", "description": "Transaction logged time", "example": "null" },
+            "workstation_name": {  "type": "string", "database": "VARCHAR(50)", "description": "Workstation name", "example": "null" }
+          }
+        }                   
+        
+
+    
+
+    
+    - SaleInvoiceProduct: |
+        {
+          "name": "SaleInvoiceProduct",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Activation": {  "type": "integer", "database": "INTEGER", "description": "A flag to indicate if this is an activated product", "example": "0" },
+            "AssociationNumber": {  "type": "integer", "database": "INTEGER", "description": "Association number in rq", "example": "1" },
+            "category_number": {  "type": "string", "database": "VARCHAR(150)", "description": "Internal identifier for a Category in RQ", "example": "10101126" },
+            "category_path": {  "type": "string", "database": "VARCHAR(150)", "description": "Category", "example": ">> Accessories >> Antennas" },
+            "cost": {  "type": "decimal", "database": "MONEY", "description": "Cost", "example": "6.96" },
+            "Discount": {  "type": "decimal", "database": "MONEY", "description": "A flag to indicate if this is a discounted product", "example": "0" },
+            "employee_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "2892" },
+            "employee_name": {  "type": "string", "database": "VARCHAR(250)", "description": "Name of employee in RQ", "example": "iQmetrix Employee" },
+            "invoice_id": {  "type": "integer", "database": "INTEGER", "description": "Internal identifier in RQ", "example": "1267257" },
+            "item_logged_time": {  "type": "datetime", "database": "DATETIME", "description": "Time the product was added to the invoice", "example": "2015-03-03T07:40:29.493" },
+            "list_price": {  "type": "decimal", "database": "MONEY", "description": "List price", "example": "1" },
+            "override_amt": {  "type": "decimal", "database": "MONEY", "description": "Override amount", "example": "0" },
+            "Priority": {  "type": "integer", "database": "INTEGER", "description": "A number representing the priority of the product on the invoice", "example": "1" },
+            "product_description": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Description", "example": "ADAPTER CABLE USB727/760- Test" },
+            "product_id": {  "type": "string", "database": "VARCHAR(250)", "description": "Identifier for a product in RQ", "example": "ASANUN000001" },
+            "product_type": {  "type": "string", "database": "VARCHAR(250)", "description": "Product type in RQ", "example": "Regular Global Product" },
+            "quantity": {  "type": "integer", "database": "INTEGER", "description": "Quantity", "example": "1" },
+            "receipt_number": {  "type": "string", "database": "VARCHAR(50)", "description": "Receipt number in RQ", "example": "00416IN4417" },
+            "Return": {  "type": "integer", "database": "INTEGER", "description": "A flag to indicate if this is a returned product", "example": "0" },
+            "sale_price": {  "type": "decimal", "database": "MONEY", "description": "Sale price", "example": "1" },
+            "store_id": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "221" },
+            "terminal_id": {  "type": "integer", "database": "INTEGER", "description": "Transaction logged time", "example": "0" },
+            "workstation_name": {  "type": "string", "database": "VARCHAR(100)", "description": "Workstation name", "example": "TEMP-W530-W8" }
+          }
+        }                         
+        
+
+    
+
+    
+    - SaleInvoiceTax: |
+        {
+          "name": "SaleInvoiceTax",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "DateCreated": {  "type": "datetime", "database": "DATETIME", "description": "Created date", "example": "2010-05-28T15:55:38.78" },
+            "InvoiceIDByStore": {  "type": "string", "database": "VARCHAR(14)", "description": "Invoice number", "example": "00001IN193" },
+            "SaleInvoiceID": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an invoice in RQ", "example": "812306" },
+            "StoreID1": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a store in RQ", "example": "1" },
+            "Tax": {  "type": "decimal", "database": "MONEY", "description": "Tax amount", "example": "0" }
+          }
+        }                               
+        
+
+    
+
+    
+    - Relationship: |
+        {
+          "name": "Relationship",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CompanyID": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>", "example": "22575" },
+            "CompanyName": {  "type": "string", "database": "VARCHAR(50)", "description": "Company name", "example": "KENTEL" }
+          }
+        }
+        
+
+    
+
+
+/partner/relationships?Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Partner Relationships
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CompanyID":22575,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"22575"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CompanyID":22575,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"22575"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CompanyID":22575,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"22575"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CompanyID":22575,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"22575"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CompanyID":22575,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"22575"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CompanyID":22575,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"22575"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/Categories?CompanyId={CompanyId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Categories for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CategoryNumber":"10101012","Category":"Financing","CategoryPath":">> Activations >> Financing"}]
+                            schema: |
+                                {"name":"Category","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CategoryNumber":{"type":"string","description":"Identifier for the Category","database":"NVARCHAR (100)","example":"10101012"},"Category":{"type":"string","description":"Category Name","database":"NVARCHAR (MAX)","example":"Financing"},"CategoryPath":{"type":"string","description":"Category","database":"NVARCHAR (MAX)","example":">> Activations >> Financing"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CategoryNumber":"10101012","Category":"Financing","CategoryPath":">> Activations >> Financing"}]
+                            schema: |
+                                {"name":"Category","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CategoryNumber":{"type":"string","description":"Identifier for the Category","database":"NVARCHAR (100)","example":"10101012"},"Category":{"type":"string","description":"Category Name","database":"NVARCHAR (MAX)","example":"Financing"},"CategoryPath":{"type":"string","description":"Category","database":"NVARCHAR (MAX)","example":">> Activations >> Financing"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CategoryNumber":"10101012","Category":"Financing","CategoryPath":">> Activations >> Financing"}]
+                            schema: |
+                                {"name":"Category","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CategoryNumber":{"type":"string","description":"Identifier for the Category","database":"NVARCHAR (100)","example":"10101012"},"Category":{"type":"string","description":"Category Name","database":"NVARCHAR (MAX)","example":"Financing"},"CategoryPath":{"type":"string","description":"Category","database":"NVARCHAR (MAX)","example":">> Activations >> Financing"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CategoryNumber":"10101012","Category":"Financing","CategoryPath":">> Activations >> Financing"}]
+                            schema: |
+                                {"name":"Category","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CategoryNumber":{"type":"string","description":"Identifier for the Category","database":"NVARCHAR (100)","example":"10101012"},"Category":{"type":"string","description":"Category Name","database":"NVARCHAR (MAX)","example":"Financing"},"CategoryPath":{"type":"string","description":"Category","database":"NVARCHAR (MAX)","example":">> Activations >> Financing"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CategoryNumber":"10101012","Category":"Financing","CategoryPath":">> Activations >> Financing"}]
+                            schema: |
+                                {"name":"Category","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CategoryNumber":{"type":"string","description":"Identifier for the Category","database":"NVARCHAR (100)","example":"10101012"},"Category":{"type":"string","description":"Category Name","database":"NVARCHAR (MAX)","example":"Financing"},"CategoryPath":{"type":"string","description":"Category","database":"NVARCHAR (MAX)","example":">> Activations >> Financing"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CategoryNumber":"10101012","Category":"Financing","CategoryPath":">> Activations >> Financing"}]
+                            schema: |
+                                {"name":"Category","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CategoryNumber":{"type":"string","description":"Identifier for the Category","database":"NVARCHAR (100)","example":"10101012"},"Category":{"type":"string","description":"Category Name","database":"NVARCHAR (MAX)","example":"Financing"},"CategoryPath":{"type":"string","description":"Category","database":"NVARCHAR (MAX)","example":">> Activations >> Financing"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/Stores?CompanyId={CompanyId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Stores for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"StoreID":1,"City":"Phoenix","Address":"27617 Commerce Center Dr","StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1"},"City":{"type":"string","description":"City","example":"Phoenix"},"Address":{"type":"string","description":"Address","example":"27617 Commerce Center Dr"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"StoreID":1,"City":"Phoenix","Address":"27617 Commerce Center Dr","StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1"},"City":{"type":"string","description":"City","example":"Phoenix"},"Address":{"type":"string","description":"Address","example":"27617 Commerce Center Dr"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"StoreID":1,"City":"Phoenix","Address":"27617 Commerce Center Dr","StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1"},"City":{"type":"string","description":"City","example":"Phoenix"},"Address":{"type":"string","description":"Address","example":"27617 Commerce Center Dr"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"StoreID":1,"City":"Phoenix","Address":"27617 Commerce Center Dr","StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1"},"City":{"type":"string","description":"City","example":"Phoenix"},"Address":{"type":"string","description":"Address","example":"27617 Commerce Center Dr"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"StoreID":1,"City":"Phoenix","Address":"27617 Commerce Center Dr","StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1"},"City":{"type":"string","description":"City","example":"Phoenix"},"Address":{"type":"string","description":"Address","example":"27617 Commerce Center Dr"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"StoreID":1,"City":"Phoenix","Address":"27617 Commerce Center Dr","StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1"},"City":{"type":"string","description":"City","example":"Phoenix"},"Address":{"type":"string","description":"Address","example":"27617 Commerce Center Dr"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/CashIns?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Cash Ins for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"amount":0,"cash_in_id":6882,"comment":"","employee_id":4,"employee_id_2":4,"employee_name":"John Tester","employee_name_2":"John Tester","in_date":"2009-10-27T09:35:30.767","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashIn","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Cash in amount","example":"0"},"cash_in_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"6882"},"comment":{"type":"string","database":"VARCHAR(2000)","description":"Comment","example":""},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash in","example":"John Tester"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash in","example":"John Tester"},"in_date":{"type":"datetime","database":"DATETIME","description":"Cash in date","example":"2009-10-27T09:35:30.767"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"amount":0,"cash_in_id":6882,"comment":"","employee_id":4,"employee_id_2":4,"employee_name":"John Tester","employee_name_2":"John Tester","in_date":"2009-10-27T09:35:30.767","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashIn","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Cash in amount","example":"0"},"cash_in_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"6882"},"comment":{"type":"string","database":"VARCHAR(2000)","description":"Comment","example":""},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash in","example":"John Tester"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash in","example":"John Tester"},"in_date":{"type":"datetime","database":"DATETIME","description":"Cash in date","example":"2009-10-27T09:35:30.767"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"amount":0,"cash_in_id":6882,"comment":"","employee_id":4,"employee_id_2":4,"employee_name":"John Tester","employee_name_2":"John Tester","in_date":"2009-10-27T09:35:30.767","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashIn","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Cash in amount","example":"0"},"cash_in_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"6882"},"comment":{"type":"string","database":"VARCHAR(2000)","description":"Comment","example":""},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash in","example":"John Tester"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash in","example":"John Tester"},"in_date":{"type":"datetime","database":"DATETIME","description":"Cash in date","example":"2009-10-27T09:35:30.767"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"amount":0,"cash_in_id":6882,"comment":"","employee_id":4,"employee_id_2":4,"employee_name":"John Tester","employee_name_2":"John Tester","in_date":"2009-10-27T09:35:30.767","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashIn","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Cash in amount","example":"0"},"cash_in_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"6882"},"comment":{"type":"string","database":"VARCHAR(2000)","description":"Comment","example":""},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash in","example":"John Tester"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash in","example":"John Tester"},"in_date":{"type":"datetime","database":"DATETIME","description":"Cash in date","example":"2009-10-27T09:35:30.767"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"amount":0,"cash_in_id":6882,"comment":"","employee_id":4,"employee_id_2":4,"employee_name":"John Tester","employee_name_2":"John Tester","in_date":"2009-10-27T09:35:30.767","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashIn","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Cash in amount","example":"0"},"cash_in_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"6882"},"comment":{"type":"string","database":"VARCHAR(2000)","description":"Comment","example":""},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash in","example":"John Tester"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash in","example":"John Tester"},"in_date":{"type":"datetime","database":"DATETIME","description":"Cash in date","example":"2009-10-27T09:35:30.767"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"amount":0,"cash_in_id":6882,"comment":"","employee_id":4,"employee_id_2":4,"employee_name":"John Tester","employee_name_2":"John Tester","in_date":"2009-10-27T09:35:30.767","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashIn","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Cash in amount","example":"0"},"cash_in_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"6882"},"comment":{"type":"string","database":"VARCHAR(2000)","description":"Comment","example":""},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash in","example":"John Tester"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash in","example":"John Tester"},"in_date":{"type":"datetime","database":"DATETIME","description":"Cash in date","example":"2009-10-27T09:35:30.767"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/CashOuts?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Cash Outs for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"amount":332478,"cash_out_id":104253,"comment":"b","employee_id":2863,"employee_id_2":2863,"employee_name":"iQmetrix Employee","employee_name_2":"iQmetrix Employee","out_date":"2011-04-13T11:35:23.32","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashOut","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"integer","database":"MONEY","description":"Cash out amount","example":"332478"},"cash_out_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"104253"},"comment":{"type":"string","database":"VARCHAR(5000)","description":"Comment","example":"b"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash out","example":"iQmetrix Employee"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash out","example":"iQmetrix Employee"},"out_date":{"type":"datetime","database":"DATETIME","description":"Cash out date","example":"2011-04-13T11:35:23.32"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"amount":332478,"cash_out_id":104253,"comment":"b","employee_id":2863,"employee_id_2":2863,"employee_name":"iQmetrix Employee","employee_name_2":"iQmetrix Employee","out_date":"2011-04-13T11:35:23.32","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashOut","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"integer","database":"MONEY","description":"Cash out amount","example":"332478"},"cash_out_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"104253"},"comment":{"type":"string","database":"VARCHAR(5000)","description":"Comment","example":"b"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash out","example":"iQmetrix Employee"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash out","example":"iQmetrix Employee"},"out_date":{"type":"datetime","database":"DATETIME","description":"Cash out date","example":"2011-04-13T11:35:23.32"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"amount":332478,"cash_out_id":104253,"comment":"b","employee_id":2863,"employee_id_2":2863,"employee_name":"iQmetrix Employee","employee_name_2":"iQmetrix Employee","out_date":"2011-04-13T11:35:23.32","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashOut","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"integer","database":"MONEY","description":"Cash out amount","example":"332478"},"cash_out_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"104253"},"comment":{"type":"string","database":"VARCHAR(5000)","description":"Comment","example":"b"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash out","example":"iQmetrix Employee"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash out","example":"iQmetrix Employee"},"out_date":{"type":"datetime","database":"DATETIME","description":"Cash out date","example":"2011-04-13T11:35:23.32"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"amount":332478,"cash_out_id":104253,"comment":"b","employee_id":2863,"employee_id_2":2863,"employee_name":"iQmetrix Employee","employee_name_2":"iQmetrix Employee","out_date":"2011-04-13T11:35:23.32","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashOut","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"integer","database":"MONEY","description":"Cash out amount","example":"332478"},"cash_out_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"104253"},"comment":{"type":"string","database":"VARCHAR(5000)","description":"Comment","example":"b"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash out","example":"iQmetrix Employee"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash out","example":"iQmetrix Employee"},"out_date":{"type":"datetime","database":"DATETIME","description":"Cash out date","example":"2011-04-13T11:35:23.32"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"amount":332478,"cash_out_id":104253,"comment":"b","employee_id":2863,"employee_id_2":2863,"employee_name":"iQmetrix Employee","employee_name_2":"iQmetrix Employee","out_date":"2011-04-13T11:35:23.32","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashOut","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"integer","database":"MONEY","description":"Cash out amount","example":"332478"},"cash_out_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"104253"},"comment":{"type":"string","database":"VARCHAR(5000)","description":"Comment","example":"b"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash out","example":"iQmetrix Employee"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash out","example":"iQmetrix Employee"},"out_date":{"type":"datetime","database":"DATETIME","description":"Cash out date","example":"2011-04-13T11:35:23.32"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"amount":332478,"cash_out_id":104253,"comment":"b","employee_id":2863,"employee_id_2":2863,"employee_name":"iQmetrix Employee","employee_name_2":"iQmetrix Employee","out_date":"2011-04-13T11:35:23.32","store_id":1,"terminal_id":0}]
+                            schema: |
+                                {"name":"CashOut","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"integer","database":"MONEY","description":"Cash out amount","example":"332478"},"cash_out_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"104253"},"comment":{"type":"string","database":"VARCHAR(5000)","description":"Comment","example":"b"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_id_2":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2863"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who performed cash out","example":"iQmetrix Employee"},"employee_name_2":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee who verified cash out","example":"iQmetrix Employee"},"out_date":{"type":"datetime","database":"DATETIME","description":"Cash out date","example":"2011-04-13T11:35:23.32"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/OriginalSaleInvoice?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Original Sales Invoices for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"invoice_id":1265314,"orig_date":"2013-04-09T08:23:51.93","orig_employee_id":45,"orig_employee_name":"iQmetrix Employee","orig_invoice_id":1265312,"orig_receipt":"00001IN1805","orig_store_id":1,"orig_terminal_id":0,"orig_workstation":"null","store_id":1}]
+                            schema: |
+                                {"name":"OriginalSalesInvoice","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1265314"},"orig_date":{"type":"datetime","database":"DATETIME","description":"Invoice date","example":"2013-04-09T08:23:51.93"},"orig_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"45"},"orig_employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee on invoice","example":"iQmetrix Employee"},"orig_invoice_id":{"type":"integer","database":"INTEGER","description":"Identifier of invoice in RQ","example":"1265312"},"orig_receipt":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN1805"},"orig_store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"orig_terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"orig_workstation":{"type":"string","database":"VARCHAR(50)","description":"Workstation","example":"null"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"invoice_id":1265314,"orig_date":"2013-04-09T08:23:51.93","orig_employee_id":45,"orig_employee_name":"iQmetrix Employee","orig_invoice_id":1265312,"orig_receipt":"00001IN1805","orig_store_id":1,"orig_terminal_id":0,"orig_workstation":"null","store_id":1}]
+                            schema: |
+                                {"name":"OriginalSalesInvoice","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1265314"},"orig_date":{"type":"datetime","database":"DATETIME","description":"Invoice date","example":"2013-04-09T08:23:51.93"},"orig_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"45"},"orig_employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee on invoice","example":"iQmetrix Employee"},"orig_invoice_id":{"type":"integer","database":"INTEGER","description":"Identifier of invoice in RQ","example":"1265312"},"orig_receipt":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN1805"},"orig_store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"orig_terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"orig_workstation":{"type":"string","database":"VARCHAR(50)","description":"Workstation","example":"null"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"invoice_id":1265314,"orig_date":"2013-04-09T08:23:51.93","orig_employee_id":45,"orig_employee_name":"iQmetrix Employee","orig_invoice_id":1265312,"orig_receipt":"00001IN1805","orig_store_id":1,"orig_terminal_id":0,"orig_workstation":"null","store_id":1}]
+                            schema: |
+                                {"name":"OriginalSalesInvoice","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1265314"},"orig_date":{"type":"datetime","database":"DATETIME","description":"Invoice date","example":"2013-04-09T08:23:51.93"},"orig_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"45"},"orig_employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee on invoice","example":"iQmetrix Employee"},"orig_invoice_id":{"type":"integer","database":"INTEGER","description":"Identifier of invoice in RQ","example":"1265312"},"orig_receipt":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN1805"},"orig_store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"orig_terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"orig_workstation":{"type":"string","database":"VARCHAR(50)","description":"Workstation","example":"null"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"invoice_id":1265314,"orig_date":"2013-04-09T08:23:51.93","orig_employee_id":45,"orig_employee_name":"iQmetrix Employee","orig_invoice_id":1265312,"orig_receipt":"00001IN1805","orig_store_id":1,"orig_terminal_id":0,"orig_workstation":"null","store_id":1}]
+                            schema: |
+                                {"name":"OriginalSalesInvoice","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1265314"},"orig_date":{"type":"datetime","database":"DATETIME","description":"Invoice date","example":"2013-04-09T08:23:51.93"},"orig_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"45"},"orig_employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee on invoice","example":"iQmetrix Employee"},"orig_invoice_id":{"type":"integer","database":"INTEGER","description":"Identifier of invoice in RQ","example":"1265312"},"orig_receipt":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN1805"},"orig_store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"orig_terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"orig_workstation":{"type":"string","database":"VARCHAR(50)","description":"Workstation","example":"null"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"invoice_id":1265314,"orig_date":"2013-04-09T08:23:51.93","orig_employee_id":45,"orig_employee_name":"iQmetrix Employee","orig_invoice_id":1265312,"orig_receipt":"00001IN1805","orig_store_id":1,"orig_terminal_id":0,"orig_workstation":"null","store_id":1}]
+                            schema: |
+                                {"name":"OriginalSalesInvoice","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1265314"},"orig_date":{"type":"datetime","database":"DATETIME","description":"Invoice date","example":"2013-04-09T08:23:51.93"},"orig_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"45"},"orig_employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee on invoice","example":"iQmetrix Employee"},"orig_invoice_id":{"type":"integer","database":"INTEGER","description":"Identifier of invoice in RQ","example":"1265312"},"orig_receipt":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN1805"},"orig_store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"orig_terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"orig_workstation":{"type":"string","database":"VARCHAR(50)","description":"Workstation","example":"null"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"invoice_id":1265314,"orig_date":"2013-04-09T08:23:51.93","orig_employee_id":45,"orig_employee_name":"iQmetrix Employee","orig_invoice_id":1265312,"orig_receipt":"00001IN1805","orig_store_id":1,"orig_terminal_id":0,"orig_workstation":"null","store_id":1}]
+                            schema: |
+                                {"name":"OriginalSalesInvoice","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1265314"},"orig_date":{"type":"datetime","database":"DATETIME","description":"Invoice date","example":"2013-04-09T08:23:51.93"},"orig_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"45"},"orig_employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee on invoice","example":"iQmetrix Employee"},"orig_invoice_id":{"type":"integer","database":"INTEGER","description":"Identifier of invoice in RQ","example":"1265312"},"orig_receipt":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN1805"},"orig_store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"orig_terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"orig_workstation":{"type":"string","database":"VARCHAR(50)","description":"Workstation","example":"null"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/PunchClock?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Punch Clock Entries for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"employee_id":2,"employee_name":"iQmetrix Employee","employee_verified":true,"in_comment":"","manager_verified":false,"out_comment":"Auto-Punch Out","punch_id":7341,"statue":1,"store_id":1,"time_in":"2010-01-04T08:00:00","time_out":"2010-01-04T12:33:00"}]
+                            schema: |
+                                {"name":"PunchClockEntry","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2"},"employee_name":{"type":"string","database":"NVARCHAR (MAX)","description":"Name of employee on punch","example":"iQmetrix Employee"},"employee_verified":{"type":"boolean","database":"BIT","description":"A flag to indicate employee verification of punch","example":"true"},"in_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch in","example":""},"manager_verified":{"type":"integer","database":"BIT","description":"A flag to indicate manager verification of punch","example":"false"},"out_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch out","example":"Auto-Punch Out"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"7341"},"statue":{"type":"integer","database":"TINYINT","description":"Standard = 1, Edited = 1, Added = 2, Deleted = 3","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"time_in":{"type":"datetime","database":"DATETIME","description":"Punch in time","example":"2010-01-04T08:00:00"},"time_out":{"type":"datetime","database":"DATETIME","description":"Punch out time","example":"2010-01-04T12:33:00"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"employee_id":2,"employee_name":"iQmetrix Employee","employee_verified":true,"in_comment":"","manager_verified":false,"out_comment":"Auto-Punch Out","punch_id":7341,"statue":1,"store_id":1,"time_in":"2010-01-04T08:00:00","time_out":"2010-01-04T12:33:00"}]
+                            schema: |
+                                {"name":"PunchClockEntry","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2"},"employee_name":{"type":"string","database":"NVARCHAR (MAX)","description":"Name of employee on punch","example":"iQmetrix Employee"},"employee_verified":{"type":"boolean","database":"BIT","description":"A flag to indicate employee verification of punch","example":"true"},"in_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch in","example":""},"manager_verified":{"type":"integer","database":"BIT","description":"A flag to indicate manager verification of punch","example":"false"},"out_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch out","example":"Auto-Punch Out"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"7341"},"statue":{"type":"integer","database":"TINYINT","description":"Standard = 1, Edited = 1, Added = 2, Deleted = 3","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"time_in":{"type":"datetime","database":"DATETIME","description":"Punch in time","example":"2010-01-04T08:00:00"},"time_out":{"type":"datetime","database":"DATETIME","description":"Punch out time","example":"2010-01-04T12:33:00"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"employee_id":2,"employee_name":"iQmetrix Employee","employee_verified":true,"in_comment":"","manager_verified":false,"out_comment":"Auto-Punch Out","punch_id":7341,"statue":1,"store_id":1,"time_in":"2010-01-04T08:00:00","time_out":"2010-01-04T12:33:00"}]
+                            schema: |
+                                {"name":"PunchClockEntry","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2"},"employee_name":{"type":"string","database":"NVARCHAR (MAX)","description":"Name of employee on punch","example":"iQmetrix Employee"},"employee_verified":{"type":"boolean","database":"BIT","description":"A flag to indicate employee verification of punch","example":"true"},"in_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch in","example":""},"manager_verified":{"type":"integer","database":"BIT","description":"A flag to indicate manager verification of punch","example":"false"},"out_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch out","example":"Auto-Punch Out"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"7341"},"statue":{"type":"integer","database":"TINYINT","description":"Standard = 1, Edited = 1, Added = 2, Deleted = 3","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"time_in":{"type":"datetime","database":"DATETIME","description":"Punch in time","example":"2010-01-04T08:00:00"},"time_out":{"type":"datetime","database":"DATETIME","description":"Punch out time","example":"2010-01-04T12:33:00"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"employee_id":2,"employee_name":"iQmetrix Employee","employee_verified":true,"in_comment":"","manager_verified":false,"out_comment":"Auto-Punch Out","punch_id":7341,"statue":1,"store_id":1,"time_in":"2010-01-04T08:00:00","time_out":"2010-01-04T12:33:00"}]
+                            schema: |
+                                {"name":"PunchClockEntry","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2"},"employee_name":{"type":"string","database":"NVARCHAR (MAX)","description":"Name of employee on punch","example":"iQmetrix Employee"},"employee_verified":{"type":"boolean","database":"BIT","description":"A flag to indicate employee verification of punch","example":"true"},"in_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch in","example":""},"manager_verified":{"type":"integer","database":"BIT","description":"A flag to indicate manager verification of punch","example":"false"},"out_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch out","example":"Auto-Punch Out"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"7341"},"statue":{"type":"integer","database":"TINYINT","description":"Standard = 1, Edited = 1, Added = 2, Deleted = 3","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"time_in":{"type":"datetime","database":"DATETIME","description":"Punch in time","example":"2010-01-04T08:00:00"},"time_out":{"type":"datetime","database":"DATETIME","description":"Punch out time","example":"2010-01-04T12:33:00"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"employee_id":2,"employee_name":"iQmetrix Employee","employee_verified":true,"in_comment":"","manager_verified":false,"out_comment":"Auto-Punch Out","punch_id":7341,"statue":1,"store_id":1,"time_in":"2010-01-04T08:00:00","time_out":"2010-01-04T12:33:00"}]
+                            schema: |
+                                {"name":"PunchClockEntry","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2"},"employee_name":{"type":"string","database":"NVARCHAR (MAX)","description":"Name of employee on punch","example":"iQmetrix Employee"},"employee_verified":{"type":"boolean","database":"BIT","description":"A flag to indicate employee verification of punch","example":"true"},"in_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch in","example":""},"manager_verified":{"type":"integer","database":"BIT","description":"A flag to indicate manager verification of punch","example":"false"},"out_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch out","example":"Auto-Punch Out"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"7341"},"statue":{"type":"integer","database":"TINYINT","description":"Standard = 1, Edited = 1, Added = 2, Deleted = 3","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"time_in":{"type":"datetime","database":"DATETIME","description":"Punch in time","example":"2010-01-04T08:00:00"},"time_out":{"type":"datetime","database":"DATETIME","description":"Punch out time","example":"2010-01-04T12:33:00"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"employee_id":2,"employee_name":"iQmetrix Employee","employee_verified":true,"in_comment":"","manager_verified":false,"out_comment":"Auto-Punch Out","punch_id":7341,"statue":1,"store_id":1,"time_in":"2010-01-04T08:00:00","time_out":"2010-01-04T12:33:00"}]
+                            schema: |
+                                {"name":"PunchClockEntry","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2"},"employee_name":{"type":"string","database":"NVARCHAR (MAX)","description":"Name of employee on punch","example":"iQmetrix Employee"},"employee_verified":{"type":"boolean","database":"BIT","description":"A flag to indicate employee verification of punch","example":"true"},"in_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch in","example":""},"manager_verified":{"type":"integer","database":"BIT","description":"A flag to indicate manager verification of punch","example":"false"},"out_comment":{"type":"string","database":"VARCHAR(100)","description":"Comment for punch out","example":"Auto-Punch Out"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"7341"},"statue":{"type":"integer","database":"TINYINT","description":"Standard = 1, Edited = 1, Added = 2, Deleted = 3","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"time_in":{"type":"datetime","database":"DATETIME","description":"Punch in time","example":"2010-01-04T08:00:00"},"time_out":{"type":"datetime","database":"DATETIME","description":"Punch out time","example":"2010-01-04T12:33:00"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/PunchClockRevisions?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Punch Clock Entries Revisions for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"comment":"wrong location - entered correctly at corporate office","employee":"Cathy Day","employee_id":107,"orig_time_in":"2010-01-04T06:12:52.79","orig_time_out":"2010-01-04T15:06:36.677","punch_id":6276,"revised_by_employee":"Dayle Paulson","revised_by_employee_id":7,"revised_date":"2010-01-14T16:06:18.25","revised_time_in":"null","revised_time_out":"null","revision_id":1567,"revision_type":3,"store_id":1}]
+                            schema: |
+                                {"name":"PunchClockEntryRevision","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"comment":{"type":"string","database":"VARCHAR(255)","description":"Revision comment","example":"wrong location - entered correctly at corporate office"},"employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee on revision","example":"Cathy Day"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"107"},"orig_time_in":{"type":"datetime","database":"DATETIME","description":"Original punch in time","example":"2010-01-04T06:12:52.79"},"orig_time_out":{"type":"datetime","database":"DATETIME","description":"Original punch out time","example":"2010-01-04T15:06:36.677"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"6276"},"revised_by_employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee making revision","example":"Dayle Paulson"},"revised_by_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"7"},"revised_date":{"type":"datetime","database":"DATETIME","description":"Date and time punch was revised","example":"2010-01-14T16:06:18.25"},"revised_time_in":{"type":"datetime","database":"DATETIME","description":"Revised punch in","example":"null"},"revised_time_out":{"type":"datetime","database":"DATETIME","description":"Revised punch out","example":"null"},"revision_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1567"},"revision_type":{"type":"integer","database":"TINYINT","description":"Not Specified = 0, Edit = 1, Addition = 2, Deletion = 3","example":"3"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"comment":"wrong location - entered correctly at corporate office","employee":"Cathy Day","employee_id":107,"orig_time_in":"2010-01-04T06:12:52.79","orig_time_out":"2010-01-04T15:06:36.677","punch_id":6276,"revised_by_employee":"Dayle Paulson","revised_by_employee_id":7,"revised_date":"2010-01-14T16:06:18.25","revised_time_in":"null","revised_time_out":"null","revision_id":1567,"revision_type":3,"store_id":1}]
+                            schema: |
+                                {"name":"PunchClockEntryRevision","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"comment":{"type":"string","database":"VARCHAR(255)","description":"Revision comment","example":"wrong location - entered correctly at corporate office"},"employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee on revision","example":"Cathy Day"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"107"},"orig_time_in":{"type":"datetime","database":"DATETIME","description":"Original punch in time","example":"2010-01-04T06:12:52.79"},"orig_time_out":{"type":"datetime","database":"DATETIME","description":"Original punch out time","example":"2010-01-04T15:06:36.677"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"6276"},"revised_by_employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee making revision","example":"Dayle Paulson"},"revised_by_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"7"},"revised_date":{"type":"datetime","database":"DATETIME","description":"Date and time punch was revised","example":"2010-01-14T16:06:18.25"},"revised_time_in":{"type":"datetime","database":"DATETIME","description":"Revised punch in","example":"null"},"revised_time_out":{"type":"datetime","database":"DATETIME","description":"Revised punch out","example":"null"},"revision_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1567"},"revision_type":{"type":"integer","database":"TINYINT","description":"Not Specified = 0, Edit = 1, Addition = 2, Deletion = 3","example":"3"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"comment":"wrong location - entered correctly at corporate office","employee":"Cathy Day","employee_id":107,"orig_time_in":"2010-01-04T06:12:52.79","orig_time_out":"2010-01-04T15:06:36.677","punch_id":6276,"revised_by_employee":"Dayle Paulson","revised_by_employee_id":7,"revised_date":"2010-01-14T16:06:18.25","revised_time_in":"null","revised_time_out":"null","revision_id":1567,"revision_type":3,"store_id":1}]
+                            schema: |
+                                {"name":"PunchClockEntryRevision","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"comment":{"type":"string","database":"VARCHAR(255)","description":"Revision comment","example":"wrong location - entered correctly at corporate office"},"employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee on revision","example":"Cathy Day"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"107"},"orig_time_in":{"type":"datetime","database":"DATETIME","description":"Original punch in time","example":"2010-01-04T06:12:52.79"},"orig_time_out":{"type":"datetime","database":"DATETIME","description":"Original punch out time","example":"2010-01-04T15:06:36.677"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"6276"},"revised_by_employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee making revision","example":"Dayle Paulson"},"revised_by_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"7"},"revised_date":{"type":"datetime","database":"DATETIME","description":"Date and time punch was revised","example":"2010-01-14T16:06:18.25"},"revised_time_in":{"type":"datetime","database":"DATETIME","description":"Revised punch in","example":"null"},"revised_time_out":{"type":"datetime","database":"DATETIME","description":"Revised punch out","example":"null"},"revision_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1567"},"revision_type":{"type":"integer","database":"TINYINT","description":"Not Specified = 0, Edit = 1, Addition = 2, Deletion = 3","example":"3"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"comment":"wrong location - entered correctly at corporate office","employee":"Cathy Day","employee_id":107,"orig_time_in":"2010-01-04T06:12:52.79","orig_time_out":"2010-01-04T15:06:36.677","punch_id":6276,"revised_by_employee":"Dayle Paulson","revised_by_employee_id":7,"revised_date":"2010-01-14T16:06:18.25","revised_time_in":"null","revised_time_out":"null","revision_id":1567,"revision_type":3,"store_id":1}]
+                            schema: |
+                                {"name":"PunchClockEntryRevision","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"comment":{"type":"string","database":"VARCHAR(255)","description":"Revision comment","example":"wrong location - entered correctly at corporate office"},"employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee on revision","example":"Cathy Day"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"107"},"orig_time_in":{"type":"datetime","database":"DATETIME","description":"Original punch in time","example":"2010-01-04T06:12:52.79"},"orig_time_out":{"type":"datetime","database":"DATETIME","description":"Original punch out time","example":"2010-01-04T15:06:36.677"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"6276"},"revised_by_employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee making revision","example":"Dayle Paulson"},"revised_by_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"7"},"revised_date":{"type":"datetime","database":"DATETIME","description":"Date and time punch was revised","example":"2010-01-14T16:06:18.25"},"revised_time_in":{"type":"datetime","database":"DATETIME","description":"Revised punch in","example":"null"},"revised_time_out":{"type":"datetime","database":"DATETIME","description":"Revised punch out","example":"null"},"revision_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1567"},"revision_type":{"type":"integer","database":"TINYINT","description":"Not Specified = 0, Edit = 1, Addition = 2, Deletion = 3","example":"3"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"comment":"wrong location - entered correctly at corporate office","employee":"Cathy Day","employee_id":107,"orig_time_in":"2010-01-04T06:12:52.79","orig_time_out":"2010-01-04T15:06:36.677","punch_id":6276,"revised_by_employee":"Dayle Paulson","revised_by_employee_id":7,"revised_date":"2010-01-14T16:06:18.25","revised_time_in":"null","revised_time_out":"null","revision_id":1567,"revision_type":3,"store_id":1}]
+                            schema: |
+                                {"name":"PunchClockEntryRevision","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"comment":{"type":"string","database":"VARCHAR(255)","description":"Revision comment","example":"wrong location - entered correctly at corporate office"},"employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee on revision","example":"Cathy Day"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"107"},"orig_time_in":{"type":"datetime","database":"DATETIME","description":"Original punch in time","example":"2010-01-04T06:12:52.79"},"orig_time_out":{"type":"datetime","database":"DATETIME","description":"Original punch out time","example":"2010-01-04T15:06:36.677"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"6276"},"revised_by_employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee making revision","example":"Dayle Paulson"},"revised_by_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"7"},"revised_date":{"type":"datetime","database":"DATETIME","description":"Date and time punch was revised","example":"2010-01-14T16:06:18.25"},"revised_time_in":{"type":"datetime","database":"DATETIME","description":"Revised punch in","example":"null"},"revised_time_out":{"type":"datetime","database":"DATETIME","description":"Revised punch out","example":"null"},"revision_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1567"},"revision_type":{"type":"integer","database":"TINYINT","description":"Not Specified = 0, Edit = 1, Addition = 2, Deletion = 3","example":"3"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"comment":"wrong location - entered correctly at corporate office","employee":"Cathy Day","employee_id":107,"orig_time_in":"2010-01-04T06:12:52.79","orig_time_out":"2010-01-04T15:06:36.677","punch_id":6276,"revised_by_employee":"Dayle Paulson","revised_by_employee_id":7,"revised_date":"2010-01-14T16:06:18.25","revised_time_in":"null","revised_time_out":"null","revision_id":1567,"revision_type":3,"store_id":1}]
+                            schema: |
+                                {"name":"PunchClockEntryRevision","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"comment":{"type":"string","database":"VARCHAR(255)","description":"Revision comment","example":"wrong location - entered correctly at corporate office"},"employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee on revision","example":"Cathy Day"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"107"},"orig_time_in":{"type":"datetime","database":"DATETIME","description":"Original punch in time","example":"2010-01-04T06:12:52.79"},"orig_time_out":{"type":"datetime","database":"DATETIME","description":"Original punch out time","example":"2010-01-04T15:06:36.677"},"punch_id":{"type":"integer","database":"INTEGER","description":"Internal identifier for punch in RQ","example":"6276"},"revised_by_employee":{"type":"string","database":"VARCHAR(MAX)","description":"Employee making revision","example":"Dayle Paulson"},"revised_by_employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"7"},"revised_date":{"type":"datetime","database":"DATETIME","description":"Date and time punch was revised","example":"2010-01-14T16:06:18.25"},"revised_time_in":{"type":"datetime","database":"DATETIME","description":"Revised punch in","example":"null"},"revised_time_out":{"type":"datetime","database":"DATETIME","description":"Revised punch out","example":"null"},"revision_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1567"},"revision_type":{"type":"integer","database":"TINYINT","description":"Not Specified = 0, Edit = 1, Addition = 2, Deletion = 3","example":"3"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/SaleInvoiceCoupons?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Sale Invoice Coupons for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Amount":3.5,"DateCreated":"2012-06-11T13:13:51.74","Description":"Normal Coupon","InvoiceIDByStore":"00001IN1001","SaleInvoiceID":1263859,"StoreID1":1}]
+                            schema: |
+                                {"name":"SaleInvoiceCoupon","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Amount":{"type":"decimal","database":"MONEY","description":"Amount on coupon","example":"3.5"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Date created","example":"2012-06-11T13:13:51.74"},"Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"Normal Coupon"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice ","example":"00001IN1001"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1263859"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Amount":3.5,"DateCreated":"2012-06-11T13:13:51.74","Description":"Normal Coupon","InvoiceIDByStore":"00001IN1001","SaleInvoiceID":1263859,"StoreID1":1}]
+                            schema: |
+                                {"name":"SaleInvoiceCoupon","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Amount":{"type":"decimal","database":"MONEY","description":"Amount on coupon","example":"3.5"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Date created","example":"2012-06-11T13:13:51.74"},"Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"Normal Coupon"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice ","example":"00001IN1001"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1263859"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Amount":3.5,"DateCreated":"2012-06-11T13:13:51.74","Description":"Normal Coupon","InvoiceIDByStore":"00001IN1001","SaleInvoiceID":1263859,"StoreID1":1}]
+                            schema: |
+                                {"name":"SaleInvoiceCoupon","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Amount":{"type":"decimal","database":"MONEY","description":"Amount on coupon","example":"3.5"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Date created","example":"2012-06-11T13:13:51.74"},"Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"Normal Coupon"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice ","example":"00001IN1001"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1263859"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Amount":3.5,"DateCreated":"2012-06-11T13:13:51.74","Description":"Normal Coupon","InvoiceIDByStore":"00001IN1001","SaleInvoiceID":1263859,"StoreID1":1}]
+                            schema: |
+                                {"name":"SaleInvoiceCoupon","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Amount":{"type":"decimal","database":"MONEY","description":"Amount on coupon","example":"3.5"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Date created","example":"2012-06-11T13:13:51.74"},"Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"Normal Coupon"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice ","example":"00001IN1001"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1263859"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Amount":3.5,"DateCreated":"2012-06-11T13:13:51.74","Description":"Normal Coupon","InvoiceIDByStore":"00001IN1001","SaleInvoiceID":1263859,"StoreID1":1}]
+                            schema: |
+                                {"name":"SaleInvoiceCoupon","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Amount":{"type":"decimal","database":"MONEY","description":"Amount on coupon","example":"3.5"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Date created","example":"2012-06-11T13:13:51.74"},"Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"Normal Coupon"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice ","example":"00001IN1001"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1263859"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Amount":3.5,"DateCreated":"2012-06-11T13:13:51.74","Description":"Normal Coupon","InvoiceIDByStore":"00001IN1001","SaleInvoiceID":1263859,"StoreID1":1}]
+                            schema: |
+                                {"name":"SaleInvoiceCoupon","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Amount":{"type":"decimal","database":"MONEY","description":"Amount on coupon","example":"3.5"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Date created","example":"2012-06-11T13:13:51.74"},"Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"Normal Coupon"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice ","example":"00001IN1001"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1263859"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/SaleInvoicePayments?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Sale Invoice Payments for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"amount":152.25,"change_amount":0,"comments":"","customer_id":"null","customer_member_num":"null","employee_id":4,"employee_name":"John Tester","employee_name_3":"John Tester","invoice_id":524371,"is_bill_payment":0,"payment_type":"Cash","receipt_number":"00001IN117","store_id":1,"terminal_id":0,"trans_create_time":"2010-03-10T15:20:19.323","trans_logged_time":"null","workstation_name":"null"}]
+                            schema: |
+                                {"name":"SaleInvoicePayment","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Amount","example":"152.25"},"change_amount":{"type":"decimal","database":"MONEY","description":"Change given","example":"0"},"comments":{"type":"string","database":"TEXT","description":"Comments","example":""},"customer_id":{"type":"string","database":"INTEGER","description":"Identifier for a customer in RQ","example":"null"},"customer_member_num":{"type":"string","database":"VARCHAR(30)","description":"Customer member number in RQ","example":"null"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"employee_name_3":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"524371"},"is_bill_payment":{"type":"integer","database":"BIT","description":"A flag to indicate if this is a bill payment","example":"0"},"payment_type":{"type":"string","database":"NVARCHAR(MAX)","description":"Payment type","example":"Cash"},"receipt_number":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN117"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"trans_create_time":{"type":"datetime","database":"DATETIME","description":"Transaction created time","example":"2010-03-10T15:20:19.323"},"trans_logged_time":{"type":"datetime","database":"DATETIME","description":"Transaction logged time","example":"null"},"workstation_name":{"type":"string","database":"VARCHAR(50)","description":"Workstation name","example":"null"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"amount":152.25,"change_amount":0,"comments":"","customer_id":"null","customer_member_num":"null","employee_id":4,"employee_name":"John Tester","employee_name_3":"John Tester","invoice_id":524371,"is_bill_payment":0,"payment_type":"Cash","receipt_number":"00001IN117","store_id":1,"terminal_id":0,"trans_create_time":"2010-03-10T15:20:19.323","trans_logged_time":"null","workstation_name":"null"}]
+                            schema: |
+                                {"name":"SaleInvoicePayment","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Amount","example":"152.25"},"change_amount":{"type":"decimal","database":"MONEY","description":"Change given","example":"0"},"comments":{"type":"string","database":"TEXT","description":"Comments","example":""},"customer_id":{"type":"string","database":"INTEGER","description":"Identifier for a customer in RQ","example":"null"},"customer_member_num":{"type":"string","database":"VARCHAR(30)","description":"Customer member number in RQ","example":"null"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"employee_name_3":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"524371"},"is_bill_payment":{"type":"integer","database":"BIT","description":"A flag to indicate if this is a bill payment","example":"0"},"payment_type":{"type":"string","database":"NVARCHAR(MAX)","description":"Payment type","example":"Cash"},"receipt_number":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN117"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"trans_create_time":{"type":"datetime","database":"DATETIME","description":"Transaction created time","example":"2010-03-10T15:20:19.323"},"trans_logged_time":{"type":"datetime","database":"DATETIME","description":"Transaction logged time","example":"null"},"workstation_name":{"type":"string","database":"VARCHAR(50)","description":"Workstation name","example":"null"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"amount":152.25,"change_amount":0,"comments":"","customer_id":"null","customer_member_num":"null","employee_id":4,"employee_name":"John Tester","employee_name_3":"John Tester","invoice_id":524371,"is_bill_payment":0,"payment_type":"Cash","receipt_number":"00001IN117","store_id":1,"terminal_id":0,"trans_create_time":"2010-03-10T15:20:19.323","trans_logged_time":"null","workstation_name":"null"}]
+                            schema: |
+                                {"name":"SaleInvoicePayment","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Amount","example":"152.25"},"change_amount":{"type":"decimal","database":"MONEY","description":"Change given","example":"0"},"comments":{"type":"string","database":"TEXT","description":"Comments","example":""},"customer_id":{"type":"string","database":"INTEGER","description":"Identifier for a customer in RQ","example":"null"},"customer_member_num":{"type":"string","database":"VARCHAR(30)","description":"Customer member number in RQ","example":"null"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"employee_name_3":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"524371"},"is_bill_payment":{"type":"integer","database":"BIT","description":"A flag to indicate if this is a bill payment","example":"0"},"payment_type":{"type":"string","database":"NVARCHAR(MAX)","description":"Payment type","example":"Cash"},"receipt_number":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN117"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"trans_create_time":{"type":"datetime","database":"DATETIME","description":"Transaction created time","example":"2010-03-10T15:20:19.323"},"trans_logged_time":{"type":"datetime","database":"DATETIME","description":"Transaction logged time","example":"null"},"workstation_name":{"type":"string","database":"VARCHAR(50)","description":"Workstation name","example":"null"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"amount":152.25,"change_amount":0,"comments":"","customer_id":"null","customer_member_num":"null","employee_id":4,"employee_name":"John Tester","employee_name_3":"John Tester","invoice_id":524371,"is_bill_payment":0,"payment_type":"Cash","receipt_number":"00001IN117","store_id":1,"terminal_id":0,"trans_create_time":"2010-03-10T15:20:19.323","trans_logged_time":"null","workstation_name":"null"}]
+                            schema: |
+                                {"name":"SaleInvoicePayment","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Amount","example":"152.25"},"change_amount":{"type":"decimal","database":"MONEY","description":"Change given","example":"0"},"comments":{"type":"string","database":"TEXT","description":"Comments","example":""},"customer_id":{"type":"string","database":"INTEGER","description":"Identifier for a customer in RQ","example":"null"},"customer_member_num":{"type":"string","database":"VARCHAR(30)","description":"Customer member number in RQ","example":"null"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"employee_name_3":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"524371"},"is_bill_payment":{"type":"integer","database":"BIT","description":"A flag to indicate if this is a bill payment","example":"0"},"payment_type":{"type":"string","database":"NVARCHAR(MAX)","description":"Payment type","example":"Cash"},"receipt_number":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN117"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"trans_create_time":{"type":"datetime","database":"DATETIME","description":"Transaction created time","example":"2010-03-10T15:20:19.323"},"trans_logged_time":{"type":"datetime","database":"DATETIME","description":"Transaction logged time","example":"null"},"workstation_name":{"type":"string","database":"VARCHAR(50)","description":"Workstation name","example":"null"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"amount":152.25,"change_amount":0,"comments":"","customer_id":"null","customer_member_num":"null","employee_id":4,"employee_name":"John Tester","employee_name_3":"John Tester","invoice_id":524371,"is_bill_payment":0,"payment_type":"Cash","receipt_number":"00001IN117","store_id":1,"terminal_id":0,"trans_create_time":"2010-03-10T15:20:19.323","trans_logged_time":"null","workstation_name":"null"}]
+                            schema: |
+                                {"name":"SaleInvoicePayment","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Amount","example":"152.25"},"change_amount":{"type":"decimal","database":"MONEY","description":"Change given","example":"0"},"comments":{"type":"string","database":"TEXT","description":"Comments","example":""},"customer_id":{"type":"string","database":"INTEGER","description":"Identifier for a customer in RQ","example":"null"},"customer_member_num":{"type":"string","database":"VARCHAR(30)","description":"Customer member number in RQ","example":"null"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"employee_name_3":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"524371"},"is_bill_payment":{"type":"integer","database":"BIT","description":"A flag to indicate if this is a bill payment","example":"0"},"payment_type":{"type":"string","database":"NVARCHAR(MAX)","description":"Payment type","example":"Cash"},"receipt_number":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN117"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"trans_create_time":{"type":"datetime","database":"DATETIME","description":"Transaction created time","example":"2010-03-10T15:20:19.323"},"trans_logged_time":{"type":"datetime","database":"DATETIME","description":"Transaction logged time","example":"null"},"workstation_name":{"type":"string","database":"VARCHAR(50)","description":"Workstation name","example":"null"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"amount":152.25,"change_amount":0,"comments":"","customer_id":"null","customer_member_num":"null","employee_id":4,"employee_name":"John Tester","employee_name_3":"John Tester","invoice_id":524371,"is_bill_payment":0,"payment_type":"Cash","receipt_number":"00001IN117","store_id":1,"terminal_id":0,"trans_create_time":"2010-03-10T15:20:19.323","trans_logged_time":"null","workstation_name":"null"}]
+                            schema: |
+                                {"name":"SaleInvoicePayment","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"amount":{"type":"decimal","database":"MONEY","description":"Amount","example":"152.25"},"change_amount":{"type":"decimal","database":"MONEY","description":"Change given","example":"0"},"comments":{"type":"string","database":"TEXT","description":"Comments","example":""},"customer_id":{"type":"string","database":"INTEGER","description":"Identifier for a customer in RQ","example":"null"},"customer_member_num":{"type":"string","database":"VARCHAR(30)","description":"Customer member number in RQ","example":"null"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"4"},"employee_name":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"employee_name_3":{"type":"string","database":"VARCHAR(MAX)","description":"Name of employee in RQ","example":"John Tester"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"524371"},"is_bill_payment":{"type":"integer","database":"BIT","description":"A flag to indicate if this is a bill payment","example":"0"},"payment_type":{"type":"string","database":"NVARCHAR(MAX)","description":"Payment type","example":"Cash"},"receipt_number":{"type":"string","database":"VARCHAR(14)","description":"Receipt number","example":"00001IN117"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Identifier for a terminal in RQ","example":"0"},"trans_create_time":{"type":"datetime","database":"DATETIME","description":"Transaction created time","example":"2010-03-10T15:20:19.323"},"trans_logged_time":{"type":"datetime","database":"DATETIME","description":"Transaction logged time","example":"null"},"workstation_name":{"type":"string","database":"VARCHAR(50)","description":"Workstation name","example":"null"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/SaleInvoiceProducts?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Sale Invoice Products for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Activation":0,"AssociationNumber":1,"category_number":"10101126","category_path":">> Accessories >> Antennas","cost":6.96,"Discount":0,"employee_id":2892,"employee_name":"iQmetrix Employee","invoice_id":1267257,"item_logged_time":"2015-03-03T07:40:29.493","list_price":1,"override_amt":0,"Priority":1,"product_description":"ADAPTER CABLE USB727/760- Test","product_id":"ASANUN000001","product_type":"Regular Global Product","quantity":1,"receipt_number":"00416IN4417","Return":0,"sale_price":1,"store_id":221,"terminal_id":0,"workstation_name":"TEMP-W530-W8"}]
+                            schema: |
+                                {"name":"SaleInvoiceProduct","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is an activated product","example":"0"},"AssociationNumber":{"type":"integer","database":"INTEGER","description":"Association number in rq","example":"1"},"category_number":{"type":"string","database":"VARCHAR(150)","description":"Internal identifier for a Category in RQ","example":"10101126"},"category_path":{"type":"string","database":"VARCHAR(150)","description":"Category","example":">> Accessories >> Antennas"},"cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"6.96"},"Discount":{"type":"decimal","database":"MONEY","description":"A flag to indicate if this is a discounted product","example":"0"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2892"},"employee_name":{"type":"string","database":"VARCHAR(250)","description":"Name of employee in RQ","example":"iQmetrix Employee"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1267257"},"item_logged_time":{"type":"datetime","database":"DATETIME","description":"Time the product was added to the invoice","example":"2015-03-03T07:40:29.493"},"list_price":{"type":"decimal","database":"MONEY","description":"List price","example":"1"},"override_amt":{"type":"decimal","database":"MONEY","description":"Override amount","example":"0"},"Priority":{"type":"integer","database":"INTEGER","description":"A number representing the priority of the product on the invoice","example":"1"},"product_description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"ADAPTER CABLE USB727/760- Test"},"product_id":{"type":"string","database":"VARCHAR(250)","description":"Identifier for a product in RQ","example":"ASANUN000001"},"product_type":{"type":"string","database":"VARCHAR(250)","description":"Product type in RQ","example":"Regular Global Product"},"quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"receipt_number":{"type":"string","database":"VARCHAR(50)","description":"Receipt number in RQ","example":"00416IN4417"},"Return":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is a returned product","example":"0"},"sale_price":{"type":"decimal","database":"MONEY","description":"Sale price","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"221"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Transaction logged time","example":"0"},"workstation_name":{"type":"string","database":"VARCHAR(100)","description":"Workstation name","example":"TEMP-W530-W8"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Activation":0,"AssociationNumber":1,"category_number":"10101126","category_path":">> Accessories >> Antennas","cost":6.96,"Discount":0,"employee_id":2892,"employee_name":"iQmetrix Employee","invoice_id":1267257,"item_logged_time":"2015-03-03T07:40:29.493","list_price":1,"override_amt":0,"Priority":1,"product_description":"ADAPTER CABLE USB727/760- Test","product_id":"ASANUN000001","product_type":"Regular Global Product","quantity":1,"receipt_number":"00416IN4417","Return":0,"sale_price":1,"store_id":221,"terminal_id":0,"workstation_name":"TEMP-W530-W8"}]
+                            schema: |
+                                {"name":"SaleInvoiceProduct","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is an activated product","example":"0"},"AssociationNumber":{"type":"integer","database":"INTEGER","description":"Association number in rq","example":"1"},"category_number":{"type":"string","database":"VARCHAR(150)","description":"Internal identifier for a Category in RQ","example":"10101126"},"category_path":{"type":"string","database":"VARCHAR(150)","description":"Category","example":">> Accessories >> Antennas"},"cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"6.96"},"Discount":{"type":"decimal","database":"MONEY","description":"A flag to indicate if this is a discounted product","example":"0"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2892"},"employee_name":{"type":"string","database":"VARCHAR(250)","description":"Name of employee in RQ","example":"iQmetrix Employee"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1267257"},"item_logged_time":{"type":"datetime","database":"DATETIME","description":"Time the product was added to the invoice","example":"2015-03-03T07:40:29.493"},"list_price":{"type":"decimal","database":"MONEY","description":"List price","example":"1"},"override_amt":{"type":"decimal","database":"MONEY","description":"Override amount","example":"0"},"Priority":{"type":"integer","database":"INTEGER","description":"A number representing the priority of the product on the invoice","example":"1"},"product_description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"ADAPTER CABLE USB727/760- Test"},"product_id":{"type":"string","database":"VARCHAR(250)","description":"Identifier for a product in RQ","example":"ASANUN000001"},"product_type":{"type":"string","database":"VARCHAR(250)","description":"Product type in RQ","example":"Regular Global Product"},"quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"receipt_number":{"type":"string","database":"VARCHAR(50)","description":"Receipt number in RQ","example":"00416IN4417"},"Return":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is a returned product","example":"0"},"sale_price":{"type":"decimal","database":"MONEY","description":"Sale price","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"221"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Transaction logged time","example":"0"},"workstation_name":{"type":"string","database":"VARCHAR(100)","description":"Workstation name","example":"TEMP-W530-W8"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Activation":0,"AssociationNumber":1,"category_number":"10101126","category_path":">> Accessories >> Antennas","cost":6.96,"Discount":0,"employee_id":2892,"employee_name":"iQmetrix Employee","invoice_id":1267257,"item_logged_time":"2015-03-03T07:40:29.493","list_price":1,"override_amt":0,"Priority":1,"product_description":"ADAPTER CABLE USB727/760- Test","product_id":"ASANUN000001","product_type":"Regular Global Product","quantity":1,"receipt_number":"00416IN4417","Return":0,"sale_price":1,"store_id":221,"terminal_id":0,"workstation_name":"TEMP-W530-W8"}]
+                            schema: |
+                                {"name":"SaleInvoiceProduct","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is an activated product","example":"0"},"AssociationNumber":{"type":"integer","database":"INTEGER","description":"Association number in rq","example":"1"},"category_number":{"type":"string","database":"VARCHAR(150)","description":"Internal identifier for a Category in RQ","example":"10101126"},"category_path":{"type":"string","database":"VARCHAR(150)","description":"Category","example":">> Accessories >> Antennas"},"cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"6.96"},"Discount":{"type":"decimal","database":"MONEY","description":"A flag to indicate if this is a discounted product","example":"0"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2892"},"employee_name":{"type":"string","database":"VARCHAR(250)","description":"Name of employee in RQ","example":"iQmetrix Employee"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1267257"},"item_logged_time":{"type":"datetime","database":"DATETIME","description":"Time the product was added to the invoice","example":"2015-03-03T07:40:29.493"},"list_price":{"type":"decimal","database":"MONEY","description":"List price","example":"1"},"override_amt":{"type":"decimal","database":"MONEY","description":"Override amount","example":"0"},"Priority":{"type":"integer","database":"INTEGER","description":"A number representing the priority of the product on the invoice","example":"1"},"product_description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"ADAPTER CABLE USB727/760- Test"},"product_id":{"type":"string","database":"VARCHAR(250)","description":"Identifier for a product in RQ","example":"ASANUN000001"},"product_type":{"type":"string","database":"VARCHAR(250)","description":"Product type in RQ","example":"Regular Global Product"},"quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"receipt_number":{"type":"string","database":"VARCHAR(50)","description":"Receipt number in RQ","example":"00416IN4417"},"Return":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is a returned product","example":"0"},"sale_price":{"type":"decimal","database":"MONEY","description":"Sale price","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"221"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Transaction logged time","example":"0"},"workstation_name":{"type":"string","database":"VARCHAR(100)","description":"Workstation name","example":"TEMP-W530-W8"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Activation":0,"AssociationNumber":1,"category_number":"10101126","category_path":">> Accessories >> Antennas","cost":6.96,"Discount":0,"employee_id":2892,"employee_name":"iQmetrix Employee","invoice_id":1267257,"item_logged_time":"2015-03-03T07:40:29.493","list_price":1,"override_amt":0,"Priority":1,"product_description":"ADAPTER CABLE USB727/760- Test","product_id":"ASANUN000001","product_type":"Regular Global Product","quantity":1,"receipt_number":"00416IN4417","Return":0,"sale_price":1,"store_id":221,"terminal_id":0,"workstation_name":"TEMP-W530-W8"}]
+                            schema: |
+                                {"name":"SaleInvoiceProduct","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is an activated product","example":"0"},"AssociationNumber":{"type":"integer","database":"INTEGER","description":"Association number in rq","example":"1"},"category_number":{"type":"string","database":"VARCHAR(150)","description":"Internal identifier for a Category in RQ","example":"10101126"},"category_path":{"type":"string","database":"VARCHAR(150)","description":"Category","example":">> Accessories >> Antennas"},"cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"6.96"},"Discount":{"type":"decimal","database":"MONEY","description":"A flag to indicate if this is a discounted product","example":"0"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2892"},"employee_name":{"type":"string","database":"VARCHAR(250)","description":"Name of employee in RQ","example":"iQmetrix Employee"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1267257"},"item_logged_time":{"type":"datetime","database":"DATETIME","description":"Time the product was added to the invoice","example":"2015-03-03T07:40:29.493"},"list_price":{"type":"decimal","database":"MONEY","description":"List price","example":"1"},"override_amt":{"type":"decimal","database":"MONEY","description":"Override amount","example":"0"},"Priority":{"type":"integer","database":"INTEGER","description":"A number representing the priority of the product on the invoice","example":"1"},"product_description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"ADAPTER CABLE USB727/760- Test"},"product_id":{"type":"string","database":"VARCHAR(250)","description":"Identifier for a product in RQ","example":"ASANUN000001"},"product_type":{"type":"string","database":"VARCHAR(250)","description":"Product type in RQ","example":"Regular Global Product"},"quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"receipt_number":{"type":"string","database":"VARCHAR(50)","description":"Receipt number in RQ","example":"00416IN4417"},"Return":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is a returned product","example":"0"},"sale_price":{"type":"decimal","database":"MONEY","description":"Sale price","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"221"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Transaction logged time","example":"0"},"workstation_name":{"type":"string","database":"VARCHAR(100)","description":"Workstation name","example":"TEMP-W530-W8"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Activation":0,"AssociationNumber":1,"category_number":"10101126","category_path":">> Accessories >> Antennas","cost":6.96,"Discount":0,"employee_id":2892,"employee_name":"iQmetrix Employee","invoice_id":1267257,"item_logged_time":"2015-03-03T07:40:29.493","list_price":1,"override_amt":0,"Priority":1,"product_description":"ADAPTER CABLE USB727/760- Test","product_id":"ASANUN000001","product_type":"Regular Global Product","quantity":1,"receipt_number":"00416IN4417","Return":0,"sale_price":1,"store_id":221,"terminal_id":0,"workstation_name":"TEMP-W530-W8"}]
+                            schema: |
+                                {"name":"SaleInvoiceProduct","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is an activated product","example":"0"},"AssociationNumber":{"type":"integer","database":"INTEGER","description":"Association number in rq","example":"1"},"category_number":{"type":"string","database":"VARCHAR(150)","description":"Internal identifier for a Category in RQ","example":"10101126"},"category_path":{"type":"string","database":"VARCHAR(150)","description":"Category","example":">> Accessories >> Antennas"},"cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"6.96"},"Discount":{"type":"decimal","database":"MONEY","description":"A flag to indicate if this is a discounted product","example":"0"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2892"},"employee_name":{"type":"string","database":"VARCHAR(250)","description":"Name of employee in RQ","example":"iQmetrix Employee"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1267257"},"item_logged_time":{"type":"datetime","database":"DATETIME","description":"Time the product was added to the invoice","example":"2015-03-03T07:40:29.493"},"list_price":{"type":"decimal","database":"MONEY","description":"List price","example":"1"},"override_amt":{"type":"decimal","database":"MONEY","description":"Override amount","example":"0"},"Priority":{"type":"integer","database":"INTEGER","description":"A number representing the priority of the product on the invoice","example":"1"},"product_description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"ADAPTER CABLE USB727/760- Test"},"product_id":{"type":"string","database":"VARCHAR(250)","description":"Identifier for a product in RQ","example":"ASANUN000001"},"product_type":{"type":"string","database":"VARCHAR(250)","description":"Product type in RQ","example":"Regular Global Product"},"quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"receipt_number":{"type":"string","database":"VARCHAR(50)","description":"Receipt number in RQ","example":"00416IN4417"},"Return":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is a returned product","example":"0"},"sale_price":{"type":"decimal","database":"MONEY","description":"Sale price","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"221"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Transaction logged time","example":"0"},"workstation_name":{"type":"string","database":"VARCHAR(100)","description":"Workstation name","example":"TEMP-W530-W8"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Activation":0,"AssociationNumber":1,"category_number":"10101126","category_path":">> Accessories >> Antennas","cost":6.96,"Discount":0,"employee_id":2892,"employee_name":"iQmetrix Employee","invoice_id":1267257,"item_logged_time":"2015-03-03T07:40:29.493","list_price":1,"override_amt":0,"Priority":1,"product_description":"ADAPTER CABLE USB727/760- Test","product_id":"ASANUN000001","product_type":"Regular Global Product","quantity":1,"receipt_number":"00416IN4417","Return":0,"sale_price":1,"store_id":221,"terminal_id":0,"workstation_name":"TEMP-W530-W8"}]
+                            schema: |
+                                {"name":"SaleInvoiceProduct","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is an activated product","example":"0"},"AssociationNumber":{"type":"integer","database":"INTEGER","description":"Association number in rq","example":"1"},"category_number":{"type":"string","database":"VARCHAR(150)","description":"Internal identifier for a Category in RQ","example":"10101126"},"category_path":{"type":"string","database":"VARCHAR(150)","description":"Category","example":">> Accessories >> Antennas"},"cost":{"type":"decimal","database":"MONEY","description":"Cost","example":"6.96"},"Discount":{"type":"decimal","database":"MONEY","description":"A flag to indicate if this is a discounted product","example":"0"},"employee_id":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"2892"},"employee_name":{"type":"string","database":"VARCHAR(250)","description":"Name of employee in RQ","example":"iQmetrix Employee"},"invoice_id":{"type":"integer","database":"INTEGER","description":"Internal identifier in RQ","example":"1267257"},"item_logged_time":{"type":"datetime","database":"DATETIME","description":"Time the product was added to the invoice","example":"2015-03-03T07:40:29.493"},"list_price":{"type":"decimal","database":"MONEY","description":"List price","example":"1"},"override_amt":{"type":"decimal","database":"MONEY","description":"Override amount","example":"0"},"Priority":{"type":"integer","database":"INTEGER","description":"A number representing the priority of the product on the invoice","example":"1"},"product_description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description","example":"ADAPTER CABLE USB727/760- Test"},"product_id":{"type":"string","database":"VARCHAR(250)","description":"Identifier for a product in RQ","example":"ASANUN000001"},"product_type":{"type":"string","database":"VARCHAR(250)","description":"Product type in RQ","example":"Regular Global Product"},"quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"receipt_number":{"type":"string","database":"VARCHAR(50)","description":"Receipt number in RQ","example":"00416IN4417"},"Return":{"type":"integer","database":"INTEGER","description":"A flag to indicate if this is a returned product","example":"0"},"sale_price":{"type":"decimal","database":"MONEY","description":"Sale price","example":"1"},"store_id":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"221"},"terminal_id":{"type":"integer","database":"INTEGER","description":"Transaction logged time","example":"0"},"workstation_name":{"type":"string","database":"VARCHAR(100)","description":"Workstation name","example":"TEMP-W530-W8"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Envysion/SaleInvoiceTaxes?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&StoreId={StoreId}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 22575
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        StoreId:
+            displayName: StoreId
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a store in RQ
+          
+      
+    get:
+        
+        displayName: Getting Sale Invoice Taxes for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2010-05-28T15:55:38.78","InvoiceIDByStore":"00001IN193","SaleInvoiceID":812306,"StoreID1":1,"Tax":0}]
+                            schema: |
+                                {"name":"SaleInvoiceTax","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created date","example":"2010-05-28T15:55:38.78"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"00001IN193"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Identifier for an invoice in RQ","example":"812306"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"Tax":{"type":"decimal","database":"MONEY","description":"Tax amount","example":"0"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2010-05-28T15:55:38.78","InvoiceIDByStore":"00001IN193","SaleInvoiceID":812306,"StoreID1":1,"Tax":0}]
+                            schema: |
+                                {"name":"SaleInvoiceTax","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created date","example":"2010-05-28T15:55:38.78"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"00001IN193"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Identifier for an invoice in RQ","example":"812306"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"Tax":{"type":"decimal","database":"MONEY","description":"Tax amount","example":"0"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2010-05-28T15:55:38.78","InvoiceIDByStore":"00001IN193","SaleInvoiceID":812306,"StoreID1":1,"Tax":0}]
+                            schema: |
+                                {"name":"SaleInvoiceTax","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created date","example":"2010-05-28T15:55:38.78"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"00001IN193"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Identifier for an invoice in RQ","example":"812306"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"Tax":{"type":"decimal","database":"MONEY","description":"Tax amount","example":"0"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2010-05-28T15:55:38.78","InvoiceIDByStore":"00001IN193","SaleInvoiceID":812306,"StoreID1":1,"Tax":0}]
+                            schema: |
+                                {"name":"SaleInvoiceTax","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created date","example":"2010-05-28T15:55:38.78"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"00001IN193"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Identifier for an invoice in RQ","example":"812306"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"Tax":{"type":"decimal","database":"MONEY","description":"Tax amount","example":"0"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2010-05-28T15:55:38.78","InvoiceIDByStore":"00001IN193","SaleInvoiceID":812306,"StoreID1":1,"Tax":0}]
+                            schema: |
+                                {"name":"SaleInvoiceTax","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created date","example":"2010-05-28T15:55:38.78"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"00001IN193"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Identifier for an invoice in RQ","example":"812306"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"Tax":{"type":"decimal","database":"MONEY","description":"Tax amount","example":"0"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2010-05-28T15:55:38.78","InvoiceIDByStore":"00001IN193","SaleInvoiceID":812306,"StoreID1":1,"Tax":0}]
+                            schema: |
+                                {"name":"SaleInvoiceTax","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created date","example":"2010-05-28T15:55:38.78"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","description":"Invoice number","example":"00001IN193"},"SaleInvoiceID":{"type":"integer","database":"INTEGER","description":"Identifier for an invoice in RQ","example":"812306"},"StoreID1":{"type":"integer","database":"INTEGER","description":"Identifier for a store in RQ","example":"1"},"Tax":{"type":"decimal","database":"MONEY","description":"Tax amount","example":"0"}}}
+                            
+                        
+                    
+                
+            
+    

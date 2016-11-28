@@ -1,0 +1,827 @@
+#%RAML 0.8
+title: company tree
+version: v1
+baseUri: https://entitymanager{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |
+      A Company Tree is a representation of how a Company is structured and is used to: 
+
+      * Organize Locations
+      * Manage nuances within iQmetrix APIs, which can be passed down hierarchically 
+      * Structure reporting
+      * Manage security access
+
+      To learn more about Company Trees, see {{CompanyTree_Concept}}.
+
+      ### Company Relationships
+
+      A Company {{Relationship}} describes the interaction between a {{Company}} and a Manufacturer, Supplier, Partner, Company Tree Node, etc.
+
+      Depending on the type of Relationship, the identifier for each Entity may appear in the `Source` or `Destination` field.
+
+      See the table below for a list of legal relationships and where the identifier of each entity will be placed in the resource.
+
+      | Name | Description | Source | Destination |
+      |:-----|:------------|:-------|:------------|
+      | Company-Group | A Group in the first level of a Company Tree for the Company | Company | Group |
+      | Company-Location | A Location in the first level of a Company Tree for the Company | Company | Location |
+      | Company-Division | A Division in the first level of a Company Tree for the Company | Company | Division |
+      | Company-Supplier | Supplier for the Company | Supplier | Company |
+      | Company-Carrier | Carrier for the Company | Carrier | Company |
+      | Company-Partner | Partner for the Company | Partner | Company |
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `New node {x} must be related to its parent role. `<br/>`Parent node {y} must be in same tree as Company {z}` | Ensure the NodeId is a valid CompanyTreeNode and is in the correct Company Tree |
+      | `HTTP 400` | `Invalid Canadian postal code. Should have valid `<br/>`letters and format A1A 1A1 where A is a letter and 1 is a digit.` | Ensure Postal/Zip Code is valid |
+      | `HTTP 400` | `Request Parameter Doesn't Match Expected Value` | Ensure all **Required** parameters are provided, see `Description` of Error for more details |
+      | `HTTP 400` | `Please move or delete attached locations`<br/>` before deleting this entity` | Ensure Node to be deleted does not have child Locations |
+      | `HTTP 400` | `'{x}' should not be empty.` | Ensure required parameters are included |
+      | `HTTP 400` | `'{x}' must be between 0 and {y} characters. `<br/>` You entered {z} characters.` | Ensure required parameters are within size limitations |
+      | `HTTP 400` | `'Latitude/Longitude' should not be empty` | Ensure both `Latitude` and `Longitude` are provided, or `Geography` is null |
+      | `HTTP 400` | `'Latitude' must be between -90 and 90.  `<br/>`You entered {x}` | Ensure `Latitude` is between -90 and 90 |
+      | `HTTP 400` | `'Longitude' must be between -180 and 180. `<br/>`You entered {x}` | Ensure `Longitude` is between -180 and 180 |
+      | `HTTP 404` | `Entity Not Found` | Ensure `CompanyId` and `LocationId``<br/>` are accurate and the Location belongs to the Company |
+      | `HTTP 409` | `Entity resource already modified by an`<br/>`  earlier request` | Ensure `Version` is included in request and the Version value provided in the request data matches the Version for the resource in the database  |
+      | `HTTP 409` | `An Entity already exists with the same name`<br/>` and role at this level.` | Ensure an instance of the resource you are trying to create does not already exist with the same name |    
+resourceTypes:
+    - collection:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json  
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>  
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json       
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>                         
+    - singularEndpoint:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)     
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+          responses:
+            200:
+              body:
+                application/json:            
+    - singularEndpointPutOnly:
+        securedBy: [oauth_2_0]
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>> 
+    - singularEndpointReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json       
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>          
+    - singularEndpointPutGet:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>    
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json    
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - singularEndpointDeleteOnly:
+        securedBy: [oauth_2_0]
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token) 
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+          responses:
+            200:
+              body:
+                application/json:                                             
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:   
+  - Company: |
+      {
+        "name": "Company",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "",
+        "properties": {
+          "Id": { "type": "integer", "description": "Unique identifier", "example": "14146", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string", "size": "250", "description": "Name", "example": "Kentel Corp" }, 
+          "Description": { "type": "string", "size": "255", "description": "Description", "example": "Wireless accessories provider with store locations all across the globe." }, 
+          "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Company", "ref": "company tree.CompanyRole", "isNested": "true" },
+          "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "123" }, 
+          "CreatedUtc": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-05-20T23:06:29.7700813Z" }, 
+          "LastModifiedUtc": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z" }, 
+          "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data", "example": "" },
+          "Logo": { "type": "object", "description": "A reference to an [Asset](/api/assets/#asset)", "ref": "company tree.Asset"}, 
+          "Relationships": { "type": "array", "arrayType": "object","description": "See [Company Relationships](#company-relationships)", "ref": "company tree.Relationship", "generated": "true" },
+          "SortName": { "type": "string",  "description": "A string used for sorting", "example": "kentel corp" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1" }, 
+          "CorrelationId": { "type": "string",  "description": "Reserved for internal use"},
+          "Role": { "type": "string",  "description": "Reserved for internal use" },
+          "TypeId": { "type": "integer",  "description": "Reserved for future use"  }
+        }
+      }
+  - CompanyRole: |
+      {
+          "name": "CompanyRole",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "description": "Name", "example": "Company" }
+          }
+      }      
+  - Relationship: |
+      {
+        "name": "Relationship",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier for the relationship", "example": "6267", "generated": "true" }, 
+          "Source": { "type": "integer", "description": "Identifier for a {{Vendor}}, {{Carrier}} or {{Partner}} or {{Company}}", "example": "14146" },
+          "Destination": { "type": "integer", "description": "Identifier for a {{Group}}, {{Location}}, {{Division}} or {{Company}}", "example": "14147" },
+          "CreatedUtc": { "type": "DateTime", "description": "Date the relationship was formed, in UTC", "example": "2015-11-20T18:22:10.931Z", "generated": "true" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true" },
+          "Definition": { "type": "integer", "description": "Reserved for internal use", "example": "2" }
+        }
+      }     
+  - Asset: |
+      {
+        "name": "Asset",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "d22291d9-db1d-45e2-ab60-32ac9c145323", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string", "description": "File name", "example": "globe-rocket.jpg", "generated": "true" }, 
+          "Height": { "type": "integer", "description": "Height in pixels", "example": "341", "generated": "true" }, 
+          "Href": { "type": "string", "description": "URL that points to an actual file where the digital asset is stored", "example": "https://amsdemostorage.blob.core.windows.net/assets/d22291d9-db1d-45e2-ab60-32ac9c145323.jpg", "generated": "true" }, 
+          "Md5Checksum": { "type": "string", "description": "String that can be used for upload integrity checks or comparing two assets", "example": "d2d0b491ad3eecd9d8c3dabb0610197d", "generated": "true" }, 
+          "MimeType": { "type": "string", "description": "Mime type", "example": "image/jpeg", "generated": "true" }, 
+          "Width": { "type": "integer", "description": "Width in pixels", "example": "450", "generated": "true" }
+        }
+      }
+  - CompanyTree: |
+      {
+        "name": "CompanyTree",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Your Company Tree is a hierarchial representation of how your Company is structured, including the root Company, Groups, Divisions and Locations.\n\nTo learn more about Company Trees, see {{CompanyTree_Concept}}.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Company identifier", "ref": "company tree.Company.Id", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string", "size": "250", "description": "Company name", "ref": "company tree.Company.Name" }, 
+          "Description": { "type": "string", "size": "255", "description": "Description", "ref": "company tree.Company.Description" }, 
+          "Role": { "type": "string",  "description": "Role", "ref": "company tree.CompanyRole.Name" }, 
+          "Nodes": { "type": "array", "arrayType": "object", "ref": "company tree.CompanyTreeNode", "description": "The Company Tree hierarchy made up of Nodes" }
+        }
+      }
+  - CompanyTreeNode: |
+      {
+        "name": "CompanyTreeNode",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can represent a {{Group}}, {{Division}}, {{Location}} or device.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "ref": "company tree.Division.Id", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string", "size": "250", "description": "Name", "ref": "company tree.Division.Name" }, 
+          "Description": { "type": "string", "size": "255", "description": "Description", "ref": "company tree.Division.Description" }, 
+          "Role": { "type": "string",  "description": "Role, possible values include: Company, Group, Division and Location", "ref": "company tree.DivisionRole.Name" }, 
+          "Nodes": { "type": "array", "arrayType": "object", "description": "Children", "example": "" }
+        }
+      }
+  - Location: |
+      {
+        "name": "Location",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "A **Location** is a physical or virtual presence that may hold inventory or process transactions.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Unique identifier", "putDescription": "Required for PUT requests", "example": "14202", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string", "size": "250", "description": "Name", "example": "Dufferin Mall" }, 
+          "Description": { "type": "string", "size": "255", "description": "Description", "example": "This Location is used to clear out discounted inventory" }, 
+          "Roles": { "type": "array", "arrayType": "object","description": "The Role of this Location, the value must be Location", "putDescription": "Must be `Location`", "ref": "company tree.LocationRole", "isNested": "true", "putGenerate": "true" },
+          "CreatedUTC": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-02-26T00:03:01.372Z", "generated": "true" }, 
+          "LastModifiedUTC": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-02-27T00:03:06.392Z", "generated": "true" }, 
+          "Area": { "type": "object", "description": "Measurement of floor space", "ref": "company tree.Area"},
+          "Address": { "type": "object", "description": "Address", "ref": "company tree.Address"},
+          "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data"},
+          "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "123" }, 
+          "Contacts": { "type": "array", "arrayType": "object", "description": "Contact information", "ref": "company tree.Contact"},
+          "Geography": { "type": "object", "description": "Geographic coordinates of this Location", "ref": "company tree.Geography", "isNested": "true"},
+          "Relationships": { "type": "array", "arrayType": "object","description": "Relationship information, such as the parent node in the Company Tree", "example": "", "generated": "true"},
+          "SortName": { "type": "string",  "description": "A string used for sorting", "example": "dufferin mall", "generated": "true" }, 
+          "StoreHours": { "type": "object", "ref":"company tree.StoreHours", "description": "Store hours for this Location"},
+          "StorePhoneNumbers": { "type": "array", "arrayType": "object", "isNested": "true", "ref": "company tree.PhoneNumber", "description": "Phone numbers"},
+          "TimeZone": { "type": "object", "ref": "company tree.TimeZone", "isNested": "true", "description": "Timezone information for the Location"},
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "13", "generated": "true", "putGenerate": "true" }, 
+          "CorrelationId": { "type": "string",  "description": "Reserved for internal use"},
+          "LocationType": { "type": "string",  "description": "Reserved for future use"},
+          "LocationSubType": { "type": "string",  "description": "Reserved for future use"},
+          "Logo": { "type": "object", "description": "Reserved for internal use"},
+          "Role": { "type": "string",  "description": "Reserved for internal use" },
+          "TypeId": { "type": "integer",  "description": "Reserved for future use"  }
+        },
+        "required": ["Name", "Roles"]
+      }
+  - LocationArray: |
+      {
+        "exclude": "true",
+        "name": "Location",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }
+  - LocationRole: |
+      {
+          "name": "LocationRole",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "description": "Name", "example": "Location" }
+          },
+          "required": [ "Name" ]
+      }          
+  - Division: |
+      {
+        "name": "Division",                
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Division, as well as Groups, serve as generic buckets clients can use to organize the company tree. Divisions could be used to represent sub-brand or sub-company of a main company.\n\nTo learn more about Divisions, see {{Division_Concept}}.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Unique identifier", "example": "14159", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string", "size": "250", "description": "Name", "example": "T-hut Wireless" }, 
+          "Description": { "type": "string", "size": "255", "description": "Description", "example": "Division of Kiosks" }, 
+          "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Division", "generated": "true", "ref": "company tree.DivisionRole", "isNested": "true", "putGenerate": "true" }, 
+          "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "187" }, 
+          "CreatedUTC": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-05-20T23:06:29.7700813Z", "generated": "true" }, 
+          "LastModifiedUTC": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z", "generated": "true" }, 
+          "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data"},
+          "Logo": { "type": "object", "ref":"company tree.Asset", "description": "A reference to an Asset", "generated": "true" }, 
+          "Relationships": { "type": "array", "arrayType": "object","description": "Relationship information, such child Locations, Suppliers and Carriers", "example": "", "generated": "true" }, 
+          "SortName": { "type": "string",  "description": "A string used for sorting", "example": "t-hut wireless", "generated": "true" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true", "putGenerate": "true" }, 
+          "CorrelationId": { "type": "string",  "description": "Reserved for internal use"},
+          "Role": { "type": "string",  "description": "Reserved for internal use" },
+          "TypeId": { "type": "integer",  "description": "Reserved for future use"  }          
+        },
+        "required": ["Name"]        
+      }
+  - DivisionRole: |
+      {
+          "name": "DivisionRole",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "description": "Name", "example": "Division" }
+          }
+      }      
+  - Group: |
+      {
+        "name": "Group",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Managerial or geographical groupings.\n\n To learn more about Groups, see {{Group_Concept}}.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Unique identifier", "example": "14166", "generated": "true", "putGenerate": "true"}, 
+          "Name": { "type": "string", "size": "250", "description": "Name", "example": "Toronto" }, 
+          "Description": { "type": "string", "size": "255", "description": "Description", "example": "Group within Ontario" }, 
+          "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Group", "generated": "true", "ref": "company tree.GroupRole", "isNested": "true", "putGenerate": "true" }, 
+          "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "187" }, 
+          "CreatedUTC": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-05-20T23:06:29.7700813Z", "generated": "true" }, 
+          "LastModifiedUTC": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z", "generated": "true" }, 
+          "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data"},
+          "Logo": { "type": "object", "ref":"assets.Asset", "description": "A reference to an Asset", "generated": "true", "example": "" }, 
+          "Relationships": { "type": "array", "arrayType": "object","description": "Relationship information, such child Locations, Suppliers and Carriers", "example": "", "generated": "true"  }, 
+          "SortName": { "type": "string",  "description": "A string used for sorting", "example": "toronto", "generated": "true" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true", "putGenerate": "true" }, 
+          "CorrelationId": { "type": "string",  "description": "Reserved for internal use"},
+          "Role": { "type": "string",  "description": "Reserved for internal use" },
+          "TypeId": { "type": "integer",  "description": "Reserved for future use"  }
+        },
+        "required": ["Name"]
+      }
+  - GroupRole: |
+      {
+          "name": "GroupRole",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "description": "Name", "example": "Group" }
+          }
+      }      
+  - ClientIdSearch: |
+      {
+        "exclude": "true",
+        "name": "ClientIdSearch",
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "array",
+        "properties": {
+          "Id": { "type": "integer", "ref": "company tree.Location.Id"},
+          "Name": { "type": "string", "ref": "company tree.Location.Name"},
+          "Description": { "type": "string", "description": "", "ref": "company tree.Location.Description" },
+          "Role": { "type": "string", "description": "Role of the Entity", "ref": "company tree.LocationRole.Name"},
+          "Path": { "type": "array", "arrayType": "object", "ref": "company tree.Path", "description": "Parents of the Entity. The order of elements is important, reflecting the hierarchy of parents (self, parent, parent-of-parent, etc) "}     
+        }
+      }
+  - Path: |
+      {
+        "exclude": "true",
+        "name": "Path",
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "Id": { "type": "integer", "ref": "company tree.Location.Id" },
+          "Name": { "type": "string", "ref": "company tree.Location.Name"},
+          "Description": { "type": "string", "ref": "company tree.Location.Description"},
+          "Role": { "type": "string", "description": "Role of the Entity", "ref": "company tree.LocationRole.Name"}
+        }
+      }
+  - Address: |
+      {
+        "name": "Address",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "A **Location** is a physical or virtual presence that may hold inventory or process transactions.",
+        "properties": {
+          "AddressLine1": { "type": "string",  "description": "First line of Address", "example": "4970 Hillside Avenue" }, 
+          "AddressLine2": { "type": "string",  "description": "Second line of Address", "example": "Apt 115" }, 
+          "City": { "type": "string",  "description": "City", "example": "Edmonton" }, 
+          "StateCode": { "type": "string",  "description": "Code for the State in which this address resides. Based off the ISO 3166-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>", "example": "ON" }, 
+          "StateName": { "type": "string",  "description": "State/Province. Uses the ISO 3166-2 standard", "example": "Ontario" }, 
+          "CountryCode": { "type": "string",  "description": "Country Code. Uses the ISO 3166-1 alpha-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","putDescription": "Required if�StateCode�is provided", "ref": "reference.Country.Code" }, 
+          "CountryName": { "type": "string",  "description": "Country", "example": "Canada" }, 
+          "Zip": { "type": "string",  "description": "Zip or Postal Code", "example": "P9H 9I4" }
+        }
+      }
+  - Area: |
+      {
+        "name": "Area",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Value": { "type": "integer", "description": "Value of the Area", "putDescription": "Only required if Area is not null. If provided, Unit must also be provided", "example": "1100" }, 
+          "Unit": { "type": "string",  "description": "Unit used for the Value, acceptable values are SqFt and SqM", "putDescription": "Only required if Area is not null. If provided, Value must also be provided", "example": "SqFt" }
+        },
+        "required": ["Value", "Unit"]               
+      }   
+  - TimeZone: |
+      {
+        "name": "TimeZone",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "string", "description": "Identifier. For a list of acceptable values, see <a href='/api/reference/#getting-all-time-zones'>Getting All Time Zones</a>", "ref": "reference.TimeZone.Id" }, 
+          "DaylightSavingTimeEnabled": { "type": "boolean", "description": "A flag to indicate if the Time Zone observes Daylight Savings Time", "example": "true" }
+        }        
+      }   
+  - Geography: |
+      {
+        "exclude": "true",
+        "name": "Geography",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Longitude": { "type": "decimal", "description": "Longitude, must be between -180 and 180", "putDescription": "Only required if Geography is not null. If provided, Longitude must also be provided","example": "-104.612034" }, 
+          "Latitude": { "type": "decimal", "description": "Latitude, must be between -90 and 90", "putDescription": "Only required if Geography is not null. If provided, Latitude must also be provided", "example": "50.443559" }
+        },
+        "required": ["Latitude", "Longitude"]
+      } 
+  - StoreHours: |
+      {
+        "name": "StoreHours",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Monday": { "type": "object", "description": "Hours on Monday",  "ref": "company tree.WeekDay" },
+          "Tuesday": { "type": "object", "description": "Hours on Tuesday","ref": "company tree.WeekDay" },
+          "Wednesday": { "type": "object","description": "Hours on Wednesday", "ref": "company tree.WeekDay" },
+          "Thursday": { "type": "object","description": "Hours on Thursday", "ref": "company tree.WeekDay" },
+          "Friday": { "type": "object", "description": "Hours on Friday","description": "Hours on Monday","ref": "company tree.WeekDay" },
+          "Saturday": { "type": "object", "description": "Hours on Saturday","ref": "company tree.WeekDay" },
+          "Sunday": { "type": "object","description": "Hours on Sunday", "ref": "company tree.WeekDay" }
+        }        
+      } 
+  - WeekDay: |
+      {
+        "name": "WeekDay",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Open": { "type": "object", "description": "Open time", "isNested": "true", "ref": "company tree.Hours" }, 
+          "Close": { "type": "object", "description": "Close time","isNested": "true", "ref": "company tree.Hours" }
+        }        
+      } 
+  - Hours: |
+      {
+        "exclude": "true",
+        "name": "Hours",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Hour": { "type": "integer", "example": "10" }, 
+          "Minute": { "type": "integer", "example": "0" }
+        }        
+      }
+  - Contact: |
+      {
+        "name": "Contact",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Name": { "type": "string","description": "Name", "example": "John Smith" }, 
+          "Description": { "type": "string", "description": "Description","example": "Store Manager" },
+          "PhoneNumbers": { "type": "array", "description": "Phone numbers", "isNested": "true", "ref": "company tree.PhoneNumber"}
+          }        
+      }
+  - PhoneNumber: |
+      {
+        "exclude": "true",
+        "name": "PhoneNumber",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+            "Description": { "type": "string", "description": "Description", "example": "Main Line" }, 
+            "Number": { "type": "string", "description": "Phone number","example": "5555555555" }, 
+            "Extension": { "type": "string", "description": "Extension","example": "1234" }
+          }        
+      }
+/Companies({CompanyId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: Company
+  get: 
+    displayName: Getting a Company
+/Companies({CompanyId})/Tree:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: CompanyTree
+  get:
+    displayName: Getting a Company Tree
+/Companies({CompanyId})/Tree/Nodes({NodeId})/Locations:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    NodeId:
+      displayName: NodeId
+      type: integer
+      example: 14159
+      description: Identifier of the parent for the {{Location}} 
+      required: true
+  type:
+    collectionWriteOnly:
+      resource: Location
+      postResource: Location
+  post:
+    displayName: Creating a Location
+/Companies({CompanyId})/Tree/Nodes({NodeId})/Locations({LocationId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    NodeId:
+      displayName: NodeId
+      type: integer
+      example: 14159
+      description: Identifier of the parent for the {{Location}} 
+      required: true      
+    LocationId:
+      displayName: LocationId
+      type: string
+      example: 14202
+      description: Identifier for the {{Location}}
+      required: true
+  type:
+    singularEndpointPutOnly:
+      resource: Location
+      postResource: Location
+  put:
+    displayName: Updating a Location
+    description: |
+      There are <strong>two</strong> different ways to update a location. 
+
+      <ul>
+        <li>Option 1 - <code>PUT /Companies({CompanyId})/Tree/Nodes({NodeId})/Locations({LocationId})</code></li>
+        <li>Option 2 - <code>PUT /Companies({CompanyId})/Locations({LocationId})</code></li>
+      </ul>
+
+      Option 1 requires knowing the <code>NodeId</code> of the parent of the {{Location}}, but has <strong>stronger</strong> validation.
+/Companies({CompanyId})/Locations({LocationId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    LocationId:
+      displayName: LocationId
+      type: string
+      example: 14202
+      description: Identifier for the {{Location}}
+      required: true      
+  type:
+    singularEndpointReadOnly:
+      resource: Location
+  get: 
+    displayName: Getting a Location for a Company
+/Companies({CompanyId})/Locations:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: LocationArray
+  get:
+    displayName: Getting All Locations for a Company
+/Companies({CompanyId})/Tree/Nodes({NodeId})/Divisions:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    NodeId:
+      displayName: NodeId
+      type: integer
+      example: 14159
+      description: Identifier of a Node
+      required: true
+  type:
+    collectionWriteOnly:
+      resource: Division
+      postResource: Division
+  post:
+    displayName: Creating a Division
+    description: |
+        Divisions may be added to the root Company node, or to a Division or Group node. 
+
+        A Division cannot be created if one already exists at the same level with the same name. 
+
+        That is, you can have a Division and Group with the same name under the same parent or two Division with the same name in different parts of the tree, but you cannot have two Divisions with the same name and the same parent.
+/Companies({CompanyId})/Tree/Nodes({NodeId})/Groups:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    NodeId:
+      displayName: NodeId
+      type: integer
+      example: 14159
+      description: Identifier of a Node
+      required: true      
+  type:
+    collectionWriteOnly:
+      resource: Group
+      postResource: Group
+  post:
+    displayName: Creating a Group
+    description: |
+        Groups may be added to the root Company node, or to a Division or Group node. 
+
+        A Group cannot be created if one already exists at the same level with the same name. 
+
+        That is, you can have a Division and Group with the same name under the same parent or two Groups with the same name in different parts of the tree, but you cannot have two Groups with the same name and the same parent.
+/Companies({CompanyId})/Tree/Nodes({NodeId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    NodeId:
+      displayName: NodeId
+      type: integer
+      example: 14159
+      description: Identifier of a Node to be deleted
+      required: true    
+  type:
+    singularEndpointDeleteOnly:
+  delete:
+    displayName: Deleting a Group or Division
+    description: |
+        {{warning}}
+        This operation <strong>cannot be undone</strong>.
+        {{end}}
+
+        This request removes the Node referred to by NodeId from the Company Tree along with all of its children. 
+
+        Only Divisions and Groups can be deleted this way. 
+
+        If the Node or any of its children include Entities other than Groups or Divisions, the request will be rejected.
+/Entities({CompanyId})/Nodes?$filter='{ClientEntityId}':
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    ClientEntityId:
+      displayName: ClientEntityId
+      type: string
+      example: 187
+      description: The value to search for
+      required: true
+  type:
+    collectionReadOnly:
+      resource: ClientIdSearch
+  get:
+    displayName: Searching by ClientEntityId
+    description: |
+      This request allows you to search your Company Tree using the `ClientEntityId` field. 
+
+      This request returns an array of objects that summarize Entities matching the search criteria. 
+
+      The following resource types are considered 'Entities': {{Company}}, {{Division}}, {{Group}}, {{Location}}, device

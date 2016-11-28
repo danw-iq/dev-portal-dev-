@@ -1,0 +1,127 @@
+#%RAML 0.8
+title: assets
+baseUri: https://ams{UrlSuffix}.iqmetrix.net
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: exclude
+    content: true
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Bad Request` | Ensure the Asset is of the correct type for the action (i.e. an image for /images endpoints) |
+      | `HTTP 400` | `Bad Request` | Ensure you are only uploading one Asset at a time |
+      | `HTTP 400` | `Bad Request` | Ensure file was attached to request |
+      | `HTTP 404` | `Asset Media Service Error: Resource not found` | Ensure Asset GUID is valid and the Asset exists |
+resourceTypes:
+  - singularEndpointReadOnly:
+      get:
+          headers:
+            Accept:
+              example: application/json
+          responses:
+              200:
+                  body:
+                      application/json:
+                        schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Asset: |
+      {
+        "name": "Asset",
+        "type": "object",
+        "description": "An **Asset** is an image or video associated with a Product.",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "id": { "type": "GUID", "description": "Unique identifier", "example": "09fe1ee4-42b1-43a6-bd80-cd2bda21e90a" }, 
+          "name": { "type": "string",  "description": "File name", "example": "49ebd282-4161-4a9d-9b40-a5a20d144b6f.png" }, 
+          "height": { "type": "integer", "description": "Height in pixels", "example": "1024" }, 
+          "href": { "type": "string",  "description": "URL that points to an actual file where the digital asset is stored", "example": "https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png" }, 
+          "md5Checksum": { "type": "string",  "description": "String that can be used for upload integrity checks or comparing two assets", "example": "1f88a2813737aa0019a63069586055ed" }, 
+          "mimeType": { "type": "string",  "description": "The mime type", "example": "image/png" }, 
+          "width": { "type": "integer", "description": "Width in pixels", "example": "502" },
+          "success": { "type": "boolean", "description": "A flag to indicate that the Asset was uploaded. This only appears when asset is first uploaded", "example": "true", "generated": "true"}          
+        }
+      }      
+/assets:
+  post:
+    headers:
+      Authorization:
+        example: Bearer (Access Token)
+      Accept:
+        example: application/json
+      Content-Type:
+        example: multipart/form-data
+    displayName: Creating an Asset
+    body: 
+      multipart/form-data:
+        formParameters:
+          Filename:
+            displayName: Filename
+            description: File to be uploaded
+            required: true
+            type: file
+            example: image.jpg
+    responses:
+      201: 
+        body:
+          application/json:
+            schema: Asset
+/assets/{AssetId}:
+  uriParameters:
+    AssetId:
+      displayName: AssetId
+      type: string
+      example: 09fe1ee4-42b1-43a6-bd80-cd2bda21e90a
+      description: Identifier for the {{Asset}}
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: Asset
+  get:
+    displayName: Getting an Asset
+/images/{AssetId}:
+  uriParameters:
+    AssetId:
+      displayName: AssetId
+      type: string
+      example: 09fe1ee4-42b1-43a6-bd80-cd2bda21e90a
+      description: Identifier for the {{Asset}}
+      required: true
+  get:
+    displayName: Redirecting to an Image Asset
+    description: A successful response to this request is a `HTTP 303` redirect with a `Location` header pointing to the actual file where the digital asset is stored
+    responses:
+      303:
+        body:
+          application/text:
+            example: |
+              Location: https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png

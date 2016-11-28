@@ -1,0 +1,152 @@
+#%RAML 0.8
+title: saccs
+baseUri: https://shippingaggregatordemo.iqmetrix.net/
+schemas: 
+
+    
+    - ShippingQuery: |
+        {
+          "name": "ShippingQuery",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "LocationEntityId": { "type": "string", "description": "[Location](/api/company-tree/#location) identifer", "example": "14202" }, 
+            "PostalCode": { "type": "string", "description": "Postal or zip code of shipping address", "example": "P9H 9I4" }, 
+            "Items": { "type":"array", "arrayType": "object", "description": "List of Products to be added to shipping query", "ref":"saccs.Item" }
+          },
+          "required": [ "LocationEntityId", "PostalCode" ]
+        }
+        
+
+    
+
+    
+    - Item: |
+        {
+          "name": "Item",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CatalogId": { "type": "GUID", "description": "[Catalog](/api/catalog/#catalogitem) identifer", "example": "18e039de-f950-4d8e-a48a-d06e4db55a07" }, 
+            "Quantity": { "type": "integer", "description": "Amount of products", "example": "1"},
+            "Cost": { "type": "decimal", "description": "Cost of item", "example": "9.99", "generated": "true" }
+          },
+          "required": [ "CatalogId", "Quantity" ]
+        }
+        
+
+    
+
+    
+    - ShippingResponse: |
+        {
+          "name": "ShippingResponse",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id" : { "type": "integer", "description": "Unique identifer", "example": "1"}, 
+            "LocationEntityId": { "type": "integer", "description": "[Location](/api/company-tree/#location) identifier", "example": "14202" }, 
+            "PostalCode": { "type": "string", "description": "Postal or zip code of shipping address", "example": "P9H 9I4" }, 
+            "Shipments": { "type":"array", "arrayType": "object", "ref":"saccs.Shipments", "description": "List of suppliers and their shipping options" },
+            "Items": { "type": "array", "arrayType": "object", "description": "Reserved for internal use" }
+          }
+        }
+        
+
+    
+
+    
+    - Shipments: |
+        {
+          "name": "Shipments",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "SupplierEntityId": {"type": "integer", "description": "[Supplier](/api/entity-store/#supplier) identifier", "example": "14107"},
+            "Items": { "type":"array", "arrayType": "object", "ref":"saccs.Item", "description": "List of Products to be added to shipping query" },
+            "ShippingOptions": { "type":"array", "arrayType": "object", "ref":"saccs.ShippingOptions", "description": "List of shipping options available from vendor" }
+          }
+        }
+        
+
+    
+
+    
+    - ShippingOptions: |
+        {
+          "name": "ShippingOptions",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id" : { "type": "string", "description": "Vendor shipping identifer", "example": "1", "generated": "true" }, 
+            "Cost": { "type": "decimal", "description": "Cost for shipping option", "example": "7.94", "generated": "true" }, 
+            "Currency": { "type": "string", "description": "Cost currency (USD or CAD)", "example": "CAD", "generated": "true" }, 
+            "EstimatedTransitTime": { "type": "String", "description": "Total time to be in transit, where units are provided by supplier", "example": "1 week", "generated": "true" },
+            "Name": { "type": "string", "description": "Shipping option name", "example": "PurolatorExpress", "generated": "true" }
+          }
+        }
+        
+
+    
+
+
+/Companies({CompanyId})/ShippingInformation:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier of the Company
+          
+      
+    post:
+        
+        displayName: Retrieving Shipping Options
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"LocationEntityId":"14202","PostalCode":"P9H 9I4","Items":[{"CatalogId":"18e039de-f950-4d8e-a48a-d06e4db55a07","Quantity":1}]}
+                    
+                schema: |
+                    {"name":"ShippingQuery","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"LocationEntityId":{"type":"string","description":"[Location](/api/company-tree/#location) identifer","example":"14202"},"PostalCode":{"type":"string","description":"Postal or zip code of shipping address","example":"P9H 9I4"},"Items":{"type":"array","arrayType":"object","description":"List of Products to be added to shipping query","ref":"saccs.Item","properties":{"CatalogId":{"type":"guid","description":"[Catalog](/api/catalog/#catalogitem) identifer","example":"18e039de-f950-4d8e-a48a-d06e4db55a07","name":"CatalogId"},"Quantity":{"type":"integer","description":"Amount of products","example":"1","name":"Quantity"},"Cost":{"type":"decimal","description":"Cost of item","example":"9.99","generated":"true","name":"Cost"}},"required":["CatalogId","Quantity"]}},"required":["LocationEntityId","PostalCode"]}
+                
+            
+        responses:
+            
+            202:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":1,"LocationEntityId":14202,"PostalCode":"P9H 9I4","Shipments":[{"SupplierEntityId":14107,"Items":[{"CatalogId":"18e039de-f950-4d8e-a48a-d06e4db55a07","Quantity":1,"Cost":9.99}],"ShippingOptions":[{"Id":"1","Cost":7.94,"Currency":"CAD","EstimatedTransitTime":"1 week","Name":"PurolatorExpress"}]}]}
+                            schema: |
+                                {"name":"ShippingResponse","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Unique identifer","example":"1"},"LocationEntityId":{"type":"integer","description":"[Location](/api/company-tree/#location) identifier","example":"14202"},"PostalCode":{"type":"string","description":"Postal or zip code of shipping address","example":"P9H 9I4"},"Shipments":{"type":"array","arrayType":"object","ref":"saccs.Shipments","description":"List of suppliers and their shipping options","properties":{"SupplierEntityId":{"type":"integer","description":"[Supplier](/api/entity-store/#supplier) identifier","example":"14107","name":"SupplierEntityId"},"Items":{"type":"array","arrayType":"object","ref":"saccs.Item","description":"List of Products to be added to shipping query","name":"Items"},"ShippingOptions":{"type":"array","arrayType":"object","ref":"saccs.ShippingOptions","description":"List of shipping options available from vendor","name":"ShippingOptions"}}},"Items":{"type":"array","arrayType":"object","description":"Reserved for internal use"}}}
+                            
+                        
+                    
+                
+            
+    

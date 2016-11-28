@@ -1,0 +1,497 @@
+#%RAML 0.8
+title: product-feed
+baseUri: https://curationdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - Product: |
+        {
+          "name": "Product",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Product information for the feed. It is **highly recommended** to include `ModelName` for every product created. See {{ProductStructure_Concept}} for more information.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Unique identifier", "example": "34", "generated": "true" }, 
+            "Assets": { "type": "array", "arrayType": "object", "description": "Assets", "ref": "product-feed.Asset" }, 
+            "Classification": { "type": "object", "description": "Refer to [Classification](/concepts/classification-tree) for more information", "ref": "product-feed.Classification" }, 
+            "ClassificationTreeName": { "type": "string",  "description": "Name of the classification tree", "ref": "classification-tree.ClassificationTree.Name" }, 
+            "Fields": { "type": "array", "arrayType": "object", "description": "A list of fields for the product. For the product being added, only include the definitions that apply", "ref": "product-feed.Field" }, 
+            "LastModifiedByVendorUtc": { "type": "DateTime", "description": "Provides the last date that the product feed was modified by the vendor, in UTC", "example": "2015-09-16T10:40:31.101Z" }, 
+            "Manufacturer": { "type": "string",  "description": "The company that produces the product", "example": "Motorola" }, 
+            "ManufacturerSku": { "type": "string",  "description": "The Product SKU from the manufacturer", "example": "1234" }, 
+            "ModelName": { "type": "string",  "description": "[Master Product](/concepts/product-structure/#Master-Products) name", "example": "Agent18 SlimShield Case for iPhone 6" }, 
+            "UPC": { "type": "string",  "description": "Universal Product Code", "example": "723755004337" }, 
+            "VendorSkus": { "type": "array", "arrayType": "object", "description": "Vendor SKU information for the product", "ref": "product-feed.VendorSku" }, 
+            "ProviderClassification": { "type": "string",  "description": "Reserved for internal use", "example": "" }, 
+            "UnsupportedAssets": { "type": "array", "arrayType": "object", "description": "This is a legacy property that should not be used", "example": "" }
+          },
+          "required": ["Fields"]
+        }
+        
+
+    
+
+    
+    - VendorSku: |
+        {
+          "name": "VendorSku",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Vendor information for the feed. It is **highly recommended** to include `Sku` for every product created.",
+          "properties": {
+            "Description": { "type": "string",  "description": "SKU description", "example": "Phone case" }, 
+            "Sku": { "type": "string",  "description": "Vendor product SKU", "example": "1115884" }, 
+            "VendorName": { "type": "string",  "description": "Name of the Vendor", "example": "Amazon" }
+          }
+        }
+        
+
+    
+
+    
+    - Classification: |
+        {
+          "name": "Classification",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Classification information for the feed. The `TreeId` is the identifer for the Industry (e.g. Cellular and Accessories), while the `Id` is the identifier (template) for the Product (e.g. Battery Pack). See {{ClassificationTree_Concept}} for more information.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Product classification identifier", "ref": "classification-tree.Classification.Id" }, 
+            "Name": { "type": "string",  "description": "The name of the Classification your product falls under", "ref": "classification-tree.Classification.Name", "generated": "true" }, 
+            "TreeId": { "type": "integer", "description": "Classification Tree identifier", "ref": "classification-tree.ClassificationTree.Id" }
+          },
+          "required": [ "TreeId", "Id" ]
+        }
+        
+
+    
+
+    
+    - ProductArray: |
+        {
+          "exclude": "true",        
+          "name": "Product",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }
+        
+
+    
+
+    
+    - Field: |
+        {
+          "name": "Field",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "At minimum, the Product Name field is required along with a corresponding value.\n\nTo get a list of all field definitions, use the {{Getting_Field_Definitions}} method. ",
+          "properties": {
+            "Definition": { "type": "object", "description": "The field definition", "ref": "product-feed.Definition", "isNested": "true" }, 
+            "Value": { "type": "string",  "description": "The value for the field", "example": "Android" }
+          }, 
+          "required": [ "Definition", "Value" ]
+        }
+        
+
+    
+
+    
+    - Definition: |
+        {
+          "exclude": "true",
+          "name": "Definition",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "The field definition identifier. The definition for this parameter varies based on the [Environments](/#environments)", "example": "1"}
+          }, 
+          "required": [ "Definition", "Value" ]
+        }      
+        
+
+    
+
+    
+    - Asset: |
+        {
+          "name": "Asset",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "During the request, only the asset URLs are required. The response will contain additional information provided by the server.\n\nRefer to {{Asset_Glossary}} for more information.",
+          "properties": {
+            "Id": { "type": "GUID", "description": "Unique identifier", "example": "31294366-948a-420c-972f-ed1450e3cdd8", "generated": "true" }, 
+            "AssetUrl": { "type": "string",  "description": "Original URL of asset provided in request", "example": "http://image.sample.com/b.png" }, 
+            "FileName": { "type": "string",  "description": "Filename of the asset", "example": "Note4-white.png", "generated": "true" }, 
+            "IsConverted": { "type": "boolean", "description": "Indicates if the asset have been converted", "example": "false", "generated": "true" }, 
+            "MimeType": { "type": "string",  "description": "Type of Mime", "example": "image/jpg", "generated": "true" }, 
+            "OriginalUrl": { "type": "string",  "description": "Original URL of asset", "example": "http://image.sample.com/b.png", "generated": "true" }
+          },
+          "required": [ "AssetUrl"]
+        }
+        
+
+    
+
+    
+    - ProductFeed: |
+        {
+          "name": "ProductFeed",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "**Product Feeds** are used to group all Products together for a particular vendor.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Unique identifier", "example": "34", "generated": "true"  }, 
+            "LastReceivedUpdatesFromProviderUtc": { "type": "DateTime", "description": "Date and time of last received update, in UTC", "example": "2014-11-13T19:40:57.102Z" }, 
+            "Products": { "type": "array", "arrayType": "Product", "description": "List of [Products](#product)", "ref": "product-feed.Product" }, 
+            "ProviderName": { "type": "string",  "description": "Name of the Product Feed", "example": "Joe's Product Feed" }, 
+            "Version": { "type": "integer", "description": "Latest revision number", "example": "8" }
+          }
+        }
+        
+
+    
+
+
+/ProductFeeds({FeedId})/Products:
+    
+    uriParameters:
+        
+        FeedId:
+            displayName: FeedId
+            type: string
+            example: 34
+            required: true
+            description: Product Feed identifier
+          
+      
+    post:
+        
+        displayName: Adding a Product to a Feed
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |
+                    {
+                      "Classification": {
+                        "TreeId": 1,
+                        "Id": 4
+                      },
+                      "Fields": [
+                        {
+                          "Definition": {
+                            "Id": 1,
+                            "StringId": "Product Name"
+                          },
+                          "Value": "Agent18 SlimShield Case for iPhone 6 - Black"
+                        },
+                        {
+                          "Definition": {
+                            "Id": 129,
+                            "StringId": "Color Tags"
+                          },
+                          "Value": "Black, Red"
+                        },
+                        {
+                          "Definition": {
+                            "Id": 76,
+                            "StringId": "MSRP",
+                            "InputType": "Currency"
+                          },
+                          "Value": "24.99 CAD"
+                        }                          
+                      ],
+                      "Assets": [
+                        {
+                          "AssetUrl": "http://image.sample.com/a.jpg"
+                        },
+                        {
+                          "AssetUrl": "http://image.sample.com/b.png"
+                        },
+                        {
+                          "AssetUrl": "http://image.sample.com/c.mov"
+                        }
+                      ],
+                      "ModelName": "Agent18 SlimShield Case for iPhone 6",
+                      "LastModifiedByVendorUtc": "2015-09-16T10:40:31.101Z",
+                      "Manufacturer": "Agent18",
+                      "ManufacturerSku": "980113579",
+                      "UPC": "723755004337",
+                      "VendorSkus": [
+                        {
+                          "Description": "Online retailer",
+                          "Sku": "1115884",
+                          "VendorName": "Amazon"
+                        }
+                      ]
+                    }
+                    
+
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                  "Id": 17,
+                                    "Assets": [
+                                        {
+                                            "Id": "31294366-948a-420c-972f-ed1450e3cdd8",
+                                            "FileName": "a.jpg",
+                                            "MimeType": "image/jpg",
+                                            "OriginalUrl": "http://image.sample.com/a.jpg",
+                                            "IsConverted": false
+                                        },
+                                        {
+                                            "Id": "e43aa38e-cdc5-4492-bf1f-6552a1805464",
+                                            "FileName": "b.png",
+                                            "MimeType": "image/png",
+                                            "OriginalUrl": "http://image.sample.com/b.png",
+                                            "IsConverted": false
+                                        },
+                                        {
+                                            "Id": "49b12198-a22b-4f42-a4ab-9e78de776754",
+                                            "FileName": "c.mov",
+                                            "MimeType": "video/mov",
+                                            "OriginalUrl": "http://image.sample.com/c.mov",
+                                            "IsConverted": false
+                                        }
+                                    ],        
+                                    "Classification": {
+                                        "TreeId": 1,
+                                        "Id": 5,
+                                        "Name": "Cases"
+                                    },
+                                    "ClassificationTreeName": "Cellular & Accessories",
+                                    "Fields": [
+                                        {
+                                            "Definition": {
+                                                "Id": 1,
+                                                "LanguageInvariantName": "Product Name",
+                                                "StringId": "Product Name",
+                                                "InputType": "TextSingleLine",
+                                                "IsRequired": true,
+                                                "LanguageInvariantUnit": "",
+                                                "DisplayName": "Product Name",
+                                                "Unit": "",
+                                                "Options": []
+                                            },
+                                            "Value": "Agent18 SlimShield Case for iPhone 6 - Black"
+                                        },
+                                        {
+                                            "Definition": {
+                                                "Id": 129,
+                                                "LanguageInvariantName": "Color Tags",
+                                                "StringId": "Color Tags",
+                                                "InputType": "MultiSelect",
+                                                "IsRequired": false,
+                                                "LanguageInvariantUnit": "",
+                                                "DisplayName": "Color Tags",
+                                                "Unit": "",
+                                                "Options": [
+                                                    {
+                                                        "Id": 1,
+                                                        "Value": "Black"
+                                                    },
+                                                    {
+                                                        "Id": 2,
+                                                        "Value": "Blue"
+                                                    },
+                                                    {
+                                                        "Id": 3,
+                                                        "Value": "Brown"
+                                                    },
+                                                    {
+                                                        "Id": 4,
+                                                        "Value": "Gray"
+                                                    },
+                                                    {
+                                                        "Id": 5,
+                                                        "Value": "Green"
+                                                    }
+                                                ]
+                                            },
+                                            "Value": "Black, Red"
+                                        }
+                                    ], 
+                                    "LastModifiedByVendorUtc": "2015-09-18T10:40:31Z",
+                                    "Manufacturer": "Agent18",
+                                    "ManufacturerSku": "980113579",
+                                    "ModelName": "Agent18 SlimShield Case for iPhone 6",
+                                    "UPC": "723755004337",
+                                    "VendorSkus": [
+                                        {
+                                            "Sku": "1115884",
+                                            "VendorName": "Amazon",
+                                            "Description": "Online retailer"
+                                        }
+                                    ]
+                                }
+                                
+                        
+                        
+                    
+                
+            
+      
+    get:
+        
+        displayName: Getting All Products in a Feed
+                
+        
+        description: |            
+            Returns all the <strong>Products</strong> in a particular <strong>Product Feed</strong> indicated by the feed's <strong>Feed ID</strong> parameter. 
+            
+            Useful when testing to ensure that products have been successfully added or removed.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":34,"Assets":[{"Id":"31294366-948a-420c-972f-ed1450e3cdd8","AssetUrl":"http://image.sample.com/b.png","FileName":"Note4-white.png","IsConverted":false,"MimeType":"image/jpg","OriginalUrl":"http://image.sample.com/b.png"}],"Classification":{"Id":4,"Name":"Smartphones","TreeId":1},"ClassificationTreeName":"Cellular & Accessories","Fields":[{"Definition":{"Id":1},"Value":"Android"}],"LastModifiedByVendorUtc":"2015-09-16T10:40:31.101Z","Manufacturer":"Motorola","ManufacturerSku":"1234","ModelName":"Agent18 SlimShield Case for iPhone 6","UPC":"723755004337","VendorSkus":[{"Description":"Phone case","Sku":"1115884","VendorName":"Amazon"}]}]
+                            schema: |
+                                {"exclude":"true","name":"Product","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/ProductFeeds({FeedId}):
+    
+    uriParameters:
+        
+        FeedId:
+            displayName: FeedId
+            type: string
+            example: 34
+            required: true
+            description: 
+          
+      
+    get:
+        
+        displayName: Getting a Product Feed
+                
+        
+        description: |            
+            Returns an array of <a href="#product">Products</a>, as well as additional parameters.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":34,"LastReceivedUpdatesFromProviderUtc":"2014-11-13T19:40:57.102Z","Products":[{"Id":34,"Assets":[{"Id":"31294366-948a-420c-972f-ed1450e3cdd8","AssetUrl":"http://image.sample.com/b.png","FileName":"Note4-white.png","IsConverted":false,"MimeType":"image/jpg","OriginalUrl":"http://image.sample.com/b.png"}],"Classification":{"Id":4,"Name":"Smartphones","TreeId":1},"ClassificationTreeName":"Cellular & Accessories","Fields":[{"Definition":{"Id":1},"Value":"Android"}],"LastModifiedByVendorUtc":"2015-09-16T10:40:31.101Z","Manufacturer":"Motorola","ManufacturerSku":"1234","ModelName":"Agent18 SlimShield Case for iPhone 6","UPC":"723755004337","VendorSkus":[{"Description":"Phone case","Sku":"1115884","VendorName":"Amazon"}]}],"ProviderName":"Joe's Product Feed","Version":8}
+                            schema: |
+                                {"name":"ProductFeed","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"**Product Feeds** are used to group all Products together for a particular vendor.","properties":{"Id":{"type":"integer","description":"Unique identifier","example":"34","generated":"true"},"LastReceivedUpdatesFromProviderUtc":{"type":"DateTime","description":"Date and time of last received update, in UTC","example":"2014-11-13T19:40:57.102Z"},"Products":{"type":"array","arrayType":"Product","description":"List of [Products](#product)","ref":"product-feed.Product","properties":{"Id":{"type":"integer","description":"Unique identifier","example":"34","generated":"true","name":"Id"},"Assets":{"type":"array","arrayType":"object","description":"Assets","ref":"product-feed.Asset","name":"Assets","properties":{"Id":{"type":"guid","description":"Unique identifier","example":"31294366-948a-420c-972f-ed1450e3cdd8","generated":"true","name":"Id"},"AssetUrl":{"type":"string","description":"Original URL of asset provided in request","example":"http://image.sample.com/b.png","name":"AssetUrl"},"FileName":{"type":"string","description":"Filename of the asset","example":"Note4-white.png","generated":"true","name":"FileName"},"IsConverted":{"type":"boolean","description":"Indicates if the asset have been converted","example":"false","generated":"true","name":"IsConverted"},"MimeType":{"type":"string","description":"Type of Mime","example":"image/jpg","generated":"true","name":"MimeType"},"OriginalUrl":{"type":"string","description":"Original URL of asset","example":"http://image.sample.com/b.png","generated":"true","name":"OriginalUrl"}},"required":["AssetUrl"]},"Classification":{"type":"object","description":"Refer to [Classification](/concepts/classification-tree) for more information","ref":"product-feed.Classification","name":"Classification","properties":{"Id":{"type":"integer","description":"Product classification identifier","ref":"classification-tree.Classification.Id","example":"4","name":"Id"},"Name":{"type":"string","description":"The name of the Classification your product falls under","ref":"classification-tree.Classification.Name","generated":"true","example":"Smartphones","name":"Name"},"TreeId":{"type":"integer","description":"Classification Tree identifier","ref":"classification-tree.ClassificationTree.Id","example":"1","name":"TreeId"}},"required":["TreeId","Id"]},"ClassificationTreeName":{"type":"string","description":"Name of the classification tree","ref":"classification-tree.ClassificationTree.Name","example":"Cellular & Accessories","name":"ClassificationTreeName"},"Fields":{"type":"array","arrayType":"object","description":"A list of fields for the product. For the product being added, only include the definitions that apply","ref":"product-feed.Field","name":"Fields","properties":{"Definition":{"type":"object","description":"The field definition","ref":"product-feed.Definition","isNested":"true","name":"Definition","properties":{"Id":{"type":"integer","description":"The field definition identifier. The definition for this parameter varies based on the [Environments](/#environments)","example":"1","name":"Id"}},"required":["Definition","Value"]},"Value":{"type":"string","description":"The value for the field","example":"Android","name":"Value"}},"required":["Definition","Value"]},"LastModifiedByVendorUtc":{"type":"datetime","description":"Provides the last date that the product feed was modified by the vendor, in UTC","example":"2015-09-16T10:40:31.101Z","name":"LastModifiedByVendorUtc"},"Manufacturer":{"type":"string","description":"The company that produces the product","example":"Motorola","name":"Manufacturer"},"ManufacturerSku":{"type":"string","description":"The Product SKU from the manufacturer","example":"1234","name":"ManufacturerSku"},"ModelName":{"type":"string","description":"[Master Product](/concepts/product-structure/#Master-Products) name","example":"Agent18 SlimShield Case for iPhone 6","name":"ModelName"},"UPC":{"type":"string","description":"Universal Product Code","example":"723755004337","name":"UPC"},"VendorSkus":{"type":"array","arrayType":"object","description":"Vendor SKU information for the product","ref":"product-feed.VendorSku","name":"VendorSkus","properties":{"Description":{"type":"string","description":"SKU description","example":"Phone case","name":"Description"},"Sku":{"type":"string","description":"Vendor product SKU","example":"1115884","name":"Sku"},"VendorName":{"type":"string","description":"Name of the Vendor","example":"Amazon","name":"VendorName"}}},"ProviderClassification":{"type":"string","description":"Reserved for internal use","example":""},"UnsupportedAssets":{"type":"array","arrayType":"object","description":"This is a legacy property that should not be used","example":""}},"required":["Fields"]},"ProviderName":{"type":"string","description":"Name of the Product Feed","example":"Joe's Product Feed"},"Version":{"type":"integer","description":"Latest revision number","example":"8"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/ProductFeeds({FeedId})/Products({ProductId}):
+    
+    uriParameters:
+        
+        FeedId:
+            displayName: FeedId
+            type: string
+            example: 34
+            required: true
+            description: 
+        
+        ProductId:
+            displayName: ProductId
+            type: string
+            example: 2
+            required: true
+            description: 
+          
+      
+    delete:
+        
+        displayName: Removing a Product from a Feed
+                
+        
+        description: |            
+            Updates a Product Feed (FeedId) by removing a Product (ProductId). 
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    

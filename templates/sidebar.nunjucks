@@ -1,0 +1,377 @@
+entries:
+
+- title: Reference
+  subcategories:
+
+    - title: Dropship
+      subcategories:
+      {% for entry in entries["Dropship"] %}
+      - title: {{entry.API | fixTitle}}
+        url: {{entry.url}}
+        
+        overview: {% for doc in entry.documentation %}{% if doc == "overview" %}true{% endif %}{% endfor %}
+
+        author: {% for doc in entry.documentation %}{% if doc.title == "author" %}{{doc.content}}{% endif %}{% endfor %}
+
+        enumerations:
+        {% for enumeration in entry.enumerations %}
+          - title: {{enumeration}}
+        {% endfor %}
+
+        resources: 
+        {% for resource in entry.resources %}
+          - title: {{resource}}
+        {% endfor %}
+        requests:
+          {% for request in entry.requests %}
+            - title: {{request.name}}
+              url: {{request.url}}
+          {% endfor %}
+
+        extended-examples: {% for doc in entry.documentation %}{% if doc == "extended-examples" %}true{% endif %}{% endfor %}
+
+        searching: {% for doc in entry.documentation %}{% if doc == "searching" %}true{% endif %}{% endfor %}
+
+        pagination: {% for doc in entry.documentation %}{% if doc == "pagination" %}true{% endif %}{% endfor %}
+
+        errors: {% for doc in entry.documentation %}{% if doc == "errors" %}true{% endif %}{% endfor %}
+
+      {% endfor %}
+
+      - title: Shipping Options
+        url: /api/shipping-options
+
+        endpoint: Endpoint Format
+        overview: true
+        authentication: true
+        resources:
+
+          - title: ShippingQuery
+          - title: Item
+          - title: ShippingOption
+
+        requests:
+
+          - title: Get Shipping Options
+            url: get-shipping-options
+
+      - title: Supplier Orders
+        url: /api/supplier-orders
+
+        author: Dropship
+        overview: true
+        resources:
+
+          - title: OrderStatusUpdate
+          - title: ItemStatusUpdate
+          - title: ItemInformation
+          - title: Feed
+          - title: OrderCreated
+          - title: OrderStatusUpdated
+
+        enumerations: 
+
+          - title: OrderStatus
+          - title: ItemStatus 
+
+        requests:
+
+          - title: Updating Order Status
+            url: updating-order-status
+
+          - title: Updating Item Status
+            url: updating-item-status
+
+          - title: Getting the Order Feed
+            url: getting-the-order-feed
+
+          - title: Getting Order Feed Archives
+            url: getting-order-feed-archives
+
+        errors: true
+
+    - title: Partners
+      subcategories:
+      {% for entry in entries["Partners"] %}
+      - title: {{entry.API | fixTitle}}
+        url: {{entry.url}}
+        
+        overview: {% for doc in entry.documentation %}{% if doc == "overview" %}true{% endif %}{% endfor %}
+
+        author: {% for doc in entry.documentation %}{% if doc.title == "author" %}{{doc.content}}{% endif %}{% endfor %}
+
+        enumerations:
+        {% for enumeration in entry.enumerations %}
+          - title: {{enumeration}}
+        {% endfor %}
+
+        resources: 
+        {% for resource in entry.resources %}
+          - title: {{resource}}
+        {% endfor %}
+        requests:
+          {% for request in entry.requests %}
+            - title: {{request.name}}
+              url: {{request.url}}
+          {% endfor %}
+
+        extended-examples: {% for doc in entry.documentation %}{% if doc == "extended-examples" %}true{% endif %}{% endfor %}
+
+        searching: {% for doc in entry.documentation %}{% if doc == "searching" %}true{% endif %}{% endfor %}
+
+        pagination: {% for doc in entry.documentation %}{% if doc == "pagination" %}true{% endif %}{% endfor %}
+
+        errors: {% for doc in entry.documentation %}{% if doc == "errors" %}true{% endif %}{% endfor %}
+
+    {% endfor %}
+
+    - title: Product Library
+      subcategories:
+      {% for entry in entries["Product Library"] %}
+      - title: {{entry.API | fixTitle}}
+        url: {{entry.url}}
+        
+        overview: {% for doc in entry.documentation %}{% if doc == "overview" %}true{% endif %}{% endfor %}
+
+        author: {% for doc in entry.documentation %}{% if doc.title == "author" %}{{doc.content}}{% endif %}{% endfor %}
+
+        enumerations:
+        {% for enumeration in entry.enumerations %}
+          - title: {{enumeration}}
+        {% endfor %}
+
+        resources: 
+        {% for resource in entry.resources %}
+          - title: {{resource}}
+        {% endfor %}
+        requests:
+          {% for request in entry.requests %}
+            - title: {{request.name}}
+              url: {{request.url}}
+          {% endfor %}
+
+        extended-examples: {% for doc in entry.documentation %}{% if doc == "extended-examples" %}true{% endif %}{% endfor %}
+
+        searching: {% for doc in entry.documentation %}{% if doc == "searching" %}true{% endif %}{% endfor %}
+
+        pagination: {% for doc in entry.documentation %}{% if doc == "pagination" %}true{% endif %}{% endfor %}
+
+        errors: {% for doc in entry.documentation %}{% if doc == "errors" %}true{% endif %}{% endfor %}
+
+    {% endfor %}
+
+    - title: RQ
+      subcategories:
+      {% for entry in entries["RQ"] %}
+      - title: {{entry.API | fixTitle}}
+        url: {{entry.url}}
+        
+        overview: {% for doc in entry.documentation %}{% if doc == "overview" %}true{% endif %}{% endfor %}
+
+        author: {% for doc in entry.documentation %}{% if doc.title == "author" %}{{doc.content}}{% endif %}{% endfor %}
+
+        enumerations:
+        {% for enumeration in entry.enumerations %}
+          - title: {{enumeration}}
+        {% endfor %}
+
+        resources: 
+        {% for resource in entry.resources %}
+          - title: {{resource}}
+        {% endfor %}
+        requests:
+          {% for request in entry.requests %}
+            - title: {{request.name}}
+              url: {{request.url}}
+          {% endfor %}
+
+        extended-examples: {% for doc in entry.documentation %}{% if doc == "extended-examples" %}true{% endif %}{% endfor %}
+
+        searching: {% for doc in entry.documentation %}{% if doc == "searching" %}true{% endif %}{% endfor %}
+
+        pagination: {% for doc in entry.documentation %}{% if doc == "pagination" %}true{% endif %}{% endfor %}
+
+        errors: {% for doc in entry.documentation %}{% if doc == "errors" %}true{% endif %}{% endfor %}
+
+      {% endfor %}
+
+        author: RQ
+        overview: true
+        
+        resources:
+
+          - title: VendorIdentity
+          - title: ClientAgent
+          - title: CompanyInformation
+          - title: PurchaseOrderShipmentNotice
+          - title: PurchaseOrder
+          - title: PurchaseOrderData
+          - title: ProductInformation
+          - title: StoreInformation
+
+        requests:
+
+          - title: Getting Pending Companies
+            url: getting-pending-companies
+
+          - title: Getting Enabled Companies
+            url: getting-enabled-companies
+
+          - title: Enabling or Disabling a Company
+            url: enabling-or-disabling-a-company
+
+          - title: Getting a Company List
+            url: getting-a-company-list
+
+          - title: Getting a Store List
+            url: getting-a-store-list
+
+          - title: Getting an Inventory Report
+            url: getting-an-inventory-report
+
+          - title: Creating a Purchase Order
+            url: creating-a-purchase-order
+
+          - title: Creating a Purchase Order Shipment Notice
+            url: creating-a-purchase-order-shipment-notice
+
+
+    {% for entry in entries[""] %}
+    - title: {{entry.API | fixTitle}}
+      url: {{entry.url}}
+      
+      overview: {% for doc in entry.documentation %}{% if doc == "overview" %}true{% endif %}{% endfor %}
+
+      author: {% for doc in entry.documentation %}{% if doc.title == "author" %}{{doc.content}}{% endif %}{% endfor %}
+      {% for doc in entry.documentation %}{% if doc == "exclude" %}exclude: true{% endif %}{% endfor %}
+
+      enumerations:
+      {% for enumeration in entry.enumerations %}
+        - title: {{enumeration}}
+      {% endfor %}
+
+      resources: 
+      {% for resource in entry.resources %}
+        - title: {{resource}}
+      {% endfor %}
+      requests:
+        {% for request in entry.requests %}
+          - title: {{request.name}}
+            url: {{request.url}}
+        {% endfor %}
+
+      extended-examples: {% for doc in entry.documentation %}{% if doc == "extended-examples" %}true{% endif %}{% endfor %}
+
+      searching: {% for doc in entry.documentation %}{% if doc == "searching" %}true{% endif %}{% endfor %}
+
+      pagination: {% for doc in entry.documentation %}{% if doc == "pagination" %}true{% endif %}{% endfor %}
+
+      errors: {% for doc in entry.documentation %}{% if doc == "errors" %}true{% endif %}{% endfor %}
+
+  {% endfor %}
+
+    - title: Authentication
+      url: /api/authentication
+
+      author: 
+      overview: true
+      requests:
+        
+        - title: Obtaining an Access Token
+          url: obtaining-an-access-token
+
+        - title: Refreshing an Access Token
+          url: refreshing-an-access-token
+
+- title: Guides
+  subcategories:
+      
+    - title: Creating an In Store Order
+      url: /guides/creating-an-in-store-order/
+
+    - title: Creating a User for RQ
+      url: /guides/creating-a-user-for-rq/
+
+    - title: Dropship Client Integration Guides
+    
+      thirdLevelItems:
+
+        - title: Dropship Point of Sale Guide
+          url: /guides/dropship-pos-guide/
+
+    - title: Dropship Partner Integration Guides
+
+      thirdLevelItems:
+
+        - title: Dropship Onboarding Guide
+          url: /guides/dropship-onboarding-guide/
+
+        - title: Dropship Order Management Guide
+          url: /guides/dropship-order-guide/
+
+        - title: Dropship Test Order Guide
+          url: /guides/dropship-test-order-guide/
+
+    - title: eCommerce Integration Guide
+      url: /guides/commerce-guide/
+
+    - title: Endless Aisle Integration Guide
+
+      thirdLevelItems:
+
+        - title: Overview
+          url: /guides/ea-guide/overview
+
+        - title: Corporate Hierarchy
+          url: /guides/ea-guide/corporate-hierarchy       
+
+        - title: Content
+          url: /guides/ea-guide/content
+
+        - title: Inventory
+          url: /guides/ea-guide/inventory
+
+        - title: Orders
+          url: /guides/ea-guide/orders
+
+    - title: RQ Data Connect Guide
+      url: /guides/rq-data-connect/
+
+    - title: Third Party Authentication
+      url: /guides/3pa/
+      
+- title: Core Concepts
+  subcategories:
+
+    - title: Classification Tree
+      url: /concepts/classification-tree/
+
+    - title: Company Tree
+      url: /concepts/company-tree/
+
+    - title: Product Library
+      url: /concepts/product-library/
+
+    - title: Product Structure
+      url: /concepts/product-structure/
+
+    - title: User Manager
+      url: /concepts/user-manager/
+
+- title: FAQ
+  subcategories:
+
+    - title: Authentication FAQ
+      url: /faq/auth-faq/
+
+    - title: Dropship FAQ
+      url: /faq/dropship-faq/
+
+- title: Sample Applications
+  subcategories:
+
+    - title: Magento Sync
+      url: /reference-applications/
+
+    - title: Shopify Integration
+      url: /reference-applications/      

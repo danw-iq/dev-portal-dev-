@@ -1,0 +1,113 @@
+#%RAML 0.8
+title: cost-feed
+version: v1
+baseUri: https://dropship{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: | 
+      Dropship
+  - title: overview
+    content: |
+      The cost feed provides iQmetrix with the wholesale cost (inclusive cost for the company) for each product.  
+      The cost feed allows suppliers to input a list of products, where each product includes one cost and list of associated companies.
+
+      These costs will be provided for retailers (companies) to use for future transactions and will be reflected in RQ and BI reporting. 
+
+      Products can be repeated in this feed with different costs. For example, the iPhone 6 could be priced differently depending on where it is sold. 
+
+      {{note}} 
+      Ensure each company ID has only <strong>one</strong> cost per product.
+      {{end}}
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Cannot find supplier identifier in the uri` | Occurs when entering an incorrect `SupplierId` in the uri |
+resourceTypes:
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            202:
+              body:
+                application/json:
+                  schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Cost: |
+      {
+        "name": "Cost",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifer", "example": "2e18496c-8f73-4298-8c96-a07816926734", "generated": "true" }, 
+          "Products": { "type":"array", "arrayType": "object", "ref":"cost-feed.Product", "isNested": "true", "description": "List of products for which the cost is being updated" }
+        },
+        "required": [ "Products" ]
+      }
+  - Product: |
+      {
+        "exclude": "true",
+        "name": "Product",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Sku": { "type": "string", "description": "Vendor product SKU", "example": "1115884" }, 
+          "Cost": { "type": "decimal", "description": "Vendor product cost applied to the associated companies", "example": "12.99" }, 
+          "CompanyIds": { "type": "array", "arrayType": "integer", "description": "List of [Company](/api/company-tree#company) identifiers to receive Vendor product cost", "example": "14146" }
+        },
+        "required": [ "Sku", "Cost", "CompanyIds" ]
+      }
+/Suppliers({SupplierId})/Cost:
+  uriParameters:
+    SupplierId:
+      displayName: SupplierId
+      type: string
+      example: 14107
+      description: Identifier of the Supplier
+      required: true
+  type:
+    collectionWriteOnly:
+      resource: Cost
+  post:
+    displayName: Adding a Product to Cost Feed

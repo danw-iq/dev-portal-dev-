@@ -1,0 +1,48 @@
+{
+  "name": "raml2Markdown",
+  "description": "Converts RAML to a specific Markdown format",
+  "version": "1.0.0",
+  "author": {
+    "name": "Melissa Kendall",
+    "email": "melissak@iqmetrix.com"
+  },
+  "bugs": {
+    "url": "https://github.com/iQmetrix/api-documentation/issues"
+  },
+  "dependencies": {
+    "async": "*",
+    "chai": "^3.5.0",
+    "cheerio": "*",
+    "commander": "*",
+    "foreachasync": "*",
+    "guid": "0.0.12",
+    "http-status-codes": "*",
+    "jade": "*",
+    "json-schema-compatibility": "*",
+    "jsonpath": "*",
+    "lodash": "*",
+    "nunjucks": "*",
+    "pluralize": "*",
+    "pretty-data": "^0.40.0",
+    "q": "*",
+    "raml2obj": "*",
+    "request": "^2.74.0",
+    "supermarked": "*",
+    "underscore": "^1.8.3",
+    "urijs": "*",
+    "walk": "*",
+    "when": "*",
+    "xml2json": "^0.10.0"
+  },
+  "homepage": "https://github.com/iQmetrix/api-documentation",
+  "keywords": [
+    "RAML"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/iQmetrix/api-documentation.git"
+  },
+  "preferGlobal": "false",
+  "gitHead": "4be78cc683fab85082d1f653b16749782d44c41a"
+}

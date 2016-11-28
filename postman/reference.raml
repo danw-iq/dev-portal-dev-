@@ -1,0 +1,193 @@
+#%RAML 0.8
+title: reference
+baseUri: https://referencedemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - Country: |
+        {
+          "name": "Country",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "1" }, 
+            "Code": { "type": "string",  "description": "Country Code. Uses the ISO 3166-1 alpha-2 standard", "example": "CA" }, 
+            "Name": { "type": "string", "description": "Country name", "example": "Canada" }, 
+            "Version": { "type": "integer", "description": "Latest version number", "example": "1" }, 
+            "States": { "type": "array", "arrayType": "object", "description": "States/Provinces", "ref": "reference.State" },
+            "Alpha3Code": { "type": "string", "description": "Reserved for future use", "example": "" }          
+          }
+        } 
+        
+
+    
+
+    
+    - State: |
+        {
+          "name": "State",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "description": "Country name", "example": "Alberta" }, 
+            "Code": { "type": "string", "description": "State/Province Code. Based off the ISO 3166-2 standard", "example": "AB" },
+            "Id": { "type": "integer", "description": "Reserved for future use", "example": "0" },
+            "Alpha3Code": { "type": "string", "description": "Reserved for future use", "example": "" },
+            "CountryCode": { "type": "string", "description": "Reserved for future use", "example": "" }
+          }
+        }
+        
+
+    
+
+    
+    - TimeZone: |
+        {
+          "name": "TimeZone",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "string", "description": "Identifier", "example": "Alaskan Standard Time" }, 
+            "Name": { "type": "string", "description": "Name", "example": "(UTC-09:00) Alaska" },
+            "SupportsDaylightSavingTime": { "type": "boolean", "description": "A flag to indicate if this TimeZone observes Daylight Savings Time", "example": "true" }
+          }
+        }  
+        
+
+    
+
+    
+    - Currency: |
+        {
+          "name": "Currency",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "To represent a Currency symbol in unicode, use the format <code>&#(Code);</code>, for USD this would be <code>&#36;</code> which is displayed as &#36; ",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "106" }, 
+            "Name": { "type": "string", "description": "Currency Name", "example": "United States Dollar" },
+            "Code": { "type": "string", "description": "Identifier for the Currency", "example": "USD" },
+            "Symbol": { "type": "array", "arrayType": "integer", "description": "Unicode decimal value for symbols associated with this currency", "example": "36" },
+            "Version": { "type": "integer", "description": "Latest version number", "example": "1" },
+            "LanguageNameMap": { "type": "string", "description": "Reserved for future use", "example": "" }
+          }
+        }                   
+        
+
+    
+
+
+/Countries:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting All Countries
+                
+        
+        headers:
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":1,"Code":"CA","Name":"Canada","Version":1,"States":[{"Name":"Alberta","Code":"AB"}]}]
+                            schema: |
+                                {"name":"Country","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"1"},"Code":{"type":"string","description":"Country Code. Uses the ISO 3166-1 alpha-2 standard","example":"CA"},"Name":{"type":"string","description":"Country name","example":"Canada"},"Version":{"type":"integer","description":"Latest version number","example":"1"},"States":{"type":"array","arrayType":"object","description":"States/Provinces","ref":"reference.State","properties":{"Name":{"type":"string","description":"Country name","example":"Alberta","name":"Name"},"Code":{"type":"string","description":"State/Province Code. Based off the ISO 3166-2 standard","example":"AB","name":"Code"},"Id":{"type":"integer","description":"Reserved for future use","example":"0"},"Alpha3Code":{"type":"string","description":"Reserved for future use","example":""},"CountryCode":{"type":"string","description":"Reserved for future use","example":""}}},"Alpha3Code":{"type":"string","description":"Reserved for future use","example":""}}}
+                            
+                        
+                    
+                
+            
+    
+
+/TimeZones:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting All Time Zones
+                
+        
+        headers:
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"Alaskan Standard Time","Name":"(UTC-09:00) Alaska","SupportsDaylightSavingTime":true}]
+                            schema: |
+                                {"name":"TimeZone","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"string","description":"Identifier","example":"Alaskan Standard Time"},"Name":{"type":"string","description":"Name","example":"(UTC-09:00) Alaska"},"SupportsDaylightSavingTime":{"type":"boolean","description":"A flag to indicate if this TimeZone observes Daylight Savings Time","example":"true"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/Currencies:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting All Currencies
+                
+        
+        description: |            
+            Currency resources are returned in ascending alphabetical order by Code.
+
+        
+        headers:
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":106,"Name":"United States Dollar","Code":"USD","Symbol":[36],"Version":1}]
+                            schema: |
+                                {"name":"Currency","type":"array","$schema":"http://json-schema.org/draft-03/schema","description":"To represent a Currency symbol in unicode, use the format <code>&#(Code);</code>, for USD this would be <code>&#36;</code> which is displayed as &#36; ","properties":{"Id":{"type":"integer","description":"Identifier","example":"106"},"Name":{"type":"string","description":"Currency Name","example":"United States Dollar"},"Code":{"type":"string","description":"Identifier for the Currency","example":"USD"},"Symbol":{"type":"array","arrayType":"integer","description":"Unicode decimal value for symbols associated with this currency","example":"36"},"Version":{"type":"integer","description":"Latest version number","example":"1"},"LanguageNameMap":{"type":"string","description":"Reserved for future use","example":""}}}
+                            
+                        
+                    
+                
+            
+    

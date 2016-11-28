@@ -1,0 +1,950 @@
+#%RAML 0.8
+title: RQ Data Connect Finance Reports
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - ChargeBackSummaryReportLocationData: |
+        {
+          "name": "ChargeBackSummaryReportLocationData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Quantity": { "type": "integer", "description": "Qty", "database": "INT", "example": "1" },
+            "StoreID": { "type": "integer", "description": "Internal identifier for a store in RQ", "database": "INT", "example": "6679" },
+            "StoreName": { "type": "string", "description": "Location", "database": "NVARCHAR (MAX)", "example": "100: My Network LLC - Anchorage" },
+            "TotalValue": { "type": "decimal", "description": "Total Value - dollar value of the charge backs", "database": "MONEY", "example": "-100" }
+          }
+        }
+        
+
+    
+
+    
+    - ChargeBackSummaryReportCategoryData: |
+        {
+          "name": "ChargeBackSummaryReportCategoryData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CategoryName": { "type": "string", "description": "Category Name", "database": "NVARCHAR (MAX)", "example": "Financing" },
+            "CategoryNumber": { "type": "string", "description": "Internal identifier for a Category in RQ", "database": "NVARCHAR (100)", "example": "10101012" },
+            "CategoryPath": { "type": "string", "description": "Category", "database": "NVARCHAR (MAX)", "example": ">> Activations >> Financing" },
+            "Quantity": { "type": "integer", "description": "Qty", "database": "INT", "example": "1" },
+            "TotalValue": { "type": "decimal", "description": "Total Value - dollar value of the charge backs", "database": "MONEY", "example": "-100" }
+          }
+        }
+        
+
+    
+
+    
+    - ChargeBackSummaryReportProductSummaryData: |
+        {
+          "name": "ChargeBackSummaryReportProductSummaryData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "GlobalProductID": { "type": "integer", "description": "Internal identifier for a product in RQ", "database": "INT", "example": "9809" },
+            "ProductIdentifier": { "type": "string", "description": "Product SKU", "database": "VARCHAR (12)", "example": "ACFNRB000008" },
+            "ProductName": { "type": "string", "description": "Product Name", "database": "NVARCHAR (MAX)", "example": "Vendor Rebate" },
+            "Quantity": { "type": "integer", "description": "Qty", "database": "INT", "example": "1" },
+            "TotalValue": { "type": "decimal", "description": "Total Value - dollar value of the charge backs", "database": "MONEY", "example": "-100" }
+          }
+        }
+        
+
+    
+
+    
+    - ChargeBackSummaryReportProductDetailData: |
+        {
+          "name": "ChargeBackSummaryReportProductDetailData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "AssociationNumber": { "type": "integer", "description": "When adding products with PAW all associated products from the sale have the same association number tied together, this value increments based on how many sales are made on that order", "database": "SMALLINT", "example": "7" },
+            "CarrierPrice": { "type": "decimal", "description": "Carrier Price - value or revenue assigned by the carrier", "database": "MONEY", "example": "0" },
+            "CategoryName": { "type": "string", "description": "Category - inventory category to which the SKU belongs", "database": "VARCHAR(100)", "example": "10101012" },
+            "CategoryNumber": { "type": "string", "description": "Internal identifier for a Category in RQ", "database": "VARCHAR(100)", "example": "Financing" },
+            "ChargeBackCode": { "type": "string", "description": "Charge Back Code - specific code for this charge back", "database": "VARCHAR(500)", "example": "iQmetrix User" },
+            "ChargedBackByEmployee": { "type": "string", "description": "Tendered By - name of the employee logged into RQ when the invoice was tendered", "database": "VARCHAR(160)", "example": "1" },
+            "ChargedBackByEmployeeID": { "type": "integer", "description": "Identifier for an employee in RQ", "database": "INT", "example": "1" },
+            "Comments": { "type": "string", "description": "Comments - any comments associated with this charge back", "database": "NVARCHAR(MAX)", "example": "" },
+            "CustomerID": { "type": "integer", "description": "Internal identifier for a customer in RQ", "database": "INT", "example": "null" },
+            "CustomerName": { "type": "string", "description": "Customer Name - name of the customer as entered on their profile", "database": "VARCHAR(160)", "example": "No Customer" },
+            "DateChargedBack": { "type": "datetime", "description": "Charged Back - date of the charge back", "database": "DATETIME", "example": "2016-05-20T07:57:42.417" },
+            "DateInvoiced": { "type": "datetime", "description": "Invoiced - date originally invoiced", "database": "DATETIME", "example": "2016-05-20T06:47:10.543" },
+            "FullChargeBackID": { "type": "guid", "description": "Internal identifier in RQ", "database": "IDUNIQUEIDENTIFIER", "example": "322aa012-82dc-4373-a7d6-82faa2b4738b" },
+            "FullChargeBackIDByStore": { "type": "string", "description": "Charge Back # - invoice number for the charge back", "database": "VARCHAR(30)", "example": "77224FC1" },
+            "GlobalProductID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "9809" },
+            "InvoicedByEmployee": { "type": "string", "description": "Sales Person - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box", "database": "VARCHAR(160)", "example": "iQmetrix User" },
+            "InvoicedByEmployeeID": { "type": "integer", "description": "Internal identifier for an Employee in RQ", "database": "INT", "example": "1" },
+            "ProductIdentifier": { "type": "string", "description": "Product SKU - SKU of the product charged back", "database": "VARCHAR(12)", "example": "ACFNRB000008" },
+            "ProductName": { "type": "string", "description": "Product Name - description of the product charged back", "database": "VARCHAR(100)", "example": "Vendor Rebate" },
+            "Quantity": { "type": "integer", "description": "Qty - total count of charge backs", "database": "INT", "example": "1" },
+            "RelatedProduct": { "type": "string", "description": "Related Product - related product, if applicable", "database": "VARCHAR(100)", "example": "" },
+            "RelatedProductID": { "type": "integer", "description": "Internal identifier for a product in RQ", "database": "INT", "example": "0" },
+            "SaleInvoiceID": { "type": "integer", "description": "Internal identifier for an invoice in RQ", "database": "INT", "example": "129036" },
+            "SaleInvoiceIDByStore": { "type": "string", "description": "Invoice # - original invoice number", "database": "VARCHAR(30)", "example": "77224IN5" },
+            "SerialNumber": { "type": "string", "description": "Tracking Number - tracking number associated with the product charged back", "database": "VARCHAR(100)", "example": "1123123132" },
+            "TotalValue": { "type": "decimal", "description": "Total Value - dollar value of the charge backs", "database": "MONEY", "example": "-100" },
+            "VendorName": { "type": "string", "description": "Name for a vendor in RQ", "database": "NVARCHAR(MAX)", "example": "" },
+            "VendorSKU": { "type": "string", "description": "Vendor SKU in RQ", "database": "VARCHAR(25)", "example": "" }
+          }
+        }
+        
+
+    
+
+    
+    - ChargeBackSummaryReportEmployeeData: |
+        {
+          "name": "ChargeBackSummaryReportEmployeeData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Commission": { "type": "decimal", "description": "Commission", "database": "MONEY", "example": "0" },
+            "InvoicedByEmployee": { "type": "string", "description": "Employee", "database": "VARCHAR (51)", "example": "iQmetrix User" },
+            "InvoicedByEmployeeID": { "type": "integer", "description": "Internal identifier for an Employee in RQ", "database": "INT", "example": "1" },
+            "Quantity": { "type": "integer", "description": "Qty", "database": "INT", "example": "1" },
+            "TotalValue": { "type": "decimal", "description": "Total Value - dollar value of the charge backs", "database": "MONEY", "example": "5" }
+          }
+        }
+        
+
+    
+
+    
+    - ChargeBackSummaryReportHardwareCollectionData: |
+        {
+          "name": "ChargeBackSummaryReportHardwareCollectionData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "AssociationNumber": { "type": "integer", "description": "When adding products with PAW all associated products from the sale have the same association number tied together, this value increments based on how many sales are made on that order", "database": "SMALLINT", "example": "7" },
+            "CommissionRebate1": { "type": "string", "description": "Commission Rebate 1 - name of the first commission rebate", "database": "NVARCHAR(1000)", "example": "SaslTel New Activation" },
+            "CommissionRebate2": { "type": "string", "description": "Commission Rebate 2 - name of the second commission rebate", "database": "NVARCHAR(1000)", "example": "" },
+            "CustomerID": { "type": "integer", "description": "Identifier for a customer in RQ", "database": "INT", "example": "null" },
+            "CustomerName": { "type": "string", "description": "Customer Name - name of the customer as entered on their profile", "database": "VARCHAR(160)", "example": "No Customer" },
+            "DateInvoiced": { "type": "datetime", "description": "Tendered On - date tendered", "database": "DATETIME", "example": "2016-05-20T06:47:10.543" },
+            "EquipmentRebate": { "type": "string", "description": "Equipment Rebate - name of the equipment rebate", "database": "NVARCHAR(1000)", "example": "" },
+            "HardwareRebateGlobalProductID": { "type": "integer", "description": "Internal identifier for a product in RQ", "database": "INT", "example": "1" },
+            "HardwareRebateSKU": { "type": "string", "description": "Equipment Rebate SKU - SKU of the equipment rebate", "database": "VARCHAR(12)", "example": "CPCCRB000104" },
+            "InvoicedByEmployee": { "type": "string", "description": "Sales Person - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box", "database": "VARCHAR(160)", "example": "iQmetrix User" },
+            "InvoicedByEmployeeID": { "type": "integer", "description": "Internal identifier for an employee in RQ", "database": "INT", "example": "1" },
+            "IsFullChargedBack1": { "type": "string", "description": "Charged Back - yes if charged back", "database": "VARCHAR(10)", "example": "" },
+            "IsFullChargedBack2": { "type": "string", "description": "Charged Back - yes if charged back", "database": "VARCHAR(10)", "example": "" },
+            "IsFullChargedBack3": { "type": "string", "description": "Charged Back - yes if charged back", "database": "VARCHAR(10)", "example": "" },
+            "PhoneNumber": { "type": "string", "description": "Phone - Mobile number of the device", "database": "VARCHAR(30)", "example": "" },
+            "Price": { "type": "decimal", "description": "Price - actual invoiced price", "database": "MONEY", "example": "99.99" },
+            "RatePlanRebate2GlobalProductID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "2" },
+            "RatePlanRebate2SKU": { "type": "string", "description": "Commission Rebate 2 SKU - SKU of the second commission rebate", "database": "VARCHAR(12)", "example": "" },
+            "RatePlanRebateGlobalProductID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "3" },
+            "RatePlanRebateSKU": { "type": "string", "description": "Commission Rebate SKU - SKU of the first commission rebate", "database": "VARCHAR(12)", "example": "" },
+            "RelatedProduct": { "type": "string", "description": "Related Product - product associated with this rebate", "database": "VARCHAR(100)", "example": "" },
+            "RelatedProductID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "0" },
+            "SaleInvoiceID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "423" },
+            "SaleInvoiceIDByStore": { "type": "string", "description": "Invoice # - original invoice number", "database": "VARCHAR(30)", "example": "" },
+            "SerialNumber": { "type": "string", "description": "Serial number", "database": "VARCHAR(100)", "example": "" },
+            "StoreID": { "type": "integer", "description": "Collection Date - date collected", "database": "INT", "example": "6679" },
+            "StoreName": { "type": "string", "description": "Tendered At - location where tendered", "database": "VARCHAR(100)", "example": "100: My Network LLC - Anchorage" },
+            "VendorName": { "type": "string", "description": "Name for a vendor in RQ", "database": "NVARCHAR(MAX)", "example": "" },
+            "VendorSKU": { "type": "string", "description": "Vendor SKU", "database": "VARCHAR(25)", "example": "" }
+          }
+        }
+        
+
+    
+
+    
+    - PaymentIntegrationTransactionReportData: |
+        {
+          "type": "array",
+          "name": "PaymentIntegrationTransactionReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": {
+            "InvoiceID": { "type": "integer", "database": "INT", "example": "122337", "description": "Unique identifier for the invoice in RQ" },
+            "StoreInvoiceID": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN5981", "description": "Invoice identifier displayed to the user and on the printed invoice" },
+            "CustomerName": { "type": "string", "database": "VARCHAR(101)", "example": "Alice Kim", "description": "Customer name" },
+            "EmployeeName": { "type": "string", "database": "VARCHAR(51)", "example": "Sam Smith", "description": "Employee name" },
+            "InvoiceTypeID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for the InvoiceType, see InvoiceType property" },
+            "InvoiceType": { "type": "string", "database": "VARCHAR(15)", "example": "Invoice", "description": "Name of the <a href='#invoicetype'>InvoiceType</a>" },
+            "LocationEntityID": { "type": "integer","database": "INT","example": "14192","description": "Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store" },
+            "AuthType": { "type": "string", "database": "VARCHAR(4)", "example": "Sale", "description": "Indicates sale or refund" },
+            "TransType": { "type": "string", "database": "VARCHAR(8)", "example": "Credit", "description": "What type of transaction this is (Credit/Debit)" },
+            "CardTypeID": { "type": "integer","database": "INT","example": "2","description": "Identifier for the CardType. See CardType property" },
+            "CardType": { "type": "string", "database": "VARCHAR(50)", "example": "Visa","description": "Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#cardtype'>CardType</a>. See <a href='#getting-card-types'>Getting Card Types</a> for a list of possible values" },
+            "Amount": { "type": "decimal","database": "MONEY","example": "4","description": "Amount requested" },
+            "EntryTypeID": { "type": "integer","database": "INT","example": "2","description": "Identifier for the EntryType, see EntryType property" },
+            "EntryType": { "type": "string", "database": "VARCHAR(50)", "example": "Swiped", "description": "Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#entrytype'>EntryType</a>. See <a href='#getting-entry-types'>Getting Entry Types</a> for a list of possible values" },
+            "MerchantNumber": { "type": "string","database": "VARCHAR(50)","example": "1111","description": "The Merchant Number / ID used in payment credentials for this transaction" },
+            "TerminalNumber": { "type": "string","database": "VARCHAR(50)","example": "90572837","description": "The Terminal Number / ID used in payment credentials for this transaction" },
+            "AuthDateUTC": { "type": "datetime","database": "DATETIME","example": "2015-01-28T16:31:58.877","description": "Date of Transaction in UTC" },
+            "AuthorizationNumber": { "type": "string","database": "VARCHAR(10)","example": "ABS251","description": "Authorization Number from Payment Processor" },
+            "CardholderName": { "type": "string","database": "VARCHAR(100)","example": "John Test","description": "Name of Cardholder" },
+            "CardBin": { "type": "string","database": "VARCHAR(6)","example": "545454","description": "The payment cards Bank Identifiation Number (BIN)" },
+            "LastFourDigits": { "type": "string","database": "VARCHAR(4)","example": "5454","description": "Last four digits of card" },
+            "TransactionResult": { "type": "string", "database": "VARCHAR(110)", "example": "Approved", "description": "Indicated Approved or Declined" },
+            "ReversedVoided": { "type": "integer", "database": "INT", "example": "0", "description": "A flag to indicate if the transaction was reversed/voided (1) or not (0)" },
+            "ReversedVoidedReason": { "type": "string","database": "VARCHAR(150)","example": "Auto Void from Incomplete Invoice","description": "String explanation on why the original transaction was voided. Only appears on void transactions, not on the original sale transation" },
+            "VoidedByEmployeeEntityID": { "type": "string","database": "NVARCHAR(50)","example": "512","description": "Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> who voided this transaction" },
+            "VoidedDate": { "type": "datetime","database": "DATETIME","example": "2015-01-30T16:31:58.877","description": "Date Transaction was voided in UTC" }
+          }
+        }         
+        
+
+    
+
+    
+    - TaxDetailsReportData: |
+        {
+          "type": "array",
+          "name": "TaxDetailsReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": {
+            "DateCreated": { "type": "datetime","database": "DATETIME","example": "2015-12-31T12:35:07.05","description": "Invoice Date - date the invoice was tendered" },
+            "SaleInvoiceID": { "type": "integer","database": "INT","example": "166519","description": "Internal identifier for an Invoice in RQ" },
+            "InvoiceIDByStore": { "type": "string","database": "VARCHAR(14)","example": "MIL44AH9","description": "Invoice #- invoice number assigned by RQ" },
+            "TenderedBy": { "type": "string","database": "VARCHAR(51)","example": "John Test","description": "Invoiced By- name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund" },
+            "TenderedAt": { "type": "string","database": "NVARCHAR(MAX)","example": "Cornwall","description": "Invoiced At- name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund" },
+            "CustomerName": { "type": "string","database": "VARCHAR(151)","example": "Alice Smith","description": "Customer Name - name of the customer as entered on their profile" },
+            "Comments": { "type": "string","database": "NVARCHAR(MAX)","example": "Return","description": "Invoice Comments - any comments on the invoice" },
+            "Invoiced": { "type": "decimal","database": "MONEY","example": "-910.94","description": "Total Invoiced - total dollar value of the invoice" },
+            "Sales": { "type": "decimal","database": "MONEY","example": "-910.94","description": "Total Sales - total dollar value of the sales on the invoice, usually the same as Total Invoiced except in the case of gift card sales" },
+            "Cost": { "type": "decimal","database": "MONEY","example": "-405.67","description": "Total Cost - total purchase cost for all product on the invoice" },
+            "Profit": { "type": "decimal","database": "MONEY","example": "-505.27","description": "Total GP - gross profit for the invoice" },
+            "Adjusted": { "type": "string","database": "VARCHAR(32)","example": "No","description": "Adjusted - indicates if the invoice was adjusted" },
+            "Taxable": { "type": "string","database": "VARCHAR(32)","example": "Yes","description": "Taxable - indicates if this line is taxable" },
+            "Refund": { "type": "string","database": "VARCHAR(32)","example": "Yes","description": "Refund - indicates if this is a refund" },
+            "VendorRebates": { "type": "decimal","database": "MONEY","example": "0","description": "Total Vendor Rebates - total vendor rebate dollar amount" },
+            "VendorRebatesTax": { "type": "decimal","database": "MONEY","example": "0","description": "Tax On Vendor Rebates - dollar amount of tax on any vendor rebates" },
+            "Coupons": { "type": "decimal","database": "MONEY","example": "0","description": "Total Coupons - total dollar amount of coupons" },
+            "CouponsTax": { "type": "decimal","database": "MONEY","example": "0","description": "Tax On Coupons - total dollar amount of tax collected on coupons" },
+            "YourPriceTaxableSales": { "type": "decimal","database": "MONEY","example": "-910.94","description": "Full Your Price Taxable Amount - total your price taxable amount (based on the price the product was sold for)" },
+            "ListPriceTaxableSales": { "type": "decimal","database": "MONEY","example": "0","description": "Full List Price Taxable Amount - total list price taxable amount (based on the original retail price rung up at the POS based on the inventory settings, prior to giving a discount)" },
+            "GreaterOfTaxableSales": { "type": "decimal","database": "MONEY","example": "-69.94","description": "Full Greater of Your Price And Cost Taxable Amount - based on (greater of the price the product sold for, or the cost of the product)" },
+            "FlatTaxableSales": { "type": "decimal","database": "MONEY","example": "0","description": "Full Flat Taxable Amount - based on the price the product was sold for" },
+            "NonTaxableSales": { "type": "decimal","database": "MONEY","example": "0","description": "Tax Exempt Amount - total tax exempt amount" },
+            "TaxCollected": { "type": "decimal","database": "MONEY","example": "-59.79","description": "Total Tax Paid Amount - total dollar amount of tax paid" },
+            "TaxExemptReasonCode": { "type": "string","database": "VARCHAR(1)","example": "","description": "" }
+          }
+        }        
+        
+
+    
+
+    
+    - EntryType: |
+        {
+        
+            "type": "array",
+            "name": "EntryType",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": {
+              "EntryTypeID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier" },
+              "EntryTypeDescription": { "type": "string", "database": "VARCHAR(50)", "example": "Swiped", "description": "Description" },
+              "Message": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Swiped", "description": "Message" }
+            }
+          }
+        
+
+    
+
+    
+    - CardType: |
+        {
+        
+            "type": "array",
+            "name": "CardType",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": {
+              "CardTypeID": { "type": "integer", "database": "INT", "example": "2", "description": "Identifier" },
+              "FullName": { "type": "string", "database": "VARCHAR(50)", "example": "Mastercard", "description": "Full card name" },
+              "Mnemonic": { "type": "string", "database": "VARCHAR(2)", "example": "MC", "description": "Card abbreviation" },
+              "AccountNumberLength": { "type": "integer", "database": "INT", "example": "16", "description": "Length of account number" },
+              "CvvLength": { "type": "integer", "database": "INT", "example": "3", "description": "Length of CVV number on card" }
+            }
+          }      
+        
+
+    
+
+
+/reports/chargebacksummaryreport?SearchMethod={SearchMethod}&CategoryNumber={CategoryNumber}&InvoiceStartDate={InvoiceStartDate}&InvoiceStopDate={InvoiceStopDate}&ChargeBackStartDate={ChargeBackStartDate}&ChargeBackStopDate={ChargeBackStopDate}&JournalIDs={JournalIDs}&QueryPart={QueryPart}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&ProductIdentifier={ProductIdentifier}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        SearchMethod:
+            displayName: SearchMethod
+            type: integer
+            example: 1
+            required: true
+            description: Acceptable values include 1 for Category, 2 for Product or 3 for Journal Number
+        
+        CategoryNumber:
+            displayName: CategoryNumber
+            type: integer
+            example: 10
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#categorynumber'>CategoryNumber</a>. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+        
+        InvoiceStartDate:
+            displayName: InvoiceStartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Filter report by invoices created after this date
+        
+        InvoiceStopDate:
+            displayName: InvoiceStopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Filter report by invoices created before this date
+        
+        ChargeBackStartDate:
+            displayName: ChargeBackStartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Filter report by charge backs created after this date
+        
+        ChargeBackStopDate:
+            displayName: ChargeBackStopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Filter report by charge backs created before this date
+        
+        JournalIDs:
+            displayName: JournalIDs
+            type: integer
+            example: -1
+            required: true
+            description: Filter report by Journal. Use -1 for All Journals.
+        
+        QueryPart:
+            displayName: QueryPart
+            type: integer
+            example: 1
+            required: true
+            description: See report description for a list of acceptable values
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoIDs:
+            displayName: ForWhoIDs
+            type: integer
+            example: 6679
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        ProductIdentifier:
+            displayName: ProductIdentifier
+            type: string
+            example: ASCLMO000001
+            required: false
+            description: Product SKU
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Charge Back Summary Report
+                
+        
+        description: |            
+            <a name="commission-reports"></a>For more information, see {{support_ChargeBackSummaryReport}}.
+            
+            Note that this report has multiple responses, depending on the ReportPart specified.
+            
+            | Report Part | Response |
+            |:------------|:---------|
+            | 1 | <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#chargebacksummaryreportlocationdata'>ChargeBackSummaryReportLocationData</a> |
+            | 2 | <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#chargebacksummaryreportcategorydata'>ChargeBackSummaryReportCategoryData</a> |
+            | 3 | <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#chargebacksummaryreportproductsummarydata'>ChargeBackSummaryReportProductSummaryData</a> |
+            | 4 | <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#chargebacksummaryreportproductdetaildata'>ChargeBackSummaryReportProductDetailData</a> |
+            | 5 | <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#chargebacksummaryreportemployeedata'>ChargeBackSummaryReportEmployeeData</a> |
+            | 6 | <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#chargebacksummaryreporthardwarecollectiondata'>ChargeBackSummaryReportHardwareCollectionData</a> |
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Quantity":1,"StoreID":6679,"StoreName":"100: My Network LLC - Anchorage","TotalValue":-100}]
+                            schema: |
+                                {"name":"ChargeBackSummaryReportLocationData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Quantity":{"type":"integer","description":"Qty","database":"INT","example":"1"},"StoreID":{"type":"integer","description":"Internal identifier for a store in RQ","database":"INT","example":"6679"},"StoreName":{"type":"string","description":"Location","database":"NVARCHAR (MAX)","example":"100: My Network LLC - Anchorage"},"TotalValue":{"type":"decimal","description":"Total Value - dollar value of the charge backs","database":"MONEY","example":"-100"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Quantity":1,"StoreID":6679,"StoreName":"100: My Network LLC - Anchorage","TotalValue":-100}]
+                            schema: |
+                                {"name":"ChargeBackSummaryReportLocationData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Quantity":{"type":"integer","description":"Qty","database":"INT","example":"1"},"StoreID":{"type":"integer","description":"Internal identifier for a store in RQ","database":"INT","example":"6679"},"StoreName":{"type":"string","description":"Location","database":"NVARCHAR (MAX)","example":"100: My Network LLC - Anchorage"},"TotalValue":{"type":"decimal","description":"Total Value - dollar value of the charge backs","database":"MONEY","example":"-100"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Quantity":1,"StoreID":6679,"StoreName":"100: My Network LLC - Anchorage","TotalValue":-100}]
+                            schema: |
+                                {"name":"ChargeBackSummaryReportLocationData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Quantity":{"type":"integer","description":"Qty","database":"INT","example":"1"},"StoreID":{"type":"integer","description":"Internal identifier for a store in RQ","database":"INT","example":"6679"},"StoreName":{"type":"string","description":"Location","database":"NVARCHAR (MAX)","example":"100: My Network LLC - Anchorage"},"TotalValue":{"type":"decimal","description":"Total Value - dollar value of the charge backs","database":"MONEY","example":"-100"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Quantity":1,"StoreID":6679,"StoreName":"100: My Network LLC - Anchorage","TotalValue":-100}]
+                            schema: |
+                                {"name":"ChargeBackSummaryReportLocationData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Quantity":{"type":"integer","description":"Qty","database":"INT","example":"1"},"StoreID":{"type":"integer","description":"Internal identifier for a store in RQ","database":"INT","example":"6679"},"StoreName":{"type":"string","description":"Location","database":"NVARCHAR (MAX)","example":"100: My Network LLC - Anchorage"},"TotalValue":{"type":"decimal","description":"Total Value - dollar value of the charge backs","database":"MONEY","example":"-100"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Quantity":1,"StoreID":6679,"StoreName":"100: My Network LLC - Anchorage","TotalValue":-100}]
+                            schema: |
+                                {"name":"ChargeBackSummaryReportLocationData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Quantity":{"type":"integer","description":"Qty","database":"INT","example":"1"},"StoreID":{"type":"integer","description":"Internal identifier for a store in RQ","database":"INT","example":"6679"},"StoreName":{"type":"string","description":"Location","database":"NVARCHAR (MAX)","example":"100: My Network LLC - Anchorage"},"TotalValue":{"type":"decimal","description":"Total Value - dollar value of the charge backs","database":"MONEY","example":"-100"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Quantity":1,"StoreID":6679,"StoreName":"100: My Network LLC - Anchorage","TotalValue":-100}]
+                            schema: |
+                                {"name":"ChargeBackSummaryReportLocationData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Quantity":{"type":"integer","description":"Qty","database":"INT","example":"1"},"StoreID":{"type":"integer","description":"Internal identifier for a store in RQ","database":"INT","example":"6679"},"StoreName":{"type":"string","description":"Location","database":"NVARCHAR (MAX)","example":"100: My Network LLC - Anchorage"},"TotalValue":{"type":"decimal","description":"Total Value - dollar value of the charge backs","database":"MONEY","example":"-100"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/reports/paymentintegrationtransactionbydatereport?StartDate={StartDate}&StopDate={StopDate}&LocationEntityIDs={LocationEntityIDs}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        LocationEntityIDs:
+            displayName: LocationEntityIDs
+            type: string
+            example: 33484,33496,33490,33492
+            required: false
+            description: Comma seperated list of identifiers for <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Locations</a> in Entity Store. To determine the LocationEntityId for a store in RQ, see <a href='/api/RQ-Data-Connect/#getting-a-list-of-stores-in-rq'>Getting A List of Stores in RQ</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Payment Integration Transaction Report
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":122337,"StoreInvoiceID":"84WEAIN5981","CustomerName":"Alice Kim","EmployeeName":"Sam Smith","InvoiceTypeID":1,"InvoiceType":"Invoice","LocationEntityID":14192,"AuthType":"Sale","TransType":"Credit","CardTypeID":2,"CardType":"Visa","Amount":4,"EntryTypeID":2,"EntryType":"Swiped","MerchantNumber":"1111","TerminalNumber":"90572837","AuthDateUTC":"2015-01-28T16:31:58.877","AuthorizationNumber":"ABS251","CardholderName":"John Test","CardBin":"545454","LastFourDigits":"5454","TransactionResult":"Approved","ReversedVoided":0,"ReversedVoidedReason":"Auto Void from Incomplete Invoice","VoidedByEmployeeEntityID":"512","VoidedDate":"2015-01-30T16:31:58.877"}]
+                            schema: |
+                                {"type":"array","name":"PaymentIntegrationTransactionReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"InvoiceID":{"type":"integer","database":"INT","example":"122337","description":"Unique identifier for the invoice in RQ"},"StoreInvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN5981","description":"Invoice identifier displayed to the user and on the printed invoice"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Alice Kim","description":"Customer name"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","example":"Sam Smith","description":"Employee name"},"InvoiceTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier for the InvoiceType, see InvoiceType property"},"InvoiceType":{"type":"string","database":"VARCHAR(15)","example":"Invoice","description":"Name of the <a href='#invoicetype'>InvoiceType</a>"},"LocationEntityID":{"type":"integer","database":"INT","example":"14192","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store"},"AuthType":{"type":"string","database":"VARCHAR(4)","example":"Sale","description":"Indicates sale or refund"},"TransType":{"type":"string","database":"VARCHAR(8)","example":"Credit","description":"What type of transaction this is (Credit/Debit)"},"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the CardType. See CardType property"},"CardType":{"type":"string","database":"VARCHAR(50)","example":"Visa","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#cardtype'>CardType</a>. See <a href='#getting-card-types'>Getting Card Types</a> for a list of possible values"},"Amount":{"type":"decimal","database":"MONEY","example":"4","description":"Amount requested"},"EntryTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the EntryType, see EntryType property"},"EntryType":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#entrytype'>EntryType</a>. See <a href='#getting-entry-types'>Getting Entry Types</a> for a list of possible values"},"MerchantNumber":{"type":"string","database":"VARCHAR(50)","example":"1111","description":"The Merchant Number / ID used in payment credentials for this transaction"},"TerminalNumber":{"type":"string","database":"VARCHAR(50)","example":"90572837","description":"The Terminal Number / ID used in payment credentials for this transaction"},"AuthDateUTC":{"type":"datetime","database":"DATETIME","example":"2015-01-28T16:31:58.877","description":"Date of Transaction in UTC"},"AuthorizationNumber":{"type":"string","database":"VARCHAR(10)","example":"ABS251","description":"Authorization Number from Payment Processor"},"CardholderName":{"type":"string","database":"VARCHAR(100)","example":"John Test","description":"Name of Cardholder"},"CardBin":{"type":"string","database":"VARCHAR(6)","example":"545454","description":"The payment cards Bank Identifiation Number (BIN)"},"LastFourDigits":{"type":"string","database":"VARCHAR(4)","example":"5454","description":"Last four digits of card"},"TransactionResult":{"type":"string","database":"VARCHAR(110)","example":"Approved","description":"Indicated Approved or Declined"},"ReversedVoided":{"type":"integer","database":"INT","example":"0","description":"A flag to indicate if the transaction was reversed/voided (1) or not (0)"},"ReversedVoidedReason":{"type":"string","database":"VARCHAR(150)","example":"Auto Void from Incomplete Invoice","description":"String explanation on why the original transaction was voided. Only appears on void transactions, not on the original sale transation"},"VoidedByEmployeeEntityID":{"type":"string","database":"NVARCHAR(50)","example":"512","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> who voided this transaction"},"VoidedDate":{"type":"datetime","database":"DATETIME","example":"2015-01-30T16:31:58.877","description":"Date Transaction was voided in UTC"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":122337,"StoreInvoiceID":"84WEAIN5981","CustomerName":"Alice Kim","EmployeeName":"Sam Smith","InvoiceTypeID":1,"InvoiceType":"Invoice","LocationEntityID":14192,"AuthType":"Sale","TransType":"Credit","CardTypeID":2,"CardType":"Visa","Amount":4,"EntryTypeID":2,"EntryType":"Swiped","MerchantNumber":"1111","TerminalNumber":"90572837","AuthDateUTC":"2015-01-28T16:31:58.877","AuthorizationNumber":"ABS251","CardholderName":"John Test","CardBin":"545454","LastFourDigits":"5454","TransactionResult":"Approved","ReversedVoided":0,"ReversedVoidedReason":"Auto Void from Incomplete Invoice","VoidedByEmployeeEntityID":"512","VoidedDate":"2015-01-30T16:31:58.877"}]
+                            schema: |
+                                {"type":"array","name":"PaymentIntegrationTransactionReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"InvoiceID":{"type":"integer","database":"INT","example":"122337","description":"Unique identifier for the invoice in RQ"},"StoreInvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN5981","description":"Invoice identifier displayed to the user and on the printed invoice"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Alice Kim","description":"Customer name"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","example":"Sam Smith","description":"Employee name"},"InvoiceTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier for the InvoiceType, see InvoiceType property"},"InvoiceType":{"type":"string","database":"VARCHAR(15)","example":"Invoice","description":"Name of the <a href='#invoicetype'>InvoiceType</a>"},"LocationEntityID":{"type":"integer","database":"INT","example":"14192","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store"},"AuthType":{"type":"string","database":"VARCHAR(4)","example":"Sale","description":"Indicates sale or refund"},"TransType":{"type":"string","database":"VARCHAR(8)","example":"Credit","description":"What type of transaction this is (Credit/Debit)"},"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the CardType. See CardType property"},"CardType":{"type":"string","database":"VARCHAR(50)","example":"Visa","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#cardtype'>CardType</a>. See <a href='#getting-card-types'>Getting Card Types</a> for a list of possible values"},"Amount":{"type":"decimal","database":"MONEY","example":"4","description":"Amount requested"},"EntryTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the EntryType, see EntryType property"},"EntryType":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#entrytype'>EntryType</a>. See <a href='#getting-entry-types'>Getting Entry Types</a> for a list of possible values"},"MerchantNumber":{"type":"string","database":"VARCHAR(50)","example":"1111","description":"The Merchant Number / ID used in payment credentials for this transaction"},"TerminalNumber":{"type":"string","database":"VARCHAR(50)","example":"90572837","description":"The Terminal Number / ID used in payment credentials for this transaction"},"AuthDateUTC":{"type":"datetime","database":"DATETIME","example":"2015-01-28T16:31:58.877","description":"Date of Transaction in UTC"},"AuthorizationNumber":{"type":"string","database":"VARCHAR(10)","example":"ABS251","description":"Authorization Number from Payment Processor"},"CardholderName":{"type":"string","database":"VARCHAR(100)","example":"John Test","description":"Name of Cardholder"},"CardBin":{"type":"string","database":"VARCHAR(6)","example":"545454","description":"The payment cards Bank Identifiation Number (BIN)"},"LastFourDigits":{"type":"string","database":"VARCHAR(4)","example":"5454","description":"Last four digits of card"},"TransactionResult":{"type":"string","database":"VARCHAR(110)","example":"Approved","description":"Indicated Approved or Declined"},"ReversedVoided":{"type":"integer","database":"INT","example":"0","description":"A flag to indicate if the transaction was reversed/voided (1) or not (0)"},"ReversedVoidedReason":{"type":"string","database":"VARCHAR(150)","example":"Auto Void from Incomplete Invoice","description":"String explanation on why the original transaction was voided. Only appears on void transactions, not on the original sale transation"},"VoidedByEmployeeEntityID":{"type":"string","database":"NVARCHAR(50)","example":"512","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> who voided this transaction"},"VoidedDate":{"type":"datetime","database":"DATETIME","example":"2015-01-30T16:31:58.877","description":"Date Transaction was voided in UTC"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":122337,"StoreInvoiceID":"84WEAIN5981","CustomerName":"Alice Kim","EmployeeName":"Sam Smith","InvoiceTypeID":1,"InvoiceType":"Invoice","LocationEntityID":14192,"AuthType":"Sale","TransType":"Credit","CardTypeID":2,"CardType":"Visa","Amount":4,"EntryTypeID":2,"EntryType":"Swiped","MerchantNumber":"1111","TerminalNumber":"90572837","AuthDateUTC":"2015-01-28T16:31:58.877","AuthorizationNumber":"ABS251","CardholderName":"John Test","CardBin":"545454","LastFourDigits":"5454","TransactionResult":"Approved","ReversedVoided":0,"ReversedVoidedReason":"Auto Void from Incomplete Invoice","VoidedByEmployeeEntityID":"512","VoidedDate":"2015-01-30T16:31:58.877"}]
+                            schema: |
+                                {"type":"array","name":"PaymentIntegrationTransactionReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"InvoiceID":{"type":"integer","database":"INT","example":"122337","description":"Unique identifier for the invoice in RQ"},"StoreInvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN5981","description":"Invoice identifier displayed to the user and on the printed invoice"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Alice Kim","description":"Customer name"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","example":"Sam Smith","description":"Employee name"},"InvoiceTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier for the InvoiceType, see InvoiceType property"},"InvoiceType":{"type":"string","database":"VARCHAR(15)","example":"Invoice","description":"Name of the <a href='#invoicetype'>InvoiceType</a>"},"LocationEntityID":{"type":"integer","database":"INT","example":"14192","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store"},"AuthType":{"type":"string","database":"VARCHAR(4)","example":"Sale","description":"Indicates sale or refund"},"TransType":{"type":"string","database":"VARCHAR(8)","example":"Credit","description":"What type of transaction this is (Credit/Debit)"},"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the CardType. See CardType property"},"CardType":{"type":"string","database":"VARCHAR(50)","example":"Visa","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#cardtype'>CardType</a>. See <a href='#getting-card-types'>Getting Card Types</a> for a list of possible values"},"Amount":{"type":"decimal","database":"MONEY","example":"4","description":"Amount requested"},"EntryTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the EntryType, see EntryType property"},"EntryType":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#entrytype'>EntryType</a>. See <a href='#getting-entry-types'>Getting Entry Types</a> for a list of possible values"},"MerchantNumber":{"type":"string","database":"VARCHAR(50)","example":"1111","description":"The Merchant Number / ID used in payment credentials for this transaction"},"TerminalNumber":{"type":"string","database":"VARCHAR(50)","example":"90572837","description":"The Terminal Number / ID used in payment credentials for this transaction"},"AuthDateUTC":{"type":"datetime","database":"DATETIME","example":"2015-01-28T16:31:58.877","description":"Date of Transaction in UTC"},"AuthorizationNumber":{"type":"string","database":"VARCHAR(10)","example":"ABS251","description":"Authorization Number from Payment Processor"},"CardholderName":{"type":"string","database":"VARCHAR(100)","example":"John Test","description":"Name of Cardholder"},"CardBin":{"type":"string","database":"VARCHAR(6)","example":"545454","description":"The payment cards Bank Identifiation Number (BIN)"},"LastFourDigits":{"type":"string","database":"VARCHAR(4)","example":"5454","description":"Last four digits of card"},"TransactionResult":{"type":"string","database":"VARCHAR(110)","example":"Approved","description":"Indicated Approved or Declined"},"ReversedVoided":{"type":"integer","database":"INT","example":"0","description":"A flag to indicate if the transaction was reversed/voided (1) or not (0)"},"ReversedVoidedReason":{"type":"string","database":"VARCHAR(150)","example":"Auto Void from Incomplete Invoice","description":"String explanation on why the original transaction was voided. Only appears on void transactions, not on the original sale transation"},"VoidedByEmployeeEntityID":{"type":"string","database":"NVARCHAR(50)","example":"512","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> who voided this transaction"},"VoidedDate":{"type":"datetime","database":"DATETIME","example":"2015-01-30T16:31:58.877","description":"Date Transaction was voided in UTC"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":122337,"StoreInvoiceID":"84WEAIN5981","CustomerName":"Alice Kim","EmployeeName":"Sam Smith","InvoiceTypeID":1,"InvoiceType":"Invoice","LocationEntityID":14192,"AuthType":"Sale","TransType":"Credit","CardTypeID":2,"CardType":"Visa","Amount":4,"EntryTypeID":2,"EntryType":"Swiped","MerchantNumber":"1111","TerminalNumber":"90572837","AuthDateUTC":"2015-01-28T16:31:58.877","AuthorizationNumber":"ABS251","CardholderName":"John Test","CardBin":"545454","LastFourDigits":"5454","TransactionResult":"Approved","ReversedVoided":0,"ReversedVoidedReason":"Auto Void from Incomplete Invoice","VoidedByEmployeeEntityID":"512","VoidedDate":"2015-01-30T16:31:58.877"}]
+                            schema: |
+                                {"type":"array","name":"PaymentIntegrationTransactionReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"InvoiceID":{"type":"integer","database":"INT","example":"122337","description":"Unique identifier for the invoice in RQ"},"StoreInvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN5981","description":"Invoice identifier displayed to the user and on the printed invoice"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Alice Kim","description":"Customer name"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","example":"Sam Smith","description":"Employee name"},"InvoiceTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier for the InvoiceType, see InvoiceType property"},"InvoiceType":{"type":"string","database":"VARCHAR(15)","example":"Invoice","description":"Name of the <a href='#invoicetype'>InvoiceType</a>"},"LocationEntityID":{"type":"integer","database":"INT","example":"14192","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store"},"AuthType":{"type":"string","database":"VARCHAR(4)","example":"Sale","description":"Indicates sale or refund"},"TransType":{"type":"string","database":"VARCHAR(8)","example":"Credit","description":"What type of transaction this is (Credit/Debit)"},"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the CardType. See CardType property"},"CardType":{"type":"string","database":"VARCHAR(50)","example":"Visa","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#cardtype'>CardType</a>. See <a href='#getting-card-types'>Getting Card Types</a> for a list of possible values"},"Amount":{"type":"decimal","database":"MONEY","example":"4","description":"Amount requested"},"EntryTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the EntryType, see EntryType property"},"EntryType":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#entrytype'>EntryType</a>. See <a href='#getting-entry-types'>Getting Entry Types</a> for a list of possible values"},"MerchantNumber":{"type":"string","database":"VARCHAR(50)","example":"1111","description":"The Merchant Number / ID used in payment credentials for this transaction"},"TerminalNumber":{"type":"string","database":"VARCHAR(50)","example":"90572837","description":"The Terminal Number / ID used in payment credentials for this transaction"},"AuthDateUTC":{"type":"datetime","database":"DATETIME","example":"2015-01-28T16:31:58.877","description":"Date of Transaction in UTC"},"AuthorizationNumber":{"type":"string","database":"VARCHAR(10)","example":"ABS251","description":"Authorization Number from Payment Processor"},"CardholderName":{"type":"string","database":"VARCHAR(100)","example":"John Test","description":"Name of Cardholder"},"CardBin":{"type":"string","database":"VARCHAR(6)","example":"545454","description":"The payment cards Bank Identifiation Number (BIN)"},"LastFourDigits":{"type":"string","database":"VARCHAR(4)","example":"5454","description":"Last four digits of card"},"TransactionResult":{"type":"string","database":"VARCHAR(110)","example":"Approved","description":"Indicated Approved or Declined"},"ReversedVoided":{"type":"integer","database":"INT","example":"0","description":"A flag to indicate if the transaction was reversed/voided (1) or not (0)"},"ReversedVoidedReason":{"type":"string","database":"VARCHAR(150)","example":"Auto Void from Incomplete Invoice","description":"String explanation on why the original transaction was voided. Only appears on void transactions, not on the original sale transation"},"VoidedByEmployeeEntityID":{"type":"string","database":"NVARCHAR(50)","example":"512","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> who voided this transaction"},"VoidedDate":{"type":"datetime","database":"DATETIME","example":"2015-01-30T16:31:58.877","description":"Date Transaction was voided in UTC"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":122337,"StoreInvoiceID":"84WEAIN5981","CustomerName":"Alice Kim","EmployeeName":"Sam Smith","InvoiceTypeID":1,"InvoiceType":"Invoice","LocationEntityID":14192,"AuthType":"Sale","TransType":"Credit","CardTypeID":2,"CardType":"Visa","Amount":4,"EntryTypeID":2,"EntryType":"Swiped","MerchantNumber":"1111","TerminalNumber":"90572837","AuthDateUTC":"2015-01-28T16:31:58.877","AuthorizationNumber":"ABS251","CardholderName":"John Test","CardBin":"545454","LastFourDigits":"5454","TransactionResult":"Approved","ReversedVoided":0,"ReversedVoidedReason":"Auto Void from Incomplete Invoice","VoidedByEmployeeEntityID":"512","VoidedDate":"2015-01-30T16:31:58.877"}]
+                            schema: |
+                                {"type":"array","name":"PaymentIntegrationTransactionReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"InvoiceID":{"type":"integer","database":"INT","example":"122337","description":"Unique identifier for the invoice in RQ"},"StoreInvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN5981","description":"Invoice identifier displayed to the user and on the printed invoice"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Alice Kim","description":"Customer name"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","example":"Sam Smith","description":"Employee name"},"InvoiceTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier for the InvoiceType, see InvoiceType property"},"InvoiceType":{"type":"string","database":"VARCHAR(15)","example":"Invoice","description":"Name of the <a href='#invoicetype'>InvoiceType</a>"},"LocationEntityID":{"type":"integer","database":"INT","example":"14192","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store"},"AuthType":{"type":"string","database":"VARCHAR(4)","example":"Sale","description":"Indicates sale or refund"},"TransType":{"type":"string","database":"VARCHAR(8)","example":"Credit","description":"What type of transaction this is (Credit/Debit)"},"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the CardType. See CardType property"},"CardType":{"type":"string","database":"VARCHAR(50)","example":"Visa","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#cardtype'>CardType</a>. See <a href='#getting-card-types'>Getting Card Types</a> for a list of possible values"},"Amount":{"type":"decimal","database":"MONEY","example":"4","description":"Amount requested"},"EntryTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the EntryType, see EntryType property"},"EntryType":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#entrytype'>EntryType</a>. See <a href='#getting-entry-types'>Getting Entry Types</a> for a list of possible values"},"MerchantNumber":{"type":"string","database":"VARCHAR(50)","example":"1111","description":"The Merchant Number / ID used in payment credentials for this transaction"},"TerminalNumber":{"type":"string","database":"VARCHAR(50)","example":"90572837","description":"The Terminal Number / ID used in payment credentials for this transaction"},"AuthDateUTC":{"type":"datetime","database":"DATETIME","example":"2015-01-28T16:31:58.877","description":"Date of Transaction in UTC"},"AuthorizationNumber":{"type":"string","database":"VARCHAR(10)","example":"ABS251","description":"Authorization Number from Payment Processor"},"CardholderName":{"type":"string","database":"VARCHAR(100)","example":"John Test","description":"Name of Cardholder"},"CardBin":{"type":"string","database":"VARCHAR(6)","example":"545454","description":"The payment cards Bank Identifiation Number (BIN)"},"LastFourDigits":{"type":"string","database":"VARCHAR(4)","example":"5454","description":"Last four digits of card"},"TransactionResult":{"type":"string","database":"VARCHAR(110)","example":"Approved","description":"Indicated Approved or Declined"},"ReversedVoided":{"type":"integer","database":"INT","example":"0","description":"A flag to indicate if the transaction was reversed/voided (1) or not (0)"},"ReversedVoidedReason":{"type":"string","database":"VARCHAR(150)","example":"Auto Void from Incomplete Invoice","description":"String explanation on why the original transaction was voided. Only appears on void transactions, not on the original sale transation"},"VoidedByEmployeeEntityID":{"type":"string","database":"NVARCHAR(50)","example":"512","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> who voided this transaction"},"VoidedDate":{"type":"datetime","database":"DATETIME","example":"2015-01-30T16:31:58.877","description":"Date Transaction was voided in UTC"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":122337,"StoreInvoiceID":"84WEAIN5981","CustomerName":"Alice Kim","EmployeeName":"Sam Smith","InvoiceTypeID":1,"InvoiceType":"Invoice","LocationEntityID":14192,"AuthType":"Sale","TransType":"Credit","CardTypeID":2,"CardType":"Visa","Amount":4,"EntryTypeID":2,"EntryType":"Swiped","MerchantNumber":"1111","TerminalNumber":"90572837","AuthDateUTC":"2015-01-28T16:31:58.877","AuthorizationNumber":"ABS251","CardholderName":"John Test","CardBin":"545454","LastFourDigits":"5454","TransactionResult":"Approved","ReversedVoided":0,"ReversedVoidedReason":"Auto Void from Incomplete Invoice","VoidedByEmployeeEntityID":"512","VoidedDate":"2015-01-30T16:31:58.877"}]
+                            schema: |
+                                {"type":"array","name":"PaymentIntegrationTransactionReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"InvoiceID":{"type":"integer","database":"INT","example":"122337","description":"Unique identifier for the invoice in RQ"},"StoreInvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN5981","description":"Invoice identifier displayed to the user and on the printed invoice"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Alice Kim","description":"Customer name"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","example":"Sam Smith","description":"Employee name"},"InvoiceTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier for the InvoiceType, see InvoiceType property"},"InvoiceType":{"type":"string","database":"VARCHAR(15)","example":"Invoice","description":"Name of the <a href='#invoicetype'>InvoiceType</a>"},"LocationEntityID":{"type":"integer","database":"INT","example":"14192","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store"},"AuthType":{"type":"string","database":"VARCHAR(4)","example":"Sale","description":"Indicates sale or refund"},"TransType":{"type":"string","database":"VARCHAR(8)","example":"Credit","description":"What type of transaction this is (Credit/Debit)"},"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the CardType. See CardType property"},"CardType":{"type":"string","database":"VARCHAR(50)","example":"Visa","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#cardtype'>CardType</a>. See <a href='#getting-card-types'>Getting Card Types</a> for a list of possible values"},"Amount":{"type":"decimal","database":"MONEY","example":"4","description":"Amount requested"},"EntryTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier for the EntryType, see EntryType property"},"EntryType":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Name of the <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Finance-Reports/#entrytype'>EntryType</a>. See <a href='#getting-entry-types'>Getting Entry Types</a> for a list of possible values"},"MerchantNumber":{"type":"string","database":"VARCHAR(50)","example":"1111","description":"The Merchant Number / ID used in payment credentials for this transaction"},"TerminalNumber":{"type":"string","database":"VARCHAR(50)","example":"90572837","description":"The Terminal Number / ID used in payment credentials for this transaction"},"AuthDateUTC":{"type":"datetime","database":"DATETIME","example":"2015-01-28T16:31:58.877","description":"Date of Transaction in UTC"},"AuthorizationNumber":{"type":"string","database":"VARCHAR(10)","example":"ABS251","description":"Authorization Number from Payment Processor"},"CardholderName":{"type":"string","database":"VARCHAR(100)","example":"John Test","description":"Name of Cardholder"},"CardBin":{"type":"string","database":"VARCHAR(6)","example":"545454","description":"The payment cards Bank Identifiation Number (BIN)"},"LastFourDigits":{"type":"string","database":"VARCHAR(4)","example":"5454","description":"Last four digits of card"},"TransactionResult":{"type":"string","database":"VARCHAR(110)","example":"Approved","description":"Indicated Approved or Declined"},"ReversedVoided":{"type":"integer","database":"INT","example":"0","description":"A flag to indicate if the transaction was reversed/voided (1) or not (0)"},"ReversedVoidedReason":{"type":"string","database":"VARCHAR(150)","example":"Auto Void from Incomplete Invoice","description":"String explanation on why the original transaction was voided. Only appears on void transactions, not on the original sale transation"},"VoidedByEmployeeEntityID":{"type":"string","database":"NVARCHAR(50)","example":"512","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> who voided this transaction"},"VoidedDate":{"type":"datetime","database":"DATETIME","example":"2015-01-30T16:31:58.877","description":"Date Transaction was voided in UTC"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/reports/taxdetailsreport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoIDs:
+            displayName: ForWhoIDs
+            type: integer
+            example: 6679
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting the Tax Details Report
+                
+        
+        description: |            
+            For more information, see {{support_TaxDetailsReport}}.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2015-12-31T12:35:07.05","SaleInvoiceID":166519,"InvoiceIDByStore":"MIL44AH9","TenderedBy":"John Test","TenderedAt":"Cornwall","CustomerName":"Alice Smith","Comments":"Return","Invoiced":-910.94,"Sales":-910.94,"Cost":-405.67,"Profit":-505.27,"Adjusted":"No","Taxable":"Yes","Refund":"Yes","VendorRebates":0,"VendorRebatesTax":0,"Coupons":0,"CouponsTax":0,"YourPriceTaxableSales":-910.94,"ListPriceTaxableSales":0,"GreaterOfTaxableSales":-69.94,"FlatTaxableSales":0,"NonTaxableSales":0,"TaxCollected":-59.79,"TaxExemptReasonCode":""}]
+                            schema: |
+                                {"type":"array","name":"TaxDetailsReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","example":"2015-12-31T12:35:07.05","description":"Invoice Date - date the invoice was tendered"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"166519","description":"Internal identifier for an Invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice #- invoice number assigned by RQ"},"TenderedBy":{"type":"string","database":"VARCHAR(51)","example":"John Test","description":"Invoiced By- name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund"},"TenderedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"Cornwall","description":"Invoiced At- name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund"},"CustomerName":{"type":"string","database":"VARCHAR(151)","example":"Alice Smith","description":"Customer Name - name of the customer as entered on their profile"},"Comments":{"type":"string","database":"NVARCHAR(MAX)","example":"Return","description":"Invoice Comments - any comments on the invoice"},"Invoiced":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Invoiced - total dollar value of the invoice"},"Sales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Sales - total dollar value of the sales on the invoice, usually the same as Total Invoiced except in the case of gift card sales"},"Cost":{"type":"decimal","database":"MONEY","example":"-405.67","description":"Total Cost - total purchase cost for all product on the invoice"},"Profit":{"type":"decimal","database":"MONEY","example":"-505.27","description":"Total GP - gross profit for the invoice"},"Adjusted":{"type":"string","database":"VARCHAR(32)","example":"No","description":"Adjusted - indicates if the invoice was adjusted"},"Taxable":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Taxable - indicates if this line is taxable"},"Refund":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Refund - indicates if this is a refund"},"VendorRebates":{"type":"decimal","database":"MONEY","example":"0","description":"Total Vendor Rebates - total vendor rebate dollar amount"},"VendorRebatesTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Vendor Rebates - dollar amount of tax on any vendor rebates"},"Coupons":{"type":"decimal","database":"MONEY","example":"0","description":"Total Coupons - total dollar amount of coupons"},"CouponsTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Coupons - total dollar amount of tax collected on coupons"},"YourPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Full Your Price Taxable Amount - total your price taxable amount (based on the price the product was sold for)"},"ListPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full List Price Taxable Amount - total list price taxable amount (based on the original retail price rung up at the POS based on the inventory settings, prior to giving a discount)"},"GreaterOfTaxableSales":{"type":"decimal","database":"MONEY","example":"-69.94","description":"Full Greater of Your Price And Cost Taxable Amount - based on (greater of the price the product sold for, or the cost of the product)"},"FlatTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full Flat Taxable Amount - based on the price the product was sold for"},"NonTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Tax Exempt Amount - total tax exempt amount"},"TaxCollected":{"type":"decimal","database":"MONEY","example":"-59.79","description":"Total Tax Paid Amount - total dollar amount of tax paid"},"TaxExemptReasonCode":{"type":"string","database":"VARCHAR(1)","example":"","description":""}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2015-12-31T12:35:07.05","SaleInvoiceID":166519,"InvoiceIDByStore":"MIL44AH9","TenderedBy":"John Test","TenderedAt":"Cornwall","CustomerName":"Alice Smith","Comments":"Return","Invoiced":-910.94,"Sales":-910.94,"Cost":-405.67,"Profit":-505.27,"Adjusted":"No","Taxable":"Yes","Refund":"Yes","VendorRebates":0,"VendorRebatesTax":0,"Coupons":0,"CouponsTax":0,"YourPriceTaxableSales":-910.94,"ListPriceTaxableSales":0,"GreaterOfTaxableSales":-69.94,"FlatTaxableSales":0,"NonTaxableSales":0,"TaxCollected":-59.79,"TaxExemptReasonCode":""}]
+                            schema: |
+                                {"type":"array","name":"TaxDetailsReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","example":"2015-12-31T12:35:07.05","description":"Invoice Date - date the invoice was tendered"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"166519","description":"Internal identifier for an Invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice #- invoice number assigned by RQ"},"TenderedBy":{"type":"string","database":"VARCHAR(51)","example":"John Test","description":"Invoiced By- name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund"},"TenderedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"Cornwall","description":"Invoiced At- name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund"},"CustomerName":{"type":"string","database":"VARCHAR(151)","example":"Alice Smith","description":"Customer Name - name of the customer as entered on their profile"},"Comments":{"type":"string","database":"NVARCHAR(MAX)","example":"Return","description":"Invoice Comments - any comments on the invoice"},"Invoiced":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Invoiced - total dollar value of the invoice"},"Sales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Sales - total dollar value of the sales on the invoice, usually the same as Total Invoiced except in the case of gift card sales"},"Cost":{"type":"decimal","database":"MONEY","example":"-405.67","description":"Total Cost - total purchase cost for all product on the invoice"},"Profit":{"type":"decimal","database":"MONEY","example":"-505.27","description":"Total GP - gross profit for the invoice"},"Adjusted":{"type":"string","database":"VARCHAR(32)","example":"No","description":"Adjusted - indicates if the invoice was adjusted"},"Taxable":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Taxable - indicates if this line is taxable"},"Refund":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Refund - indicates if this is a refund"},"VendorRebates":{"type":"decimal","database":"MONEY","example":"0","description":"Total Vendor Rebates - total vendor rebate dollar amount"},"VendorRebatesTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Vendor Rebates - dollar amount of tax on any vendor rebates"},"Coupons":{"type":"decimal","database":"MONEY","example":"0","description":"Total Coupons - total dollar amount of coupons"},"CouponsTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Coupons - total dollar amount of tax collected on coupons"},"YourPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Full Your Price Taxable Amount - total your price taxable amount (based on the price the product was sold for)"},"ListPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full List Price Taxable Amount - total list price taxable amount (based on the original retail price rung up at the POS based on the inventory settings, prior to giving a discount)"},"GreaterOfTaxableSales":{"type":"decimal","database":"MONEY","example":"-69.94","description":"Full Greater of Your Price And Cost Taxable Amount - based on (greater of the price the product sold for, or the cost of the product)"},"FlatTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full Flat Taxable Amount - based on the price the product was sold for"},"NonTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Tax Exempt Amount - total tax exempt amount"},"TaxCollected":{"type":"decimal","database":"MONEY","example":"-59.79","description":"Total Tax Paid Amount - total dollar amount of tax paid"},"TaxExemptReasonCode":{"type":"string","database":"VARCHAR(1)","example":"","description":""}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2015-12-31T12:35:07.05","SaleInvoiceID":166519,"InvoiceIDByStore":"MIL44AH9","TenderedBy":"John Test","TenderedAt":"Cornwall","CustomerName":"Alice Smith","Comments":"Return","Invoiced":-910.94,"Sales":-910.94,"Cost":-405.67,"Profit":-505.27,"Adjusted":"No","Taxable":"Yes","Refund":"Yes","VendorRebates":0,"VendorRebatesTax":0,"Coupons":0,"CouponsTax":0,"YourPriceTaxableSales":-910.94,"ListPriceTaxableSales":0,"GreaterOfTaxableSales":-69.94,"FlatTaxableSales":0,"NonTaxableSales":0,"TaxCollected":-59.79,"TaxExemptReasonCode":""}]
+                            schema: |
+                                {"type":"array","name":"TaxDetailsReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","example":"2015-12-31T12:35:07.05","description":"Invoice Date - date the invoice was tendered"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"166519","description":"Internal identifier for an Invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice #- invoice number assigned by RQ"},"TenderedBy":{"type":"string","database":"VARCHAR(51)","example":"John Test","description":"Invoiced By- name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund"},"TenderedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"Cornwall","description":"Invoiced At- name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund"},"CustomerName":{"type":"string","database":"VARCHAR(151)","example":"Alice Smith","description":"Customer Name - name of the customer as entered on their profile"},"Comments":{"type":"string","database":"NVARCHAR(MAX)","example":"Return","description":"Invoice Comments - any comments on the invoice"},"Invoiced":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Invoiced - total dollar value of the invoice"},"Sales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Sales - total dollar value of the sales on the invoice, usually the same as Total Invoiced except in the case of gift card sales"},"Cost":{"type":"decimal","database":"MONEY","example":"-405.67","description":"Total Cost - total purchase cost for all product on the invoice"},"Profit":{"type":"decimal","database":"MONEY","example":"-505.27","description":"Total GP - gross profit for the invoice"},"Adjusted":{"type":"string","database":"VARCHAR(32)","example":"No","description":"Adjusted - indicates if the invoice was adjusted"},"Taxable":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Taxable - indicates if this line is taxable"},"Refund":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Refund - indicates if this is a refund"},"VendorRebates":{"type":"decimal","database":"MONEY","example":"0","description":"Total Vendor Rebates - total vendor rebate dollar amount"},"VendorRebatesTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Vendor Rebates - dollar amount of tax on any vendor rebates"},"Coupons":{"type":"decimal","database":"MONEY","example":"0","description":"Total Coupons - total dollar amount of coupons"},"CouponsTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Coupons - total dollar amount of tax collected on coupons"},"YourPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Full Your Price Taxable Amount - total your price taxable amount (based on the price the product was sold for)"},"ListPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full List Price Taxable Amount - total list price taxable amount (based on the original retail price rung up at the POS based on the inventory settings, prior to giving a discount)"},"GreaterOfTaxableSales":{"type":"decimal","database":"MONEY","example":"-69.94","description":"Full Greater of Your Price And Cost Taxable Amount - based on (greater of the price the product sold for, or the cost of the product)"},"FlatTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full Flat Taxable Amount - based on the price the product was sold for"},"NonTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Tax Exempt Amount - total tax exempt amount"},"TaxCollected":{"type":"decimal","database":"MONEY","example":"-59.79","description":"Total Tax Paid Amount - total dollar amount of tax paid"},"TaxExemptReasonCode":{"type":"string","database":"VARCHAR(1)","example":"","description":""}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2015-12-31T12:35:07.05","SaleInvoiceID":166519,"InvoiceIDByStore":"MIL44AH9","TenderedBy":"John Test","TenderedAt":"Cornwall","CustomerName":"Alice Smith","Comments":"Return","Invoiced":-910.94,"Sales":-910.94,"Cost":-405.67,"Profit":-505.27,"Adjusted":"No","Taxable":"Yes","Refund":"Yes","VendorRebates":0,"VendorRebatesTax":0,"Coupons":0,"CouponsTax":0,"YourPriceTaxableSales":-910.94,"ListPriceTaxableSales":0,"GreaterOfTaxableSales":-69.94,"FlatTaxableSales":0,"NonTaxableSales":0,"TaxCollected":-59.79,"TaxExemptReasonCode":""}]
+                            schema: |
+                                {"type":"array","name":"TaxDetailsReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","example":"2015-12-31T12:35:07.05","description":"Invoice Date - date the invoice was tendered"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"166519","description":"Internal identifier for an Invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice #- invoice number assigned by RQ"},"TenderedBy":{"type":"string","database":"VARCHAR(51)","example":"John Test","description":"Invoiced By- name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund"},"TenderedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"Cornwall","description":"Invoiced At- name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund"},"CustomerName":{"type":"string","database":"VARCHAR(151)","example":"Alice Smith","description":"Customer Name - name of the customer as entered on their profile"},"Comments":{"type":"string","database":"NVARCHAR(MAX)","example":"Return","description":"Invoice Comments - any comments on the invoice"},"Invoiced":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Invoiced - total dollar value of the invoice"},"Sales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Sales - total dollar value of the sales on the invoice, usually the same as Total Invoiced except in the case of gift card sales"},"Cost":{"type":"decimal","database":"MONEY","example":"-405.67","description":"Total Cost - total purchase cost for all product on the invoice"},"Profit":{"type":"decimal","database":"MONEY","example":"-505.27","description":"Total GP - gross profit for the invoice"},"Adjusted":{"type":"string","database":"VARCHAR(32)","example":"No","description":"Adjusted - indicates if the invoice was adjusted"},"Taxable":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Taxable - indicates if this line is taxable"},"Refund":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Refund - indicates if this is a refund"},"VendorRebates":{"type":"decimal","database":"MONEY","example":"0","description":"Total Vendor Rebates - total vendor rebate dollar amount"},"VendorRebatesTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Vendor Rebates - dollar amount of tax on any vendor rebates"},"Coupons":{"type":"decimal","database":"MONEY","example":"0","description":"Total Coupons - total dollar amount of coupons"},"CouponsTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Coupons - total dollar amount of tax collected on coupons"},"YourPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Full Your Price Taxable Amount - total your price taxable amount (based on the price the product was sold for)"},"ListPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full List Price Taxable Amount - total list price taxable amount (based on the original retail price rung up at the POS based on the inventory settings, prior to giving a discount)"},"GreaterOfTaxableSales":{"type":"decimal","database":"MONEY","example":"-69.94","description":"Full Greater of Your Price And Cost Taxable Amount - based on (greater of the price the product sold for, or the cost of the product)"},"FlatTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full Flat Taxable Amount - based on the price the product was sold for"},"NonTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Tax Exempt Amount - total tax exempt amount"},"TaxCollected":{"type":"decimal","database":"MONEY","example":"-59.79","description":"Total Tax Paid Amount - total dollar amount of tax paid"},"TaxExemptReasonCode":{"type":"string","database":"VARCHAR(1)","example":"","description":""}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2015-12-31T12:35:07.05","SaleInvoiceID":166519,"InvoiceIDByStore":"MIL44AH9","TenderedBy":"John Test","TenderedAt":"Cornwall","CustomerName":"Alice Smith","Comments":"Return","Invoiced":-910.94,"Sales":-910.94,"Cost":-405.67,"Profit":-505.27,"Adjusted":"No","Taxable":"Yes","Refund":"Yes","VendorRebates":0,"VendorRebatesTax":0,"Coupons":0,"CouponsTax":0,"YourPriceTaxableSales":-910.94,"ListPriceTaxableSales":0,"GreaterOfTaxableSales":-69.94,"FlatTaxableSales":0,"NonTaxableSales":0,"TaxCollected":-59.79,"TaxExemptReasonCode":""}]
+                            schema: |
+                                {"type":"array","name":"TaxDetailsReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","example":"2015-12-31T12:35:07.05","description":"Invoice Date - date the invoice was tendered"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"166519","description":"Internal identifier for an Invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice #- invoice number assigned by RQ"},"TenderedBy":{"type":"string","database":"VARCHAR(51)","example":"John Test","description":"Invoiced By- name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund"},"TenderedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"Cornwall","description":"Invoiced At- name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund"},"CustomerName":{"type":"string","database":"VARCHAR(151)","example":"Alice Smith","description":"Customer Name - name of the customer as entered on their profile"},"Comments":{"type":"string","database":"NVARCHAR(MAX)","example":"Return","description":"Invoice Comments - any comments on the invoice"},"Invoiced":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Invoiced - total dollar value of the invoice"},"Sales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Sales - total dollar value of the sales on the invoice, usually the same as Total Invoiced except in the case of gift card sales"},"Cost":{"type":"decimal","database":"MONEY","example":"-405.67","description":"Total Cost - total purchase cost for all product on the invoice"},"Profit":{"type":"decimal","database":"MONEY","example":"-505.27","description":"Total GP - gross profit for the invoice"},"Adjusted":{"type":"string","database":"VARCHAR(32)","example":"No","description":"Adjusted - indicates if the invoice was adjusted"},"Taxable":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Taxable - indicates if this line is taxable"},"Refund":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Refund - indicates if this is a refund"},"VendorRebates":{"type":"decimal","database":"MONEY","example":"0","description":"Total Vendor Rebates - total vendor rebate dollar amount"},"VendorRebatesTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Vendor Rebates - dollar amount of tax on any vendor rebates"},"Coupons":{"type":"decimal","database":"MONEY","example":"0","description":"Total Coupons - total dollar amount of coupons"},"CouponsTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Coupons - total dollar amount of tax collected on coupons"},"YourPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Full Your Price Taxable Amount - total your price taxable amount (based on the price the product was sold for)"},"ListPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full List Price Taxable Amount - total list price taxable amount (based on the original retail price rung up at the POS based on the inventory settings, prior to giving a discount)"},"GreaterOfTaxableSales":{"type":"decimal","database":"MONEY","example":"-69.94","description":"Full Greater of Your Price And Cost Taxable Amount - based on (greater of the price the product sold for, or the cost of the product)"},"FlatTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full Flat Taxable Amount - based on the price the product was sold for"},"NonTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Tax Exempt Amount - total tax exempt amount"},"TaxCollected":{"type":"decimal","database":"MONEY","example":"-59.79","description":"Total Tax Paid Amount - total dollar amount of tax paid"},"TaxExemptReasonCode":{"type":"string","database":"VARCHAR(1)","example":"","description":""}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"DateCreated":"2015-12-31T12:35:07.05","SaleInvoiceID":166519,"InvoiceIDByStore":"MIL44AH9","TenderedBy":"John Test","TenderedAt":"Cornwall","CustomerName":"Alice Smith","Comments":"Return","Invoiced":-910.94,"Sales":-910.94,"Cost":-405.67,"Profit":-505.27,"Adjusted":"No","Taxable":"Yes","Refund":"Yes","VendorRebates":0,"VendorRebatesTax":0,"Coupons":0,"CouponsTax":0,"YourPriceTaxableSales":-910.94,"ListPriceTaxableSales":0,"GreaterOfTaxableSales":-69.94,"FlatTaxableSales":0,"NonTaxableSales":0,"TaxCollected":-59.79,"TaxExemptReasonCode":""}]
+                            schema: |
+                                {"type":"array","name":"TaxDetailsReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"DateCreated":{"type":"datetime","database":"DATETIME","example":"2015-12-31T12:35:07.05","description":"Invoice Date - date the invoice was tendered"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"166519","description":"Internal identifier for an Invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice #- invoice number assigned by RQ"},"TenderedBy":{"type":"string","database":"VARCHAR(51)","example":"John Test","description":"Invoiced By- name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund"},"TenderedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"Cornwall","description":"Invoiced At- name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund"},"CustomerName":{"type":"string","database":"VARCHAR(151)","example":"Alice Smith","description":"Customer Name - name of the customer as entered on their profile"},"Comments":{"type":"string","database":"NVARCHAR(MAX)","example":"Return","description":"Invoice Comments - any comments on the invoice"},"Invoiced":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Invoiced - total dollar value of the invoice"},"Sales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Total Sales - total dollar value of the sales on the invoice, usually the same as Total Invoiced except in the case of gift card sales"},"Cost":{"type":"decimal","database":"MONEY","example":"-405.67","description":"Total Cost - total purchase cost for all product on the invoice"},"Profit":{"type":"decimal","database":"MONEY","example":"-505.27","description":"Total GP - gross profit for the invoice"},"Adjusted":{"type":"string","database":"VARCHAR(32)","example":"No","description":"Adjusted - indicates if the invoice was adjusted"},"Taxable":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Taxable - indicates if this line is taxable"},"Refund":{"type":"string","database":"VARCHAR(32)","example":"Yes","description":"Refund - indicates if this is a refund"},"VendorRebates":{"type":"decimal","database":"MONEY","example":"0","description":"Total Vendor Rebates - total vendor rebate dollar amount"},"VendorRebatesTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Vendor Rebates - dollar amount of tax on any vendor rebates"},"Coupons":{"type":"decimal","database":"MONEY","example":"0","description":"Total Coupons - total dollar amount of coupons"},"CouponsTax":{"type":"decimal","database":"MONEY","example":"0","description":"Tax On Coupons - total dollar amount of tax collected on coupons"},"YourPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"-910.94","description":"Full Your Price Taxable Amount - total your price taxable amount (based on the price the product was sold for)"},"ListPriceTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full List Price Taxable Amount - total list price taxable amount (based on the original retail price rung up at the POS based on the inventory settings, prior to giving a discount)"},"GreaterOfTaxableSales":{"type":"decimal","database":"MONEY","example":"-69.94","description":"Full Greater of Your Price And Cost Taxable Amount - based on (greater of the price the product sold for, or the cost of the product)"},"FlatTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Full Flat Taxable Amount - based on the price the product was sold for"},"NonTaxableSales":{"type":"decimal","database":"MONEY","example":"0","description":"Tax Exempt Amount - total tax exempt amount"},"TaxCollected":{"type":"decimal","database":"MONEY","example":"-59.79","description":"Total Tax Paid Amount - total dollar amount of tax paid"},"TaxExemptReasonCode":{"type":"string","database":"VARCHAR(1)","example":"","description":""}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/entrytypes?LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting Entry Types
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"EntryTypeID":1,"EntryTypeDescription":"Swiped","Message":"Swiped"}]
+                            schema: |
+                                {"type":"array","name":"EntryType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EntryTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"EntryTypeDescription":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Description"},"Message":{"type":"string","database":"NVARCHAR(MAX)","example":"Swiped","description":"Message"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"EntryTypeID":1,"EntryTypeDescription":"Swiped","Message":"Swiped"}]
+                            schema: |
+                                {"type":"array","name":"EntryType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EntryTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"EntryTypeDescription":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Description"},"Message":{"type":"string","database":"NVARCHAR(MAX)","example":"Swiped","description":"Message"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"EntryTypeID":1,"EntryTypeDescription":"Swiped","Message":"Swiped"}]
+                            schema: |
+                                {"type":"array","name":"EntryType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EntryTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"EntryTypeDescription":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Description"},"Message":{"type":"string","database":"NVARCHAR(MAX)","example":"Swiped","description":"Message"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"EntryTypeID":1,"EntryTypeDescription":"Swiped","Message":"Swiped"}]
+                            schema: |
+                                {"type":"array","name":"EntryType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EntryTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"EntryTypeDescription":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Description"},"Message":{"type":"string","database":"NVARCHAR(MAX)","example":"Swiped","description":"Message"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"EntryTypeID":1,"EntryTypeDescription":"Swiped","Message":"Swiped"}]
+                            schema: |
+                                {"type":"array","name":"EntryType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EntryTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"EntryTypeDescription":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Description"},"Message":{"type":"string","database":"NVARCHAR(MAX)","example":"Swiped","description":"Message"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"EntryTypeID":1,"EntryTypeDescription":"Swiped","Message":"Swiped"}]
+                            schema: |
+                                {"type":"array","name":"EntryType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EntryTypeID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"EntryTypeDescription":{"type":"string","database":"VARCHAR(50)","example":"Swiped","description":"Description"},"Message":{"type":"string","database":"NVARCHAR(MAX)","example":"Swiped","description":"Message"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/cardtypes:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Card Types
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CardTypeID":2,"FullName":"Mastercard","Mnemonic":"MC","AccountNumberLength":16,"CvvLength":3}]
+                            schema: |
+                                {"type":"array","name":"CardType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier"},"FullName":{"type":"string","database":"VARCHAR(50)","example":"Mastercard","description":"Full card name"},"Mnemonic":{"type":"string","database":"VARCHAR(2)","example":"MC","description":"Card abbreviation"},"AccountNumberLength":{"type":"integer","database":"INT","example":"16","description":"Length of account number"},"CvvLength":{"type":"integer","database":"INT","example":"3","description":"Length of CVV number on card"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CardTypeID":2,"FullName":"Mastercard","Mnemonic":"MC","AccountNumberLength":16,"CvvLength":3}]
+                            schema: |
+                                {"type":"array","name":"CardType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier"},"FullName":{"type":"string","database":"VARCHAR(50)","example":"Mastercard","description":"Full card name"},"Mnemonic":{"type":"string","database":"VARCHAR(2)","example":"MC","description":"Card abbreviation"},"AccountNumberLength":{"type":"integer","database":"INT","example":"16","description":"Length of account number"},"CvvLength":{"type":"integer","database":"INT","example":"3","description":"Length of CVV number on card"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CardTypeID":2,"FullName":"Mastercard","Mnemonic":"MC","AccountNumberLength":16,"CvvLength":3}]
+                            schema: |
+                                {"type":"array","name":"CardType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier"},"FullName":{"type":"string","database":"VARCHAR(50)","example":"Mastercard","description":"Full card name"},"Mnemonic":{"type":"string","database":"VARCHAR(2)","example":"MC","description":"Card abbreviation"},"AccountNumberLength":{"type":"integer","database":"INT","example":"16","description":"Length of account number"},"CvvLength":{"type":"integer","database":"INT","example":"3","description":"Length of CVV number on card"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CardTypeID":2,"FullName":"Mastercard","Mnemonic":"MC","AccountNumberLength":16,"CvvLength":3}]
+                            schema: |
+                                {"type":"array","name":"CardType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier"},"FullName":{"type":"string","database":"VARCHAR(50)","example":"Mastercard","description":"Full card name"},"Mnemonic":{"type":"string","database":"VARCHAR(2)","example":"MC","description":"Card abbreviation"},"AccountNumberLength":{"type":"integer","database":"INT","example":"16","description":"Length of account number"},"CvvLength":{"type":"integer","database":"INT","example":"3","description":"Length of CVV number on card"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CardTypeID":2,"FullName":"Mastercard","Mnemonic":"MC","AccountNumberLength":16,"CvvLength":3}]
+                            schema: |
+                                {"type":"array","name":"CardType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier"},"FullName":{"type":"string","database":"VARCHAR(50)","example":"Mastercard","description":"Full card name"},"Mnemonic":{"type":"string","database":"VARCHAR(2)","example":"MC","description":"Card abbreviation"},"AccountNumberLength":{"type":"integer","database":"INT","example":"16","description":"Length of account number"},"CvvLength":{"type":"integer","database":"INT","example":"3","description":"Length of CVV number on card"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CardTypeID":2,"FullName":"Mastercard","Mnemonic":"MC","AccountNumberLength":16,"CvvLength":3}]
+                            schema: |
+                                {"type":"array","name":"CardType","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CardTypeID":{"type":"integer","database":"INT","example":"2","description":"Identifier"},"FullName":{"type":"string","database":"VARCHAR(50)","example":"Mastercard","description":"Full card name"},"Mnemonic":{"type":"string","database":"VARCHAR(2)","example":"MC","description":"Card abbreviation"},"AccountNumberLength":{"type":"integer","database":"INT","example":"16","description":"Length of account number"},"CvvLength":{"type":"integer","database":"INT","example":"3","description":"Length of CVV number on card"}}}
+                            
+                        
+                    
+                
+            
+    

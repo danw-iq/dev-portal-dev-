@@ -1,0 +1,167 @@
+#%RAML 0.8
+title: Trade-In Reporting Service
+baseUri: https://tradeinreportingdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - PhobioTradeInDataArray: |
+        {
+          "exclude": "true",
+          "name": "PhobioTradeInData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"        
+        }
+        
+
+    
+
+    
+    - PhobioTradeInData: |
+        {
+          "name": "PhobioTradeInData",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",        
+          "properties": {
+            "inspectedDate": { "type": "datetime", "description": "Date added to statement for payment", "example": "2016-03-16T12:00:00.000Z" },
+            "originalCustomerInspectionValue ": { "type": "decimal", "description": "Amount customer should have received based on inspection", "example": "310.50" },
+            "originalCustomerTradeInValue": { "type": "decimal", "description": "Value customer deserved for Trade (updated by Phobio upon receipt)", "example": "310.50" },
+            "paymentDate": { "type": "datetime", "description": "Date payment issued by Phobio", "example": "2016-03-16T12:00:00.000Z" },
+            "postInspectionValue": { "type": "decimal", "description": "Payment amount to dealer", "example": "310.50" },
+            "processedDate": { "type": "datetime", "description": "Date processed at Phobio", "example": "2016-03-17T12:00:00.000Z" },
+            "receivedDate": { "type": "datetime", "description": "Date received at Phobio", "example": "2016-03-16T12:00:00.000Z" },
+            "receivedImei": { "type": "string", "description": "IMEI of product received at Phobio", "example": "351756051523999" },
+            "receivedProductDisplayName": { "type": "string", "description": "Name of product received at Phobio", "example": "Galaxy S6 edge+ 32GB - Black Sapphire" },
+            "referenceNumber": { "type": "string", "description": "Phobio's quote UID that contains the trade", "example": "29253392392" },
+            "serialNumber": { "type": "string", "description": "The serial number (IMEI) of the trade this data applies to", "example": "B7FQ-RANC" },
+            "shippedDate": { "type": "datetime", "description": "Date shipped from store", "example": "2016-03-13T12:00:00.000Z" },
+            "shipmentId": { "type": "string", "description": "UID of shipment", "example": "123" },
+            "tradeInStatus": { "type": "string", "description": "Status of the Trade-In, see [Trade-In Status](#trade-in-status) for a list of acceptable values", "example": "Quoted" }
+          },
+          "required": [ "referenceNumber", "receivedImei" ]
+        }
+        
+
+    
+
+    
+    - ProviderTradeData: |
+        {
+          "name": "ProviderTradeData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",        
+          "properties": {
+            "referenceNumber": { "type": "string", "description": "The reference number from the provider", "example": "123" },
+            "tradeDataId": { "type": "integer", "description": "The identifier of the provider trade data", "example": "357" }
+          },
+          "required": [ "referenceNumber", "tradeDataId" ]
+        }
+        
+
+    
+
+
+/providers({ProviderId})/tradeData:
+    
+    uriParameters:
+        
+        ProviderId:
+            displayName: ProviderId
+            type: integer
+            example: 10
+            required: true
+            description: The provider identifier given by iQmetrix
+          
+      
+    post:
+        
+        displayName: Create or Update a Trade
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    [{"inspectedDate":"2016-03-16T12:00:00.000Z","originalCustomerInspectionValue ":310.5,"originalCustomerTradeInValue":310.5,"paymentDate":"2016-03-16T12:00:00.000Z","postInspectionValue":310.5,"processedDate":"2016-03-17T12:00:00.000Z","receivedDate":"2016-03-16T12:00:00.000Z","receivedImei":"351756051523999","receivedProductDisplayName":"Galaxy S6 edge+ 32GB - Black Sapphire","referenceNumber":"29253392392","serialNumber":"B7FQ-RANC","shippedDate":"2016-03-13T12:00:00.000Z","shipmentId":"123","tradeInStatus":"Quoted"}]
+                    
+                schema: |
+                    {"exclude":"true","name":"PhobioTradeInData","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"referenceNumber":"123","tradeDataId":357}]
+                            schema: |
+                                {"name":"ProviderTradeData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"referenceNumber":{"type":"string","description":"The reference number from the provider","example":"123"},"tradeDataId":{"type":"integer","description":"The identifier of the provider trade data","example":"357"}},"required":["referenceNumber","tradeDataId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/providers({ProviderId})/tradeData({TradeDataId}):
+    
+    uriParameters:
+        
+        ProviderId:
+            displayName: ProviderId
+            type: integer
+            example: 10
+            required: true
+            description: The provider identifier given by iQmetrix
+        
+        TradeDataId:
+            displayName: TradeDataId
+            type: integer
+            example: 357
+            required: true
+            description: The identifier for the Provider trade-In data
+          
+      
+    get:
+        
+        displayName: Get Provider Data for a Trade
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"inspectedDate":"2016-03-16T12:00:00.000Z","originalCustomerInspectionValue ":310.5,"originalCustomerTradeInValue":310.5,"paymentDate":"2016-03-16T12:00:00.000Z","postInspectionValue":310.5,"processedDate":"2016-03-17T12:00:00.000Z","receivedDate":"2016-03-16T12:00:00.000Z","receivedImei":"351756051523999","receivedProductDisplayName":"Galaxy S6 edge+ 32GB - Black Sapphire","referenceNumber":"29253392392","serialNumber":"B7FQ-RANC","shippedDate":"2016-03-13T12:00:00.000Z","shipmentId":"123","tradeInStatus":"Quoted"}
+                            schema: |
+                                {"name":"PhobioTradeInData","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"inspectedDate":{"type":"datetime","description":"Date added to statement for payment","example":"2016-03-16T12:00:00.000Z"},"originalCustomerInspectionValue ":{"type":"decimal","description":"Amount customer should have received based on inspection","example":"310.50"},"originalCustomerTradeInValue":{"type":"decimal","description":"Value customer deserved for Trade (updated by Phobio upon receipt)","example":"310.50"},"paymentDate":{"type":"datetime","description":"Date payment issued by Phobio","example":"2016-03-16T12:00:00.000Z"},"postInspectionValue":{"type":"decimal","description":"Payment amount to dealer","example":"310.50"},"processedDate":{"type":"datetime","description":"Date processed at Phobio","example":"2016-03-17T12:00:00.000Z"},"receivedDate":{"type":"datetime","description":"Date received at Phobio","example":"2016-03-16T12:00:00.000Z"},"receivedImei":{"type":"string","description":"IMEI of product received at Phobio","example":"351756051523999"},"receivedProductDisplayName":{"type":"string","description":"Name of product received at Phobio","example":"Galaxy S6 edge+ 32GB - Black Sapphire"},"referenceNumber":{"type":"string","description":"Phobio's quote UID that contains the trade","example":"29253392392"},"serialNumber":{"type":"string","description":"The serial number (IMEI) of the trade this data applies to","example":"B7FQ-RANC"},"shippedDate":{"type":"datetime","description":"Date shipped from store","example":"2016-03-13T12:00:00.000Z"},"shipmentId":{"type":"string","description":"UID of shipment","example":"123"},"tradeInStatus":{"type":"string","description":"Status of the Trade-In, see [Trade-In Status](#trade-in-status) for a list of acceptable values","example":"Quoted"}},"required":["referenceNumber","receivedImei"]}
+                            
+                        
+                    
+                
+            
+    

@@ -1,0 +1,1047 @@
+#%RAML 0.8
+title: cmi
+baseUri: https://vmidemo.iqmetrix.net/VMIClientService.asmx
+schemas: 
+
+    
+    - ClientIdentity: |
+        {
+          "name": "ClientIdentity",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Authentication for the CMI API is done by including a ClientIdentity resource in a `<client>` section at the beginning of each request.\n\nClientIdentitiy information is supplied by iQmetrix and used to authenticate requests made to the CMI API.\n{{note}}ClientIdentity authentication information is <a href=\"{{'#environments' | prepend: site.api_baseurl}}\">Environment</a> specific{{end}}",
+          "properties": {
+            "ClientID": { "type": "GUID", "description": "Client specific identifier supplied by iQmetrix", "putDescription": "Client specific identifier supplied by iQmetrix", "example": "9DC6AA95-856B-42C9-8AAF-392A2A02AC77" }, 
+            "Username": { "type": "String", "description": "Client specific username supplied by iQmetrix", "putDescription": "Client specific username supplied by iQmetrix", "example": "sampleusername" }, 
+            "Password": { "type": "String", "description": "Client specific password supplied by iQmetrix", "putDescription": "Client specific password supplied by iQmetrix",  "example": "samplepassword" }, 
+            "StoreId": { "type": "Integer", "description": "If provided, this value should be `-1`, which denotes all stores", "putDescription": "If provided, this value should be -1, which denotes all stores", "example": "-1" }
+          },
+          "required": ["ClientID", "Username", "Password", "StoreId"]
+        }
+        
+
+    
+
+    
+    - PurchaseOrderShipmentNotice: |
+        {
+          "name": "PurchaseOrderShipmentNotice",
+          "type": "object",
+          "wrap": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "PurchaseOrderID": { "type": "GUID", "description": "Unique identifier", "putDescription": "Either this value or VendorInvoiceNumber must be provided", "example": "84DACFD3-4095-4D50-A02E-781B86B7408E" }, 
+            "ProductItemID": { "type": "Integer", "description": "GlobalProductId from RQ", "putDescription": "Either this value or VendorSKU must be provided", "example": "11142" }, 
+            "Quantity": { "type": "Integer", "description": "Number of items shipped", "putDescription": "Number of items shipped", "example": "1" }, 
+            "RQPurchaseOrderID": { "type": "Integer", "description": "Identifier for the Purchase Order in RQ", "putDescription": "Identifier for the Purchase Order in RQ",  "example": "22073" }, 
+            "SerialNumbers": { "type": "array", "arrayType": "string", "description": "Serial numbers. Must match Quantity", "putDescription": "Serial numbers. Must match Quantity", "example": "97000012" }, 
+            "ShipmentNumber": { "type": "String", "description": "Vendor defined identifier for the shipment", "putDescription": "If this value is not provided, the service will automatically assign one", "example": "SHIP001" }, 
+            "VendorInvoiceNumber": { "type": "String", "description": "Value supplied by the vendor when creating the purchase order", "putDescription": "Either this value OR PurchaseOrderID must be provided", "example": "1002" }, 
+            "VendorSKU": { "type": "String", "description": "The vendor part number/sku", "putDescription": "Either this value or ProductItemId must be provided", "example": "ABC123" }
+          },
+          "required": ["Quantity", "SerialNumbers", "VendorInvoiceNumber", "RQPurchaseOrderID"]
+        }      
+        
+
+    
+
+    
+    - PurchaseOrderInformation: |
+        {
+          "name": "PurchaseOrderInformation",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+              "PurchaseOrderInformation": { "type": "object", "ref": "cmi.PurchaseOrder" }
+           }
+        }         
+        
+
+    
+
+    
+    - GetProductSalesReport: |
+        {
+          "exclude": "true",
+          "name": "GetProductSalesReport",
+          "type": "object",
+          "soapRequest": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "storeId": { "type": "integer", "description": "Identifier for a Channel, Region, District or Store in RQ", "putDescription": "This value can be a Channel, Region, District or Store Id. The request body will change depending on the parameter used (i.e. <channelId></channelId>)","example": "4" },        
+            "startDate": { "type": "datetime", "description": "Start date", "example": "01/01/2016" },
+            "endDate": { "type": "datetime", "description": "End date", "example": "10/31/2016" }          
+          },
+          "required": [ "GetProductSalesReport", "client", "storeId", "startDate", "endDate" ]
+        }  
+        
+
+    
+
+    
+    - PurchaseOrder: |
+        {
+          "name": "PurchaseOrder",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "PurchaseOrderID": { "type": "GUID", "description": "Unique identifier", "example": "28890F70-8FC9-4A9B-9458-410A8D08502D" }, 
+            "PurchaseOrderData": { "type": "object", "ref": "cmi.PurchaseOrderData", "description": "Purchase order" }, 
+            "ProductsOrdered": { "type": "array", "arrayType": "object", "ref": "cmi.ProductInformation", "description": "Products ordered" }, 
+            "ProductsReceived": { "type": "array", "arrayType": "object", "ref": "cmi.ProductInformation", "description": "Products received", "generated": "true" }, 
+            "SerialsReceived": { "type": "array", "arrayType": "object", "ref": "cmi.ProductSerialNumber", "description": "Serials received", "generated": "true" }
+          },
+          "required": [ "PurchaseOrderID", "PurchaseOrderData", "ProductsOrdered" ]
+        }      
+        
+
+    
+
+    
+    - PurchaseOrderSlim: |
+        {
+          "exclude": "true",
+          "name": "PurchaseOrderSlim",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "PurchaseOrderID": { "type": "GUID", "description": "Unique identifier", "example": "28890F70-8FC9-4A9B-9458-410A8D08502D" }, 
+            "PurchaseOrderData": { "type": "object", "ref": "cmi.PurchaseOrderData", "description": "Purchase order" }, 
+            "ProductsOrdered": { "type": "array", "arrayType": "object", "ref": "cmi.ProductInformation", "description": "Products ordered" }
+          }
+        }        
+        
+
+    
+
+    
+    - PurchaseOrderData: |
+        {
+          "name": "PurchaseOrderData",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "PurchaseOrderID": { "type": "GUID", "description": "Unique identifier", "example": "28890F70-8FC9-4A9B-9458-410A8D08502D", "generated": "true" }, 
+            "BillToStoreID": { "type": "Integer", "description": "RQ StoreId", "putDescription": "Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied", "example": "55" }, 
+            "BillToStoreName": { "type": "String", "description": "RQ store name", "example": "Cornwall west", "generated": "true" }, 
+            "BillToVendorAccountNumber": { "type": "String", "description": "Vendor account number to use for billing. Can be used in place of `BillToStoreId`", "example": "1", "generated": "true" }, 
+            "IsDeleted": { "type": "Boolean", "description": "A flag to indicate if this purchase order has been deleted in RQ", "example": "false", "generated": "true" }, 
+            "CreatedByVMI": { "type": "Boolean", "description": "A flag to indicate if this was created by the VMI API (true) or RQ (false)", "putDescription": "defaults to false", "example": "false" }, 
+            "CreatedDate": { "type": "DateTime", "description": "The date and time the purchase order was created, if it was created in RQ", "example": "3/16/2014 12:00:00 AM" }, 
+            "Comments": { "type": "String", "description": "Any comments for the purchase order", "example": "comments" }, 
+            "EstimatedArrivalDate": { "type": "String", "description": "Estimated date of arrival", "example": "3/2/2014 12:00:00 AM" }, 
+            "OrderTotal": { "type": "Decimal", "description": "Cost of the order, provided by a vendor for informational purposes only", "putDescription": "Defaults to -1", "example": "99.99" }, 
+            "RetailiQPurchaseOrderID": { "type": "Integer", "description": "Identifier of purchase order in RQ", "example": "22075", "generated": "true" }, 
+            "RetailiQPurchaseOrderNumber": { "type": "String", "description": "Purchase order number in RQ", "example": "DALEKPO5", "generated": "true" }, 
+            "ShippingTotal": { "type": "Decimal", "description": "Cost of shipping", "putDescription": "Defaults to -1", "example": "99.99" }, 
+            "ShipToStoreID": { "type": "Integer", "description": "Identifier of store to use for shipping. Either this value or ShipToVendorAccountNumber must be supplied", "putDescription": "Defaults to -1", "example": "55" }, 
+            "ShipToStoreName": { "type": "String", "description": "Name of store to use for shipping", "example": "Cornwall west", "generated": "true" }, 
+            "ShipToVendorAccountNumber": { "type": "String", "description": "Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`", "example": "1", "generated": "true" }, 
+            "VendorInvoiceNumber": { "type": "String", "description": "Invoice number for the vendor, must be unique", "example": "563783" }, 
+            "VendorName": { "type": "String", "description": "Name of the vendor", "example": "SampleVendor", "generated": "true" }
+          },
+          "required": [ "BillToStoreID", "EstimatedArrivalDate", "ShipToStoreID", "VendorInvoiceNumber" ]            
+        }        
+        
+
+    
+
+    
+    - ProductInformation: |
+        {
+          "name": "ProductInformation",
+          "type": "object",
+          "wrap": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ProductID": { "type": "GUID", "description": "Unique identifier", "example": "86EE477F-C6B7-48FA-AA0A-105662D9A3ED" }, 
+            "ProductName": { "type": "String", "description": "Name", "example": "Samsung Galaxy S6" }, 
+            "CategoryPath": {"type": "String", "description": "Category location of product. path of category delimited by '>>'", "example": "Activation >> Dropship", "generated": "true" },          
+            "DateEOL": { "type": "DateTime", "description": "End of life date", "example": "1/01/2016 12:00:00 AM", "geneated": "true" }, 
+            "DateReceived": {"type": "String", "description": "Product receiving stauts in RQ", "example": "01/21/2016 16:58:23"},          
+            "DoNotOrder": { "type": "Boolean", "description": "A flag to indicate if the product should not be ordered", "example": "false", "generated": "true" }, 
+            "Enabled": { "type": "Boolean", "description": "A flag to indicate if product is enabled", "example": "true" }, 
+            "GrossQuantitySold": { "type": "Integer", "description": "Gross amount sold", "example": "-1", "generated": "true" }, 
+            "GrossQuantityReturned": { "type": "Integer", "description": "Gross amount returned", "example": "-1", "generated": "true" }, 
+            "MaximumLevel": { "type": "Integer", "description": "Maximum number of Products that can be added to the PurchaseOrder", "example": "100", "putDescription": "defaults to -1" }, 
+            "MinimumLevel": { "type": "Integer", "description": "Minimum number of Products that can be added to the PurchaseOrder", "example": "10", "putDescription": "defaults to -1" }, 
+            "MinMaxLocked": { "type": "Boolean", "description": "A flag to indicate if the Min and Max values are locked (unchangeable)", "example": "false", "generated": "true" }, 
+            "ProductCost": { "type": "Decimal", "description": "Required for PO creation or default from RQ will be used", "example": "99.99", "putDescription": "defaults to -1" }, 
+            "ProductItemID": { "type": "Integer", "description": "GlobalProductId from RQ", "example": "11142" }, 
+            "ProductReceived": { "type": "Boolean", "description": "A flag to indicate if product was received", "example": "false" }, 
+            "ProductSKU": { "type": "String", "description": "ProductIdentifier in RQ", "example": "CECPSM000017" }, 
+            "QuantityCommittedOnOrderEntry": { "type": "Integer", "description": "Amount committed on an order entry", "example": "0", "putDescription": "defaults to -1" }, 
+            "QuantityInStock": { "type": "Integer", "description": "Amount in stock", "example": "8", "putDescription": "defaults to -1" }, 
+            "QuantityInTransfer": { "type": "Integer", "description": "Amount in transfer", "example": "3", "putDescription": "defaults to -1" }, 
+            "QuantityOnBackOrder": { "type": "Integer", "description": "Amount on back order", "example": "0", "putDescription": "defaults to -1" }, 
+            "QuantityOnLoan": { "type": "Integer", "description": "Amount on loan", "example": "5", "putDescription": "defaults to -1" }, 
+            "QuantityOnOrder": { "type": "Integer", "description": "Amount on order", "example": "6", "putDescription": "defaults to -1" }, 
+            "QuantityOnRMA": { "type": "Integer", "description": "Amount on RMA", "example": "9", "putDescription": "defaults to -1" }, 
+            "QuantityOnUncommittedOrder": { "type": "Integer", "description": "Amount on uncommitted order", "example": "2", "generated": "true"  }, 
+            "QuantityOrdered": { "type": "Integer", "description": "Amount ordered", "example": "4" }, 
+            "QuantityReceived": { "type": "Integer", "description": "Amount received", "example": "4", "putDescription": "defaults to -1" }, 
+            "QuantitySold": { "type": "Integer", "description": "Amount sold", "example": "30", "putDescription": "defaults to -1" }, 
+            "QuantitySuggestedByVendor": { "type": "Integer", "description": "Amount suggested by vendor", "example": "50", "generated": "true"  }, 
+            "RetailPrice": { "type": "Decimal", "description": "Retail price", "example": "99.99", "generated": "true"  }, 
+            "SaleBegin": { "type": "DateTime", "description": "Sale begin date", "example": "01/01/2014 12:00:00 AM", "generated": "true"  }, 
+            "SaleEnd": { "type": "DateTime", "description": "Sale end date", "example": "01/10/2014 12:00:00 AM", "generated": "true"  }, 
+            "SalePrice": { "type": "Decimal", "description": "Sale price", "example": "79.99", "generated": "true"  }, 
+            "VendorSKU": { "type": "String", "description": "Vendor SKU", "example": "SSGS5CB" } 
+          },
+          "required": [ "QuantityOrdered", "VendorSKU" ]                               
+        }      
+        
+
+    
+
+    
+    - ProductSerialNumber: |
+        {
+          "name": "ProductSerialNumber",
+          "type": "object",
+          "wrap": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ProductItemID": { "type": "Integer", "description": "GlobalProductId from RQ", "example": "11142" }, 
+            "DateReceived": { "type": "datetime", "description": "Date received", "example": "3/11/2014 2:29:25 PM" }, 
+            "NonSellable": { "type": "Boolean", "description": "A flag to indicate if the product is sellable (`false`) or nonsellable (`true`) in RQ", "example": "true" }, 
+            "SerialNumber": { "type": "String", "description": "Serial number", "example": "132456456456111" }
+          }                         
+        }          
+        
+
+    
+
+    
+    - ReceivingInfo: |
+        {
+          "name": "ReceivingInfo",
+          "type": "object",
+          "wrap": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ProductItemID": { "type": "Integer", "description": "GlobalProductId from RQ", "example": "11142" }, 
+            "ProductName": { "type": "String", "description": "Name", "example": "Samsung Galaxy S6" }, 
+            "ShipToStoreID": { "type": "Integer", "description": "Shipping store ID", "example": "55" }, 
+            "ShipToStoreName": { "type": "String", "description": "Name of store to use for shipping", "example": "Cornwall west" }, 
+            "RQPurchaseOrderNumber": { "type": "String", "description": "Purchase Order number from RQ", "example": "CORNWPO3550" }, 
+            "VendorSKU": { "type": "String", "description": "Vendor SKU", "example": "ABC123" },
+            "Quantity": { "type": "Integer", "description": "Number of items received", "example": "1" }, 
+            "ProductCost": { "type": "Decimal", "description": "Product cost", "example": "99.99" }, 
+            "DateReceived": { "type": "string", "description": "Date received", "example": "3/11/2014 2:29:25 PM" }, 
+            "RQReceivingNumber": { "type": "String", "description": "The receiving number from RQ", "example": "CORNWRE6055" }, 
+            "SerialNumber": { "type": "String", "description": "Serial number", "example": "132456456456111" }
+          }                         
+        }      
+        
+
+    
+
+    
+    - StoreInformation: |
+        {
+          "name": "StoreInformation",
+          "wrap": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "StoreID": { "type": "Integer", "description": "Identifier", "example": "36" }, 
+            "Name": { "type": "String", "description": "Name", "example": "Cornwall West" }, 
+            "Abbreviation": { "type": "String", "description": "Abbrevation", "example": "CWW" }, 
+            "Address": { "type": "String", "description": "Address", "example": "2102 11th Ave" }, 
+            "City": { "type": "String", "description": "City", "example": "Regina" }, 
+            "Country": { "type": "String", "description": "Country", "example": "Canada" }, 
+            "District": { "type": "String", "description": "District", "example": "Regina" }, 
+            "PhoneNumber": { "type": "String", "description": "Phone Number", "example": "5555555555" }, 
+            "PostalZipCode": { "type": "String", "description": "Postal or Zip Code", "example": "S2S 2S2" }, 
+            "ProvinceState": { "type": "String", "description": "Province or State", "example": "Saskatchewan" }, 
+            "Region": { "type": "String", "description": "Region", "example": "Regina" }, 
+            "ShipToStoreID": { "type": "Integer", "description": "Shipping store ID", "example": "55" }, 
+            "BillToStoreID": { "type": "Integer", "description": "RQ StoreID", "example": "55" }
+          }    
+        }      
+        
+
+    
+
+    
+    - CreatePurchaseOrderShipmentNotice: |
+        {
+          "exclude": "true",
+          "name": "CreatePurchaseOrderShipmentNotice",
+          "type": "object",
+          "soapRequest": "true",        
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "notice": { "type": "object", "ref": "cmi.PurchaseOrderShipmentNotice" }
+          },
+          "required": [ "CreatePurchaseOrderShipmentNotice", "client", "notice" ]
+        }
+        
+
+    
+
+    
+    - CreatePurchaseOrder: |
+        {
+          "exclude": "true",
+          "name": "CreatePurchaseOrder",
+          "type": "object",
+          "soapRequest": "true",        
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "vendorId": { "type": "guid", "putDescription": "Vendor identifier", "example": "f8c68dc5-7417-4e4d-b17c-42838660772a" },
+            "PurchaseOrder": { "type": "object", "ref": "cmi.PurchaseOrder" }
+          },
+          "required": [ "CreatePurchaseOrder", "client", "vendorId", "PurchaseOrder" ]
+        }
+        
+
+    
+
+    
+    - CreateUncommittedPurchaseOrder: |
+        {
+          "exclude": "true",
+          "name": "CreateUncommittedPurchaseOrder",
+          "type": "object",
+          "soapRequest": "true",        
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "vendorId": { "type": "guid", "putDescription": "Vendor identifier", "example": "f8c68dc5-7417-4e4d-b17c-42838660772a" },
+            "purchaseOrder": { "type": "object", "ref": "cmi.PurchaseOrder" }
+          },
+          "required": [ "CreateUncommittedPurchaseOrder", "client", "vendorId", "PurchaseOrder" ]
+        }      
+        
+
+    
+
+    
+    - GetPurchaseOrdersByStatus: |
+        {
+          "exclude": "true",
+          "name": "GetPurchaseOrdersByStatus",
+          "type": "object",
+          "soapRequest": "true",        
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "isCommitted": { "type": "boolean", "putDescription": "Flag to indicate if committed or uncommitted purchase orders should be searched for", "example": "true" }, 
+            "isCompleted": { "type": "boolean", "putDescription": "Flag to indicate if complete or incomplete purchase orders should be searched for", "example": "true" }, 
+            "startDate": { "type": "DateTime", "putDescription": "timestamp defaults to 12:00:00 AM, if not specified", "example": "2015-01-01T12:00:00.000" }, 
+            "endDate": { "type": "DateTime", "putDescription": "timestamp defaults to 12:00:00 AM, if not specified", "example": "2015-01-30T12:00:00.000" }
+          },
+          "required": ["GetPurchaseOrdersByStatus", "client", "isCommitted", "isCompleted", "startDate", "endDate"]
+        }
+        
+
+    
+
+    
+    - GetPurchaseOrderByReferenceNumber: |
+        {
+          "name": "GetPurchaseOrderByReferenceNumber",
+          "exclude": "true",
+          "type": "object",
+          "soapRequest": "true",        
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "purchaseOrderReferenceNumber": { "type": "string", "putDescription": "Reference Number on the Purchase Order in RQ", "example": "77123" }
+          },
+          "required": [ "GetPurchaseOrdersByReferenceNumber", "client", "PurchaseOrderReferenceNumber"]
+        }  
+        
+
+    
+
+    
+    - GetPurchaseOrderByBusinessID: |
+        {
+          "name": "GetPurchaseOrderByBusinessID",
+          "exclude": "true",
+          "type": "object",
+          "soapRequest": "true",        
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "purchaseOrderIdByStore": { "type": "string", "putDescription": "The business key of the purchase order in RQ", "example": "123" }
+          },
+          "required": [ "client", "purchaseOrderIdByStore"]
+        }  
+        
+
+    
+
+    
+    - GetReceivingInfo: |
+        {
+          "name": "GetReceivingInfo",
+          "exclude": "true",
+          "type": "object",
+          "soapRequest": "true",                
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },                    
+            "startDate": { "type": "String", "putDescription": "Products received on or after this day at midnight will be searched for", "example": "01/01/2016" }, 
+            "endDate": { "type": "String", "putDescription": "Products received up to the end of this day will be searched for", "example": "05/25/2016" }
+          },
+          "required": ["GetReceivingInfo", "client", "startDate", "endDate"]
+        }  
+        
+
+    
+
+    
+    - GetStoreList: |
+        {
+          "exclude": "true",
+          "name": "GetStoreList",
+          "type": "object",
+          "soapRequest": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" }
+          },
+          "required": [ "client" ]
+        }  
+        
+
+    
+
+    
+    - UpdatePurchaseOrderComments: |
+        {
+          "exclude": "true",
+          "name": "UpdatePurchaseOrderComments",
+          "type": "object",
+          "soapRequest": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "purchaseOrderID": { "type": "Unique identifier for a PO", "putDescription": "Identifier of a PO, either this value, referenceNumber or retailiQPurchaseOrderID must be provided", "example": "1af7104d-f4df-4ae4-bd22-df2af6dd1c64", "hideFromExample": "true" },
+            "retailiQPurchaseOrderID": { "type": "Integer", "putDescription": "Identifier of purchase order in RQ, either this value, referenceNumber or purchaseOrderID must be provided. If the PO was created from RQ, this value is required", "example": "22075"},           
+            "referenceNumber": { "type": "String", "putDescription": "Identifier of vendor purchase order in RQ, either this value, retailiQPurchaseOrderID or purchaseOrderID must be provided", "example": "4", "hideFromExample": "true" },
+            "comments": { "type": "string", "example": "Complete" }
+          },
+          "required": [ "UpdatePurchaseOrderComments", "client"  ]
+        }        
+        
+
+    
+
+    
+    - UpdateSalesAndPurchaseOrderLocation: |
+        {
+          "exclude": "true",
+          "name": "UpdateSalesAndPurchaseOrderLocation",
+          "type": "object",
+          "soapRequest": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "client": { "type": "object", "ref": "cmi.ClientIdentity" },
+            "purchaseOrderID": { "type": "Unique identifier for a PO", "putDescription": "Identifier of a PO, either this value, referenceNumber or retailiQPurchaseOrderID must be provided", "example": "1af7104d-f4df-4ae4-bd22-df2af6dd1c64", "hideFromExample": "true" },
+            "retailiQPurchaseOrderID": { "type": "Integer", "putDescription": "Identifier of purchase order in RQ, either this value, referenceNumber or purchaseOrderID must be provided. If the PO was created from RQ, this value is required", "example": "22075"},           
+            "referenceNumber": { "type": "String", "putDescription": "Identifier of vendor purchase order in RQ, either this value, retailiQPurchaseOrderID or purchaseOrderID must be provided", "example": "4", "hideFromExample": "true" },
+             "shipToStoreId": { "type": "Integer", "putDescription": "Identifier for a store in RQ", "example": "4" }
+          },
+          "required": [ "UpdateSalesAndPurchaseOrderLocation", "shipToStoreId", "client"  ]
+        }        
+        
+
+    
+
+    
+    - ProductSalesReportData: |
+        {
+          "exclude": "true",
+          "name": "ProductSalesReportData",
+          "type": "object",
+          "wrap": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {   
+            "CategoryPath": {  "type": "string", "description": "", "example": "Activation >> Dropship" },
+            "ChannelID": {  "type": "guid", "description": "", "example": "4bbb842d-0340-4ffc-9216-bf170c861424" },
+            "ChannelName": {  "type": "string", "description": "", "example": "First Channel" },
+            "Description": {  "type": "string", "description": "", "example": "" },
+            "DistrictID": {  "type": "integer", "description": "", "example": "1" },
+            "DistrictName": {  "type": "string", "description": "", "example": "First District" },
+            "InvoicedBy": {  "type": "string", "description": "", "example": "iQmetrix User" },
+            "ListPrice": {  "type": "decimal", "description": "", "example": "99.99" },
+            "ProductItemID": {  "type": "integer", "description": "", "example": "11142" },
+            "ProductSKU": {  "type": "string", "description": "", "example": "CECPSM000017" },
+            "Quantity": {  "type": "integer", "description": "", "example": "1" },
+            "Refund": {  "type": "boolean", "description": "", "example": "false" },
+            "RegionID": {  "type": "integer", "description": "", "example": "1" },
+            "RegionName": {  "type": "string", "description": "", "example": "First Region" },
+            "RqInvoiceIdByStore": {  "type": "string", "description": "", "example": "BDP123" },
+            "SoldOn": {  "type": "datetime", "description": "", "example": "1/21/2016 4:58:24 PM" },
+            "StoreID": {  "type": "integer", "description": "", "example": "4" },
+            "TrackingNumber": {  "type": "string", "description": "", "example": "12345" },
+            "VendorSKU": {  "type": "string", "description": "", "example": "SSGS5CB" }
+          }
+        }
+        
+
+    
+
+
+/?op=CreatePurchaseOrderShipmentNotice:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Creating a Purchase Order Shipment Notice
+                
+        
+        description: |            
+            This method allows the vendor to create a shipment notice for an existing purchase order. 
+            
+            #### Notes
+            
+            * The shipment notice will be used when receiving purchase order products with serial numbers
+            * Multiple shipment notices can be created for a single purchase order
+            * Each shipment notice is for a single product
+            * If more than one product appears in a shipment, create one shipment notice for each product, but use the same shipment number for all products in the same shipment
+            
+            {{tip}}
+            This request accepts an array of PurchaseOrderShipmentNotices, so you do not need to call the CMI service multiple times for products in an order
+            {{end}}
+            
+
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"notice":{"PurchaseOrderID":"84DACFD3-4095-4D50-A02E-781B86B7408E","ProductItemID":11142,"Quantity":1,"RQPurchaseOrderID":22073,"SerialNumbers":["97000012"],"ShipmentNumber":"SHIP001","VendorInvoiceNumber":"1002","VendorSKU":"ABC123"}}
+                    
+                schema: |
+                    {"exclude":"true","name":"CreatePurchaseOrderShipmentNotice","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"notice":{"type":"object","ref":"cmi.PurchaseOrderShipmentNotice","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","putDescription":"Either this value or VendorInvoiceNumber must be provided","example":"84DACFD3-4095-4D50-A02E-781B86B7408E","name":"PurchaseOrderID"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","putDescription":"Either this value or VendorSKU must be provided","example":"11142","name":"ProductItemID"},"Quantity":{"type":"integer","description":"Number of items shipped","putDescription":"Number of items shipped","example":"1","name":"Quantity"},"RQPurchaseOrderID":{"type":"integer","description":"Identifier for the Purchase Order in RQ","putDescription":"Identifier for the Purchase Order in RQ","example":"22073","name":"RQPurchaseOrderID"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers. Must match Quantity","putDescription":"Serial numbers. Must match Quantity","example":"97000012","name":"SerialNumbers"},"ShipmentNumber":{"type":"string","description":"Vendor defined identifier for the shipment","putDescription":"If this value is not provided, the service will automatically assign one","example":"SHIP001","name":"ShipmentNumber"},"VendorInvoiceNumber":{"type":"string","description":"Value supplied by the vendor when creating the purchase order","putDescription":"Either this value OR PurchaseOrderID must be provided","example":"1002","name":"VendorInvoiceNumber"},"VendorSKU":{"type":"string","description":"The vendor part number/sku","putDescription":"Either this value or ProductItemId must be provided","example":"ABC123","name":"VendorSKU"}},"required":["Quantity","SerialNumbers","VendorInvoiceNumber","RQPurchaseOrderID"]}},"required":["CreatePurchaseOrderShipmentNotice","client","notice"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"PurchaseOrderID":"84DACFD3-4095-4D50-A02E-781B86B7408E","ProductItemID":11142,"Quantity":1,"RQPurchaseOrderID":22073,"SerialNumbers":["97000012"],"ShipmentNumber":"SHIP001","VendorInvoiceNumber":"1002","VendorSKU":"ABC123"}
+                            schema: |
+                                {"name":"PurchaseOrderShipmentNotice","type":"object","wrap":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"PurchaseOrderID":{"type":"GUID","description":"Unique identifier","putDescription":"Either this value or VendorInvoiceNumber must be provided","example":"84DACFD3-4095-4D50-A02E-781B86B7408E"},"ProductItemID":{"type":"Integer","description":"GlobalProductId from RQ","putDescription":"Either this value or VendorSKU must be provided","example":"11142"},"Quantity":{"type":"Integer","description":"Number of items shipped","putDescription":"Number of items shipped","example":"1"},"RQPurchaseOrderID":{"type":"Integer","description":"Identifier for the Purchase Order in RQ","putDescription":"Identifier for the Purchase Order in RQ","example":"22073"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers. Must match Quantity","putDescription":"Serial numbers. Must match Quantity","example":"97000012"},"ShipmentNumber":{"type":"String","description":"Vendor defined identifier for the shipment","putDescription":"If this value is not provided, the service will automatically assign one","example":"SHIP001"},"VendorInvoiceNumber":{"type":"String","description":"Value supplied by the vendor when creating the purchase order","putDescription":"Either this value OR PurchaseOrderID must be provided","example":"1002"},"VendorSKU":{"type":"String","description":"The vendor part number/sku","putDescription":"Either this value or ProductItemId must be provided","example":"ABC123"}},"required":["Quantity","SerialNumbers","VendorInvoiceNumber","RQPurchaseOrderID"]}
+                            
+                        
+                    
+                
+            
+    
+
+/?op=CreatePurchaseOrder:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Creating a Purchase Order
+                
+        
+        description: |            
+            #### Notes
+            
+            * Creating a Purchase Order allows RQ to properly account for products arriving at a store so that stock levels are updated correctly
+            * Each item must be unique
+            * To place multiple copies of an item on an order, adjust the quantity    
+            
+
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"vendorId":"f8c68dc5-7417-4e4d-b17c-42838660772a","PurchaseOrder":{"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","PurchaseOrderData":{"BillToStoreID":55,"CreatedByVMI":false,"CreatedDate":"3/16/2014 12:00:00 AM","Comments":"comments","EstimatedArrivalDate":"3/2/2014 12:00:00 AM","OrderTotal":99.99,"ShippingTotal":99.99,"ShipToStoreID":55,"VendorInvoiceNumber":"563783"},"ProductsOrdered":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","Enabled":true,"MaximumLevel":100,"MinimumLevel":10,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"VendorSKU":"SSGS5CB"}]}}
+                    
+                schema: |
+                    {"exclude":"true","name":"CreatePurchaseOrder","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"vendorId":{"type":"guid","putDescription":"Vendor identifier","example":"f8c68dc5-7417-4e4d-b17c-42838660772a"},"PurchaseOrder":{"type":"object","ref":"cmi.PurchaseOrder","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","name":"PurchaseOrderID"},"PurchaseOrderData":{"type":"object","ref":"cmi.PurchaseOrderData","description":"Purchase order","name":"PurchaseOrderData","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","generated":"true","name":"PurchaseOrderID"},"BillToStoreID":{"type":"integer","description":"RQ StoreId","putDescription":"Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied","example":"55","name":"BillToStoreID"},"BillToStoreName":{"type":"string","description":"RQ store name","example":"Cornwall west","generated":"true","name":"BillToStoreName"},"BillToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for billing. Can be used in place of `BillToStoreId`","example":"1","generated":"true","name":"BillToVendorAccountNumber"},"IsDeleted":{"type":"boolean","description":"A flag to indicate if this purchase order has been deleted in RQ","example":"false","generated":"true","name":"IsDeleted"},"CreatedByVMI":{"type":"boolean","description":"A flag to indicate if this was created by the VMI API (true) or RQ (false)","putDescription":"defaults to false","example":"false","name":"CreatedByVMI"},"CreatedDate":{"type":"datetime","description":"The date and time the purchase order was created, if it was created in RQ","example":"3/16/2014 12:00:00 AM","name":"CreatedDate"},"Comments":{"type":"string","description":"Any comments for the purchase order","example":"comments","name":"Comments"},"EstimatedArrivalDate":{"type":"string","description":"Estimated date of arrival","example":"3/2/2014 12:00:00 AM","name":"EstimatedArrivalDate"},"OrderTotal":{"type":"decimal","description":"Cost of the order, provided by a vendor for informational purposes only","putDescription":"Defaults to -1","example":"99.99","name":"OrderTotal"},"RetailiQPurchaseOrderID":{"type":"integer","description":"Identifier of purchase order in RQ","example":"22075","generated":"true","name":"RetailiQPurchaseOrderID"},"RetailiQPurchaseOrderNumber":{"type":"string","description":"Purchase order number in RQ","example":"DALEKPO5","generated":"true","name":"RetailiQPurchaseOrderNumber"},"ShippingTotal":{"type":"decimal","description":"Cost of shipping","putDescription":"Defaults to -1","example":"99.99","name":"ShippingTotal"},"ShipToStoreID":{"type":"integer","description":"Identifier of store to use for shipping. Either this value or ShipToVendorAccountNumber must be supplied","putDescription":"Defaults to -1","example":"55","name":"ShipToStoreID"},"ShipToStoreName":{"type":"string","description":"Name of store to use for shipping","example":"Cornwall west","generated":"true","name":"ShipToStoreName"},"ShipToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`","example":"1","generated":"true","name":"ShipToVendorAccountNumber"},"VendorInvoiceNumber":{"type":"string","description":"Invoice number for the vendor, must be unique","example":"563783","name":"VendorInvoiceNumber"},"VendorName":{"type":"string","description":"Name of the vendor","example":"SampleVendor","generated":"true","name":"VendorName"}},"required":["BillToStoreID","EstimatedArrivalDate","ShipToStoreID","VendorInvoiceNumber"]},"ProductsOrdered":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products ordered","name":"ProductsOrdered","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"ProductsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products received","generated":"true","name":"ProductsReceived","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"SerialsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductSerialNumber","description":"Serials received","generated":"true","name":"SerialsReceived","properties":{"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"DateReceived":{"type":"datetime","description":"Date received","example":"3/11/2014 2:29:25 PM","name":"DateReceived"},"NonSellable":{"type":"boolean","description":"A flag to indicate if the product is sellable (`false`) or nonsellable (`true`) in RQ","example":"true","name":"NonSellable"},"SerialNumber":{"type":"string","description":"Serial number","example":"132456456456111","name":"SerialNumber"}}}},"required":["PurchaseOrderID","PurchaseOrderData","ProductsOrdered"]}},"required":["CreatePurchaseOrder","client","vendorId","PurchaseOrder"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","PurchaseOrderData":{"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","BillToStoreID":55,"BillToStoreName":"Cornwall west","BillToVendorAccountNumber":"1","IsDeleted":false,"CreatedByVMI":false,"CreatedDate":"3/16/2014 12:00:00 AM","Comments":"comments","EstimatedArrivalDate":"3/2/2014 12:00:00 AM","OrderTotal":99.99,"RetailiQPurchaseOrderID":22075,"RetailiQPurchaseOrderNumber":"DALEKPO5","ShippingTotal":99.99,"ShipToStoreID":55,"ShipToStoreName":"Cornwall west","ShipToVendorAccountNumber":"1","VendorInvoiceNumber":"563783","VendorName":"SampleVendor"},"ProductsOrdered":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","CategoryPath":"Activation >> Dropship","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","DoNotOrder":false,"Enabled":true,"GrossQuantitySold":-1,"GrossQuantityReturned":-1,"MaximumLevel":100,"MinimumLevel":10,"MinMaxLocked":false,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOnUncommittedOrder":2,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"QuantitySuggestedByVendor":50,"RetailPrice":99.99,"SaleBegin":"01/01/2014 12:00:00 AM","SaleEnd":"01/10/2014 12:00:00 AM","SalePrice":79.99,"VendorSKU":"SSGS5CB"}]}
+                            schema: |
+                                {"exclude":"true","name":"PurchaseOrderSlim","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"PurchaseOrderID":{"type":"GUID","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D"},"PurchaseOrderData":{"type":"object","ref":"cmi.PurchaseOrderData","description":"Purchase order","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","generated":"true","name":"PurchaseOrderID"},"BillToStoreID":{"type":"integer","description":"RQ StoreId","putDescription":"Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied","example":"55","name":"BillToStoreID"},"BillToStoreName":{"type":"string","description":"RQ store name","example":"Cornwall west","generated":"true","name":"BillToStoreName"},"BillToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for billing. Can be used in place of `BillToStoreId`","example":"1","generated":"true","name":"BillToVendorAccountNumber"},"IsDeleted":{"type":"boolean","description":"A flag to indicate if this purchase order has been deleted in RQ","example":"false","generated":"true","name":"IsDeleted"},"CreatedByVMI":{"type":"boolean","description":"A flag to indicate if this was created by the VMI API (true) or RQ (false)","putDescription":"defaults to false","example":"false","name":"CreatedByVMI"},"CreatedDate":{"type":"datetime","description":"The date and time the purchase order was created, if it was created in RQ","example":"3/16/2014 12:00:00 AM","name":"CreatedDate"},"Comments":{"type":"string","description":"Any comments for the purchase order","example":"comments","name":"Comments"},"EstimatedArrivalDate":{"type":"string","description":"Estimated date of arrival","example":"3/2/2014 12:00:00 AM","name":"EstimatedArrivalDate"},"OrderTotal":{"type":"decimal","description":"Cost of the order, provided by a vendor for informational purposes only","putDescription":"Defaults to -1","example":"99.99","name":"OrderTotal"},"RetailiQPurchaseOrderID":{"type":"integer","description":"Identifier of purchase order in RQ","example":"22075","generated":"true","name":"RetailiQPurchaseOrderID"},"RetailiQPurchaseOrderNumber":{"type":"string","description":"Purchase order number in RQ","example":"DALEKPO5","generated":"true","name":"RetailiQPurchaseOrderNumber"},"ShippingTotal":{"type":"decimal","description":"Cost of shipping","putDescription":"Defaults to -1","example":"99.99","name":"ShippingTotal"},"ShipToStoreID":{"type":"integer","description":"Identifier of store to use for shipping. Either this value or ShipToVendorAccountNumber must be supplied","putDescription":"Defaults to -1","example":"55","name":"ShipToStoreID"},"ShipToStoreName":{"type":"string","description":"Name of store to use for shipping","example":"Cornwall west","generated":"true","name":"ShipToStoreName"},"ShipToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`","example":"1","generated":"true","name":"ShipToVendorAccountNumber"},"VendorInvoiceNumber":{"type":"string","description":"Invoice number for the vendor, must be unique","example":"563783","name":"VendorInvoiceNumber"},"VendorName":{"type":"string","description":"Name of the vendor","example":"SampleVendor","generated":"true","name":"VendorName"}},"required":["BillToStoreID","EstimatedArrivalDate","ShipToStoreID","VendorInvoiceNumber"]},"ProductsOrdered":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products ordered","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]}}}
+                            
+                        
+                    
+                
+            
+    
+
+/?op=CreateUncommittedPurchaseOrder:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Creating an Uncommitted Purchase Order
+                
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"vendorId":"f8c68dc5-7417-4e4d-b17c-42838660772a","purchaseOrder":{"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","PurchaseOrderData":{"BillToStoreID":55,"CreatedByVMI":false,"CreatedDate":"3/16/2014 12:00:00 AM","Comments":"comments","EstimatedArrivalDate":"3/2/2014 12:00:00 AM","OrderTotal":99.99,"ShippingTotal":99.99,"ShipToStoreID":55,"VendorInvoiceNumber":"563783"},"ProductsOrdered":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","Enabled":true,"MaximumLevel":100,"MinimumLevel":10,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"VendorSKU":"SSGS5CB"}]}}
+                    
+                schema: |
+                    {"exclude":"true","name":"CreateUncommittedPurchaseOrder","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"vendorId":{"type":"guid","putDescription":"Vendor identifier","example":"f8c68dc5-7417-4e4d-b17c-42838660772a"},"purchaseOrder":{"type":"object","ref":"cmi.PurchaseOrder","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","name":"PurchaseOrderID"},"PurchaseOrderData":{"type":"object","ref":"cmi.PurchaseOrderData","description":"Purchase order","name":"PurchaseOrderData","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","generated":"true","name":"PurchaseOrderID"},"BillToStoreID":{"type":"integer","description":"RQ StoreId","putDescription":"Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied","example":"55","name":"BillToStoreID"},"BillToStoreName":{"type":"string","description":"RQ store name","example":"Cornwall west","generated":"true","name":"BillToStoreName"},"BillToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for billing. Can be used in place of `BillToStoreId`","example":"1","generated":"true","name":"BillToVendorAccountNumber"},"IsDeleted":{"type":"boolean","description":"A flag to indicate if this purchase order has been deleted in RQ","example":"false","generated":"true","name":"IsDeleted"},"CreatedByVMI":{"type":"boolean","description":"A flag to indicate if this was created by the VMI API (true) or RQ (false)","putDescription":"defaults to false","example":"false","name":"CreatedByVMI"},"CreatedDate":{"type":"datetime","description":"The date and time the purchase order was created, if it was created in RQ","example":"3/16/2014 12:00:00 AM","name":"CreatedDate"},"Comments":{"type":"string","description":"Any comments for the purchase order","example":"comments","name":"Comments"},"EstimatedArrivalDate":{"type":"string","description":"Estimated date of arrival","example":"3/2/2014 12:00:00 AM","name":"EstimatedArrivalDate"},"OrderTotal":{"type":"decimal","description":"Cost of the order, provided by a vendor for informational purposes only","putDescription":"Defaults to -1","example":"99.99","name":"OrderTotal"},"RetailiQPurchaseOrderID":{"type":"integer","description":"Identifier of purchase order in RQ","example":"22075","generated":"true","name":"RetailiQPurchaseOrderID"},"RetailiQPurchaseOrderNumber":{"type":"string","description":"Purchase order number in RQ","example":"DALEKPO5","generated":"true","name":"RetailiQPurchaseOrderNumber"},"ShippingTotal":{"type":"decimal","description":"Cost of shipping","putDescription":"Defaults to -1","example":"99.99","name":"ShippingTotal"},"ShipToStoreID":{"type":"integer","description":"Identifier of store to use for shipping. Either this value or ShipToVendorAccountNumber must be supplied","putDescription":"Defaults to -1","example":"55","name":"ShipToStoreID"},"ShipToStoreName":{"type":"string","description":"Name of store to use for shipping","example":"Cornwall west","generated":"true","name":"ShipToStoreName"},"ShipToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`","example":"1","generated":"true","name":"ShipToVendorAccountNumber"},"VendorInvoiceNumber":{"type":"string","description":"Invoice number for the vendor, must be unique","example":"563783","name":"VendorInvoiceNumber"},"VendorName":{"type":"string","description":"Name of the vendor","example":"SampleVendor","generated":"true","name":"VendorName"}},"required":["BillToStoreID","EstimatedArrivalDate","ShipToStoreID","VendorInvoiceNumber"]},"ProductsOrdered":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products ordered","name":"ProductsOrdered","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"ProductsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products received","generated":"true","name":"ProductsReceived","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"SerialsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductSerialNumber","description":"Serials received","generated":"true","name":"SerialsReceived","properties":{"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"DateReceived":{"type":"datetime","description":"Date received","example":"3/11/2014 2:29:25 PM","name":"DateReceived"},"NonSellable":{"type":"boolean","description":"A flag to indicate if the product is sellable (`false`) or nonsellable (`true`) in RQ","example":"true","name":"NonSellable"},"SerialNumber":{"type":"string","description":"Serial number","example":"132456456456111","name":"SerialNumber"}}}},"required":["PurchaseOrderID","PurchaseOrderData","ProductsOrdered"]}},"required":["CreateUncommittedPurchaseOrder","client","vendorId","PurchaseOrder"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","PurchaseOrderData":{"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","BillToStoreID":55,"BillToStoreName":"Cornwall west","BillToVendorAccountNumber":"1","IsDeleted":false,"CreatedByVMI":false,"CreatedDate":"3/16/2014 12:00:00 AM","Comments":"comments","EstimatedArrivalDate":"3/2/2014 12:00:00 AM","OrderTotal":99.99,"RetailiQPurchaseOrderID":22075,"RetailiQPurchaseOrderNumber":"DALEKPO5","ShippingTotal":99.99,"ShipToStoreID":55,"ShipToStoreName":"Cornwall west","ShipToVendorAccountNumber":"1","VendorInvoiceNumber":"563783","VendorName":"SampleVendor"},"ProductsOrdered":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","CategoryPath":"Activation >> Dropship","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","DoNotOrder":false,"Enabled":true,"GrossQuantitySold":-1,"GrossQuantityReturned":-1,"MaximumLevel":100,"MinimumLevel":10,"MinMaxLocked":false,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOnUncommittedOrder":2,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"QuantitySuggestedByVendor":50,"RetailPrice":99.99,"SaleBegin":"01/01/2014 12:00:00 AM","SaleEnd":"01/10/2014 12:00:00 AM","SalePrice":79.99,"VendorSKU":"SSGS5CB"}]}
+                            schema: |
+                                {"exclude":"true","name":"PurchaseOrderSlim","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"PurchaseOrderID":{"type":"GUID","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D"},"PurchaseOrderData":{"type":"object","ref":"cmi.PurchaseOrderData","description":"Purchase order","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","generated":"true","name":"PurchaseOrderID"},"BillToStoreID":{"type":"integer","description":"RQ StoreId","putDescription":"Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied","example":"55","name":"BillToStoreID"},"BillToStoreName":{"type":"string","description":"RQ store name","example":"Cornwall west","generated":"true","name":"BillToStoreName"},"BillToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for billing. Can be used in place of `BillToStoreId`","example":"1","generated":"true","name":"BillToVendorAccountNumber"},"IsDeleted":{"type":"boolean","description":"A flag to indicate if this purchase order has been deleted in RQ","example":"false","generated":"true","name":"IsDeleted"},"CreatedByVMI":{"type":"boolean","description":"A flag to indicate if this was created by the VMI API (true) or RQ (false)","putDescription":"defaults to false","example":"false","name":"CreatedByVMI"},"CreatedDate":{"type":"datetime","description":"The date and time the purchase order was created, if it was created in RQ","example":"3/16/2014 12:00:00 AM","name":"CreatedDate"},"Comments":{"type":"string","description":"Any comments for the purchase order","example":"comments","name":"Comments"},"EstimatedArrivalDate":{"type":"string","description":"Estimated date of arrival","example":"3/2/2014 12:00:00 AM","name":"EstimatedArrivalDate"},"OrderTotal":{"type":"decimal","description":"Cost of the order, provided by a vendor for informational purposes only","putDescription":"Defaults to -1","example":"99.99","name":"OrderTotal"},"RetailiQPurchaseOrderID":{"type":"integer","description":"Identifier of purchase order in RQ","example":"22075","generated":"true","name":"RetailiQPurchaseOrderID"},"RetailiQPurchaseOrderNumber":{"type":"string","description":"Purchase order number in RQ","example":"DALEKPO5","generated":"true","name":"RetailiQPurchaseOrderNumber"},"ShippingTotal":{"type":"decimal","description":"Cost of shipping","putDescription":"Defaults to -1","example":"99.99","name":"ShippingTotal"},"ShipToStoreID":{"type":"integer","description":"Identifier of store to use for shipping. Either this value or ShipToVendorAccountNumber must be supplied","putDescription":"Defaults to -1","example":"55","name":"ShipToStoreID"},"ShipToStoreName":{"type":"string","description":"Name of store to use for shipping","example":"Cornwall west","generated":"true","name":"ShipToStoreName"},"ShipToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`","example":"1","generated":"true","name":"ShipToVendorAccountNumber"},"VendorInvoiceNumber":{"type":"string","description":"Invoice number for the vendor, must be unique","example":"563783","name":"VendorInvoiceNumber"},"VendorName":{"type":"string","description":"Name of the vendor","example":"SampleVendor","generated":"true","name":"VendorName"}},"required":["BillToStoreID","EstimatedArrivalDate","ShipToStoreID","VendorInvoiceNumber"]},"ProductsOrdered":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products ordered","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]}}}
+                            
+                        
+                    
+                
+            
+    
+
+/?op=UpdatePurchaseOrderComments:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Updating Comments for a Purchase Order
+                
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"retailiQPurchaseOrderID":22075,"comments":"Complete"}
+                    
+                schema: |
+                    {"exclude":"true","name":"UpdatePurchaseOrderComments","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"purchaseOrderID":{"type":"Unique identifier for a PO","putDescription":"Identifier of a PO, either this value, referenceNumber or retailiQPurchaseOrderID must be provided","example":"1af7104d-f4df-4ae4-bd22-df2af6dd1c64","hideFromExample":"true"},"retailiQPurchaseOrderID":{"type":"Integer","putDescription":"Identifier of purchase order in RQ, either this value, referenceNumber or purchaseOrderID must be provided. If the PO was created from RQ, this value is required","example":"22075"},"referenceNumber":{"type":"String","putDescription":"Identifier of vendor purchase order in RQ, either this value, retailiQPurchaseOrderID or purchaseOrderID must be provided","example":"4","hideFromExample":"true"},"comments":{"type":"string","example":"Complete"}},"required":["UpdatePurchaseOrderComments","client"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            example: |
+                                <?xml version="1.0" encoding="utf-8"?>
+                                <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                                  <soap:Body>
+                                    <UpdatePurchaseOrderCommentsResponse xmlns="http://www.iqmetrix.com" />
+                                  </soap:Body>
+                                </soap:Envelope>    
+                                
+                        
+                        
+                    
+                
+            
+    
+
+/?op=UpdateSalesAndPurchaseOrderLocation:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Updating the Location for a Purchase Order
+                
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"retailiQPurchaseOrderID":22075,"shipToStoreId":4}
+                    
+                schema: |
+                    {"exclude":"true","name":"UpdateSalesAndPurchaseOrderLocation","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"purchaseOrderID":{"type":"Unique identifier for a PO","putDescription":"Identifier of a PO, either this value, referenceNumber or retailiQPurchaseOrderID must be provided","example":"1af7104d-f4df-4ae4-bd22-df2af6dd1c64","hideFromExample":"true"},"retailiQPurchaseOrderID":{"type":"Integer","putDescription":"Identifier of purchase order in RQ, either this value, referenceNumber or purchaseOrderID must be provided. If the PO was created from RQ, this value is required","example":"22075"},"referenceNumber":{"type":"String","putDescription":"Identifier of vendor purchase order in RQ, either this value, retailiQPurchaseOrderID or purchaseOrderID must be provided","example":"4","hideFromExample":"true"},"shipToStoreId":{"type":"Integer","putDescription":"Identifier for a store in RQ","example":"4"}},"required":["UpdateSalesAndPurchaseOrderLocation","shipToStoreId","client"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            example: |
+                                <?xml version="1.0" encoding="utf-8"?>
+                                <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                                  <soap:Body>
+                                    <UpdateSalesAndPurchaseOrderLocationResponse xmlns="http://www.iqmetrix.com">
+                                      <UpdateSalesAndPurchaseOrderLocationResult>true</UpdateSalesAndPurchaseOrderLocationResult>
+                                    </UpdateSalesAndPurchaseOrderLocationResponse>
+                                  </soap:Body>
+                                </soap:Envelope>
+                                
+                        
+                        
+                    
+                
+            
+    
+
+/?op=GetPurchaseOrdersByStatus:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Getting Purchase Orders By Status
+                
+        
+        description: |            
+            This method will return all purchase orders in the client database that match the provided status criteria, including those that were not created through the CMI API.  
+            
+            Therefore, if a dealer creates a Purchase Order within RQ, it will be available in this list.
+            
+
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"isCommitted":true,"isCompleted":true,"startDate":"2015-01-01T12:00:00.000","endDate":"2015-01-30T12:00:00.000"}
+                    
+                schema: |
+                    {"exclude":"true","name":"GetPurchaseOrdersByStatus","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"isCommitted":{"type":"boolean","putDescription":"Flag to indicate if committed or uncommitted purchase orders should be searched for","example":"true"},"isCompleted":{"type":"boolean","putDescription":"Flag to indicate if complete or incomplete purchase orders should be searched for","example":"true"},"startDate":{"type":"DateTime","putDescription":"timestamp defaults to 12:00:00 AM, if not specified","example":"2015-01-01T12:00:00.000"},"endDate":{"type":"DateTime","putDescription":"timestamp defaults to 12:00:00 AM, if not specified","example":"2015-01-30T12:00:00.000"}},"required":["GetPurchaseOrdersByStatus","client","isCommitted","isCompleted","startDate","endDate"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"PurchaseOrderInformation":{"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","PurchaseOrderData":{"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","BillToStoreID":55,"BillToStoreName":"Cornwall west","BillToVendorAccountNumber":"1","IsDeleted":false,"CreatedByVMI":false,"CreatedDate":"3/16/2014 12:00:00 AM","Comments":"comments","EstimatedArrivalDate":"3/2/2014 12:00:00 AM","OrderTotal":99.99,"RetailiQPurchaseOrderID":22075,"RetailiQPurchaseOrderNumber":"DALEKPO5","ShippingTotal":99.99,"ShipToStoreID":55,"ShipToStoreName":"Cornwall west","ShipToVendorAccountNumber":"1","VendorInvoiceNumber":"563783","VendorName":"SampleVendor"},"ProductsOrdered":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","CategoryPath":"Activation >> Dropship","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","DoNotOrder":false,"Enabled":true,"GrossQuantitySold":-1,"GrossQuantityReturned":-1,"MaximumLevel":100,"MinimumLevel":10,"MinMaxLocked":false,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOnUncommittedOrder":2,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"QuantitySuggestedByVendor":50,"RetailPrice":99.99,"SaleBegin":"01/01/2014 12:00:00 AM","SaleEnd":"01/10/2014 12:00:00 AM","SalePrice":79.99,"VendorSKU":"SSGS5CB"}],"ProductsReceived":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","CategoryPath":"Activation >> Dropship","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","DoNotOrder":false,"Enabled":true,"GrossQuantitySold":-1,"GrossQuantityReturned":-1,"MaximumLevel":100,"MinimumLevel":10,"MinMaxLocked":false,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOnUncommittedOrder":2,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"QuantitySuggestedByVendor":50,"RetailPrice":99.99,"SaleBegin":"01/01/2014 12:00:00 AM","SaleEnd":"01/10/2014 12:00:00 AM","SalePrice":79.99,"VendorSKU":"SSGS5CB"}],"SerialsReceived":[{"ProductItemID":11142,"DateReceived":"3/11/2014 2:29:25 PM","NonSellable":true,"SerialNumber":"132456456456111"}]}}
+                            schema: |
+                                {"name":"PurchaseOrderInformation","exclude":"true","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"PurchaseOrderInformation":{"type":"object","ref":"cmi.PurchaseOrder","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","name":"PurchaseOrderID"},"PurchaseOrderData":{"type":"object","ref":"cmi.PurchaseOrderData","description":"Purchase order","name":"PurchaseOrderData","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","generated":"true","name":"PurchaseOrderID"},"BillToStoreID":{"type":"integer","description":"RQ StoreId","putDescription":"Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied","example":"55","name":"BillToStoreID"},"BillToStoreName":{"type":"string","description":"RQ store name","example":"Cornwall west","generated":"true","name":"BillToStoreName"},"BillToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for billing. Can be used in place of `BillToStoreId`","example":"1","generated":"true","name":"BillToVendorAccountNumber"},"IsDeleted":{"type":"boolean","description":"A flag to indicate if this purchase order has been deleted in RQ","example":"false","generated":"true","name":"IsDeleted"},"CreatedByVMI":{"type":"boolean","description":"A flag to indicate if this was created by the VMI API (true) or RQ (false)","putDescription":"defaults to false","example":"false","name":"CreatedByVMI"},"CreatedDate":{"type":"datetime","description":"The date and time the purchase order was created, if it was created in RQ","example":"3/16/2014 12:00:00 AM","name":"CreatedDate"},"Comments":{"type":"string","description":"Any comments for the purchase order","example":"comments","name":"Comments"},"EstimatedArrivalDate":{"type":"string","description":"Estimated date of arrival","example":"3/2/2014 12:00:00 AM","name":"EstimatedArrivalDate"},"OrderTotal":{"type":"decimal","description":"Cost of the order, provided by a vendor for informational purposes only","putDescription":"Defaults to -1","example":"99.99","name":"OrderTotal"},"RetailiQPurchaseOrderID":{"type":"integer","description":"Identifier of purchase order in RQ","example":"22075","generated":"true","name":"RetailiQPurchaseOrderID"},"RetailiQPurchaseOrderNumber":{"type":"string","description":"Purchase order number in RQ","example":"DALEKPO5","generated":"true","name":"RetailiQPurchaseOrderNumber"},"ShippingTotal":{"type":"decimal","description":"Cost of shipping","putDescription":"Defaults to -1","example":"99.99","name":"ShippingTotal"},"ShipToStoreID":{"type":"integer","description":"Identifier of store to use for shipping. Either this value or ShipToVendorAccountNumber must be supplied","putDescription":"Defaults to -1","example":"55","name":"ShipToStoreID"},"ShipToStoreName":{"type":"string","description":"Name of store to use for shipping","example":"Cornwall west","generated":"true","name":"ShipToStoreName"},"ShipToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`","example":"1","generated":"true","name":"ShipToVendorAccountNumber"},"VendorInvoiceNumber":{"type":"string","description":"Invoice number for the vendor, must be unique","example":"563783","name":"VendorInvoiceNumber"},"VendorName":{"type":"string","description":"Name of the vendor","example":"SampleVendor","generated":"true","name":"VendorName"}},"required":["BillToStoreID","EstimatedArrivalDate","ShipToStoreID","VendorInvoiceNumber"]},"ProductsOrdered":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products ordered","name":"ProductsOrdered","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"ProductsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products received","generated":"true","name":"ProductsReceived","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"SerialsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductSerialNumber","description":"Serials received","generated":"true","name":"SerialsReceived","properties":{"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"DateReceived":{"type":"datetime","description":"Date received","example":"3/11/2014 2:29:25 PM","name":"DateReceived"},"NonSellable":{"type":"boolean","description":"A flag to indicate if the product is sellable (`false`) or nonsellable (`true`) in RQ","example":"true","name":"NonSellable"},"SerialNumber":{"type":"string","description":"Serial number","example":"132456456456111","name":"SerialNumber"}}}},"required":["PurchaseOrderID","PurchaseOrderData","ProductsOrdered"]}}}
+                            
+                        
+                    
+                
+            
+    
+
+/?op=GetPurchaseOrderByReferenceNumber:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Getting Purchase Orders by Reference Number
+                
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"purchaseOrderReferenceNumber":"77123"}
+                    
+                schema: |
+                    {"name":"GetPurchaseOrderByReferenceNumber","exclude":"true","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"purchaseOrderReferenceNumber":{"type":"string","putDescription":"Reference Number on the Purchase Order in RQ","example":"77123"}},"required":["GetPurchaseOrdersByReferenceNumber","client","PurchaseOrderReferenceNumber"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","PurchaseOrderData":{"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","BillToStoreID":55,"BillToStoreName":"Cornwall west","BillToVendorAccountNumber":"1","IsDeleted":false,"CreatedByVMI":false,"CreatedDate":"3/16/2014 12:00:00 AM","Comments":"comments","EstimatedArrivalDate":"3/2/2014 12:00:00 AM","OrderTotal":99.99,"RetailiQPurchaseOrderID":22075,"RetailiQPurchaseOrderNumber":"DALEKPO5","ShippingTotal":99.99,"ShipToStoreID":55,"ShipToStoreName":"Cornwall west","ShipToVendorAccountNumber":"1","VendorInvoiceNumber":"563783","VendorName":"SampleVendor"},"ProductsOrdered":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","CategoryPath":"Activation >> Dropship","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","DoNotOrder":false,"Enabled":true,"GrossQuantitySold":-1,"GrossQuantityReturned":-1,"MaximumLevel":100,"MinimumLevel":10,"MinMaxLocked":false,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOnUncommittedOrder":2,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"QuantitySuggestedByVendor":50,"RetailPrice":99.99,"SaleBegin":"01/01/2014 12:00:00 AM","SaleEnd":"01/10/2014 12:00:00 AM","SalePrice":79.99,"VendorSKU":"SSGS5CB"}],"ProductsReceived":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","CategoryPath":"Activation >> Dropship","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","DoNotOrder":false,"Enabled":true,"GrossQuantitySold":-1,"GrossQuantityReturned":-1,"MaximumLevel":100,"MinimumLevel":10,"MinMaxLocked":false,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOnUncommittedOrder":2,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"QuantitySuggestedByVendor":50,"RetailPrice":99.99,"SaleBegin":"01/01/2014 12:00:00 AM","SaleEnd":"01/10/2014 12:00:00 AM","SalePrice":79.99,"VendorSKU":"SSGS5CB"}],"SerialsReceived":[{"ProductItemID":11142,"DateReceived":"3/11/2014 2:29:25 PM","NonSellable":true,"SerialNumber":"132456456456111"}]}
+                            schema: |
+                                {"name":"PurchaseOrder","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"PurchaseOrderID":{"type":"GUID","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D"},"PurchaseOrderData":{"type":"object","ref":"cmi.PurchaseOrderData","description":"Purchase order","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","generated":"true","name":"PurchaseOrderID"},"BillToStoreID":{"type":"integer","description":"RQ StoreId","putDescription":"Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied","example":"55","name":"BillToStoreID"},"BillToStoreName":{"type":"string","description":"RQ store name","example":"Cornwall west","generated":"true","name":"BillToStoreName"},"BillToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for billing. Can be used in place of `BillToStoreId`","example":"1","generated":"true","name":"BillToVendorAccountNumber"},"IsDeleted":{"type":"boolean","description":"A flag to indicate if this purchase order has been deleted in RQ","example":"false","generated":"true","name":"IsDeleted"},"CreatedByVMI":{"type":"boolean","description":"A flag to indicate if this was created by the VMI API (true) or RQ (false)","putDescription":"defaults to false","example":"false","name":"CreatedByVMI"},"CreatedDate":{"type":"datetime","description":"The date and time the purchase order was created, if it was created in RQ","example":"3/16/2014 12:00:00 AM","name":"CreatedDate"},"Comments":{"type":"string","description":"Any comments for the purchase order","example":"comments","name":"Comments"},"EstimatedArrivalDate":{"type":"string","description":"Estimated date of arrival","example":"3/2/2014 12:00:00 AM","name":"EstimatedArrivalDate"},"OrderTotal":{"type":"decimal","description":"Cost of the order, provided by a vendor for informational purposes only","putDescription":"Defaults to -1","example":"99.99","name":"OrderTotal"},"RetailiQPurchaseOrderID":{"type":"integer","description":"Identifier of purchase order in RQ","example":"22075","generated":"true","name":"RetailiQPurchaseOrderID"},"RetailiQPurchaseOrderNumber":{"type":"string","description":"Purchase order number in RQ","example":"DALEKPO5","generated":"true","name":"RetailiQPurchaseOrderNumber"},"ShippingTotal":{"type":"decimal","description":"Cost of shipping","putDescription":"Defaults to -1","example":"99.99","name":"ShippingTotal"},"ShipToStoreID":{"type":"integer","description":"Identifier of store to use for shipping. Either this value or ShipToVendorAccountNumber must be supplied","putDescription":"Defaults to -1","example":"55","name":"ShipToStoreID"},"ShipToStoreName":{"type":"string","description":"Name of store to use for shipping","example":"Cornwall west","generated":"true","name":"ShipToStoreName"},"ShipToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`","example":"1","generated":"true","name":"ShipToVendorAccountNumber"},"VendorInvoiceNumber":{"type":"string","description":"Invoice number for the vendor, must be unique","example":"563783","name":"VendorInvoiceNumber"},"VendorName":{"type":"string","description":"Name of the vendor","example":"SampleVendor","generated":"true","name":"VendorName"}},"required":["BillToStoreID","EstimatedArrivalDate","ShipToStoreID","VendorInvoiceNumber"]},"ProductsOrdered":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products ordered","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"ProductsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products received","generated":"true","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"SerialsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductSerialNumber","description":"Serials received","generated":"true","properties":{"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"DateReceived":{"type":"datetime","description":"Date received","example":"3/11/2014 2:29:25 PM","name":"DateReceived"},"NonSellable":{"type":"boolean","description":"A flag to indicate if the product is sellable (`false`) or nonsellable (`true`) in RQ","example":"true","name":"NonSellable"},"SerialNumber":{"type":"string","description":"Serial number","example":"132456456456111","name":"SerialNumber"}}}},"required":["PurchaseOrderID","PurchaseOrderData","ProductsOrdered"]}
+                            
+                        
+                    
+                
+            
+    
+
+/?op=GetPurchaseOrderByBusinessID:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Getting Client Purchase Orders by Business Key
+                
+        
+        description: |            
+            This method allows you find a purchase order based on the RQ business key, the visual ID by store seen on RQ printouts.
+            
+
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"purchaseOrderIdByStore":"123"}
+                    
+                schema: |
+                    {"name":"GetPurchaseOrderByBusinessID","exclude":"true","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"purchaseOrderIdByStore":{"type":"string","putDescription":"The business key of the purchase order in RQ","example":"123"}},"required":["client","purchaseOrderIdByStore"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","PurchaseOrderData":{"PurchaseOrderID":"28890F70-8FC9-4A9B-9458-410A8D08502D","BillToStoreID":55,"BillToStoreName":"Cornwall west","BillToVendorAccountNumber":"1","IsDeleted":false,"CreatedByVMI":false,"CreatedDate":"3/16/2014 12:00:00 AM","Comments":"comments","EstimatedArrivalDate":"3/2/2014 12:00:00 AM","OrderTotal":99.99,"RetailiQPurchaseOrderID":22075,"RetailiQPurchaseOrderNumber":"DALEKPO5","ShippingTotal":99.99,"ShipToStoreID":55,"ShipToStoreName":"Cornwall west","ShipToVendorAccountNumber":"1","VendorInvoiceNumber":"563783","VendorName":"SampleVendor"},"ProductsOrdered":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","CategoryPath":"Activation >> Dropship","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","DoNotOrder":false,"Enabled":true,"GrossQuantitySold":-1,"GrossQuantityReturned":-1,"MaximumLevel":100,"MinimumLevel":10,"MinMaxLocked":false,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOnUncommittedOrder":2,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"QuantitySuggestedByVendor":50,"RetailPrice":99.99,"SaleBegin":"01/01/2014 12:00:00 AM","SaleEnd":"01/10/2014 12:00:00 AM","SalePrice":79.99,"VendorSKU":"SSGS5CB"}],"ProductsReceived":[{"ProductID":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","ProductName":"Samsung Galaxy S6","CategoryPath":"Activation >> Dropship","DateEOL":"1/01/2016 12:00:00 AM","DateReceived":"01/21/2016 16:58:23","DoNotOrder":false,"Enabled":true,"GrossQuantitySold":-1,"GrossQuantityReturned":-1,"MaximumLevel":100,"MinimumLevel":10,"MinMaxLocked":false,"ProductCost":99.99,"ProductItemID":11142,"ProductReceived":false,"ProductSKU":"CECPSM000017","QuantityCommittedOnOrderEntry":0,"QuantityInStock":8,"QuantityInTransfer":3,"QuantityOnBackOrder":0,"QuantityOnLoan":5,"QuantityOnOrder":6,"QuantityOnRMA":9,"QuantityOnUncommittedOrder":2,"QuantityOrdered":4,"QuantityReceived":4,"QuantitySold":30,"QuantitySuggestedByVendor":50,"RetailPrice":99.99,"SaleBegin":"01/01/2014 12:00:00 AM","SaleEnd":"01/10/2014 12:00:00 AM","SalePrice":79.99,"VendorSKU":"SSGS5CB"}],"SerialsReceived":[{"ProductItemID":11142,"DateReceived":"3/11/2014 2:29:25 PM","NonSellable":true,"SerialNumber":"132456456456111"}]}
+                            schema: |
+                                {"name":"PurchaseOrder","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"PurchaseOrderID":{"type":"GUID","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D"},"PurchaseOrderData":{"type":"object","ref":"cmi.PurchaseOrderData","description":"Purchase order","properties":{"PurchaseOrderID":{"type":"guid","description":"Unique identifier","example":"28890F70-8FC9-4A9B-9458-410A8D08502D","generated":"true","name":"PurchaseOrderID"},"BillToStoreID":{"type":"integer","description":"RQ StoreId","putDescription":"Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied","example":"55","name":"BillToStoreID"},"BillToStoreName":{"type":"string","description":"RQ store name","example":"Cornwall west","generated":"true","name":"BillToStoreName"},"BillToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for billing. Can be used in place of `BillToStoreId`","example":"1","generated":"true","name":"BillToVendorAccountNumber"},"IsDeleted":{"type":"boolean","description":"A flag to indicate if this purchase order has been deleted in RQ","example":"false","generated":"true","name":"IsDeleted"},"CreatedByVMI":{"type":"boolean","description":"A flag to indicate if this was created by the VMI API (true) or RQ (false)","putDescription":"defaults to false","example":"false","name":"CreatedByVMI"},"CreatedDate":{"type":"datetime","description":"The date and time the purchase order was created, if it was created in RQ","example":"3/16/2014 12:00:00 AM","name":"CreatedDate"},"Comments":{"type":"string","description":"Any comments for the purchase order","example":"comments","name":"Comments"},"EstimatedArrivalDate":{"type":"string","description":"Estimated date of arrival","example":"3/2/2014 12:00:00 AM","name":"EstimatedArrivalDate"},"OrderTotal":{"type":"decimal","description":"Cost of the order, provided by a vendor for informational purposes only","putDescription":"Defaults to -1","example":"99.99","name":"OrderTotal"},"RetailiQPurchaseOrderID":{"type":"integer","description":"Identifier of purchase order in RQ","example":"22075","generated":"true","name":"RetailiQPurchaseOrderID"},"RetailiQPurchaseOrderNumber":{"type":"string","description":"Purchase order number in RQ","example":"DALEKPO5","generated":"true","name":"RetailiQPurchaseOrderNumber"},"ShippingTotal":{"type":"decimal","description":"Cost of shipping","putDescription":"Defaults to -1","example":"99.99","name":"ShippingTotal"},"ShipToStoreID":{"type":"integer","description":"Identifier of store to use for shipping. Either this value or ShipToVendorAccountNumber must be supplied","putDescription":"Defaults to -1","example":"55","name":"ShipToStoreID"},"ShipToStoreName":{"type":"string","description":"Name of store to use for shipping","example":"Cornwall west","generated":"true","name":"ShipToStoreName"},"ShipToVendorAccountNumber":{"type":"string","description":"Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`","example":"1","generated":"true","name":"ShipToVendorAccountNumber"},"VendorInvoiceNumber":{"type":"string","description":"Invoice number for the vendor, must be unique","example":"563783","name":"VendorInvoiceNumber"},"VendorName":{"type":"string","description":"Name of the vendor","example":"SampleVendor","generated":"true","name":"VendorName"}},"required":["BillToStoreID","EstimatedArrivalDate","ShipToStoreID","VendorInvoiceNumber"]},"ProductsOrdered":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products ordered","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"ProductsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductInformation","description":"Products received","generated":"true","properties":{"ProductID":{"type":"guid","description":"Unique identifier","example":"86EE477F-C6B7-48FA-AA0A-105662D9A3ED","name":"ProductID"},"ProductName":{"type":"string","description":"Name","example":"Samsung Galaxy S6","name":"ProductName"},"CategoryPath":{"type":"string","description":"Category location of product. path of category delimited by '>>'","example":"Activation >> Dropship","generated":"true","name":"CategoryPath"},"DateEOL":{"type":"datetime","description":"End of life date","example":"1/01/2016 12:00:00 AM","geneated":"true","name":"DateEOL"},"DateReceived":{"type":"string","description":"Product receiving stauts in RQ","example":"01/21/2016 16:58:23","name":"DateReceived"},"DoNotOrder":{"type":"boolean","description":"A flag to indicate if the product should not be ordered","example":"false","generated":"true","name":"DoNotOrder"},"Enabled":{"type":"boolean","description":"A flag to indicate if product is enabled","example":"true","name":"Enabled"},"GrossQuantitySold":{"type":"integer","description":"Gross amount sold","example":"-1","generated":"true","name":"GrossQuantitySold"},"GrossQuantityReturned":{"type":"integer","description":"Gross amount returned","example":"-1","generated":"true","name":"GrossQuantityReturned"},"MaximumLevel":{"type":"integer","description":"Maximum number of Products that can be added to the PurchaseOrder","example":"100","putDescription":"defaults to -1","name":"MaximumLevel"},"MinimumLevel":{"type":"integer","description":"Minimum number of Products that can be added to the PurchaseOrder","example":"10","putDescription":"defaults to -1","name":"MinimumLevel"},"MinMaxLocked":{"type":"boolean","description":"A flag to indicate if the Min and Max values are locked (unchangeable)","example":"false","generated":"true","name":"MinMaxLocked"},"ProductCost":{"type":"decimal","description":"Required for PO creation or default from RQ will be used","example":"99.99","putDescription":"defaults to -1","name":"ProductCost"},"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"ProductReceived":{"type":"boolean","description":"A flag to indicate if product was received","example":"false","name":"ProductReceived"},"ProductSKU":{"type":"string","description":"ProductIdentifier in RQ","example":"CECPSM000017","name":"ProductSKU"},"QuantityCommittedOnOrderEntry":{"type":"integer","description":"Amount committed on an order entry","example":"0","putDescription":"defaults to -1","name":"QuantityCommittedOnOrderEntry"},"QuantityInStock":{"type":"integer","description":"Amount in stock","example":"8","putDescription":"defaults to -1","name":"QuantityInStock"},"QuantityInTransfer":{"type":"integer","description":"Amount in transfer","example":"3","putDescription":"defaults to -1","name":"QuantityInTransfer"},"QuantityOnBackOrder":{"type":"integer","description":"Amount on back order","example":"0","putDescription":"defaults to -1","name":"QuantityOnBackOrder"},"QuantityOnLoan":{"type":"integer","description":"Amount on loan","example":"5","putDescription":"defaults to -1","name":"QuantityOnLoan"},"QuantityOnOrder":{"type":"integer","description":"Amount on order","example":"6","putDescription":"defaults to -1","name":"QuantityOnOrder"},"QuantityOnRMA":{"type":"integer","description":"Amount on RMA","example":"9","putDescription":"defaults to -1","name":"QuantityOnRMA"},"QuantityOnUncommittedOrder":{"type":"integer","description":"Amount on uncommitted order","example":"2","generated":"true","name":"QuantityOnUncommittedOrder"},"QuantityOrdered":{"type":"integer","description":"Amount ordered","example":"4","name":"QuantityOrdered"},"QuantityReceived":{"type":"integer","description":"Amount received","example":"4","putDescription":"defaults to -1","name":"QuantityReceived"},"QuantitySold":{"type":"integer","description":"Amount sold","example":"30","putDescription":"defaults to -1","name":"QuantitySold"},"QuantitySuggestedByVendor":{"type":"integer","description":"Amount suggested by vendor","example":"50","generated":"true","name":"QuantitySuggestedByVendor"},"RetailPrice":{"type":"decimal","description":"Retail price","example":"99.99","generated":"true","name":"RetailPrice"},"SaleBegin":{"type":"datetime","description":"Sale begin date","example":"01/01/2014 12:00:00 AM","generated":"true","name":"SaleBegin"},"SaleEnd":{"type":"datetime","description":"Sale end date","example":"01/10/2014 12:00:00 AM","generated":"true","name":"SaleEnd"},"SalePrice":{"type":"decimal","description":"Sale price","example":"79.99","generated":"true","name":"SalePrice"},"VendorSKU":{"type":"string","description":"Vendor SKU","example":"SSGS5CB","name":"VendorSKU"}},"required":["QuantityOrdered","VendorSKU"]},"SerialsReceived":{"type":"array","arrayType":"object","ref":"cmi.ProductSerialNumber","description":"Serials received","generated":"true","properties":{"ProductItemID":{"type":"integer","description":"GlobalProductId from RQ","example":"11142","name":"ProductItemID"},"DateReceived":{"type":"datetime","description":"Date received","example":"3/11/2014 2:29:25 PM","name":"DateReceived"},"NonSellable":{"type":"boolean","description":"A flag to indicate if the product is sellable (`false`) or nonsellable (`true`) in RQ","example":"true","name":"NonSellable"},"SerialNumber":{"type":"string","description":"Serial number","example":"132456456456111","name":"SerialNumber"}}}},"required":["PurchaseOrderID","PurchaseOrderData","ProductsOrdered"]}
+                            
+                        
+                    
+                
+            
+    
+
+/?op=GetReceivingInfo:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Getting Receiving Info
+                
+        
+        description: |            
+            Allows you to retrieve a list of products within a date range.
+            
+
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"startDate":"01/01/2016","endDate":"05/25/2016"}
+                    
+                schema: |
+                    {"name":"GetReceivingInfo","exclude":"true","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"startDate":{"type":"String","putDescription":"Products received on or after this day at midnight will be searched for","example":"01/01/2016"},"endDate":{"type":"String","putDescription":"Products received up to the end of this day will be searched for","example":"05/25/2016"}},"required":["GetReceivingInfo","client","startDate","endDate"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"ProductItemID":11142,"ProductName":"Samsung Galaxy S6","ShipToStoreID":55,"ShipToStoreName":"Cornwall west","RQPurchaseOrderNumber":"CORNWPO3550","VendorSKU":"ABC123","Quantity":1,"ProductCost":99.99,"DateReceived":"3/11/2014 2:29:25 PM","RQReceivingNumber":"CORNWRE6055","SerialNumber":"132456456456111"}
+                            schema: |
+                                {"name":"ReceivingInfo","type":"object","wrap":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"ProductItemID":{"type":"Integer","description":"GlobalProductId from RQ","example":"11142"},"ProductName":{"type":"String","description":"Name","example":"Samsung Galaxy S6"},"ShipToStoreID":{"type":"Integer","description":"Shipping store ID","example":"55"},"ShipToStoreName":{"type":"String","description":"Name of store to use for shipping","example":"Cornwall west"},"RQPurchaseOrderNumber":{"type":"String","description":"Purchase Order number from RQ","example":"CORNWPO3550"},"VendorSKU":{"type":"String","description":"Vendor SKU","example":"ABC123"},"Quantity":{"type":"Integer","description":"Number of items received","example":"1"},"ProductCost":{"type":"Decimal","description":"Product cost","example":"99.99"},"DateReceived":{"type":"string","description":"Date received","example":"3/11/2014 2:29:25 PM"},"RQReceivingNumber":{"type":"String","description":"The receiving number from RQ","example":"CORNWRE6055"},"SerialNumber":{"type":"String","description":"Serial number","example":"132456456456111"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/?op=GetStoreList:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Getting All CMI Enabled Stores
+                
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1}}
+                    
+                schema: |
+                    {"exclude":"true","name":"GetStoreList","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]}},"required":["client"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"StoreID":36,"Name":"Cornwall West","Abbreviation":"CWW","Address":"2102 11th Ave","City":"Regina","Country":"Canada","District":"Regina","PhoneNumber":"5555555555","PostalZipCode":"S2S 2S2","ProvinceState":"Saskatchewan","Region":"Regina","ShipToStoreID":55,"BillToStoreID":55}
+                            schema: |
+                                {"name":"StoreInformation","wrap":"true","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"Integer","description":"Identifier","example":"36"},"Name":{"type":"String","description":"Name","example":"Cornwall West"},"Abbreviation":{"type":"String","description":"Abbrevation","example":"CWW"},"Address":{"type":"String","description":"Address","example":"2102 11th Ave"},"City":{"type":"String","description":"City","example":"Regina"},"Country":{"type":"String","description":"Country","example":"Canada"},"District":{"type":"String","description":"District","example":"Regina"},"PhoneNumber":{"type":"String","description":"Phone Number","example":"5555555555"},"PostalZipCode":{"type":"String","description":"Postal or Zip Code","example":"S2S 2S2"},"ProvinceState":{"type":"String","description":"Province or State","example":"Saskatchewan"},"Region":{"type":"String","description":"Region","example":"Regina"},"ShipToStoreID":{"type":"Integer","description":"Shipping store ID","example":"55"},"BillToStoreID":{"type":"Integer","description":"RQ StoreID","example":"55"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/?op=GetProductSalesReport:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Getting the Product Sales Report
+                
+        
+        description: |            
+            Retrieves detailed sell through data for products.
+            
+            #### Notes
+            
+            * For no channel, use Guid.Empty or `00000000-0000-0000-0000-000000000000`
+            * For no region, district or store use -1
+
+        
+        headers:
+            
+        body:
+            
+            text/xml:
+                
+                
+                example: |  
+                    
+                    {"client":{"ClientID":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","Username":"sampleusername","Password":"samplepassword","StoreId":-1},"storeId":4,"startDate":"01/01/2016","endDate":"10/31/2016"}
+                    
+                schema: |
+                    {"exclude":"true","name":"GetProductSalesReport","type":"object","soapRequest":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"client":{"type":"object","ref":"cmi.ClientIdentity","properties":{"ClientID":{"type":"guid","description":"Client specific identifier supplied by iQmetrix","putDescription":"Client specific identifier supplied by iQmetrix","example":"9DC6AA95-856B-42C9-8AAF-392A2A02AC77","name":"ClientID"},"Username":{"type":"string","description":"Client specific username supplied by iQmetrix","putDescription":"Client specific username supplied by iQmetrix","example":"sampleusername","name":"Username"},"Password":{"type":"string","description":"Client specific password supplied by iQmetrix","putDescription":"Client specific password supplied by iQmetrix","example":"samplepassword","name":"Password"},"StoreId":{"type":"integer","description":"If provided, this value should be `-1`, which denotes all stores","putDescription":"If provided, this value should be -1, which denotes all stores","example":"-1","name":"StoreId"}},"required":["ClientID","Username","Password","StoreId"]},"storeId":{"type":"integer","description":"Identifier for a Channel, Region, District or Store in RQ","putDescription":"This value can be a Channel, Region, District or Store Id. The request body will change depending on the parameter used (i.e. <channelId></channelId>)","example":"4"},"startDate":{"type":"datetime","description":"Start date","example":"01/01/2016"},"endDate":{"type":"datetime","description":"End date","example":"10/31/2016"}},"required":["GetProductSalesReport","client","storeId","startDate","endDate"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                {"CategoryPath":"Activation >> Dropship","ChannelID":"4bbb842d-0340-4ffc-9216-bf170c861424","ChannelName":"First Channel","Description":"","DistrictID":1,"DistrictName":"First District","InvoicedBy":"iQmetrix User","ListPrice":99.99,"ProductItemID":11142,"ProductSKU":"CECPSM000017","Quantity":1,"Refund":false,"RegionID":1,"RegionName":"First Region","RqInvoiceIdByStore":"BDP123","SoldOn":"1/21/2016 4:58:24 PM","StoreID":4,"TrackingNumber":"12345","VendorSKU":"SSGS5CB"}
+                            schema: |
+                                {"exclude":"true","name":"ProductSalesReportData","type":"object","wrap":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"CategoryPath":{"type":"string","description":"","example":"Activation >> Dropship"},"ChannelID":{"type":"guid","description":"","example":"4bbb842d-0340-4ffc-9216-bf170c861424"},"ChannelName":{"type":"string","description":"","example":"First Channel"},"Description":{"type":"string","description":"","example":""},"DistrictID":{"type":"integer","description":"","example":"1"},"DistrictName":{"type":"string","description":"","example":"First District"},"InvoicedBy":{"type":"string","description":"","example":"iQmetrix User"},"ListPrice":{"type":"decimal","description":"","example":"99.99"},"ProductItemID":{"type":"integer","description":"","example":"11142"},"ProductSKU":{"type":"string","description":"","example":"CECPSM000017"},"Quantity":{"type":"integer","description":"","example":"1"},"Refund":{"type":"boolean","description":"","example":"false"},"RegionID":{"type":"integer","description":"","example":"1"},"RegionName":{"type":"string","description":"","example":"First Region"},"RqInvoiceIdByStore":{"type":"string","description":"","example":"BDP123"},"SoldOn":{"type":"datetime","description":"","example":"1/21/2016 4:58:24 PM"},"StoreID":{"type":"integer","description":"","example":"4"},"TrackingNumber":{"type":"string","description":"","example":"12345"},"VendorSKU":{"type":"string","description":"","example":"SSGS5CB"}}}
+                            
+                        
+                    
+                
+            
+    

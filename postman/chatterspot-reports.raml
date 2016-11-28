@@ -1,0 +1,599 @@
+#%RAML 0.8
+title: Chatterspot Reports
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - Relationship: |
+        {
+          "name": "Relationship",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CompanyID": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>", "example": "14682" },
+            "CompanyName": {  "type": "string", "database": "VARCHAR(50)", "description": "Company name", "example": "KENTEL" }
+          }
+        }
+        
+
+    
+
+    
+    - GenerateMarketingReportData: |
+        {
+          "name": "GenerateMarketingReportData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Customer Address": {  "type": "string", "database": "VARCHAR(50)", "description": "Customer address", "example": "3811 Smith Street" },
+            "Customer NAME": {  "type": "string", "database": "VARCHAR(101)", "description": "Customer name", "example": "John Tester" },
+            "Customer Zip Code": {  "type": "string", "database": "VARCHAR(15)", "description": "Customer zip code", "example": "75219" },
+            "Email": {  "type": "string", "database": "VARCHAR(200)", "description": "Customer email", "example": "johnb@test.com" },
+            "Employee Name": {  "type": "string", "database": "VARCHAR(51)", "description": "Employee name", "example": "IQMETRIX USER" },
+            "External Store ID": {  "type": "string", "database": "VARCHAR(255)", "description": "Identifier for a location in an external system", "example": "2356" },
+            "GlobalProductID": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a Product in RQ", "example": "92" },
+            "Gross Profit": {  "type": "decimal", "database": "MONEY", "description": "Gross profit", "example": "19.99" },
+            "Id_number": {  "type": "integer", "database": "INTEGER", "description": "Identifier for customer in RQ", "example": "1421" },
+            "IMEI": {  "type": "string", "database": "VARCHAR(100)", "description": "IMEI", "example": "6783584733" },
+            "Member Number": {  "type": "string", "database": "VARCHAR(50)", "description": "Customer member number", "example": "5103830" },
+            "MobileNumber": {  "type": "string", "database": "VARCHAR(200)", "description": "Customer mobile number", "example": "6783584733" },
+            "Product Cost": {  "type": "decimal", "database": "MONEY", "description": "Product cost", "example": "0" },
+            "Quantity": {  "type": "integer", "database": "INTEGER", "description": "Quantity", "example": "1" },
+            "RQ Employee ID": {  "type": "integer", "database": "INTEGER", "description": "Identifier for an employee in RQ", "example": "138" },
+            "RQ Invoice": {  "type": "string", "database": "VARCHAR(14)", "description": "Identifier for an invoice in RQ", "example": "FAIVGIN569" },
+            "RQ Product Description": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Description for a product in RQ", "example": "IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN" },
+            "RQ SKU": {  "type": "string", "database": "VARCHAR(12)", "description": "Product SKU in RQ", "example": "CANXRB000072" },
+            "Selling Price": {  "type": "decimal", "database": "MONEY", "description": "Selling price", "example": "19.99" },
+            "Transaction Date": {  "type": "datetime", "database": "DATETIME", "description": "Transaction date", "example": "2016-02-04T14:38:43.753" }
+          }
+        }  
+        
+
+    
+
+    
+    - ProductDetailReportData: |
+        {
+          "name": "ProductDetailReportData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Activation_RowID": { "type": "guid", "description": "Internal identifier in RQ", "database": "UNIQUEIDENTIFIER", "example": "d3d65281-5201-4927-9bac-6f3a47ddf56b" },
+            "AdjustedUnitPrice": { "type": "decimal", "description": "Adjusted Unit Price - price that the product was actually sold for", "database": "MONEY", "example": "25" },
+            "CarrierPrice": { "type": "decimal", "description": "Carrier Price - value or revenue that a carrier assigns this feature", "database": "MONEY", "example": "null" },
+            "CategoryPath": { "type": "string", "description": "Category - the category the product belongs to", "database": "NVARCHAR(MAX)", "example": ">> Phones >> Galaxies" },
+            "ChannelName": { "type": "string", "description": "Channel - channel for the rows location", "database": "NVARCHAR(MAX)", "example": "English Channel" },
+            "Comments": { "type": "string", "description": "Invoice Comments - comments added to the invoice", "database": "TEXT", "example": "" },
+            "ContractNumber": { "type": "string", "description": "Contract # - number of the contract, recorded at the time of sale", "database": "VARCHAR (50)", "example": "12345" },
+            "CustomerID": { "type": "integer", "description": "Internal identifier for a customer in RQ", "database": "INT", "example": "131149" },
+            "CustomerName": { "type": "string", "description": "Customer - name of the customer as entered on their profile", "database": "VARCHAR (101)", "example": "Bob Jones" },
+            "DateCreated": { "type": "datetime", "description": "Sold On - date and time the invoice was tendered", "database": "DATETIME", "example": "2016-05-13T12:18:08.723" },
+            "DistrictName": { "type": "string", "description": "District - district for the rows location", "database": "NVARCHAR(MAX)", "example": "Westminster" },
+            "EmployeeName": { "type": "string", "description": "Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box", "database": "VARCHAR (51)", "example": "iQmetrix User" },       
+            "GlobalProductID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "5179" },
+            "InvoicedAt": { "type": "string", "description": "Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund", "database": "NVARCHAR(MAX)", "example": "100: My Network LLC - Anchorage" },
+            "InvoicedBy": { "type": "string", "description": "Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund", "database": "NVARCHAR(MAX)", "example": "100: My Network LLC - Anchorage" },
+            "InvoiceIDByStore": { "type": "string", "description": "Invoice # - invoice number assigned by RQ", "database": "VARCHAR (14)", "example": "77224IN3" },
+            "IsOrderServiceDropShipProduct": { "type": "boolean", "description": "Internal identifier in RQ", "database": "BIT", "example": "null" },
+            "IsOrderServiceShippingProduct": { "type": "boolean", "description": "Internal identifier in RQ", "database": "BIT", "example": "null" },
+            "ListPrice": { "type": "decimal", "description": "List Price - current price as noted on the pricing tab in the inventory console for the product", "database": "MONEY", "example": "449.95" },
+            "OriginalUnitPrice": { "type": "decimal", "description": "Orig. Unit Price - original price on the invoice", "database": "MONEY", "example": "25" },
+            "Priority": { "type": "integer", "description": "The order that the products were saved in on an Invoice", "database": "INT", "example": "1" },
+            "ProductCouponDiscount": { "type": "decimal", "description": "Coupon discount on the product", "database": "MONEY", "example": "0" },
+            "ProductIdentifier": { "type": "string", "description": "Product SKU - the RQ generated SKU", "database": "VARCHAR(12)", "example": "ASHCSA000120" },
+            "ProductName": { "type": "string", "description": "Product Name - name of the product as it appears in the inventory", "database": "NVARCHAR(MAX)", "example": "Samsung Galaxy Rugby LTE" },
+            "Quantity": { "type": "integer", "description": "Qty - total number of times the Product SKU appears on the invoice", "database": "INT", "example": "1" },
+            "Refund": { "type": "boolean", "description": "Refund - indicates if a negative quantity of this item was sold", "database": "BIT", "example": "0" },
+            "RegionName": { "type": "string", "description": "Region - region for the rows location", "database": "NVARCHAR(MAX)", "example": "London" },
+            "RetailerCatalogID": { "type": "string", "description": "Internal identifier in RQ", "database": "VARCHAR (50)", "example": "null" },
+            "SaleInvoice_RowID": { "type": "guid", "description": "Internal identifier in RQ", "database": "UNIQUEIDENTIFIER", "example": "8c6537ae-75a5-4155-82b2-c8647ed05f3d" },
+            "SaleInvoiceID": { "type": "integer", "description": "Identifier for an invoice in RQ", "database": "INT", "example": "128962" },
+            "SaleInvoiceProduct_RowID": { "type": "guid", "description": "Internal identifier in RQ", "database": "UNIQUEIDENTIFIER", "example": "0099b78f-ba02-4a91-afd4-2f7eb0fbbb06" },
+            "SerialNumber": { "type": "string", "description": "Tracking # - tracking number associated with this product, serialized products only", "database": "VARCHAR (100)", "example": "1111111" },
+            "SoldAsUsed": { "type": "boolean", "description": "Sold As Used - indicates the product was used when sold", "database": "BIT", "example": "false" },
+            "SpecialProductID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "0" },
+            "StoreInStoreFlowIsEnabledForStore": { "type": "boolean", "description": "Internal identifier in RQ", "database": "BIT", "example": "false" },
+            "StoreInStoreGrossProfit": { "type": "decimal", "description": "SIS Gross Profit - profit, calculated as Total Sales - Cost for a SIS location.", "database": "MONEY", "example": "null" },
+            "StoreInStoreListPrice": { "type": "decimal", "description": "SIS List Price - Price from the store-in-store setup of the product", "database": "MONEY", "example": "null" },
+            "StoreInStorePrice": { "type": "decimal", "description": "SIS Price - The default price when sold through the store-in-store flow", "database": "MONEY", "example": "null" },
+            "StoreTypeName": { "type": "string", "description": "Location Type - the location type the the transaction was performed at", "database": "NVARCHAR(MAX)", "example": "Costco" },
+            "TenderedBy": { "type": "string", "description": "Tendered By - name of the employee logged into RQ when the invoice was tendered", "database": "VARCHAR (51)", "example": "iQmetrix User" },
+            "TotalCost": { "type": "decimal", "description": "Total Cost - total purchase cost for the product(s) on the invoice", "database": "MONEY", "example": "0" },
+            "TotalDiscount": { "type": "decimal", "description": "Total Discount - net discount amount for the Product SKU on the particular invoice", "database": "DECIMAL (8, 4)", "example": "424.95" },
+            "TotalPrice": { "type": "decimal", "description": "Total Sales - net dollar amount for the Product SKU on the particular invoice", "database": "MONEY", "example": "25" },
+            "UnitCost": { "type": "decimal", "description": "Unit Cost - purchase cost per unit", "database": "MONEY", "example": "0" },
+            "UnitPrice": { "type": "decimal", "description": "Sold For - price that appeared on the invoice (including hide on invoice items), i.e. negative if a refund", "database": "MONEY", "example": "25" },
+            "VendorName": { "type": "string", "description": "Name for a vendor in RQ", "database": "NVARCHAR(MAX)", "example": "" },
+            "VendorSKU": { "type": "string", "description": "Vendor SKU", "database": "VARCHAR(25)", "example": "" }          
+          }    
+        } 
+        
+
+    
+
+    
+    - ProductDetailReportTaxColumnData: |
+        {
+          "name": "ProductDetailReportTaxColumnData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ColName": { "type": "string", "description": "Tax name", "database": "VARCHAR", "example": "T102" },
+            "ColCaption": { "type": "string", "description": "Description",  "database": "NVARCHAR(MAX)", "example": "Flat tax" },
+            "CreditCardPaymentType": { "type": "string", "description": "Credit card information", "database": "VARCHAR (20)", "example": "null" }       
+           }
+        } 
+        
+
+    
+
+    
+    - ProductDetailReportTaxDetailData: |
+        {
+          "name": "ProductDetailReportTaxDetailData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Amount": {  "type": "decimal", "description": "Amount", "database": "MONEY ", "example": "22.5" },
+            "GlobalProductID": {  "type": "integer","description": "Identifier of a Product in RQ",  "database": "INT", "example": "5179" },
+            "Priority": {  "type": "integer","description": "Priority", "database": "INT", "example": "1" },
+            "SaleInvoiceID": {  "type": "integer","description": "Identifier of a sale invoice in RQ",  "database": "INT", "example": "128996" },
+            "SerialNumber": {  "type": "string", "description": "Serial number", "database": "VARCHAR (100) ", "example": "2222222" },
+            "TaxID": {  "type": "string", "description": "Tax identifier", "database": "VARCHAR", "example": "T102" },
+            "TaxName": {  "type": "string", "description": "Tax name", "database": "NVARCHAR(MAX)", "example": "Brad flat tax" }
+           }
+        }        
+        
+
+    
+
+
+/partner/relationships?Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Partner Relationships
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Chatterspot/GenerateMarketingReport?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&OverrideReportDefaultDate={OverrideReportDefaultDate}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14682
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        OverrideReportDefaultDate:
+            displayName: OverrideReportDefaultDate
+            type: string
+            example: true
+            required: false
+            description: 
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Generate Marketing Report
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Customer Address":"3811 Smith Street","Customer NAME":"John Tester","Customer Zip Code":"75219","Email":"johnb@test.com","Employee Name":"IQMETRIX USER","External Store ID":"2356","GlobalProductID":92,"Gross Profit":19.99,"Id_number":1421,"IMEI":"6783584733","Member Number":"5103830","MobileNumber":"6783584733","Product Cost":0,"Quantity":1,"RQ Employee ID":138,"RQ Invoice":"FAIVGIN569","RQ Product Description":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN","RQ SKU":"CANXRB000072","Selling Price":19.99,"Transaction Date":"2016-02-04T14:38:43.753"}]
+                            schema: |
+                                {"name":"GenerateMarketingReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Customer Address":{"type":"string","database":"VARCHAR(50)","description":"Customer address","example":"3811 Smith Street"},"Customer NAME":{"type":"string","database":"VARCHAR(101)","description":"Customer name","example":"John Tester"},"Customer Zip Code":{"type":"string","database":"VARCHAR(15)","description":"Customer zip code","example":"75219"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Customer email","example":"johnb@test.com"},"Employee Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"IQMETRIX USER"},"External Store ID":{"type":"string","database":"VARCHAR(255)","description":"Identifier for a location in an external system","example":"2356"},"GlobalProductID":{"type":"integer","database":"INTEGER","description":"Identifier for a Product in RQ","example":"92"},"Gross Profit":{"type":"decimal","database":"MONEY","description":"Gross profit","example":"19.99"},"Id_number":{"type":"integer","database":"INTEGER","description":"Identifier for customer in RQ","example":"1421"},"IMEI":{"type":"string","database":"VARCHAR(100)","description":"IMEI","example":"6783584733"},"Member Number":{"type":"string","database":"VARCHAR(50)","description":"Customer member number","example":"5103830"},"MobileNumber":{"type":"string","database":"VARCHAR(200)","description":"Customer mobile number","example":"6783584733"},"Product Cost":{"type":"decimal","database":"MONEY","description":"Product cost","example":"0"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQ Employee ID":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"138"},"RQ Invoice":{"type":"string","database":"VARCHAR(14)","description":"Identifier for an invoice in RQ","example":"FAIVGIN569"},"RQ Product Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description for a product in RQ","example":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN"},"RQ SKU":{"type":"string","database":"VARCHAR(12)","description":"Product SKU in RQ","example":"CANXRB000072"},"Selling Price":{"type":"decimal","database":"MONEY","description":"Selling price","example":"19.99"},"Transaction Date":{"type":"datetime","database":"DATETIME","description":"Transaction date","example":"2016-02-04T14:38:43.753"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Customer Address":"3811 Smith Street","Customer NAME":"John Tester","Customer Zip Code":"75219","Email":"johnb@test.com","Employee Name":"IQMETRIX USER","External Store ID":"2356","GlobalProductID":92,"Gross Profit":19.99,"Id_number":1421,"IMEI":"6783584733","Member Number":"5103830","MobileNumber":"6783584733","Product Cost":0,"Quantity":1,"RQ Employee ID":138,"RQ Invoice":"FAIVGIN569","RQ Product Description":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN","RQ SKU":"CANXRB000072","Selling Price":19.99,"Transaction Date":"2016-02-04T14:38:43.753"}]
+                            schema: |
+                                {"name":"GenerateMarketingReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Customer Address":{"type":"string","database":"VARCHAR(50)","description":"Customer address","example":"3811 Smith Street"},"Customer NAME":{"type":"string","database":"VARCHAR(101)","description":"Customer name","example":"John Tester"},"Customer Zip Code":{"type":"string","database":"VARCHAR(15)","description":"Customer zip code","example":"75219"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Customer email","example":"johnb@test.com"},"Employee Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"IQMETRIX USER"},"External Store ID":{"type":"string","database":"VARCHAR(255)","description":"Identifier for a location in an external system","example":"2356"},"GlobalProductID":{"type":"integer","database":"INTEGER","description":"Identifier for a Product in RQ","example":"92"},"Gross Profit":{"type":"decimal","database":"MONEY","description":"Gross profit","example":"19.99"},"Id_number":{"type":"integer","database":"INTEGER","description":"Identifier for customer in RQ","example":"1421"},"IMEI":{"type":"string","database":"VARCHAR(100)","description":"IMEI","example":"6783584733"},"Member Number":{"type":"string","database":"VARCHAR(50)","description":"Customer member number","example":"5103830"},"MobileNumber":{"type":"string","database":"VARCHAR(200)","description":"Customer mobile number","example":"6783584733"},"Product Cost":{"type":"decimal","database":"MONEY","description":"Product cost","example":"0"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQ Employee ID":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"138"},"RQ Invoice":{"type":"string","database":"VARCHAR(14)","description":"Identifier for an invoice in RQ","example":"FAIVGIN569"},"RQ Product Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description for a product in RQ","example":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN"},"RQ SKU":{"type":"string","database":"VARCHAR(12)","description":"Product SKU in RQ","example":"CANXRB000072"},"Selling Price":{"type":"decimal","database":"MONEY","description":"Selling price","example":"19.99"},"Transaction Date":{"type":"datetime","database":"DATETIME","description":"Transaction date","example":"2016-02-04T14:38:43.753"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Customer Address":"3811 Smith Street","Customer NAME":"John Tester","Customer Zip Code":"75219","Email":"johnb@test.com","Employee Name":"IQMETRIX USER","External Store ID":"2356","GlobalProductID":92,"Gross Profit":19.99,"Id_number":1421,"IMEI":"6783584733","Member Number":"5103830","MobileNumber":"6783584733","Product Cost":0,"Quantity":1,"RQ Employee ID":138,"RQ Invoice":"FAIVGIN569","RQ Product Description":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN","RQ SKU":"CANXRB000072","Selling Price":19.99,"Transaction Date":"2016-02-04T14:38:43.753"}]
+                            schema: |
+                                {"name":"GenerateMarketingReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Customer Address":{"type":"string","database":"VARCHAR(50)","description":"Customer address","example":"3811 Smith Street"},"Customer NAME":{"type":"string","database":"VARCHAR(101)","description":"Customer name","example":"John Tester"},"Customer Zip Code":{"type":"string","database":"VARCHAR(15)","description":"Customer zip code","example":"75219"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Customer email","example":"johnb@test.com"},"Employee Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"IQMETRIX USER"},"External Store ID":{"type":"string","database":"VARCHAR(255)","description":"Identifier for a location in an external system","example":"2356"},"GlobalProductID":{"type":"integer","database":"INTEGER","description":"Identifier for a Product in RQ","example":"92"},"Gross Profit":{"type":"decimal","database":"MONEY","description":"Gross profit","example":"19.99"},"Id_number":{"type":"integer","database":"INTEGER","description":"Identifier for customer in RQ","example":"1421"},"IMEI":{"type":"string","database":"VARCHAR(100)","description":"IMEI","example":"6783584733"},"Member Number":{"type":"string","database":"VARCHAR(50)","description":"Customer member number","example":"5103830"},"MobileNumber":{"type":"string","database":"VARCHAR(200)","description":"Customer mobile number","example":"6783584733"},"Product Cost":{"type":"decimal","database":"MONEY","description":"Product cost","example":"0"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQ Employee ID":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"138"},"RQ Invoice":{"type":"string","database":"VARCHAR(14)","description":"Identifier for an invoice in RQ","example":"FAIVGIN569"},"RQ Product Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description for a product in RQ","example":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN"},"RQ SKU":{"type":"string","database":"VARCHAR(12)","description":"Product SKU in RQ","example":"CANXRB000072"},"Selling Price":{"type":"decimal","database":"MONEY","description":"Selling price","example":"19.99"},"Transaction Date":{"type":"datetime","database":"DATETIME","description":"Transaction date","example":"2016-02-04T14:38:43.753"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Customer Address":"3811 Smith Street","Customer NAME":"John Tester","Customer Zip Code":"75219","Email":"johnb@test.com","Employee Name":"IQMETRIX USER","External Store ID":"2356","GlobalProductID":92,"Gross Profit":19.99,"Id_number":1421,"IMEI":"6783584733","Member Number":"5103830","MobileNumber":"6783584733","Product Cost":0,"Quantity":1,"RQ Employee ID":138,"RQ Invoice":"FAIVGIN569","RQ Product Description":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN","RQ SKU":"CANXRB000072","Selling Price":19.99,"Transaction Date":"2016-02-04T14:38:43.753"}]
+                            schema: |
+                                {"name":"GenerateMarketingReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Customer Address":{"type":"string","database":"VARCHAR(50)","description":"Customer address","example":"3811 Smith Street"},"Customer NAME":{"type":"string","database":"VARCHAR(101)","description":"Customer name","example":"John Tester"},"Customer Zip Code":{"type":"string","database":"VARCHAR(15)","description":"Customer zip code","example":"75219"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Customer email","example":"johnb@test.com"},"Employee Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"IQMETRIX USER"},"External Store ID":{"type":"string","database":"VARCHAR(255)","description":"Identifier for a location in an external system","example":"2356"},"GlobalProductID":{"type":"integer","database":"INTEGER","description":"Identifier for a Product in RQ","example":"92"},"Gross Profit":{"type":"decimal","database":"MONEY","description":"Gross profit","example":"19.99"},"Id_number":{"type":"integer","database":"INTEGER","description":"Identifier for customer in RQ","example":"1421"},"IMEI":{"type":"string","database":"VARCHAR(100)","description":"IMEI","example":"6783584733"},"Member Number":{"type":"string","database":"VARCHAR(50)","description":"Customer member number","example":"5103830"},"MobileNumber":{"type":"string","database":"VARCHAR(200)","description":"Customer mobile number","example":"6783584733"},"Product Cost":{"type":"decimal","database":"MONEY","description":"Product cost","example":"0"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQ Employee ID":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"138"},"RQ Invoice":{"type":"string","database":"VARCHAR(14)","description":"Identifier for an invoice in RQ","example":"FAIVGIN569"},"RQ Product Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description for a product in RQ","example":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN"},"RQ SKU":{"type":"string","database":"VARCHAR(12)","description":"Product SKU in RQ","example":"CANXRB000072"},"Selling Price":{"type":"decimal","database":"MONEY","description":"Selling price","example":"19.99"},"Transaction Date":{"type":"datetime","database":"DATETIME","description":"Transaction date","example":"2016-02-04T14:38:43.753"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Customer Address":"3811 Smith Street","Customer NAME":"John Tester","Customer Zip Code":"75219","Email":"johnb@test.com","Employee Name":"IQMETRIX USER","External Store ID":"2356","GlobalProductID":92,"Gross Profit":19.99,"Id_number":1421,"IMEI":"6783584733","Member Number":"5103830","MobileNumber":"6783584733","Product Cost":0,"Quantity":1,"RQ Employee ID":138,"RQ Invoice":"FAIVGIN569","RQ Product Description":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN","RQ SKU":"CANXRB000072","Selling Price":19.99,"Transaction Date":"2016-02-04T14:38:43.753"}]
+                            schema: |
+                                {"name":"GenerateMarketingReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Customer Address":{"type":"string","database":"VARCHAR(50)","description":"Customer address","example":"3811 Smith Street"},"Customer NAME":{"type":"string","database":"VARCHAR(101)","description":"Customer name","example":"John Tester"},"Customer Zip Code":{"type":"string","database":"VARCHAR(15)","description":"Customer zip code","example":"75219"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Customer email","example":"johnb@test.com"},"Employee Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"IQMETRIX USER"},"External Store ID":{"type":"string","database":"VARCHAR(255)","description":"Identifier for a location in an external system","example":"2356"},"GlobalProductID":{"type":"integer","database":"INTEGER","description":"Identifier for a Product in RQ","example":"92"},"Gross Profit":{"type":"decimal","database":"MONEY","description":"Gross profit","example":"19.99"},"Id_number":{"type":"integer","database":"INTEGER","description":"Identifier for customer in RQ","example":"1421"},"IMEI":{"type":"string","database":"VARCHAR(100)","description":"IMEI","example":"6783584733"},"Member Number":{"type":"string","database":"VARCHAR(50)","description":"Customer member number","example":"5103830"},"MobileNumber":{"type":"string","database":"VARCHAR(200)","description":"Customer mobile number","example":"6783584733"},"Product Cost":{"type":"decimal","database":"MONEY","description":"Product cost","example":"0"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQ Employee ID":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"138"},"RQ Invoice":{"type":"string","database":"VARCHAR(14)","description":"Identifier for an invoice in RQ","example":"FAIVGIN569"},"RQ Product Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description for a product in RQ","example":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN"},"RQ SKU":{"type":"string","database":"VARCHAR(12)","description":"Product SKU in RQ","example":"CANXRB000072"},"Selling Price":{"type":"decimal","database":"MONEY","description":"Selling price","example":"19.99"},"Transaction Date":{"type":"datetime","database":"DATETIME","description":"Transaction date","example":"2016-02-04T14:38:43.753"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Customer Address":"3811 Smith Street","Customer NAME":"John Tester","Customer Zip Code":"75219","Email":"johnb@test.com","Employee Name":"IQMETRIX USER","External Store ID":"2356","GlobalProductID":92,"Gross Profit":19.99,"Id_number":1421,"IMEI":"6783584733","Member Number":"5103830","MobileNumber":"6783584733","Product Cost":0,"Quantity":1,"RQ Employee ID":138,"RQ Invoice":"FAIVGIN569","RQ Product Description":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN","RQ SKU":"CANXRB000072","Selling Price":19.99,"Transaction Date":"2016-02-04T14:38:43.753"}]
+                            schema: |
+                                {"name":"GenerateMarketingReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Customer Address":{"type":"string","database":"VARCHAR(50)","description":"Customer address","example":"3811 Smith Street"},"Customer NAME":{"type":"string","database":"VARCHAR(101)","description":"Customer name","example":"John Tester"},"Customer Zip Code":{"type":"string","database":"VARCHAR(15)","description":"Customer zip code","example":"75219"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Customer email","example":"johnb@test.com"},"Employee Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"IQMETRIX USER"},"External Store ID":{"type":"string","database":"VARCHAR(255)","description":"Identifier for a location in an external system","example":"2356"},"GlobalProductID":{"type":"integer","database":"INTEGER","description":"Identifier for a Product in RQ","example":"92"},"Gross Profit":{"type":"decimal","database":"MONEY","description":"Gross profit","example":"19.99"},"Id_number":{"type":"integer","database":"INTEGER","description":"Identifier for customer in RQ","example":"1421"},"IMEI":{"type":"string","database":"VARCHAR(100)","description":"IMEI","example":"6783584733"},"Member Number":{"type":"string","database":"VARCHAR(50)","description":"Customer member number","example":"5103830"},"MobileNumber":{"type":"string","database":"VARCHAR(200)","description":"Customer mobile number","example":"6783584733"},"Product Cost":{"type":"decimal","database":"MONEY","description":"Product cost","example":"0"},"Quantity":{"type":"integer","database":"INTEGER","description":"Quantity","example":"1"},"RQ Employee ID":{"type":"integer","database":"INTEGER","description":"Identifier for an employee in RQ","example":"138"},"RQ Invoice":{"type":"string","database":"VARCHAR(14)","description":"Identifier for an invoice in RQ","example":"FAIVGIN569"},"RQ Product Description":{"type":"string","database":"NVARCHAR(MAX)","description":"Description for a product in RQ","example":"IDEN -TELENAV: UNLIMITED ROUTES $10 -- NEED DATA ACCESS PLAN"},"RQ SKU":{"type":"string","database":"VARCHAR(12)","description":"Product SKU in RQ","example":"CANXRB000072"},"Selling Price":{"type":"decimal","database":"MONEY","description":"Selling price","example":"19.99"},"Transaction Date":{"type":"datetime","database":"DATETIME","description":"Transaction date","example":"2016-02-04T14:38:43.753"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/Chatterspot/ProductDetailReport?CompanyId={CompanyId}&StartDate={StartDate}&StopDate={StopDate}&SearchMethod={SearchMethod}&CategoryNumber={CategoryNumber}&ReportPart={ReportPart}&ManufacturerID={ManufacturerID}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&ProductIdentifier={ProductIdentifier}&InvoiceIDByStore={InvoiceIDByStore}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14682
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>, for a list see Getting Partner Relationships
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        SearchMethod:
+            displayName: SearchMethod
+            type: integer
+            example: 3
+            required: true
+            description: Acceptable values include 1 for Product SKU, 2 for Manufacutrer, 3 for Category and 4 for Invoice Number
+        
+        CategoryNumber:
+            displayName: CategoryNumber
+            type: integer
+            example: 10
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#categorynumber'>CategoryNumber</a>. For a complete list see <a href="#getting-category-numbers">Getting Category Numbers</a>
+        
+        ReportPart:
+            displayName: ReportPart
+            type: integer
+            example: 1
+            required: true
+            description: Acceptable values include 1 to return the default report, 2 for the tax detail report and 3 for tax column data
+        
+        ManufacturerID:
+            displayName: ManufacturerID
+            type: integer
+            example: -1
+            required: true
+            description: Identifier for a Manufacture in RQ. Use -1 for all Manufacturers. For a complete list see <a href="#getting-a-list-of-manufacturers-in-rq">Getting a List of Manufacturers in RQ</a>
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoIDs:
+            displayName: ForWhoIDs
+            type: integer
+            example: 6679
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        ProductIdentifier:
+            displayName: ProductIdentifier
+            type: string
+            example: ASCLMO000001
+            required: false
+            description: Product SKU
+        
+        InvoiceIDByStore:
+            displayName: InvoiceIDByStore
+            type: string
+            example: 77224IN3
+            required: false
+            description: Tracking number
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='#getting-language-codes'>Getting Language Codes</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Product Detail Report for a Company
+                
+        
+        description: |            
+            For more information, see {{support_ProductDetailReport}}.
+            
+            Note that this report has multiple responses, depending on the ReportPart specified.
+            
+            | Report Part | Response |
+            |:------------|:---------|
+            | 1 | {{Chatterspot-Reports_ProductDetailReportData}} |
+            | 2 | {{Chatterspot-Reports_ProductDetailReportTaxDetailData}} |
+            | 3 | {{Chatterspot-Reports_ProductDetailReportTaxColumnData}} |
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Activation_RowID":"d3d65281-5201-4927-9bac-6f3a47ddf56b","AdjustedUnitPrice":25,"CarrierPrice":null,"CategoryPath":">> Phones >> Galaxies","ChannelName":"English Channel","Comments":"","ContractNumber":"12345","CustomerID":131149,"CustomerName":"Bob Jones","DateCreated":"2016-05-13T12:18:08.723","DistrictName":"Westminster","EmployeeName":"iQmetrix User","GlobalProductID":5179,"InvoicedAt":"100: My Network LLC - Anchorage","InvoicedBy":"100: My Network LLC - Anchorage","InvoiceIDByStore":"77224IN3","IsOrderServiceDropShipProduct":null,"IsOrderServiceShippingProduct":null,"ListPrice":449.95,"OriginalUnitPrice":25,"Priority":1,"ProductCouponDiscount":0,"ProductIdentifier":"ASHCSA000120","ProductName":"Samsung Galaxy Rugby LTE","Quantity":1,"Refund":0,"RegionName":"London","RetailerCatalogID":"null","SaleInvoice_RowID":"8c6537ae-75a5-4155-82b2-c8647ed05f3d","SaleInvoiceID":128962,"SaleInvoiceProduct_RowID":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06","SerialNumber":"1111111","SoldAsUsed":false,"SpecialProductID":0,"StoreInStoreFlowIsEnabledForStore":false,"StoreInStoreGrossProfit":null,"StoreInStoreListPrice":null,"StoreInStorePrice":null,"StoreTypeName":"Costco","TenderedBy":"iQmetrix User","TotalCost":0,"TotalDiscount":424.95,"TotalPrice":25,"UnitCost":0,"UnitPrice":25,"VendorName":"","VendorSKU":""}]
+                            schema: |
+                                {"name":"ProductDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"d3d65281-5201-4927-9bac-6f3a47ddf56b"},"AdjustedUnitPrice":{"type":"decimal","description":"Adjusted Unit Price - price that the product was actually sold for","database":"MONEY","example":"25"},"CarrierPrice":{"type":"decimal","description":"Carrier Price - value or revenue that a carrier assigns this feature","database":"MONEY","example":"null"},"CategoryPath":{"type":"string","description":"Category - the category the product belongs to","database":"NVARCHAR(MAX)","example":">> Phones >> Galaxies"},"ChannelName":{"type":"string","description":"Channel - channel for the rows location","database":"NVARCHAR(MAX)","example":"English Channel"},"Comments":{"type":"string","description":"Invoice Comments - comments added to the invoice","database":"TEXT","example":""},"ContractNumber":{"type":"string","description":"Contract # - number of the contract, recorded at the time of sale","database":"VARCHAR (50)","example":"12345"},"CustomerID":{"type":"integer","description":"Internal identifier for a customer in RQ","database":"INT","example":"131149"},"CustomerName":{"type":"string","description":"Customer - name of the customer as entered on their profile","database":"VARCHAR (101)","example":"Bob Jones"},"DateCreated":{"type":"datetime","description":"Sold On - date and time the invoice was tendered","database":"DATETIME","example":"2016-05-13T12:18:08.723"},"DistrictName":{"type":"string","description":"District - district for the rows location","database":"NVARCHAR(MAX)","example":"Westminster"},"EmployeeName":{"type":"string","description":"Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box","database":"VARCHAR (51)","example":"iQmetrix User"},"GlobalProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"5179"},"InvoicedAt":{"type":"string","description":"Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoicedBy":{"type":"string","description":"Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoiceIDByStore":{"type":"string","description":"Invoice # - invoice number assigned by RQ","database":"VARCHAR (14)","example":"77224IN3"},"IsOrderServiceDropShipProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"IsOrderServiceShippingProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"ListPrice":{"type":"decimal","description":"List Price - current price as noted on the pricing tab in the inventory console for the product","database":"MONEY","example":"449.95"},"OriginalUnitPrice":{"type":"decimal","description":"Orig. Unit Price - original price on the invoice","database":"MONEY","example":"25"},"Priority":{"type":"integer","description":"The order that the products were saved in on an Invoice","database":"INT","example":"1"},"ProductCouponDiscount":{"type":"decimal","description":"Coupon discount on the product","database":"MONEY","example":"0"},"ProductIdentifier":{"type":"string","description":"Product SKU - the RQ generated SKU","database":"VARCHAR(12)","example":"ASHCSA000120"},"ProductName":{"type":"string","description":"Product Name - name of the product as it appears in the inventory","database":"NVARCHAR(MAX)","example":"Samsung Galaxy Rugby LTE"},"Quantity":{"type":"integer","description":"Qty - total number of times the Product SKU appears on the invoice","database":"INT","example":"1"},"Refund":{"type":"boolean","description":"Refund - indicates if a negative quantity of this item was sold","database":"BIT","example":"0"},"RegionName":{"type":"string","description":"Region - region for the rows location","database":"NVARCHAR(MAX)","example":"London"},"RetailerCatalogID":{"type":"string","description":"Internal identifier in RQ","database":"VARCHAR (50)","example":"null"},"SaleInvoice_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"8c6537ae-75a5-4155-82b2-c8647ed05f3d"},"SaleInvoiceID":{"type":"integer","description":"Identifier for an invoice in RQ","database":"INT","example":"128962"},"SaleInvoiceProduct_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06"},"SerialNumber":{"type":"string","description":"Tracking # - tracking number associated with this product, serialized products only","database":"VARCHAR (100)","example":"1111111"},"SoldAsUsed":{"type":"boolean","description":"Sold As Used - indicates the product was used when sold","database":"BIT","example":"false"},"SpecialProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"0"},"StoreInStoreFlowIsEnabledForStore":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"false"},"StoreInStoreGrossProfit":{"type":"decimal","description":"SIS Gross Profit - profit, calculated as Total Sales - Cost for a SIS location.","database":"MONEY","example":"null"},"StoreInStoreListPrice":{"type":"decimal","description":"SIS List Price - Price from the store-in-store setup of the product","database":"MONEY","example":"null"},"StoreInStorePrice":{"type":"decimal","description":"SIS Price - The default price when sold through the store-in-store flow","database":"MONEY","example":"null"},"StoreTypeName":{"type":"string","description":"Location Type - the location type the the transaction was performed at","database":"NVARCHAR(MAX)","example":"Costco"},"TenderedBy":{"type":"string","description":"Tendered By - name of the employee logged into RQ when the invoice was tendered","database":"VARCHAR (51)","example":"iQmetrix User"},"TotalCost":{"type":"decimal","description":"Total Cost - total purchase cost for the product(s) on the invoice","database":"MONEY","example":"0"},"TotalDiscount":{"type":"decimal","description":"Total Discount - net discount amount for the Product SKU on the particular invoice","database":"DECIMAL (8, 4)","example":"424.95"},"TotalPrice":{"type":"decimal","description":"Total Sales - net dollar amount for the Product SKU on the particular invoice","database":"MONEY","example":"25"},"UnitCost":{"type":"decimal","description":"Unit Cost - purchase cost per unit","database":"MONEY","example":"0"},"UnitPrice":{"type":"decimal","description":"Sold For - price that appeared on the invoice (including hide on invoice items), i.e. negative if a refund","database":"MONEY","example":"25"},"VendorName":{"type":"string","description":"Name for a vendor in RQ","database":"NVARCHAR(MAX)","example":""},"VendorSKU":{"type":"string","description":"Vendor SKU","database":"VARCHAR(25)","example":""}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Activation_RowID":"d3d65281-5201-4927-9bac-6f3a47ddf56b","AdjustedUnitPrice":25,"CarrierPrice":null,"CategoryPath":">> Phones >> Galaxies","ChannelName":"English Channel","Comments":"","ContractNumber":"12345","CustomerID":131149,"CustomerName":"Bob Jones","DateCreated":"2016-05-13T12:18:08.723","DistrictName":"Westminster","EmployeeName":"iQmetrix User","GlobalProductID":5179,"InvoicedAt":"100: My Network LLC - Anchorage","InvoicedBy":"100: My Network LLC - Anchorage","InvoiceIDByStore":"77224IN3","IsOrderServiceDropShipProduct":null,"IsOrderServiceShippingProduct":null,"ListPrice":449.95,"OriginalUnitPrice":25,"Priority":1,"ProductCouponDiscount":0,"ProductIdentifier":"ASHCSA000120","ProductName":"Samsung Galaxy Rugby LTE","Quantity":1,"Refund":0,"RegionName":"London","RetailerCatalogID":"null","SaleInvoice_RowID":"8c6537ae-75a5-4155-82b2-c8647ed05f3d","SaleInvoiceID":128962,"SaleInvoiceProduct_RowID":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06","SerialNumber":"1111111","SoldAsUsed":false,"SpecialProductID":0,"StoreInStoreFlowIsEnabledForStore":false,"StoreInStoreGrossProfit":null,"StoreInStoreListPrice":null,"StoreInStorePrice":null,"StoreTypeName":"Costco","TenderedBy":"iQmetrix User","TotalCost":0,"TotalDiscount":424.95,"TotalPrice":25,"UnitCost":0,"UnitPrice":25,"VendorName":"","VendorSKU":""}]
+                            schema: |
+                                {"name":"ProductDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"d3d65281-5201-4927-9bac-6f3a47ddf56b"},"AdjustedUnitPrice":{"type":"decimal","description":"Adjusted Unit Price - price that the product was actually sold for","database":"MONEY","example":"25"},"CarrierPrice":{"type":"decimal","description":"Carrier Price - value or revenue that a carrier assigns this feature","database":"MONEY","example":"null"},"CategoryPath":{"type":"string","description":"Category - the category the product belongs to","database":"NVARCHAR(MAX)","example":">> Phones >> Galaxies"},"ChannelName":{"type":"string","description":"Channel - channel for the rows location","database":"NVARCHAR(MAX)","example":"English Channel"},"Comments":{"type":"string","description":"Invoice Comments - comments added to the invoice","database":"TEXT","example":""},"ContractNumber":{"type":"string","description":"Contract # - number of the contract, recorded at the time of sale","database":"VARCHAR (50)","example":"12345"},"CustomerID":{"type":"integer","description":"Internal identifier for a customer in RQ","database":"INT","example":"131149"},"CustomerName":{"type":"string","description":"Customer - name of the customer as entered on their profile","database":"VARCHAR (101)","example":"Bob Jones"},"DateCreated":{"type":"datetime","description":"Sold On - date and time the invoice was tendered","database":"DATETIME","example":"2016-05-13T12:18:08.723"},"DistrictName":{"type":"string","description":"District - district for the rows location","database":"NVARCHAR(MAX)","example":"Westminster"},"EmployeeName":{"type":"string","description":"Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box","database":"VARCHAR (51)","example":"iQmetrix User"},"GlobalProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"5179"},"InvoicedAt":{"type":"string","description":"Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoicedBy":{"type":"string","description":"Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoiceIDByStore":{"type":"string","description":"Invoice # - invoice number assigned by RQ","database":"VARCHAR (14)","example":"77224IN3"},"IsOrderServiceDropShipProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"IsOrderServiceShippingProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"ListPrice":{"type":"decimal","description":"List Price - current price as noted on the pricing tab in the inventory console for the product","database":"MONEY","example":"449.95"},"OriginalUnitPrice":{"type":"decimal","description":"Orig. Unit Price - original price on the invoice","database":"MONEY","example":"25"},"Priority":{"type":"integer","description":"The order that the products were saved in on an Invoice","database":"INT","example":"1"},"ProductCouponDiscount":{"type":"decimal","description":"Coupon discount on the product","database":"MONEY","example":"0"},"ProductIdentifier":{"type":"string","description":"Product SKU - the RQ generated SKU","database":"VARCHAR(12)","example":"ASHCSA000120"},"ProductName":{"type":"string","description":"Product Name - name of the product as it appears in the inventory","database":"NVARCHAR(MAX)","example":"Samsung Galaxy Rugby LTE"},"Quantity":{"type":"integer","description":"Qty - total number of times the Product SKU appears on the invoice","database":"INT","example":"1"},"Refund":{"type":"boolean","description":"Refund - indicates if a negative quantity of this item was sold","database":"BIT","example":"0"},"RegionName":{"type":"string","description":"Region - region for the rows location","database":"NVARCHAR(MAX)","example":"London"},"RetailerCatalogID":{"type":"string","description":"Internal identifier in RQ","database":"VARCHAR (50)","example":"null"},"SaleInvoice_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"8c6537ae-75a5-4155-82b2-c8647ed05f3d"},"SaleInvoiceID":{"type":"integer","description":"Identifier for an invoice in RQ","database":"INT","example":"128962"},"SaleInvoiceProduct_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06"},"SerialNumber":{"type":"string","description":"Tracking # - tracking number associated with this product, serialized products only","database":"VARCHAR (100)","example":"1111111"},"SoldAsUsed":{"type":"boolean","description":"Sold As Used - indicates the product was used when sold","database":"BIT","example":"false"},"SpecialProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"0"},"StoreInStoreFlowIsEnabledForStore":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"false"},"StoreInStoreGrossProfit":{"type":"decimal","description":"SIS Gross Profit - profit, calculated as Total Sales - Cost for a SIS location.","database":"MONEY","example":"null"},"StoreInStoreListPrice":{"type":"decimal","description":"SIS List Price - Price from the store-in-store setup of the product","database":"MONEY","example":"null"},"StoreInStorePrice":{"type":"decimal","description":"SIS Price - The default price when sold through the store-in-store flow","database":"MONEY","example":"null"},"StoreTypeName":{"type":"string","description":"Location Type - the location type the the transaction was performed at","database":"NVARCHAR(MAX)","example":"Costco"},"TenderedBy":{"type":"string","description":"Tendered By - name of the employee logged into RQ when the invoice was tendered","database":"VARCHAR (51)","example":"iQmetrix User"},"TotalCost":{"type":"decimal","description":"Total Cost - total purchase cost for the product(s) on the invoice","database":"MONEY","example":"0"},"TotalDiscount":{"type":"decimal","description":"Total Discount - net discount amount for the Product SKU on the particular invoice","database":"DECIMAL (8, 4)","example":"424.95"},"TotalPrice":{"type":"decimal","description":"Total Sales - net dollar amount for the Product SKU on the particular invoice","database":"MONEY","example":"25"},"UnitCost":{"type":"decimal","description":"Unit Cost - purchase cost per unit","database":"MONEY","example":"0"},"UnitPrice":{"type":"decimal","description":"Sold For - price that appeared on the invoice (including hide on invoice items), i.e. negative if a refund","database":"MONEY","example":"25"},"VendorName":{"type":"string","description":"Name for a vendor in RQ","database":"NVARCHAR(MAX)","example":""},"VendorSKU":{"type":"string","description":"Vendor SKU","database":"VARCHAR(25)","example":""}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Activation_RowID":"d3d65281-5201-4927-9bac-6f3a47ddf56b","AdjustedUnitPrice":25,"CarrierPrice":null,"CategoryPath":">> Phones >> Galaxies","ChannelName":"English Channel","Comments":"","ContractNumber":"12345","CustomerID":131149,"CustomerName":"Bob Jones","DateCreated":"2016-05-13T12:18:08.723","DistrictName":"Westminster","EmployeeName":"iQmetrix User","GlobalProductID":5179,"InvoicedAt":"100: My Network LLC - Anchorage","InvoicedBy":"100: My Network LLC - Anchorage","InvoiceIDByStore":"77224IN3","IsOrderServiceDropShipProduct":null,"IsOrderServiceShippingProduct":null,"ListPrice":449.95,"OriginalUnitPrice":25,"Priority":1,"ProductCouponDiscount":0,"ProductIdentifier":"ASHCSA000120","ProductName":"Samsung Galaxy Rugby LTE","Quantity":1,"Refund":0,"RegionName":"London","RetailerCatalogID":"null","SaleInvoice_RowID":"8c6537ae-75a5-4155-82b2-c8647ed05f3d","SaleInvoiceID":128962,"SaleInvoiceProduct_RowID":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06","SerialNumber":"1111111","SoldAsUsed":false,"SpecialProductID":0,"StoreInStoreFlowIsEnabledForStore":false,"StoreInStoreGrossProfit":null,"StoreInStoreListPrice":null,"StoreInStorePrice":null,"StoreTypeName":"Costco","TenderedBy":"iQmetrix User","TotalCost":0,"TotalDiscount":424.95,"TotalPrice":25,"UnitCost":0,"UnitPrice":25,"VendorName":"","VendorSKU":""}]
+                            schema: |
+                                {"name":"ProductDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"d3d65281-5201-4927-9bac-6f3a47ddf56b"},"AdjustedUnitPrice":{"type":"decimal","description":"Adjusted Unit Price - price that the product was actually sold for","database":"MONEY","example":"25"},"CarrierPrice":{"type":"decimal","description":"Carrier Price - value or revenue that a carrier assigns this feature","database":"MONEY","example":"null"},"CategoryPath":{"type":"string","description":"Category - the category the product belongs to","database":"NVARCHAR(MAX)","example":">> Phones >> Galaxies"},"ChannelName":{"type":"string","description":"Channel - channel for the rows location","database":"NVARCHAR(MAX)","example":"English Channel"},"Comments":{"type":"string","description":"Invoice Comments - comments added to the invoice","database":"TEXT","example":""},"ContractNumber":{"type":"string","description":"Contract # - number of the contract, recorded at the time of sale","database":"VARCHAR (50)","example":"12345"},"CustomerID":{"type":"integer","description":"Internal identifier for a customer in RQ","database":"INT","example":"131149"},"CustomerName":{"type":"string","description":"Customer - name of the customer as entered on their profile","database":"VARCHAR (101)","example":"Bob Jones"},"DateCreated":{"type":"datetime","description":"Sold On - date and time the invoice was tendered","database":"DATETIME","example":"2016-05-13T12:18:08.723"},"DistrictName":{"type":"string","description":"District - district for the rows location","database":"NVARCHAR(MAX)","example":"Westminster"},"EmployeeName":{"type":"string","description":"Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box","database":"VARCHAR (51)","example":"iQmetrix User"},"GlobalProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"5179"},"InvoicedAt":{"type":"string","description":"Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoicedBy":{"type":"string","description":"Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoiceIDByStore":{"type":"string","description":"Invoice # - invoice number assigned by RQ","database":"VARCHAR (14)","example":"77224IN3"},"IsOrderServiceDropShipProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"IsOrderServiceShippingProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"ListPrice":{"type":"decimal","description":"List Price - current price as noted on the pricing tab in the inventory console for the product","database":"MONEY","example":"449.95"},"OriginalUnitPrice":{"type":"decimal","description":"Orig. Unit Price - original price on the invoice","database":"MONEY","example":"25"},"Priority":{"type":"integer","description":"The order that the products were saved in on an Invoice","database":"INT","example":"1"},"ProductCouponDiscount":{"type":"decimal","description":"Coupon discount on the product","database":"MONEY","example":"0"},"ProductIdentifier":{"type":"string","description":"Product SKU - the RQ generated SKU","database":"VARCHAR(12)","example":"ASHCSA000120"},"ProductName":{"type":"string","description":"Product Name - name of the product as it appears in the inventory","database":"NVARCHAR(MAX)","example":"Samsung Galaxy Rugby LTE"},"Quantity":{"type":"integer","description":"Qty - total number of times the Product SKU appears on the invoice","database":"INT","example":"1"},"Refund":{"type":"boolean","description":"Refund - indicates if a negative quantity of this item was sold","database":"BIT","example":"0"},"RegionName":{"type":"string","description":"Region - region for the rows location","database":"NVARCHAR(MAX)","example":"London"},"RetailerCatalogID":{"type":"string","description":"Internal identifier in RQ","database":"VARCHAR (50)","example":"null"},"SaleInvoice_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"8c6537ae-75a5-4155-82b2-c8647ed05f3d"},"SaleInvoiceID":{"type":"integer","description":"Identifier for an invoice in RQ","database":"INT","example":"128962"},"SaleInvoiceProduct_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06"},"SerialNumber":{"type":"string","description":"Tracking # - tracking number associated with this product, serialized products only","database":"VARCHAR (100)","example":"1111111"},"SoldAsUsed":{"type":"boolean","description":"Sold As Used - indicates the product was used when sold","database":"BIT","example":"false"},"SpecialProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"0"},"StoreInStoreFlowIsEnabledForStore":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"false"},"StoreInStoreGrossProfit":{"type":"decimal","description":"SIS Gross Profit - profit, calculated as Total Sales - Cost for a SIS location.","database":"MONEY","example":"null"},"StoreInStoreListPrice":{"type":"decimal","description":"SIS List Price - Price from the store-in-store setup of the product","database":"MONEY","example":"null"},"StoreInStorePrice":{"type":"decimal","description":"SIS Price - The default price when sold through the store-in-store flow","database":"MONEY","example":"null"},"StoreTypeName":{"type":"string","description":"Location Type - the location type the the transaction was performed at","database":"NVARCHAR(MAX)","example":"Costco"},"TenderedBy":{"type":"string","description":"Tendered By - name of the employee logged into RQ when the invoice was tendered","database":"VARCHAR (51)","example":"iQmetrix User"},"TotalCost":{"type":"decimal","description":"Total Cost - total purchase cost for the product(s) on the invoice","database":"MONEY","example":"0"},"TotalDiscount":{"type":"decimal","description":"Total Discount - net discount amount for the Product SKU on the particular invoice","database":"DECIMAL (8, 4)","example":"424.95"},"TotalPrice":{"type":"decimal","description":"Total Sales - net dollar amount for the Product SKU on the particular invoice","database":"MONEY","example":"25"},"UnitCost":{"type":"decimal","description":"Unit Cost - purchase cost per unit","database":"MONEY","example":"0"},"UnitPrice":{"type":"decimal","description":"Sold For - price that appeared on the invoice (including hide on invoice items), i.e. negative if a refund","database":"MONEY","example":"25"},"VendorName":{"type":"string","description":"Name for a vendor in RQ","database":"NVARCHAR(MAX)","example":""},"VendorSKU":{"type":"string","description":"Vendor SKU","database":"VARCHAR(25)","example":""}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Activation_RowID":"d3d65281-5201-4927-9bac-6f3a47ddf56b","AdjustedUnitPrice":25,"CarrierPrice":null,"CategoryPath":">> Phones >> Galaxies","ChannelName":"English Channel","Comments":"","ContractNumber":"12345","CustomerID":131149,"CustomerName":"Bob Jones","DateCreated":"2016-05-13T12:18:08.723","DistrictName":"Westminster","EmployeeName":"iQmetrix User","GlobalProductID":5179,"InvoicedAt":"100: My Network LLC - Anchorage","InvoicedBy":"100: My Network LLC - Anchorage","InvoiceIDByStore":"77224IN3","IsOrderServiceDropShipProduct":null,"IsOrderServiceShippingProduct":null,"ListPrice":449.95,"OriginalUnitPrice":25,"Priority":1,"ProductCouponDiscount":0,"ProductIdentifier":"ASHCSA000120","ProductName":"Samsung Galaxy Rugby LTE","Quantity":1,"Refund":0,"RegionName":"London","RetailerCatalogID":"null","SaleInvoice_RowID":"8c6537ae-75a5-4155-82b2-c8647ed05f3d","SaleInvoiceID":128962,"SaleInvoiceProduct_RowID":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06","SerialNumber":"1111111","SoldAsUsed":false,"SpecialProductID":0,"StoreInStoreFlowIsEnabledForStore":false,"StoreInStoreGrossProfit":null,"StoreInStoreListPrice":null,"StoreInStorePrice":null,"StoreTypeName":"Costco","TenderedBy":"iQmetrix User","TotalCost":0,"TotalDiscount":424.95,"TotalPrice":25,"UnitCost":0,"UnitPrice":25,"VendorName":"","VendorSKU":""}]
+                            schema: |
+                                {"name":"ProductDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"d3d65281-5201-4927-9bac-6f3a47ddf56b"},"AdjustedUnitPrice":{"type":"decimal","description":"Adjusted Unit Price - price that the product was actually sold for","database":"MONEY","example":"25"},"CarrierPrice":{"type":"decimal","description":"Carrier Price - value or revenue that a carrier assigns this feature","database":"MONEY","example":"null"},"CategoryPath":{"type":"string","description":"Category - the category the product belongs to","database":"NVARCHAR(MAX)","example":">> Phones >> Galaxies"},"ChannelName":{"type":"string","description":"Channel - channel for the rows location","database":"NVARCHAR(MAX)","example":"English Channel"},"Comments":{"type":"string","description":"Invoice Comments - comments added to the invoice","database":"TEXT","example":""},"ContractNumber":{"type":"string","description":"Contract # - number of the contract, recorded at the time of sale","database":"VARCHAR (50)","example":"12345"},"CustomerID":{"type":"integer","description":"Internal identifier for a customer in RQ","database":"INT","example":"131149"},"CustomerName":{"type":"string","description":"Customer - name of the customer as entered on their profile","database":"VARCHAR (101)","example":"Bob Jones"},"DateCreated":{"type":"datetime","description":"Sold On - date and time the invoice was tendered","database":"DATETIME","example":"2016-05-13T12:18:08.723"},"DistrictName":{"type":"string","description":"District - district for the rows location","database":"NVARCHAR(MAX)","example":"Westminster"},"EmployeeName":{"type":"string","description":"Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box","database":"VARCHAR (51)","example":"iQmetrix User"},"GlobalProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"5179"},"InvoicedAt":{"type":"string","description":"Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoicedBy":{"type":"string","description":"Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoiceIDByStore":{"type":"string","description":"Invoice # - invoice number assigned by RQ","database":"VARCHAR (14)","example":"77224IN3"},"IsOrderServiceDropShipProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"IsOrderServiceShippingProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"ListPrice":{"type":"decimal","description":"List Price - current price as noted on the pricing tab in the inventory console for the product","database":"MONEY","example":"449.95"},"OriginalUnitPrice":{"type":"decimal","description":"Orig. Unit Price - original price on the invoice","database":"MONEY","example":"25"},"Priority":{"type":"integer","description":"The order that the products were saved in on an Invoice","database":"INT","example":"1"},"ProductCouponDiscount":{"type":"decimal","description":"Coupon discount on the product","database":"MONEY","example":"0"},"ProductIdentifier":{"type":"string","description":"Product SKU - the RQ generated SKU","database":"VARCHAR(12)","example":"ASHCSA000120"},"ProductName":{"type":"string","description":"Product Name - name of the product as it appears in the inventory","database":"NVARCHAR(MAX)","example":"Samsung Galaxy Rugby LTE"},"Quantity":{"type":"integer","description":"Qty - total number of times the Product SKU appears on the invoice","database":"INT","example":"1"},"Refund":{"type":"boolean","description":"Refund - indicates if a negative quantity of this item was sold","database":"BIT","example":"0"},"RegionName":{"type":"string","description":"Region - region for the rows location","database":"NVARCHAR(MAX)","example":"London"},"RetailerCatalogID":{"type":"string","description":"Internal identifier in RQ","database":"VARCHAR (50)","example":"null"},"SaleInvoice_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"8c6537ae-75a5-4155-82b2-c8647ed05f3d"},"SaleInvoiceID":{"type":"integer","description":"Identifier for an invoice in RQ","database":"INT","example":"128962"},"SaleInvoiceProduct_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06"},"SerialNumber":{"type":"string","description":"Tracking # - tracking number associated with this product, serialized products only","database":"VARCHAR (100)","example":"1111111"},"SoldAsUsed":{"type":"boolean","description":"Sold As Used - indicates the product was used when sold","database":"BIT","example":"false"},"SpecialProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"0"},"StoreInStoreFlowIsEnabledForStore":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"false"},"StoreInStoreGrossProfit":{"type":"decimal","description":"SIS Gross Profit - profit, calculated as Total Sales - Cost for a SIS location.","database":"MONEY","example":"null"},"StoreInStoreListPrice":{"type":"decimal","description":"SIS List Price - Price from the store-in-store setup of the product","database":"MONEY","example":"null"},"StoreInStorePrice":{"type":"decimal","description":"SIS Price - The default price when sold through the store-in-store flow","database":"MONEY","example":"null"},"StoreTypeName":{"type":"string","description":"Location Type - the location type the the transaction was performed at","database":"NVARCHAR(MAX)","example":"Costco"},"TenderedBy":{"type":"string","description":"Tendered By - name of the employee logged into RQ when the invoice was tendered","database":"VARCHAR (51)","example":"iQmetrix User"},"TotalCost":{"type":"decimal","description":"Total Cost - total purchase cost for the product(s) on the invoice","database":"MONEY","example":"0"},"TotalDiscount":{"type":"decimal","description":"Total Discount - net discount amount for the Product SKU on the particular invoice","database":"DECIMAL (8, 4)","example":"424.95"},"TotalPrice":{"type":"decimal","description":"Total Sales - net dollar amount for the Product SKU on the particular invoice","database":"MONEY","example":"25"},"UnitCost":{"type":"decimal","description":"Unit Cost - purchase cost per unit","database":"MONEY","example":"0"},"UnitPrice":{"type":"decimal","description":"Sold For - price that appeared on the invoice (including hide on invoice items), i.e. negative if a refund","database":"MONEY","example":"25"},"VendorName":{"type":"string","description":"Name for a vendor in RQ","database":"NVARCHAR(MAX)","example":""},"VendorSKU":{"type":"string","description":"Vendor SKU","database":"VARCHAR(25)","example":""}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Activation_RowID":"d3d65281-5201-4927-9bac-6f3a47ddf56b","AdjustedUnitPrice":25,"CarrierPrice":null,"CategoryPath":">> Phones >> Galaxies","ChannelName":"English Channel","Comments":"","ContractNumber":"12345","CustomerID":131149,"CustomerName":"Bob Jones","DateCreated":"2016-05-13T12:18:08.723","DistrictName":"Westminster","EmployeeName":"iQmetrix User","GlobalProductID":5179,"InvoicedAt":"100: My Network LLC - Anchorage","InvoicedBy":"100: My Network LLC - Anchorage","InvoiceIDByStore":"77224IN3","IsOrderServiceDropShipProduct":null,"IsOrderServiceShippingProduct":null,"ListPrice":449.95,"OriginalUnitPrice":25,"Priority":1,"ProductCouponDiscount":0,"ProductIdentifier":"ASHCSA000120","ProductName":"Samsung Galaxy Rugby LTE","Quantity":1,"Refund":0,"RegionName":"London","RetailerCatalogID":"null","SaleInvoice_RowID":"8c6537ae-75a5-4155-82b2-c8647ed05f3d","SaleInvoiceID":128962,"SaleInvoiceProduct_RowID":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06","SerialNumber":"1111111","SoldAsUsed":false,"SpecialProductID":0,"StoreInStoreFlowIsEnabledForStore":false,"StoreInStoreGrossProfit":null,"StoreInStoreListPrice":null,"StoreInStorePrice":null,"StoreTypeName":"Costco","TenderedBy":"iQmetrix User","TotalCost":0,"TotalDiscount":424.95,"TotalPrice":25,"UnitCost":0,"UnitPrice":25,"VendorName":"","VendorSKU":""}]
+                            schema: |
+                                {"name":"ProductDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"d3d65281-5201-4927-9bac-6f3a47ddf56b"},"AdjustedUnitPrice":{"type":"decimal","description":"Adjusted Unit Price - price that the product was actually sold for","database":"MONEY","example":"25"},"CarrierPrice":{"type":"decimal","description":"Carrier Price - value or revenue that a carrier assigns this feature","database":"MONEY","example":"null"},"CategoryPath":{"type":"string","description":"Category - the category the product belongs to","database":"NVARCHAR(MAX)","example":">> Phones >> Galaxies"},"ChannelName":{"type":"string","description":"Channel - channel for the rows location","database":"NVARCHAR(MAX)","example":"English Channel"},"Comments":{"type":"string","description":"Invoice Comments - comments added to the invoice","database":"TEXT","example":""},"ContractNumber":{"type":"string","description":"Contract # - number of the contract, recorded at the time of sale","database":"VARCHAR (50)","example":"12345"},"CustomerID":{"type":"integer","description":"Internal identifier for a customer in RQ","database":"INT","example":"131149"},"CustomerName":{"type":"string","description":"Customer - name of the customer as entered on their profile","database":"VARCHAR (101)","example":"Bob Jones"},"DateCreated":{"type":"datetime","description":"Sold On - date and time the invoice was tendered","database":"DATETIME","example":"2016-05-13T12:18:08.723"},"DistrictName":{"type":"string","description":"District - district for the rows location","database":"NVARCHAR(MAX)","example":"Westminster"},"EmployeeName":{"type":"string","description":"Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box","database":"VARCHAR (51)","example":"iQmetrix User"},"GlobalProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"5179"},"InvoicedAt":{"type":"string","description":"Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoicedBy":{"type":"string","description":"Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoiceIDByStore":{"type":"string","description":"Invoice # - invoice number assigned by RQ","database":"VARCHAR (14)","example":"77224IN3"},"IsOrderServiceDropShipProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"IsOrderServiceShippingProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"ListPrice":{"type":"decimal","description":"List Price - current price as noted on the pricing tab in the inventory console for the product","database":"MONEY","example":"449.95"},"OriginalUnitPrice":{"type":"decimal","description":"Orig. Unit Price - original price on the invoice","database":"MONEY","example":"25"},"Priority":{"type":"integer","description":"The order that the products were saved in on an Invoice","database":"INT","example":"1"},"ProductCouponDiscount":{"type":"decimal","description":"Coupon discount on the product","database":"MONEY","example":"0"},"ProductIdentifier":{"type":"string","description":"Product SKU - the RQ generated SKU","database":"VARCHAR(12)","example":"ASHCSA000120"},"ProductName":{"type":"string","description":"Product Name - name of the product as it appears in the inventory","database":"NVARCHAR(MAX)","example":"Samsung Galaxy Rugby LTE"},"Quantity":{"type":"integer","description":"Qty - total number of times the Product SKU appears on the invoice","database":"INT","example":"1"},"Refund":{"type":"boolean","description":"Refund - indicates if a negative quantity of this item was sold","database":"BIT","example":"0"},"RegionName":{"type":"string","description":"Region - region for the rows location","database":"NVARCHAR(MAX)","example":"London"},"RetailerCatalogID":{"type":"string","description":"Internal identifier in RQ","database":"VARCHAR (50)","example":"null"},"SaleInvoice_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"8c6537ae-75a5-4155-82b2-c8647ed05f3d"},"SaleInvoiceID":{"type":"integer","description":"Identifier for an invoice in RQ","database":"INT","example":"128962"},"SaleInvoiceProduct_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06"},"SerialNumber":{"type":"string","description":"Tracking # - tracking number associated with this product, serialized products only","database":"VARCHAR (100)","example":"1111111"},"SoldAsUsed":{"type":"boolean","description":"Sold As Used - indicates the product was used when sold","database":"BIT","example":"false"},"SpecialProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"0"},"StoreInStoreFlowIsEnabledForStore":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"false"},"StoreInStoreGrossProfit":{"type":"decimal","description":"SIS Gross Profit - profit, calculated as Total Sales - Cost for a SIS location.","database":"MONEY","example":"null"},"StoreInStoreListPrice":{"type":"decimal","description":"SIS List Price - Price from the store-in-store setup of the product","database":"MONEY","example":"null"},"StoreInStorePrice":{"type":"decimal","description":"SIS Price - The default price when sold through the store-in-store flow","database":"MONEY","example":"null"},"StoreTypeName":{"type":"string","description":"Location Type - the location type the the transaction was performed at","database":"NVARCHAR(MAX)","example":"Costco"},"TenderedBy":{"type":"string","description":"Tendered By - name of the employee logged into RQ when the invoice was tendered","database":"VARCHAR (51)","example":"iQmetrix User"},"TotalCost":{"type":"decimal","description":"Total Cost - total purchase cost for the product(s) on the invoice","database":"MONEY","example":"0"},"TotalDiscount":{"type":"decimal","description":"Total Discount - net discount amount for the Product SKU on the particular invoice","database":"DECIMAL (8, 4)","example":"424.95"},"TotalPrice":{"type":"decimal","description":"Total Sales - net dollar amount for the Product SKU on the particular invoice","database":"MONEY","example":"25"},"UnitCost":{"type":"decimal","description":"Unit Cost - purchase cost per unit","database":"MONEY","example":"0"},"UnitPrice":{"type":"decimal","description":"Sold For - price that appeared on the invoice (including hide on invoice items), i.e. negative if a refund","database":"MONEY","example":"25"},"VendorName":{"type":"string","description":"Name for a vendor in RQ","database":"NVARCHAR(MAX)","example":""},"VendorSKU":{"type":"string","description":"Vendor SKU","database":"VARCHAR(25)","example":""}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Activation_RowID":"d3d65281-5201-4927-9bac-6f3a47ddf56b","AdjustedUnitPrice":25,"CarrierPrice":null,"CategoryPath":">> Phones >> Galaxies","ChannelName":"English Channel","Comments":"","ContractNumber":"12345","CustomerID":131149,"CustomerName":"Bob Jones","DateCreated":"2016-05-13T12:18:08.723","DistrictName":"Westminster","EmployeeName":"iQmetrix User","GlobalProductID":5179,"InvoicedAt":"100: My Network LLC - Anchorage","InvoicedBy":"100: My Network LLC - Anchorage","InvoiceIDByStore":"77224IN3","IsOrderServiceDropShipProduct":null,"IsOrderServiceShippingProduct":null,"ListPrice":449.95,"OriginalUnitPrice":25,"Priority":1,"ProductCouponDiscount":0,"ProductIdentifier":"ASHCSA000120","ProductName":"Samsung Galaxy Rugby LTE","Quantity":1,"Refund":0,"RegionName":"London","RetailerCatalogID":"null","SaleInvoice_RowID":"8c6537ae-75a5-4155-82b2-c8647ed05f3d","SaleInvoiceID":128962,"SaleInvoiceProduct_RowID":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06","SerialNumber":"1111111","SoldAsUsed":false,"SpecialProductID":0,"StoreInStoreFlowIsEnabledForStore":false,"StoreInStoreGrossProfit":null,"StoreInStoreListPrice":null,"StoreInStorePrice":null,"StoreTypeName":"Costco","TenderedBy":"iQmetrix User","TotalCost":0,"TotalDiscount":424.95,"TotalPrice":25,"UnitCost":0,"UnitPrice":25,"VendorName":"","VendorSKU":""}]
+                            schema: |
+                                {"name":"ProductDetailReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Activation_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"d3d65281-5201-4927-9bac-6f3a47ddf56b"},"AdjustedUnitPrice":{"type":"decimal","description":"Adjusted Unit Price - price that the product was actually sold for","database":"MONEY","example":"25"},"CarrierPrice":{"type":"decimal","description":"Carrier Price - value or revenue that a carrier assigns this feature","database":"MONEY","example":"null"},"CategoryPath":{"type":"string","description":"Category - the category the product belongs to","database":"NVARCHAR(MAX)","example":">> Phones >> Galaxies"},"ChannelName":{"type":"string","description":"Channel - channel for the rows location","database":"NVARCHAR(MAX)","example":"English Channel"},"Comments":{"type":"string","description":"Invoice Comments - comments added to the invoice","database":"TEXT","example":""},"ContractNumber":{"type":"string","description":"Contract # - number of the contract, recorded at the time of sale","database":"VARCHAR (50)","example":"12345"},"CustomerID":{"type":"integer","description":"Internal identifier for a customer in RQ","database":"INT","example":"131149"},"CustomerName":{"type":"string","description":"Customer - name of the customer as entered on their profile","database":"VARCHAR (101)","example":"Bob Jones"},"DateCreated":{"type":"datetime","description":"Sold On - date and time the invoice was tendered","database":"DATETIME","example":"2016-05-13T12:18:08.723"},"DistrictName":{"type":"string","description":"District - district for the rows location","database":"NVARCHAR(MAX)","example":"Westminster"},"EmployeeName":{"type":"string","description":"Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box","database":"VARCHAR (51)","example":"iQmetrix User"},"GlobalProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"5179"},"InvoicedAt":{"type":"string","description":"Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoicedBy":{"type":"string","description":"Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund","database":"NVARCHAR(MAX)","example":"100: My Network LLC - Anchorage"},"InvoiceIDByStore":{"type":"string","description":"Invoice # - invoice number assigned by RQ","database":"VARCHAR (14)","example":"77224IN3"},"IsOrderServiceDropShipProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"IsOrderServiceShippingProduct":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"null"},"ListPrice":{"type":"decimal","description":"List Price - current price as noted on the pricing tab in the inventory console for the product","database":"MONEY","example":"449.95"},"OriginalUnitPrice":{"type":"decimal","description":"Orig. Unit Price - original price on the invoice","database":"MONEY","example":"25"},"Priority":{"type":"integer","description":"The order that the products were saved in on an Invoice","database":"INT","example":"1"},"ProductCouponDiscount":{"type":"decimal","description":"Coupon discount on the product","database":"MONEY","example":"0"},"ProductIdentifier":{"type":"string","description":"Product SKU - the RQ generated SKU","database":"VARCHAR(12)","example":"ASHCSA000120"},"ProductName":{"type":"string","description":"Product Name - name of the product as it appears in the inventory","database":"NVARCHAR(MAX)","example":"Samsung Galaxy Rugby LTE"},"Quantity":{"type":"integer","description":"Qty - total number of times the Product SKU appears on the invoice","database":"INT","example":"1"},"Refund":{"type":"boolean","description":"Refund - indicates if a negative quantity of this item was sold","database":"BIT","example":"0"},"RegionName":{"type":"string","description":"Region - region for the rows location","database":"NVARCHAR(MAX)","example":"London"},"RetailerCatalogID":{"type":"string","description":"Internal identifier in RQ","database":"VARCHAR (50)","example":"null"},"SaleInvoice_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"8c6537ae-75a5-4155-82b2-c8647ed05f3d"},"SaleInvoiceID":{"type":"integer","description":"Identifier for an invoice in RQ","database":"INT","example":"128962"},"SaleInvoiceProduct_RowID":{"type":"guid","description":"Internal identifier in RQ","database":"UNIQUEIDENTIFIER","example":"0099b78f-ba02-4a91-afd4-2f7eb0fbbb06"},"SerialNumber":{"type":"string","description":"Tracking # - tracking number associated with this product, serialized products only","database":"VARCHAR (100)","example":"1111111"},"SoldAsUsed":{"type":"boolean","description":"Sold As Used - indicates the product was used when sold","database":"BIT","example":"false"},"SpecialProductID":{"type":"integer","description":"Internal identifier in RQ","database":"INT","example":"0"},"StoreInStoreFlowIsEnabledForStore":{"type":"boolean","description":"Internal identifier in RQ","database":"BIT","example":"false"},"StoreInStoreGrossProfit":{"type":"decimal","description":"SIS Gross Profit - profit, calculated as Total Sales - Cost for a SIS location.","database":"MONEY","example":"null"},"StoreInStoreListPrice":{"type":"decimal","description":"SIS List Price - Price from the store-in-store setup of the product","database":"MONEY","example":"null"},"StoreInStorePrice":{"type":"decimal","description":"SIS Price - The default price when sold through the store-in-store flow","database":"MONEY","example":"null"},"StoreTypeName":{"type":"string","description":"Location Type - the location type the the transaction was performed at","database":"NVARCHAR(MAX)","example":"Costco"},"TenderedBy":{"type":"string","description":"Tendered By - name of the employee logged into RQ when the invoice was tendered","database":"VARCHAR (51)","example":"iQmetrix User"},"TotalCost":{"type":"decimal","description":"Total Cost - total purchase cost for the product(s) on the invoice","database":"MONEY","example":"0"},"TotalDiscount":{"type":"decimal","description":"Total Discount - net discount amount for the Product SKU on the particular invoice","database":"DECIMAL (8, 4)","example":"424.95"},"TotalPrice":{"type":"decimal","description":"Total Sales - net dollar amount for the Product SKU on the particular invoice","database":"MONEY","example":"25"},"UnitCost":{"type":"decimal","description":"Unit Cost - purchase cost per unit","database":"MONEY","example":"0"},"UnitPrice":{"type":"decimal","description":"Sold For - price that appeared on the invoice (including hide on invoice items), i.e. negative if a refund","database":"MONEY","example":"25"},"VendorName":{"type":"string","description":"Name for a vendor in RQ","database":"NVARCHAR(MAX)","example":""},"VendorSKU":{"type":"string","description":"Vendor SKU","database":"VARCHAR(25)","example":""}}}
+                            
+                        
+                    
+                
+            
+    

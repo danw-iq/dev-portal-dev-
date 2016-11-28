@@ -1,0 +1,1201 @@
+#%RAML 0.8
+title: carrier-integration
+baseUri: https://carrierservicesdemo.iqmetrix.net/v2
+schemas: 
+
+    
+    - Activation: |
+        {
+          "name": "Activation",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "An <strong>Activation</strong> contains IDs necessary to identify an activation, and all the activation details.",
+          "properties": {
+            "Id": { "type": "string",  "description": "Identifier", "example": "6=1115550123" }, 
+            "CarrierActivationDetails": { "type": "object", "ref": "carrier-integration.CarrierActivationDetails", "description": "The details of this Activation" }, 
+            "CarrierId": { "type": "integer", "description": "Identifier of the carrier for this request. This is not an entity ID; it is specific to the Carrier Integration Service", "example": "41" }, 
+            "CompanyId": { "type": "integer", "description": "Identifier of the [Company](/api/company-tree/#company) making this request", "example": "1234" }, 
+            "LocationId": { "type": "integer", "putDescription":"Must match the LocationId provided in the URI", "description": "Identifier of the [Location](/api/company-tree/#location) making this request", "example": "5678" }
+          },
+          "required": [ "Id", "CarrierActivationDetails","CarrierId","CompanyId","LocationId"]           
+        }
+        
+
+    
+
+    
+    - CarrierActivationDetails: |
+        {
+          "name": "CarrierActivationDetails",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "A <strong>CarrierActivationDetails</strong> contains all of the customer, product, and rate plan information necessary to process an activation.",
+          "properties": {
+            "ActivationId": { "type": "integer", "description": "System-generated identifier", "example": "354", "generated": "true", "putGenerate": "true" }, 
+            "ActivationDate": { "type": "DateTime", "description": "Date the [Activation](#activation) occurred (in UTC). This value is system generated and immutable", "example": "2015-06-19T05:44:39.7163989Z", "generated": "true" }, 
+            "ActivatedProduct": { "type": "object", "ref": "carrier-integration.ActivatedProduct", "description": "The Product that is being activated" }, 
+            "ActivationState": { "type": "string", "putDescription": "Acceptable values are Pending or Completed. Defaults to Pending", "description": "State of the [Activation](#activation). See [ActivationState](#activationstate) for a list of acceptable values", "example": "Pending", "generated": "true", "putGenerate": "true" }, 
+            "ActivationTermCode": { "type": "string", "size": "64", "description": "Type of term for the contract. Possible values vary by carrier", "example": "EarlyUpgrade" }, 
+            "ActivationType": { "type": "string",  "description": "The type of this [Activation](#activation), such as a new [Activation](#activation) or an upgrade. See [ActivationType](#activationtype) for a list of acceptable values", "example": "NewActivation" }, 
+            "AdditionalFees": { "type": "array", "arrayType": "object", "ref": "carrier-integration.AdditionalFee", "description": "Any fees applicable, not including the deposit fee or tab. For example, recycling fee" }, 
+            "ContractLengthInMonths": { "type": "integer", "description": "Number of months the [Activation](#activation) has been contracted for. ContractTerm in RQ. For a list of acceptable values, see [ContractTerms](#contractterms)", "example": "24" }, 
+            "ContractNumberIsAccountNumber": { "type": "boolean", "description": "A flag to indicate if the contract number of the [Activation](#activation) can be represented by the account number. IsAccountNumberLocked in RQ", "example": "false" }, 
+            "DealerName": { "type": "string",  "description": "Carrier-specific dealer name", "example": "IAPR" }, 
+            "DealerCode": { "type": "string", "size": "64", "description": "Carrier-specific dealer code", "example": "IAPR" }, 
+            "Deposit": { "type": "object", "ref": "carrier-integration.AdditionalFee", "description": "Security deposit the Subscriber is required to pay" }, 
+            "Notes": { "type": "string", "size": "256", "description": "Free form text with any additional notes related to the [Activation](#activation)", "example": "Notes go here!" }, 
+            "OrderNumber": { "type": "string", "size": "64", "description": "Carrier-specific identifier for the order this activation is associated with. Activations may have the same order number if they were part of a multi-line activation in the carrier system", "example": "ORD1234" }, 
+            "RatePlans": { "type": "array", "arrayType": "object", "ref": "carrier-integration.RatePlan", "description": "The Rate Plan(s) that are applied to the [Activation](#activation)" }, 
+            "RemoteActivationID": { "type": "string", "size": "64", "description": "Carrier-specific identifier for the [Activation](#activation)", "example": "3023997373" }, 
+            "Subscriber": { "type": "object", "ref": "carrier-integration.Subscriber", "description": "The Subscriber (customer) that the [Activation](#activation) is for" }, 
+            "TrackingNumber": { "type": "string", "size": "64", "description": "Carrier-specific tracking number for this [Activation](#activation)", "example": "3023997373" }, 
+            "BillingCode": { "type": "string",  "description": "Reserved for future use" }, 
+            "BillingCycle": { "type": "string",  "description": "Reserved for future use" }, 
+            "BillingCycleDate": { "type": "string",  "description": "Reserved for future use" }, 
+            "Commission": { "type": "decimal", "description": "Reserved for future use" }, 
+            "CompanyCode": { "type": "string",  "description": "Reserved for future use" }, 
+            "IsCommissionable": { "type": "boolean", "description": "Reserved for future use" }, 
+            "OriginalIMEI": { "type": "string",  "description": "Reserved for future use" }, 
+            "OriginalSIM": { "type": "string",  "description": "Reserved for future use" }, 
+            "OriginalRatePlanCode": { "type": "string",  "description": "Reserved for future use" }, 
+            "OriginalRatePlanMRC": { "type": "string",  "description": "Reserved for future use" }, 
+            "SalesRepresentativeName": { "type": "string",  "description": "Reserved for future use" }, 
+            "UpgradeCode": { "type": "string",  "description": "Reserved for future use" }, 
+            "UpgradeSourceNumber": { "type": "string",  "description": "Reserved for future use"}
+          },
+          "required": [ "ActivatedProduct", "ActivationType","Subscriber", "RatePlans" ]        
+        }
+        
+
+    
+
+    
+    - Subscriber: |
+        {
+          "name": "Subscriber",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": " A <strong>Subscriber</strong> contains all of the customer information related to an activation. \n\n <h4>RQ Limitations</h4> \n* Only 4 addresses will be accepted, the first 4 phone numbers will be assigned to Phone1, Phone2, Phone3, Phone4 in order.",
+          "properties": {
+            "SubscriberId": { "type": "string", "size": "64", "description": "Carrier-specific identifier for the Subscriber", "example": "12121212121" }, 
+            "FirstName": { "type": "string", "size": "64", "putDescription":"Required if IsIndividual is set to true, otherwise must be omitted", "description": "If IsIndividual is true, the first name of the Subscriber", "example": "Joe" }, 
+            "LastName": { "type": "string", "size": "64", "putDescription":"Required if IsIndividual is set to true, otherwise must be omitted", "description": "If IsIndividual is true, the last name of the Subscriber", "example": "Smith" }, 
+            "Addresses": { "type": "array", "arrayType": "object", "ref": "carrier-integration.Address", "description": "List of addresses for the Subscriber" }, 
+            "AssociatedAccount": { "type": "object", "description": "The account associated with this Subscriber", "ref": "carrier-integration.Account" }, 
+            "BirthDate": { "type": "DateTime", "description": "Date of birth in MM/DD/YYYY format", "example": "5/16/1980" }, 
+            "CompanyName": { "type": "string", "size": "64", "putDescription":"Required if IsIndividual is set to false, otherwise must be omitted", "description": "If the Subscriber is a business, the name of the business", "example": "" }, 
+            "Email": { "type": "string", "size": "64", "description": "Email address", "example": "subscriber@example.com" }, 
+            "IsIndividual": { "type": "boolean", "putDescription":"Defaults to false", "description": "A flag to indicate if the Subscriber is an individual (true) or a  business (false)", "example": "true" }, 
+            "Notes": { "type": "string", "size": "128", "description": "Notes", "example": "24 Month Term" }, 
+            "PhoneNumbers": {"type": "array", "arrayType": "object", "ref": "carrier-integration.PhoneNumber", "description": "List of phone numbers" }, 
+            "SSN": { "type": "string", "size": "4", "description": "Last 4 digits of a SSN", "example": "6789" }, 
+            "TrackingNumber": { "type": "string", "size": "64", "description": "Carrier-specific tracking number", "example": "2121212121" }, 
+            "SecondName": { "type": "string",  "description": "Reserved for future use" }, 
+            "PreferredLanguage": { "type": "string",  "description": "Reserved for future use"}
+          },
+          "required": ["FirstName","LastName", "CompanyName" ]        
+        }
+        
+
+    
+
+    
+    - Account: |
+        {
+          "name": "Account",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "AccountId": { "type": "string", "size": "64", "description": "Carrier-specific identifier for the associated account", "example": "343434343" }, 
+            "Notes": { "type": "string",  "description": "Custom notes related to the associated account", "example": "" }, 
+            "TrackingNumber": { "type": "string",  "description": "Carrier-specific tracking number for the associated account", "example": "5656565656" }
+          }
+        }
+        
+
+    
+
+    
+    - PhoneNumber: |
+        {
+          "name": "PhoneNumber",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {        
+            "Type": { "type": "string", "putDescription":"Defaults to Home", "description": "The type of phone number. See [PhoneNumberType](#phonenumbertype) for the list of acceptable values", "example": "Home" }, 
+            "Value": { "type": "string", "size": "32", "description": "Phone number", "example": "1234561234" }
+          },
+          "required": [ "Value" ]        
+        }
+        
+
+    
+
+    
+    - Address: |
+        {
+          "name": "Address",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "<h4>RQ Limitations</h4> \n\n* A maximum of 1 work Address (type set to `Commercial`) will be accepted\n\n* A maximum of 2 additional Addresses (excluding Work address) will be accepted",
+          "properties": {
+            "AddressLine1": { "type": "string", "size": "128", "description": "Line 1 of the Address", "example": "123 Main Street" }, 
+            "AddressLine2": { "type": "string", "size": "128", "description": "Line 2 of the Address", "example": "Apt 200" }, 
+            "City": { "type": "string", "size": "64", "description": "City", "example": "Dover" }, 
+            "Country": { "type": "string", "size": "64", "description": "Country", "example": "USA" }, 
+            "County": { "type": "string", "size": "64", "description": "County", "example": "Fairfield" }, 
+            "POBox": { "type": "string", "size": "64", "description": "Post office box", "example": "PO Box 123" }, 
+            "PostalCode": { "type": "string", "size": "32", "description": "Postal code or zip code", "example": "19901" }, 
+            "Province": { "type": "string", "size": "64", "description": "Province or state", "example": "DE" }, 
+            "SuiteNumber": { "type": "string", "size": "32", "description": "Suite number", "example": "100" }, 
+            "Type": { "type": "string",  "description": "The type of this Address. See [AddressType](#addresstype) for a list of acceptable values", "example": "Residential" } 
+          },
+          "required": [ "Type", "AddressLine1", "AddressLine2", "City", "Country", "PostalCode", "Province"]        
+        }
+        
+
+    
+
+    
+    - RatePlan: |
+        {
+          "name": "RatePlan",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "<h4>RQ Limitations</h4>\n\n* A maximum of 2 Rate Plans will be accepted",
+          "properties": {
+            "RatePlanId": { "type": "string", "size": "64", "description": "Carrier-specific identifier for the RatePlan", "example": "ABC1234" }, 
+            "Name": { "type": "string", "size": "64", "description": "Name", "example": "Country-wide Unlimited" }, 
+            "ContractTerms": { "type": "string", "size": "256", "description": "Terms and conditions", "example": "Some terms" }, 
+            "Description": { "type": "string", "size": "128", "description": "Description. May be set to an empty string", "example": "The perfect plan for lots of calling!" }, 
+            "IncludedRatePlanFeatures": { "type": "array", "arrayType":"object", "ref":"carrier-integration.RatePlanFeature", "description": "Features are included with the RatePlan" }, 
+            "MonthlyRecurringCharges": { "type": "decimal", "description": "Monthly cost", "example": "55" }, 
+            "RatePlanFeatureAddons": { "type": "array", "arrayType":"object", "ref":"carrier-integration.RatePlanFeature", "description": "Additional RatePlan features the Subscriber chose to pay for" }, 
+            "SOCCode": { "type": "string", "size": "64", "description": "Carrier-specific SOC code", "example": "ABC1234" }, 
+            "CommissionAmount": { "type": "decimal", "description": "Reserved for future use" }, 
+            "IsSharedPlan": { "type": "boolean", "description": "Reserved for future use"}
+          },
+          "required": [ "Description", "SOCCode"]        
+        }
+        
+
+    
+
+    
+    - RatePlanFeature: |
+        {
+          "name": "RatePlanFeature",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "RatePlanAddonId": { "type": "string", "size": "64", "description": "Carrier-specific identifier for the RatePlanFeature", "example": "XYZ5678" }, 
+            "Name": { "type": "string", "size": "64", "description": "Name", "example": "TEXT100" }, 
+            "Description": { "type": "string", "size": "128", "description": "Description", "example": "One hundred additional text messages." }, 
+            "MonthlyRecurringCharges": { "type": "decimal", "description": "Monthly cost", "example": "5" }, 
+            "SOCCode": { "type": "string", "size": "64", "description": "Carrier-specific SOC code", "example": "XYZ5678" }, 
+            "CommissionAmount": { "type": "decimal", "description": "Reserved for future use"}
+          },
+          "required": [ "Description", "SOCCode"]          
+        }
+        
+
+    
+
+    
+    - ActivatedProduct: |
+        {
+          "name": "ActivatedProduct",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Description": { "type": "string", "size": "128", "description": "Description", "example": "Samsung Galaxy S5" }, 
+            "ESN": { "type": "string", "size": "32", "description": "Electronic Serial Number. This is the first value used to search for a product in your inventory when importing a new activation", "putDescription": "This is the first value searched for when the Activation is imported into RQ", "example": "35854205829867" }, 
+            "IMEI": { "type": "string", "size": "32", "description": "International Mobile Station Equipment Identity", "example": "351756051523999" }, 
+            "Make": { "type": "string", "size": "64", "description": "Make", "example": "Samsung" }, 
+            "MobileDeviceNumber": { "type": "string", "size": "32", "description": "Phone number. Customer Telephone Number and MDN in RQ", "example": "1115550123" }, 
+            "Model": { "type": "string", "size": "64", "description": "Model", "example": "Galaxy S5" }, 
+            "Price": { "type": "decimal", "description": "Price", "example": "499" }, 
+            "ProductId": { "type": "string", "size": "64", "putDescription":"May be set to an empty string", "description": "Used to identify the product in other iQmetrix systems. May be set to an empty string", "example": "" }, 
+            "SerialNumber": { "type": "string", "size": "64", "description": "Serial number", "example": "98769456321" }, 
+            "SIM": { "type": "string", "size": "32", "description": "Subscriber identity module", "example": "89000000000000001234" }, 
+            "SKU": { "type": "string", "size": "64", "description": "Stockkeeping Unit. This value is used when activating a customer-owned phone", "example": "DEF987" }, 
+            "SOCCode": { "type": "string", "size": "64", "description": "Carrier-specific SOC", "example": "DEF987" }, 
+            "Tab": { "type": "object", "ref":"carrier-integration.Tab", "description": "A discount that is added to or subtracted from the Product's price" }, 
+            "IsCarrierSupplied": { "type": "boolean", "description": "Reserved for future use" }, 
+            "NumberPortedIn": { "type": "boolean", "description": "Reserved for future use"}
+          },
+          "required": ["ProductId"]        
+        }
+        
+
+    
+
+    
+    - Tab: |
+        {
+          "name": "Tab",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {      
+            "Amount": { "type": "decimal", "description": "Amount", "example": "50" }, 
+            "Commission": { "type": "object", "ref": "carrier-integration.VendorRebate", "description": "" }, 
+            "ReferenceNumber": { "type": "string",  "description": "Carrier reference number, identifier in an external system", "putDescription": "Identifier for the Tab in an external system", "example": "abc123" }
+          },
+          "required": [ "Commission", "ReferenceNumber"]        
+        }
+        
+
+    
+
+    
+    - AdditionalFee: |
+        {
+          "name": "AdditionalFee",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "size": "64", "description": "Name", "example": "Roaming" }, 
+            "Description": { "type": "string", "size": "128", "description": "Description", "example": "Roam like home" }, 
+            "Amount": { "type": "decimal", "description": "Amount", "example": "55" }, 
+            "Notes": { "type": "string", "size": "512", "description": "Notes", "example": "US" }, 
+            "Rebate": { "type": "object", "ref": "carrier-integration.VendorRebate", "description": "" }, 
+            "ReferenceNumber": { "type": "string", "size": "64", "description": "Carrier reference number, identifier in an external system", "putDescription": "Identifier for the AdditionalFee in an external system", "example": "abc123" }, 
+            "SOCCode": { "type": "string", "size": "64", "description": "Carrier-specific SOC code", "example": "BB3221" }
+          },
+          "required": [ "Name", "Description", "ReferenceNumber", "SOCCode"]        
+        }
+        
+
+    
+
+    
+    - VendorRebate: |
+        {
+          "name": "VendorRebate",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "size": "64", "description": "Name", "example": "Promo" }, 
+            "Description": { "type": "string", "size": "128", "description": "Description", "example": "FREE Roam Like Home" }, 
+            "Amount": { "type": "decimal", "description": "Amount", "example": "55" }, 
+            "Notes": { "type": "string", "size": "512", "description": "Notes", "example": "US" }, 
+            "ReferenceNumber": { "type": "string", "size": "64", "description": "Carrier reference number, identifier in an external system", "putDescription": "Identifier for the VendorRebate in an external system", "example": "abc123" }, 
+            "SOCCode": { "type": "string", "size": "64", "description": "Carrier-specific SOC code", "example": "AGG242" }
+          },
+          "required": [ "Name", "Description", "ReferenceNumber", "SOCCode"]        
+        }
+        
+
+    
+
+    
+    - ConfirmedActivation: |
+        {
+          "name": "ConfirmedActivation",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "A ConfirmedActivation resource represents a payment transaction that completed the activation of one or more phones.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Service-generated identifier for the activation confirmation", "example": "58" }, 
+            "ActivationConfirmationDetails": { "type": "array", "arrayType": "object", "ref": "carrier-integration.ActivationDetails", "description": "Contains details of each line that was confirmed as part of this transaction. Each line represents a single device that was activated as part of a ConfirmedActivation" }, 
+            "ConfirmationDateUTC": { "type": "DateTime", "description": "System generated time the activation confirmation occurred", "example": "2015-07-21T15:25:45.323" }, 
+            "InvoiceId": { "type": "string",  "description": "Identifier of the invoice that caused these activations to be confirmed", "example": "INV0001" }, 
+            "InvoiceSubtotal": { "type": "decimal", "description": "The subtotal amount from the invoice", "example": "53.38" }, 
+            "InvoiceTotal": { "type": "decimal", "description": "The total amount from the invoice", "example": "61.54" }, 
+            "LocationId": { "type": "integer", "description": "Identifier of the [Location](/api/company-tree/#location) where the transaction occurred", "example": "1" }, 
+            "Taxes": { "type": "decimal", "description": "The taxes from the invoice", "example": "8.16" }
+          }
+        }
+        
+
+    
+
+    
+    - ConfirmedActivationHal: |
+        {
+          "name": "ConfirmedActivationHal",
+          "exclude": "true",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "_links": { "type": "object", "putDescription": "Relative links to requests related to this resource", "ref": "carrier-integration.ConfirmedActivationLinks" },
+            "_embedded": { "type": "object", "putDescription": "?????????????", "example": "" },           
+            "Id": { "type": "integer", "description": "Service-generated identifier for the activation confirmation", "example": "58" }, 
+            "ActivationConfirmationDetails": { "type": "array", "arrayType": "object", "ref": "carrier-integration.ActivationDetails", "description": "Contains details of each line that was confirmed as part of this transaction. Each line represents a single device that was activated as part of a ConfirmedActivation" }, 
+            "ConfirmationDateUTC": { "type": "DateTime", "description": "System generated time the activation confirmation occurred", "example": "2015-07-21T15:25:45.323" }, 
+            "InvoiceId": { "type": "string",  "description": "Identifier of the invoice that caused these activations to be confirmed", "example": "INV0001" }, 
+            "InvoiceSubtotal": { "type": "decimal", "description": "The subtotal amount from the invoice", "example": "53.38" }, 
+            "InvoiceTotal": { "type": "decimal", "description": "The total amount from the invoice", "example": "61.54" }, 
+            "LocationId": { "type": "integer", "description": "Identifier of the [Location](/api/company-tree/#location) where the transaction occurred", "example": "1" }, 
+            "Taxes": { "type": "decimal", "description": "The taxes from the invoice", "example": "8.16" }
+          }
+        }   
+        
+
+    
+
+    
+    - ConfirmedActivationLinks: |
+        {
+          "name": "ConfirmedActivationLinks",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "self": { "type": "object", "ref": "carrier-integration.SelfActivation" }
+          }
+        }
+        
+
+    
+
+    
+    - SelfActivation: |
+        {
+          "name": "SelfActivation",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "href": { "type": "string", "putDescription": "A link to the request that will return a related ConfirmedActivation", "example": "v2/Companies(123)/Carriers(41)/ConfirmedActivations(58)" },
+            "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+          }
+        }             
+        
+
+    
+
+    
+    - SelfActivations: |
+        {
+          "name": "SelfActivations",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "href": { "type": "string", "putDescription": "A link to the request that will return a related ConfirmedActivation", "example": "v2/Companies(123)/Carriers(41)/ConfirmedActivations?$filter=ConfirmationDateUTC ge DateTime'2015-07-16T15:29:31.091Z'&$skip=0&top=5" },
+            "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+          }
+        }   
+        
+
+    
+
+    
+    - ConfirmedActivationArrayHal: |
+        {
+          "exclude": "true",
+          "name": "ConfirmedActivationArrayHal",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "carrier-integration.ConfirmedActivationPropertyLinks" },
+            "_embedded": { "type": "object", "ref": "carrier-integration.ConfirmedActivationEmbeddedLinks" }
+          }
+        }
+        
+
+    
+
+    
+    - ConfirmedActivationEmbeddedLinks: |
+        { 
+          "name": "ConfirmedActivationEmbeddedLinks",
+          "type": "object",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "self": { "type": "array", "arrayType": "object", "ref": "carrier-integration.ConfirmedActivationHal" }
+          }
+        }        
+        
+
+    
+
+    
+    - ConfirmedActivationPropertyLinks: |
+        { 
+          "name": "ConfirmedActivationPropertyLinks",
+          "type": "object",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null" },
+            "self": { "type": "object", "putDescription": "The request that returned this result", "ref": "carrier-integration.SelfActivations" },
+            "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null" }
+          }
+        }      
+        
+
+    
+
+    
+    - ActivationDetails: |
+        {
+          "name": "ActivationDetails",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ActivationID": { "type": "integer", "description": "Identifier of the activation that is being confirmed (see CarrierActivationDetails.ActivationId)", "example": "153" }, 
+            "BAN": { "type": "string",  "description": "The billing account number of the account associated with this line", "example": "681883059" }, 
+            "IMEI": { "type": "string",  "description": "The IMEI of the device that was activated", "example": "990000862471854" }, 
+            "OrderNumber": { "type": "string",  "description": "The order number of the activation that is being confirmed (see CarrierActivationDetails.OrderNumber)", "example": "ORD1234" }, 
+            "PhoneNumber": { "type": "string",  "description": "The phone number of the device that was activated", "example": "3023997373" }, 
+            "RemoteActivationID": { "type": "string",  "description": "Carrier-specific identifier for the activation that is being confirmed (see CarrierActivationDetails.RemoteActivationID)", "example": "3023997373" }
+          }
+        }
+        
+
+    
+
+    
+    - ConfigurationDetails: |
+        {    
+          "name": "ConfigurationDetails",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "putDescription": "Identifier for a Carrier in the Carrier Integration service", "example": "41", "generated": "true" },
+            "ClientID": { "type": "integer", "putDescription": "Identifier of the [Company](/api/company-tree/#company) making this request", "example": "123", "generated": "true" },
+            "CompanyWideSettingsResource": { "type": "object", "putDescription": "Company wide configuration settings", "ref": "carrier-integration.CompanyWideSettingsResource" },
+            "LocationSettingsResource": { "type": "object", "putDescription": "Location specific configuration settings", "ref": "carrier-integration.LocationSettingsResource" }
+          },
+          "required": [ "CompanyWideSettingsResource", "LocationSettingsResource" ]
+        }
+        
+
+    
+
+    
+    - CompanyWideSettingsResource: |
+        {    
+          "name": "CompanyWideSettingsResource",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CompanyWideIntegrationSettings": { "type": "array", "arrayType": "object", "isNested": "true", "description": "Company wide integration settings", "ref": "carrier-integration.CompanyWideIntegrationSetting"},
+            "MetaData": { "type": "object", "putDescription": "List of configurable settings", "isNested": "true", "ref": "carrier-integration.MetaData", "generated": "true" }
+          },
+          "required": [ "CompanyWideIntegrationSettings" ]
+        }
+        
+
+    
+
+    
+    - MetaData: |
+        {    
+          "name": "MetaData",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ConfigurableSettings": { "type": "array", "arrayType": "object", "isNested": "true", "description": "Configurable settings", "ref": "carrier-integration.ConfigurableSetting" }
+          }
+        }         
+        
+
+    
+
+    
+    - ConfigurableSetting: |
+        {
+          "exclude": "true",
+          "name": "ConfigurableSetting",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "SettingId": { "type": "integer", "description": "Identifier", "example": "1"},
+            "SettingName": { "type": "string", "description": "Type of HTML element this setting represents", "example": "YesNo" },
+            "InputType": { "type": "string", "description": "Value of the setting", "example": "Enabled" }
+          },
+          "required": [ "SettingId", "SettingName", "InputType" ]
+        }       
+        
+
+    
+
+    
+    - CompanyWideIntegrationSetting: |
+        {    
+          "name": "CompanyWideIntegrationSetting",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier of a configurable setting", "putDescription": "For a list of settings see <code>MetaData</code> part of response to <a href='#getting-configurations-by-company-and-carrier'>Getting Configurations By Company and Carrier</a>", "example": "1" },
+            "Value": { "type": "string", "description": "Value for the setting", "example": "True" },
+            "ValueOptions": { "type": "array", "arrayType": "string", "description": "Set of possible values this setting could be", "putDescription": "Will be null or empty for settings that have no such restriction.", "example": "True" }
+          },
+          "required": [ "Id", "Value"]
+        }
+        
+
+    
+
+    
+    - LocationSettingsResource: |
+        {    
+          "name": "LocationSettingsResource",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Locations": { "type": "array", "arrayType": "object", "description": "List of Locations", "isNested": "true", "ref": "carrier-integration.Location" },
+            "MetaData": { "type": "object", "description": "List of configurable settings", "isNested": "true", "ref": "carrier-integration.MetaData", "generated": "true" }
+          },
+          "required": [ "Locations" ]
+        }          
+        
+
+    
+
+    
+    - Location: |
+        {    
+          "name": "Location",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "LocationId": { "type": "integer", "putDescription": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>", "example": "5678" },
+            "IntegrationSettings": { "type": "array", "arrayType": "object", "putDescription": "Integration settings for the Location", "ref": "carrier-integration.CompanyWideIntegrationSetting" }
+          },
+          "required": [ "LocationId", "IntegrationSettings" ]
+        }        
+        
+
+    
+
+    
+    - ActivationLookupFields: |
+        {
+          "exclude": "true",
+          "name": "ActivationLookupField",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }                   
+        
+
+    
+
+    
+    - ActivationLookupField: |
+        {
+          "name": "CarrierActivationImportInputFields",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "6" },
+            "FieldName": { "type": "string", "description": "Description of this field", "example": "North American Mobile Number" },
+            "InputType": { "type": "string", "description": "Type of input this field requires", "example": "Text" },
+            "Prompt": { "type": "string", "description": "Prompt for this field", "example": "Please Enter Customer 10 Digit Mobile Number" },
+            "Value": { "type": "string", "description": "Value of the field, such as a phone number or ESN", "example": "2562788972" }
+          },
+          "required": [ "Id", "FieldName", "InputType", "Prompt", "Value" ]
+        }
+        
+
+    
+
+
+/Companies({CompanyId})/Locations({LocationId})/Carriers({CarrierId})/Activations({ActivationId}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 123
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: integer
+            example: 5678
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+        
+        CarrierId:
+            displayName: CarrierId
+            type: integer
+            example: 41
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
+        
+        ActivationId:
+            displayName: ActivationId
+            type: string
+            example: 6=1115550123
+            required: true
+            description: Activation lookup string, see <a href="#getting-an-activation">Getting an Activation</a>
+          
+      
+    put:
+        
+        displayName: Creating an Activation
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Id":"6=1115550123","CarrierActivationDetails":{"ActivationId":354,"ActivationDate":"2015-06-19T05:44:39.7163989Z","ActivatedProduct":{"Description":"Samsung Galaxy S5","ESN":"35854205829867","IMEI":"351756051523999","Make":"Samsung","MobileDeviceNumber":"1115550123","Model":"Galaxy S5","Price":499,"ProductId":"","SerialNumber":"98769456321","SIM":"89000000000000001234","SKU":"DEF987","SOCCode":"DEF987","Tab":{"Amount":50,"Commission":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123"}},"ActivationState":"Pending","ActivationTermCode":"EarlyUpgrade","ActivationType":"NewActivation","AdditionalFees":[{"Name":"Roaming","Description":"Roam like home","Amount":55,"Notes":"US","Rebate":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123","SOCCode":"BB3221"}],"ContractLengthInMonths":24,"ContractNumberIsAccountNumber":false,"DealerName":"IAPR","DealerCode":"IAPR","Deposit":{"Name":"Roaming","Description":"Roam like home","Amount":55,"Notes":"US","Rebate":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123","SOCCode":"BB3221"},"Notes":"Notes go here!","OrderNumber":"ORD1234","RatePlans":[{"RatePlanId":"ABC1234","Name":"Country-wide Unlimited","ContractTerms":"Some terms","Description":"The perfect plan for lots of calling!","IncludedRatePlanFeatures":[{"RatePlanAddonId":"XYZ5678","Name":"TEXT100","Description":"One hundred additional text messages.","MonthlyRecurringCharges":5,"SOCCode":"XYZ5678"}],"MonthlyRecurringCharges":55,"RatePlanFeatureAddons":[{"RatePlanAddonId":"XYZ5678","Name":"TEXT100","Description":"One hundred additional text messages.","MonthlyRecurringCharges":5,"SOCCode":"XYZ5678"}],"SOCCode":"ABC1234"}],"RemoteActivationID":"3023997373","Subscriber":{"SubscriberId":"12121212121","FirstName":"Joe","LastName":"Smith","Addresses":[{"AddressLine1":"123 Main Street","AddressLine2":"Apt 200","City":"Dover","Country":"USA","County":"Fairfield","POBox":"PO Box 123","PostalCode":"19901","Province":"DE","SuiteNumber":"100","Type":"Residential"}],"AssociatedAccount":{"AccountId":"343434343","Notes":"","TrackingNumber":"5656565656"},"BirthDate":"5/16/1980","CompanyName":"","Email":"subscriber@example.com","IsIndividual":true,"Notes":"24 Month Term","PhoneNumbers":[{"Type":"Home","Value":"1234561234"}],"SSN":"6789","TrackingNumber":"2121212121"},"TrackingNumber":"3023997373"},"CarrierId":41,"CompanyId":1234,"LocationId":5678}
+                    
+                schema: |
+                    {"name":"Activation","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"An <strong>Activation</strong> contains IDs necessary to identify an activation, and all the activation details.","properties":{"Id":{"type":"string","description":"Identifier","example":"6=1115550123"},"CarrierActivationDetails":{"type":"object","ref":"carrier-integration.CarrierActivationDetails","description":"The details of this Activation","properties":{"ActivationId":{"type":"integer","description":"System-generated identifier","example":"354","generated":"true","putGenerate":"true","name":"ActivationId"},"ActivationDate":{"type":"datetime","description":"Date the [Activation](#activation) occurred (in UTC). This value is system generated and immutable","example":"2015-06-19T05:44:39.7163989Z","generated":"true","name":"ActivationDate"},"ActivatedProduct":{"type":"object","ref":"carrier-integration.ActivatedProduct","description":"The Product that is being activated","name":"ActivatedProduct","properties":{"Description":{"type":"string","size":"128","description":"Description","example":"Samsung Galaxy S5","name":"Description"},"ESN":{"type":"string","size":"32","description":"Electronic Serial Number. This is the first value used to search for a product in your inventory when importing a new activation","putDescription":"This is the first value searched for when the Activation is imported into RQ","example":"35854205829867","name":"ESN"},"IMEI":{"type":"string","size":"32","description":"International Mobile Station Equipment Identity","example":"351756051523999","name":"IMEI"},"Make":{"type":"string","size":"64","description":"Make","example":"Samsung","name":"Make"},"MobileDeviceNumber":{"type":"string","size":"32","description":"Phone number. Customer Telephone Number and MDN in RQ","example":"1115550123","name":"MobileDeviceNumber"},"Model":{"type":"string","size":"64","description":"Model","example":"Galaxy S5","name":"Model"},"Price":{"type":"decimal","description":"Price","example":"499","name":"Price"},"ProductId":{"type":"string","size":"64","putDescription":"May be set to an empty string","description":"Used to identify the product in other iQmetrix systems. May be set to an empty string","example":"","name":"ProductId"},"SerialNumber":{"type":"string","size":"64","description":"Serial number","example":"98769456321","name":"SerialNumber"},"SIM":{"type":"string","size":"32","description":"Subscriber identity module","example":"89000000000000001234","name":"SIM"},"SKU":{"type":"string","size":"64","description":"Stockkeeping Unit. This value is used when activating a customer-owned phone","example":"DEF987","name":"SKU"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC","example":"DEF987","name":"SOCCode"},"Tab":{"type":"object","ref":"carrier-integration.Tab","description":"A discount that is added to or subtracted from the Product's price","name":"Tab","properties":{"Amount":{"type":"decimal","description":"Amount","example":"50","name":"Amount"},"Commission":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Commission","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the Tab in an external system","example":"abc123","name":"ReferenceNumber"}},"required":["Commission","ReferenceNumber"]},"IsCarrierSupplied":{"type":"boolean","description":"Reserved for future use"},"NumberPortedIn":{"type":"boolean","description":"Reserved for future use"}},"required":["ProductId"]},"ActivationState":{"type":"string","putDescription":"Acceptable values are Pending or Completed. Defaults to Pending","description":"State of the [Activation](#activation). See [ActivationState](#activationstate) for a list of acceptable values","example":"Pending","generated":"true","putGenerate":"true","name":"ActivationState"},"ActivationTermCode":{"type":"string","size":"64","description":"Type of term for the contract. Possible values vary by carrier","example":"EarlyUpgrade","name":"ActivationTermCode"},"ActivationType":{"type":"string","description":"The type of this [Activation](#activation), such as a new [Activation](#activation) or an upgrade. See [ActivationType](#activationtype) for a list of acceptable values","example":"NewActivation","name":"ActivationType"},"AdditionalFees":{"type":"array","arrayType":"object","ref":"carrier-integration.AdditionalFee","description":"Any fees applicable, not including the deposit fee or tab. For example, recycling fee","name":"AdditionalFees","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Roaming","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"Roam like home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"Rebate":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Rebate","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the AdditionalFee in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"BB3221","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ContractLengthInMonths":{"type":"integer","description":"Number of months the [Activation](#activation) has been contracted for. ContractTerm in RQ. For a list of acceptable values, see [ContractTerms](#contractterms)","example":"24","name":"ContractLengthInMonths"},"ContractNumberIsAccountNumber":{"type":"boolean","description":"A flag to indicate if the contract number of the [Activation](#activation) can be represented by the account number. IsAccountNumberLocked in RQ","example":"false","name":"ContractNumberIsAccountNumber"},"DealerName":{"type":"string","description":"Carrier-specific dealer name","example":"IAPR","name":"DealerName"},"DealerCode":{"type":"string","size":"64","description":"Carrier-specific dealer code","example":"IAPR","name":"DealerCode"},"Deposit":{"type":"object","ref":"carrier-integration.AdditionalFee","description":"Security deposit the Subscriber is required to pay","name":"Deposit","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Roaming","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"Roam like home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"Rebate":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Rebate","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the AdditionalFee in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"BB3221","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"Notes":{"type":"string","size":"256","description":"Free form text with any additional notes related to the [Activation](#activation)","example":"Notes go here!","name":"Notes"},"OrderNumber":{"type":"string","size":"64","description":"Carrier-specific identifier for the order this activation is associated with. Activations may have the same order number if they were part of a multi-line activation in the carrier system","example":"ORD1234","name":"OrderNumber"},"RatePlans":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlan","description":"The Rate Plan(s) that are applied to the [Activation](#activation)","name":"RatePlans","properties":{"RatePlanId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlan","example":"ABC1234","name":"RatePlanId"},"Name":{"type":"string","size":"64","description":"Name","example":"Country-wide Unlimited","name":"Name"},"ContractTerms":{"type":"string","size":"256","description":"Terms and conditions","example":"Some terms","name":"ContractTerms"},"Description":{"type":"string","size":"128","description":"Description. May be set to an empty string","example":"The perfect plan for lots of calling!","name":"Description"},"IncludedRatePlanFeatures":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlanFeature","description":"Features are included with the RatePlan","name":"IncludedRatePlanFeatures","properties":{"RatePlanAddonId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlanFeature","example":"XYZ5678","name":"RatePlanAddonId"},"Name":{"type":"string","size":"64","description":"Name","example":"TEXT100","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"One hundred additional text messages.","name":"Description"},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"5","name":"MonthlyRecurringCharges"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"XYZ5678","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"55","name":"MonthlyRecurringCharges"},"RatePlanFeatureAddons":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlanFeature","description":"Additional RatePlan features the Subscriber chose to pay for","name":"RatePlanFeatureAddons","properties":{"RatePlanAddonId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlanFeature","example":"XYZ5678","name":"RatePlanAddonId"},"Name":{"type":"string","size":"64","description":"Name","example":"TEXT100","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"One hundred additional text messages.","name":"Description"},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"5","name":"MonthlyRecurringCharges"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"XYZ5678","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"ABC1234","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"},"IsSharedPlan":{"type":"boolean","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"RemoteActivationID":{"type":"string","size":"64","description":"Carrier-specific identifier for the [Activation](#activation)","example":"3023997373","name":"RemoteActivationID"},"Subscriber":{"type":"object","ref":"carrier-integration.Subscriber","description":"The Subscriber (customer) that the [Activation](#activation) is for","name":"Subscriber","properties":{"SubscriberId":{"type":"string","size":"64","description":"Carrier-specific identifier for the Subscriber","example":"12121212121","name":"SubscriberId"},"FirstName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to true, otherwise must be omitted","description":"If IsIndividual is true, the first name of the Subscriber","example":"Joe","name":"FirstName"},"LastName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to true, otherwise must be omitted","description":"If IsIndividual is true, the last name of the Subscriber","example":"Smith","name":"LastName"},"Addresses":{"type":"array","arrayType":"object","ref":"carrier-integration.Address","description":"List of addresses for the Subscriber","name":"Addresses","properties":{"AddressLine1":{"type":"string","size":"128","description":"Line 1 of the Address","example":"123 Main Street","name":"AddressLine1"},"AddressLine2":{"type":"string","size":"128","description":"Line 2 of the Address","example":"Apt 200","name":"AddressLine2"},"City":{"type":"string","size":"64","description":"City","example":"Dover","name":"City"},"Country":{"type":"string","size":"64","description":"Country","example":"USA","name":"Country"},"County":{"type":"string","size":"64","description":"County","example":"Fairfield","name":"County"},"POBox":{"type":"string","size":"64","description":"Post office box","example":"PO Box 123","name":"POBox"},"PostalCode":{"type":"string","size":"32","description":"Postal code or zip code","example":"19901","name":"PostalCode"},"Province":{"type":"string","size":"64","description":"Province or state","example":"DE","name":"Province"},"SuiteNumber":{"type":"string","size":"32","description":"Suite number","example":"100","name":"SuiteNumber"},"Type":{"type":"string","description":"The type of this Address. See [AddressType](#addresstype) for a list of acceptable values","example":"Residential","name":"Type"}},"required":["Type","AddressLine1","AddressLine2","City","Country","PostalCode","Province"]},"AssociatedAccount":{"type":"object","description":"The account associated with this Subscriber","ref":"carrier-integration.Account","name":"AssociatedAccount","properties":{"AccountId":{"type":"string","size":"64","description":"Carrier-specific identifier for the associated account","example":"343434343","name":"AccountId"},"Notes":{"type":"string","description":"Custom notes related to the associated account","example":"","name":"Notes"},"TrackingNumber":{"type":"string","description":"Carrier-specific tracking number for the associated account","example":"5656565656","name":"TrackingNumber"}}},"BirthDate":{"type":"datetime","description":"Date of birth in MM/DD/YYYY format","example":"5/16/1980","name":"BirthDate"},"CompanyName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to false, otherwise must be omitted","description":"If the Subscriber is a business, the name of the business","example":"","name":"CompanyName"},"Email":{"type":"string","size":"64","description":"Email address","example":"subscriber@example.com","name":"Email"},"IsIndividual":{"type":"boolean","putDescription":"Defaults to false","description":"A flag to indicate if the Subscriber is an individual (true) or a  business (false)","example":"true","name":"IsIndividual"},"Notes":{"type":"string","size":"128","description":"Notes","example":"24 Month Term","name":"Notes"},"PhoneNumbers":{"type":"array","arrayType":"object","ref":"carrier-integration.PhoneNumber","description":"List of phone numbers","name":"PhoneNumbers","properties":{"Type":{"type":"string","putDescription":"Defaults to Home","description":"The type of phone number. See [PhoneNumberType](#phonenumbertype) for the list of acceptable values","example":"Home","name":"Type"},"Value":{"type":"string","size":"32","description":"Phone number","example":"1234561234","name":"Value"}},"required":["Value"]},"SSN":{"type":"string","size":"4","description":"Last 4 digits of a SSN","example":"6789","name":"SSN"},"TrackingNumber":{"type":"string","size":"64","description":"Carrier-specific tracking number","example":"2121212121","name":"TrackingNumber"},"SecondName":{"type":"string","description":"Reserved for future use"},"PreferredLanguage":{"type":"string","description":"Reserved for future use"}},"required":["FirstName","LastName","CompanyName"]},"TrackingNumber":{"type":"string","size":"64","description":"Carrier-specific tracking number for this [Activation](#activation)","example":"3023997373","name":"TrackingNumber"},"BillingCode":{"type":"string","description":"Reserved for future use"},"BillingCycle":{"type":"string","description":"Reserved for future use"},"BillingCycleDate":{"type":"string","description":"Reserved for future use"},"Commission":{"type":"decimal","description":"Reserved for future use"},"CompanyCode":{"type":"string","description":"Reserved for future use"},"IsCommissionable":{"type":"boolean","description":"Reserved for future use"},"OriginalIMEI":{"type":"string","description":"Reserved for future use"},"OriginalSIM":{"type":"string","description":"Reserved for future use"},"OriginalRatePlanCode":{"type":"string","description":"Reserved for future use"},"OriginalRatePlanMRC":{"type":"string","description":"Reserved for future use"},"SalesRepresentativeName":{"type":"string","description":"Reserved for future use"},"UpgradeCode":{"type":"string","description":"Reserved for future use"},"UpgradeSourceNumber":{"type":"string","description":"Reserved for future use"}},"required":["ActivatedProduct","ActivationType","Subscriber","RatePlans"]},"CarrierId":{"type":"integer","description":"Identifier of the carrier for this request. This is not an entity ID; it is specific to the Carrier Integration Service","example":"41"},"CompanyId":{"type":"integer","description":"Identifier of the [Company](/api/company-tree/#company) making this request","example":"1234"},"LocationId":{"type":"integer","putDescription":"Must match the LocationId provided in the URI","description":"Identifier of the [Location](/api/company-tree/#location) making this request","example":"5678"}},"required":["Id","CarrierActivationDetails","CarrierId","CompanyId","LocationId"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"6=1115550123","CarrierActivationDetails":{"ActivationId":354,"ActivationDate":"2015-06-19T05:44:39.7163989Z","ActivatedProduct":{"Description":"Samsung Galaxy S5","ESN":"35854205829867","IMEI":"351756051523999","Make":"Samsung","MobileDeviceNumber":"1115550123","Model":"Galaxy S5","Price":499,"ProductId":"","SerialNumber":"98769456321","SIM":"89000000000000001234","SKU":"DEF987","SOCCode":"DEF987","Tab":{"Amount":50,"Commission":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123"}},"ActivationState":"Pending","ActivationTermCode":"EarlyUpgrade","ActivationType":"NewActivation","AdditionalFees":[{"Name":"Roaming","Description":"Roam like home","Amount":55,"Notes":"US","Rebate":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123","SOCCode":"BB3221"}],"ContractLengthInMonths":24,"ContractNumberIsAccountNumber":false,"DealerName":"IAPR","DealerCode":"IAPR","Deposit":{"Name":"Roaming","Description":"Roam like home","Amount":55,"Notes":"US","Rebate":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123","SOCCode":"BB3221"},"Notes":"Notes go here!","OrderNumber":"ORD1234","RatePlans":[{"RatePlanId":"ABC1234","Name":"Country-wide Unlimited","ContractTerms":"Some terms","Description":"The perfect plan for lots of calling!","IncludedRatePlanFeatures":[{"RatePlanAddonId":"XYZ5678","Name":"TEXT100","Description":"One hundred additional text messages.","MonthlyRecurringCharges":5,"SOCCode":"XYZ5678"}],"MonthlyRecurringCharges":55,"RatePlanFeatureAddons":[{"RatePlanAddonId":"XYZ5678","Name":"TEXT100","Description":"One hundred additional text messages.","MonthlyRecurringCharges":5,"SOCCode":"XYZ5678"}],"SOCCode":"ABC1234"}],"RemoteActivationID":"3023997373","Subscriber":{"SubscriberId":"12121212121","FirstName":"Joe","LastName":"Smith","Addresses":[{"AddressLine1":"123 Main Street","AddressLine2":"Apt 200","City":"Dover","Country":"USA","County":"Fairfield","POBox":"PO Box 123","PostalCode":"19901","Province":"DE","SuiteNumber":"100","Type":"Residential"}],"AssociatedAccount":{"AccountId":"343434343","Notes":"","TrackingNumber":"5656565656"},"BirthDate":"5/16/1980","CompanyName":"","Email":"subscriber@example.com","IsIndividual":true,"Notes":"24 Month Term","PhoneNumbers":[{"Type":"Home","Value":"1234561234"}],"SSN":"6789","TrackingNumber":"2121212121"},"TrackingNumber":"3023997373"},"CarrierId":41,"CompanyId":1234,"LocationId":5678}
+                            schema: |
+                                {"name":"Activation","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"An <strong>Activation</strong> contains IDs necessary to identify an activation, and all the activation details.","properties":{"Id":{"type":"string","description":"Identifier","example":"6=1115550123"},"CarrierActivationDetails":{"type":"object","ref":"carrier-integration.CarrierActivationDetails","description":"The details of this Activation","properties":{"ActivationId":{"type":"integer","description":"System-generated identifier","example":"354","generated":"true","putGenerate":"true","name":"ActivationId"},"ActivationDate":{"type":"datetime","description":"Date the [Activation](#activation) occurred (in UTC). This value is system generated and immutable","example":"2015-06-19T05:44:39.7163989Z","generated":"true","name":"ActivationDate"},"ActivatedProduct":{"type":"object","ref":"carrier-integration.ActivatedProduct","description":"The Product that is being activated","name":"ActivatedProduct","properties":{"Description":{"type":"string","size":"128","description":"Description","example":"Samsung Galaxy S5","name":"Description"},"ESN":{"type":"string","size":"32","description":"Electronic Serial Number. This is the first value used to search for a product in your inventory when importing a new activation","putDescription":"This is the first value searched for when the Activation is imported into RQ","example":"35854205829867","name":"ESN"},"IMEI":{"type":"string","size":"32","description":"International Mobile Station Equipment Identity","example":"351756051523999","name":"IMEI"},"Make":{"type":"string","size":"64","description":"Make","example":"Samsung","name":"Make"},"MobileDeviceNumber":{"type":"string","size":"32","description":"Phone number. Customer Telephone Number and MDN in RQ","example":"1115550123","name":"MobileDeviceNumber"},"Model":{"type":"string","size":"64","description":"Model","example":"Galaxy S5","name":"Model"},"Price":{"type":"decimal","description":"Price","example":"499","name":"Price"},"ProductId":{"type":"string","size":"64","putDescription":"May be set to an empty string","description":"Used to identify the product in other iQmetrix systems. May be set to an empty string","example":"","name":"ProductId"},"SerialNumber":{"type":"string","size":"64","description":"Serial number","example":"98769456321","name":"SerialNumber"},"SIM":{"type":"string","size":"32","description":"Subscriber identity module","example":"89000000000000001234","name":"SIM"},"SKU":{"type":"string","size":"64","description":"Stockkeeping Unit. This value is used when activating a customer-owned phone","example":"DEF987","name":"SKU"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC","example":"DEF987","name":"SOCCode"},"Tab":{"type":"object","ref":"carrier-integration.Tab","description":"A discount that is added to or subtracted from the Product's price","name":"Tab","properties":{"Amount":{"type":"decimal","description":"Amount","example":"50","name":"Amount"},"Commission":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Commission","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the Tab in an external system","example":"abc123","name":"ReferenceNumber"}},"required":["Commission","ReferenceNumber"]},"IsCarrierSupplied":{"type":"boolean","description":"Reserved for future use"},"NumberPortedIn":{"type":"boolean","description":"Reserved for future use"}},"required":["ProductId"]},"ActivationState":{"type":"string","putDescription":"Acceptable values are Pending or Completed. Defaults to Pending","description":"State of the [Activation](#activation). See [ActivationState](#activationstate) for a list of acceptable values","example":"Pending","generated":"true","putGenerate":"true","name":"ActivationState"},"ActivationTermCode":{"type":"string","size":"64","description":"Type of term for the contract. Possible values vary by carrier","example":"EarlyUpgrade","name":"ActivationTermCode"},"ActivationType":{"type":"string","description":"The type of this [Activation](#activation), such as a new [Activation](#activation) or an upgrade. See [ActivationType](#activationtype) for a list of acceptable values","example":"NewActivation","name":"ActivationType"},"AdditionalFees":{"type":"array","arrayType":"object","ref":"carrier-integration.AdditionalFee","description":"Any fees applicable, not including the deposit fee or tab. For example, recycling fee","name":"AdditionalFees","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Roaming","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"Roam like home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"Rebate":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Rebate","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the AdditionalFee in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"BB3221","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ContractLengthInMonths":{"type":"integer","description":"Number of months the [Activation](#activation) has been contracted for. ContractTerm in RQ. For a list of acceptable values, see [ContractTerms](#contractterms)","example":"24","name":"ContractLengthInMonths"},"ContractNumberIsAccountNumber":{"type":"boolean","description":"A flag to indicate if the contract number of the [Activation](#activation) can be represented by the account number. IsAccountNumberLocked in RQ","example":"false","name":"ContractNumberIsAccountNumber"},"DealerName":{"type":"string","description":"Carrier-specific dealer name","example":"IAPR","name":"DealerName"},"DealerCode":{"type":"string","size":"64","description":"Carrier-specific dealer code","example":"IAPR","name":"DealerCode"},"Deposit":{"type":"object","ref":"carrier-integration.AdditionalFee","description":"Security deposit the Subscriber is required to pay","name":"Deposit","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Roaming","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"Roam like home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"Rebate":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Rebate","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the AdditionalFee in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"BB3221","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"Notes":{"type":"string","size":"256","description":"Free form text with any additional notes related to the [Activation](#activation)","example":"Notes go here!","name":"Notes"},"OrderNumber":{"type":"string","size":"64","description":"Carrier-specific identifier for the order this activation is associated with. Activations may have the same order number if they were part of a multi-line activation in the carrier system","example":"ORD1234","name":"OrderNumber"},"RatePlans":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlan","description":"The Rate Plan(s) that are applied to the [Activation](#activation)","name":"RatePlans","properties":{"RatePlanId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlan","example":"ABC1234","name":"RatePlanId"},"Name":{"type":"string","size":"64","description":"Name","example":"Country-wide Unlimited","name":"Name"},"ContractTerms":{"type":"string","size":"256","description":"Terms and conditions","example":"Some terms","name":"ContractTerms"},"Description":{"type":"string","size":"128","description":"Description. May be set to an empty string","example":"The perfect plan for lots of calling!","name":"Description"},"IncludedRatePlanFeatures":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlanFeature","description":"Features are included with the RatePlan","name":"IncludedRatePlanFeatures","properties":{"RatePlanAddonId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlanFeature","example":"XYZ5678","name":"RatePlanAddonId"},"Name":{"type":"string","size":"64","description":"Name","example":"TEXT100","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"One hundred additional text messages.","name":"Description"},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"5","name":"MonthlyRecurringCharges"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"XYZ5678","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"55","name":"MonthlyRecurringCharges"},"RatePlanFeatureAddons":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlanFeature","description":"Additional RatePlan features the Subscriber chose to pay for","name":"RatePlanFeatureAddons","properties":{"RatePlanAddonId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlanFeature","example":"XYZ5678","name":"RatePlanAddonId"},"Name":{"type":"string","size":"64","description":"Name","example":"TEXT100","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"One hundred additional text messages.","name":"Description"},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"5","name":"MonthlyRecurringCharges"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"XYZ5678","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"ABC1234","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"},"IsSharedPlan":{"type":"boolean","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"RemoteActivationID":{"type":"string","size":"64","description":"Carrier-specific identifier for the [Activation](#activation)","example":"3023997373","name":"RemoteActivationID"},"Subscriber":{"type":"object","ref":"carrier-integration.Subscriber","description":"The Subscriber (customer) that the [Activation](#activation) is for","name":"Subscriber","properties":{"SubscriberId":{"type":"string","size":"64","description":"Carrier-specific identifier for the Subscriber","example":"12121212121","name":"SubscriberId"},"FirstName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to true, otherwise must be omitted","description":"If IsIndividual is true, the first name of the Subscriber","example":"Joe","name":"FirstName"},"LastName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to true, otherwise must be omitted","description":"If IsIndividual is true, the last name of the Subscriber","example":"Smith","name":"LastName"},"Addresses":{"type":"array","arrayType":"object","ref":"carrier-integration.Address","description":"List of addresses for the Subscriber","name":"Addresses","properties":{"AddressLine1":{"type":"string","size":"128","description":"Line 1 of the Address","example":"123 Main Street","name":"AddressLine1"},"AddressLine2":{"type":"string","size":"128","description":"Line 2 of the Address","example":"Apt 200","name":"AddressLine2"},"City":{"type":"string","size":"64","description":"City","example":"Dover","name":"City"},"Country":{"type":"string","size":"64","description":"Country","example":"USA","name":"Country"},"County":{"type":"string","size":"64","description":"County","example":"Fairfield","name":"County"},"POBox":{"type":"string","size":"64","description":"Post office box","example":"PO Box 123","name":"POBox"},"PostalCode":{"type":"string","size":"32","description":"Postal code or zip code","example":"19901","name":"PostalCode"},"Province":{"type":"string","size":"64","description":"Province or state","example":"DE","name":"Province"},"SuiteNumber":{"type":"string","size":"32","description":"Suite number","example":"100","name":"SuiteNumber"},"Type":{"type":"string","description":"The type of this Address. See [AddressType](#addresstype) for a list of acceptable values","example":"Residential","name":"Type"}},"required":["Type","AddressLine1","AddressLine2","City","Country","PostalCode","Province"]},"AssociatedAccount":{"type":"object","description":"The account associated with this Subscriber","ref":"carrier-integration.Account","name":"AssociatedAccount","properties":{"AccountId":{"type":"string","size":"64","description":"Carrier-specific identifier for the associated account","example":"343434343","name":"AccountId"},"Notes":{"type":"string","description":"Custom notes related to the associated account","example":"","name":"Notes"},"TrackingNumber":{"type":"string","description":"Carrier-specific tracking number for the associated account","example":"5656565656","name":"TrackingNumber"}}},"BirthDate":{"type":"datetime","description":"Date of birth in MM/DD/YYYY format","example":"5/16/1980","name":"BirthDate"},"CompanyName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to false, otherwise must be omitted","description":"If the Subscriber is a business, the name of the business","example":"","name":"CompanyName"},"Email":{"type":"string","size":"64","description":"Email address","example":"subscriber@example.com","name":"Email"},"IsIndividual":{"type":"boolean","putDescription":"Defaults to false","description":"A flag to indicate if the Subscriber is an individual (true) or a  business (false)","example":"true","name":"IsIndividual"},"Notes":{"type":"string","size":"128","description":"Notes","example":"24 Month Term","name":"Notes"},"PhoneNumbers":{"type":"array","arrayType":"object","ref":"carrier-integration.PhoneNumber","description":"List of phone numbers","name":"PhoneNumbers","properties":{"Type":{"type":"string","putDescription":"Defaults to Home","description":"The type of phone number. See [PhoneNumberType](#phonenumbertype) for the list of acceptable values","example":"Home","name":"Type"},"Value":{"type":"string","size":"32","description":"Phone number","example":"1234561234","name":"Value"}},"required":["Value"]},"SSN":{"type":"string","size":"4","description":"Last 4 digits of a SSN","example":"6789","name":"SSN"},"TrackingNumber":{"type":"string","size":"64","description":"Carrier-specific tracking number","example":"2121212121","name":"TrackingNumber"},"SecondName":{"type":"string","description":"Reserved for future use"},"PreferredLanguage":{"type":"string","description":"Reserved for future use"}},"required":["FirstName","LastName","CompanyName"]},"TrackingNumber":{"type":"string","size":"64","description":"Carrier-specific tracking number for this [Activation](#activation)","example":"3023997373","name":"TrackingNumber"},"BillingCode":{"type":"string","description":"Reserved for future use"},"BillingCycle":{"type":"string","description":"Reserved for future use"},"BillingCycleDate":{"type":"string","description":"Reserved for future use"},"Commission":{"type":"decimal","description":"Reserved for future use"},"CompanyCode":{"type":"string","description":"Reserved for future use"},"IsCommissionable":{"type":"boolean","description":"Reserved for future use"},"OriginalIMEI":{"type":"string","description":"Reserved for future use"},"OriginalSIM":{"type":"string","description":"Reserved for future use"},"OriginalRatePlanCode":{"type":"string","description":"Reserved for future use"},"OriginalRatePlanMRC":{"type":"string","description":"Reserved for future use"},"SalesRepresentativeName":{"type":"string","description":"Reserved for future use"},"UpgradeCode":{"type":"string","description":"Reserved for future use"},"UpgradeSourceNumber":{"type":"string","description":"Reserved for future use"}},"required":["ActivatedProduct","ActivationType","Subscriber","RatePlans"]},"CarrierId":{"type":"integer","description":"Identifier of the carrier for this request. This is not an entity ID; it is specific to the Carrier Integration Service","example":"41"},"CompanyId":{"type":"integer","description":"Identifier of the [Company](/api/company-tree/#company) making this request","example":"1234"},"LocationId":{"type":"integer","putDescription":"Must match the LocationId provided in the URI","description":"Identifier of the [Location](/api/company-tree/#location) making this request","example":"5678"}},"required":["Id","CarrierActivationDetails","CarrierId","CompanyId","LocationId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Locations({LocationId})/Carriers({CarrierId})/Activations({ActivationLookup}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 123
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: integer
+            example: 5678
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+        
+        CarrierId:
+            displayName: CarrierId
+            type: integer
+            example: 41
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
+        
+        ActivationLookup:
+            displayName: ActivationLookup
+            type: string
+            example: 6=1115550123
+            required: true
+            description: Activation lookup string
+          
+      
+    get:
+        
+        displayName: Getting an Activation
+                
+        
+        description: |            
+            To retrieve an Activation, a string can be built based on fields from [Getting Activation Lookup Fields](#getting-activation-lookup-fields).
+            
+            The format of the string is 
+            
+            <pre>{fieldID}={value}[,{additionalFieldIds}={additionalValues}]</pre>
+            
+            There must be at least one field id, value pair. Multiple field id, value pairs are separated by a comma.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"6=1115550123","CarrierActivationDetails":{"ActivationId":354,"ActivationDate":"2015-06-19T05:44:39.7163989Z","ActivatedProduct":{"Description":"Samsung Galaxy S5","ESN":"35854205829867","IMEI":"351756051523999","Make":"Samsung","MobileDeviceNumber":"1115550123","Model":"Galaxy S5","Price":499,"ProductId":"","SerialNumber":"98769456321","SIM":"89000000000000001234","SKU":"DEF987","SOCCode":"DEF987","Tab":{"Amount":50,"Commission":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123"}},"ActivationState":"Pending","ActivationTermCode":"EarlyUpgrade","ActivationType":"NewActivation","AdditionalFees":[{"Name":"Roaming","Description":"Roam like home","Amount":55,"Notes":"US","Rebate":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123","SOCCode":"BB3221"}],"ContractLengthInMonths":24,"ContractNumberIsAccountNumber":false,"DealerName":"IAPR","DealerCode":"IAPR","Deposit":{"Name":"Roaming","Description":"Roam like home","Amount":55,"Notes":"US","Rebate":{"Name":"Promo","Description":"FREE Roam Like Home","Amount":55,"Notes":"US","ReferenceNumber":"abc123","SOCCode":"AGG242"},"ReferenceNumber":"abc123","SOCCode":"BB3221"},"Notes":"Notes go here!","OrderNumber":"ORD1234","RatePlans":[{"RatePlanId":"ABC1234","Name":"Country-wide Unlimited","ContractTerms":"Some terms","Description":"The perfect plan for lots of calling!","IncludedRatePlanFeatures":[{"RatePlanAddonId":"XYZ5678","Name":"TEXT100","Description":"One hundred additional text messages.","MonthlyRecurringCharges":5,"SOCCode":"XYZ5678"}],"MonthlyRecurringCharges":55,"RatePlanFeatureAddons":[{"RatePlanAddonId":"XYZ5678","Name":"TEXT100","Description":"One hundred additional text messages.","MonthlyRecurringCharges":5,"SOCCode":"XYZ5678"}],"SOCCode":"ABC1234"}],"RemoteActivationID":"3023997373","Subscriber":{"SubscriberId":"12121212121","FirstName":"Joe","LastName":"Smith","Addresses":[{"AddressLine1":"123 Main Street","AddressLine2":"Apt 200","City":"Dover","Country":"USA","County":"Fairfield","POBox":"PO Box 123","PostalCode":"19901","Province":"DE","SuiteNumber":"100","Type":"Residential"}],"AssociatedAccount":{"AccountId":"343434343","Notes":"","TrackingNumber":"5656565656"},"BirthDate":"5/16/1980","CompanyName":"","Email":"subscriber@example.com","IsIndividual":true,"Notes":"24 Month Term","PhoneNumbers":[{"Type":"Home","Value":"1234561234"}],"SSN":"6789","TrackingNumber":"2121212121"},"TrackingNumber":"3023997373"},"CarrierId":41,"CompanyId":1234,"LocationId":5678}
+                            schema: |
+                                {"name":"Activation","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"An <strong>Activation</strong> contains IDs necessary to identify an activation, and all the activation details.","properties":{"Id":{"type":"string","description":"Identifier","example":"6=1115550123"},"CarrierActivationDetails":{"type":"object","ref":"carrier-integration.CarrierActivationDetails","description":"The details of this Activation","properties":{"ActivationId":{"type":"integer","description":"System-generated identifier","example":"354","generated":"true","putGenerate":"true","name":"ActivationId"},"ActivationDate":{"type":"datetime","description":"Date the [Activation](#activation) occurred (in UTC). This value is system generated and immutable","example":"2015-06-19T05:44:39.7163989Z","generated":"true","name":"ActivationDate"},"ActivatedProduct":{"type":"object","ref":"carrier-integration.ActivatedProduct","description":"The Product that is being activated","name":"ActivatedProduct","properties":{"Description":{"type":"string","size":"128","description":"Description","example":"Samsung Galaxy S5","name":"Description"},"ESN":{"type":"string","size":"32","description":"Electronic Serial Number. This is the first value used to search for a product in your inventory when importing a new activation","putDescription":"This is the first value searched for when the Activation is imported into RQ","example":"35854205829867","name":"ESN"},"IMEI":{"type":"string","size":"32","description":"International Mobile Station Equipment Identity","example":"351756051523999","name":"IMEI"},"Make":{"type":"string","size":"64","description":"Make","example":"Samsung","name":"Make"},"MobileDeviceNumber":{"type":"string","size":"32","description":"Phone number. Customer Telephone Number and MDN in RQ","example":"1115550123","name":"MobileDeviceNumber"},"Model":{"type":"string","size":"64","description":"Model","example":"Galaxy S5","name":"Model"},"Price":{"type":"decimal","description":"Price","example":"499","name":"Price"},"ProductId":{"type":"string","size":"64","putDescription":"May be set to an empty string","description":"Used to identify the product in other iQmetrix systems. May be set to an empty string","example":"","name":"ProductId"},"SerialNumber":{"type":"string","size":"64","description":"Serial number","example":"98769456321","name":"SerialNumber"},"SIM":{"type":"string","size":"32","description":"Subscriber identity module","example":"89000000000000001234","name":"SIM"},"SKU":{"type":"string","size":"64","description":"Stockkeeping Unit. This value is used when activating a customer-owned phone","example":"DEF987","name":"SKU"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC","example":"DEF987","name":"SOCCode"},"Tab":{"type":"object","ref":"carrier-integration.Tab","description":"A discount that is added to or subtracted from the Product's price","name":"Tab","properties":{"Amount":{"type":"decimal","description":"Amount","example":"50","name":"Amount"},"Commission":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Commission","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the Tab in an external system","example":"abc123","name":"ReferenceNumber"}},"required":["Commission","ReferenceNumber"]},"IsCarrierSupplied":{"type":"boolean","description":"Reserved for future use"},"NumberPortedIn":{"type":"boolean","description":"Reserved for future use"}},"required":["ProductId"]},"ActivationState":{"type":"string","putDescription":"Acceptable values are Pending or Completed. Defaults to Pending","description":"State of the [Activation](#activation). See [ActivationState](#activationstate) for a list of acceptable values","example":"Pending","generated":"true","putGenerate":"true","name":"ActivationState"},"ActivationTermCode":{"type":"string","size":"64","description":"Type of term for the contract. Possible values vary by carrier","example":"EarlyUpgrade","name":"ActivationTermCode"},"ActivationType":{"type":"string","description":"The type of this [Activation](#activation), such as a new [Activation](#activation) or an upgrade. See [ActivationType](#activationtype) for a list of acceptable values","example":"NewActivation","name":"ActivationType"},"AdditionalFees":{"type":"array","arrayType":"object","ref":"carrier-integration.AdditionalFee","description":"Any fees applicable, not including the deposit fee or tab. For example, recycling fee","name":"AdditionalFees","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Roaming","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"Roam like home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"Rebate":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Rebate","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the AdditionalFee in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"BB3221","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ContractLengthInMonths":{"type":"integer","description":"Number of months the [Activation](#activation) has been contracted for. ContractTerm in RQ. For a list of acceptable values, see [ContractTerms](#contractterms)","example":"24","name":"ContractLengthInMonths"},"ContractNumberIsAccountNumber":{"type":"boolean","description":"A flag to indicate if the contract number of the [Activation](#activation) can be represented by the account number. IsAccountNumberLocked in RQ","example":"false","name":"ContractNumberIsAccountNumber"},"DealerName":{"type":"string","description":"Carrier-specific dealer name","example":"IAPR","name":"DealerName"},"DealerCode":{"type":"string","size":"64","description":"Carrier-specific dealer code","example":"IAPR","name":"DealerCode"},"Deposit":{"type":"object","ref":"carrier-integration.AdditionalFee","description":"Security deposit the Subscriber is required to pay","name":"Deposit","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Roaming","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"Roam like home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"Rebate":{"type":"object","ref":"carrier-integration.VendorRebate","description":"","name":"Rebate","properties":{"Name":{"type":"string","size":"64","description":"Name","example":"Promo","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"FREE Roam Like Home","name":"Description"},"Amount":{"type":"decimal","description":"Amount","example":"55","name":"Amount"},"Notes":{"type":"string","size":"512","description":"Notes","example":"US","name":"Notes"},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the VendorRebate in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"AGG242","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"ReferenceNumber":{"type":"string","size":"64","description":"Carrier reference number, identifier in an external system","putDescription":"Identifier for the AdditionalFee in an external system","example":"abc123","name":"ReferenceNumber"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"BB3221","name":"SOCCode"}},"required":["Name","Description","ReferenceNumber","SOCCode"]},"Notes":{"type":"string","size":"256","description":"Free form text with any additional notes related to the [Activation](#activation)","example":"Notes go here!","name":"Notes"},"OrderNumber":{"type":"string","size":"64","description":"Carrier-specific identifier for the order this activation is associated with. Activations may have the same order number if they were part of a multi-line activation in the carrier system","example":"ORD1234","name":"OrderNumber"},"RatePlans":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlan","description":"The Rate Plan(s) that are applied to the [Activation](#activation)","name":"RatePlans","properties":{"RatePlanId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlan","example":"ABC1234","name":"RatePlanId"},"Name":{"type":"string","size":"64","description":"Name","example":"Country-wide Unlimited","name":"Name"},"ContractTerms":{"type":"string","size":"256","description":"Terms and conditions","example":"Some terms","name":"ContractTerms"},"Description":{"type":"string","size":"128","description":"Description. May be set to an empty string","example":"The perfect plan for lots of calling!","name":"Description"},"IncludedRatePlanFeatures":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlanFeature","description":"Features are included with the RatePlan","name":"IncludedRatePlanFeatures","properties":{"RatePlanAddonId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlanFeature","example":"XYZ5678","name":"RatePlanAddonId"},"Name":{"type":"string","size":"64","description":"Name","example":"TEXT100","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"One hundred additional text messages.","name":"Description"},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"5","name":"MonthlyRecurringCharges"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"XYZ5678","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"55","name":"MonthlyRecurringCharges"},"RatePlanFeatureAddons":{"type":"array","arrayType":"object","ref":"carrier-integration.RatePlanFeature","description":"Additional RatePlan features the Subscriber chose to pay for","name":"RatePlanFeatureAddons","properties":{"RatePlanAddonId":{"type":"string","size":"64","description":"Carrier-specific identifier for the RatePlanFeature","example":"XYZ5678","name":"RatePlanAddonId"},"Name":{"type":"string","size":"64","description":"Name","example":"TEXT100","name":"Name"},"Description":{"type":"string","size":"128","description":"Description","example":"One hundred additional text messages.","name":"Description"},"MonthlyRecurringCharges":{"type":"decimal","description":"Monthly cost","example":"5","name":"MonthlyRecurringCharges"},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"XYZ5678","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"SOCCode":{"type":"string","size":"64","description":"Carrier-specific SOC code","example":"ABC1234","name":"SOCCode"},"CommissionAmount":{"type":"decimal","description":"Reserved for future use"},"IsSharedPlan":{"type":"boolean","description":"Reserved for future use"}},"required":["Description","SOCCode"]},"RemoteActivationID":{"type":"string","size":"64","description":"Carrier-specific identifier for the [Activation](#activation)","example":"3023997373","name":"RemoteActivationID"},"Subscriber":{"type":"object","ref":"carrier-integration.Subscriber","description":"The Subscriber (customer) that the [Activation](#activation) is for","name":"Subscriber","properties":{"SubscriberId":{"type":"string","size":"64","description":"Carrier-specific identifier for the Subscriber","example":"12121212121","name":"SubscriberId"},"FirstName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to true, otherwise must be omitted","description":"If IsIndividual is true, the first name of the Subscriber","example":"Joe","name":"FirstName"},"LastName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to true, otherwise must be omitted","description":"If IsIndividual is true, the last name of the Subscriber","example":"Smith","name":"LastName"},"Addresses":{"type":"array","arrayType":"object","ref":"carrier-integration.Address","description":"List of addresses for the Subscriber","name":"Addresses","properties":{"AddressLine1":{"type":"string","size":"128","description":"Line 1 of the Address","example":"123 Main Street","name":"AddressLine1"},"AddressLine2":{"type":"string","size":"128","description":"Line 2 of the Address","example":"Apt 200","name":"AddressLine2"},"City":{"type":"string","size":"64","description":"City","example":"Dover","name":"City"},"Country":{"type":"string","size":"64","description":"Country","example":"USA","name":"Country"},"County":{"type":"string","size":"64","description":"County","example":"Fairfield","name":"County"},"POBox":{"type":"string","size":"64","description":"Post office box","example":"PO Box 123","name":"POBox"},"PostalCode":{"type":"string","size":"32","description":"Postal code or zip code","example":"19901","name":"PostalCode"},"Province":{"type":"string","size":"64","description":"Province or state","example":"DE","name":"Province"},"SuiteNumber":{"type":"string","size":"32","description":"Suite number","example":"100","name":"SuiteNumber"},"Type":{"type":"string","description":"The type of this Address. See [AddressType](#addresstype) for a list of acceptable values","example":"Residential","name":"Type"}},"required":["Type","AddressLine1","AddressLine2","City","Country","PostalCode","Province"]},"AssociatedAccount":{"type":"object","description":"The account associated with this Subscriber","ref":"carrier-integration.Account","name":"AssociatedAccount","properties":{"AccountId":{"type":"string","size":"64","description":"Carrier-specific identifier for the associated account","example":"343434343","name":"AccountId"},"Notes":{"type":"string","description":"Custom notes related to the associated account","example":"","name":"Notes"},"TrackingNumber":{"type":"string","description":"Carrier-specific tracking number for the associated account","example":"5656565656","name":"TrackingNumber"}}},"BirthDate":{"type":"datetime","description":"Date of birth in MM/DD/YYYY format","example":"5/16/1980","name":"BirthDate"},"CompanyName":{"type":"string","size":"64","putDescription":"Required if IsIndividual is set to false, otherwise must be omitted","description":"If the Subscriber is a business, the name of the business","example":"","name":"CompanyName"},"Email":{"type":"string","size":"64","description":"Email address","example":"subscriber@example.com","name":"Email"},"IsIndividual":{"type":"boolean","putDescription":"Defaults to false","description":"A flag to indicate if the Subscriber is an individual (true) or a  business (false)","example":"true","name":"IsIndividual"},"Notes":{"type":"string","size":"128","description":"Notes","example":"24 Month Term","name":"Notes"},"PhoneNumbers":{"type":"array","arrayType":"object","ref":"carrier-integration.PhoneNumber","description":"List of phone numbers","name":"PhoneNumbers","properties":{"Type":{"type":"string","putDescription":"Defaults to Home","description":"The type of phone number. See [PhoneNumberType](#phonenumbertype) for the list of acceptable values","example":"Home","name":"Type"},"Value":{"type":"string","size":"32","description":"Phone number","example":"1234561234","name":"Value"}},"required":["Value"]},"SSN":{"type":"string","size":"4","description":"Last 4 digits of a SSN","example":"6789","name":"SSN"},"TrackingNumber":{"type":"string","size":"64","description":"Carrier-specific tracking number","example":"2121212121","name":"TrackingNumber"},"SecondName":{"type":"string","description":"Reserved for future use"},"PreferredLanguage":{"type":"string","description":"Reserved for future use"}},"required":["FirstName","LastName","CompanyName"]},"TrackingNumber":{"type":"string","size":"64","description":"Carrier-specific tracking number for this [Activation](#activation)","example":"3023997373","name":"TrackingNumber"},"BillingCode":{"type":"string","description":"Reserved for future use"},"BillingCycle":{"type":"string","description":"Reserved for future use"},"BillingCycleDate":{"type":"string","description":"Reserved for future use"},"Commission":{"type":"decimal","description":"Reserved for future use"},"CompanyCode":{"type":"string","description":"Reserved for future use"},"IsCommissionable":{"type":"boolean","description":"Reserved for future use"},"OriginalIMEI":{"type":"string","description":"Reserved for future use"},"OriginalSIM":{"type":"string","description":"Reserved for future use"},"OriginalRatePlanCode":{"type":"string","description":"Reserved for future use"},"OriginalRatePlanMRC":{"type":"string","description":"Reserved for future use"},"SalesRepresentativeName":{"type":"string","description":"Reserved for future use"},"UpgradeCode":{"type":"string","description":"Reserved for future use"},"UpgradeSourceNumber":{"type":"string","description":"Reserved for future use"}},"required":["ActivatedProduct","ActivationType","Subscriber","RatePlans"]},"CarrierId":{"type":"integer","description":"Identifier of the carrier for this request. This is not an entity ID; it is specific to the Carrier Integration Service","example":"41"},"CompanyId":{"type":"integer","description":"Identifier of the [Company](/api/company-tree/#company) making this request","example":"1234"},"LocationId":{"type":"integer","putDescription":"Must match the LocationId provided in the URI","description":"Identifier of the [Location](/api/company-tree/#location) making this request","example":"5678"}},"required":["Id","CarrierActivationDetails","CarrierId","CompanyId","LocationId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Carriers({CarrierId})/ActivationImportFields:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 123
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        CarrierId:
+            displayName: CarrierId
+            type: integer
+            example: 41
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
+          
+      
+    get:
+        
+        displayName: Getting Activation Lookup Fields
+                
+        
+        description: |            
+            This request returns a list of carrier-specific fields which are used in the URI for [Getting an Activation](#getting-an-activation).
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":6,"FieldName":"North American Mobile Number","InputType":"Text","Prompt":"Please Enter Customer 10 Digit Mobile Number","Value":"2562788972"}]
+                            schema: |
+                                {"exclude":"true","name":"ActivationLookupField","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Carriers({CarrierId})/Configurations:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 123
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        CarrierId:
+            displayName: CarrierId
+            type: integer
+            example: 41
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
+          
+      
+    get:
+        
+        displayName: Getting Configurations By Company and Carrier
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":41,"ClientID":123,"CompanyWideSettingsResource":{"CompanyWideIntegrationSettings":[{"Id":1,"Value":"True","ValueOptions":["True"]}],"MetaData":{"ConfigurableSettings":[{"SettingId":1,"SettingName":"YesNo","InputType":"Enabled"}]}},"LocationSettingsResource":{"Locations":[{"LocationId":5678,"IntegrationSettings":[{"Id":1,"Value":"True","ValueOptions":["True"]}]}],"MetaData":{"ConfigurableSettings":[{"SettingId":1,"SettingName":"YesNo","InputType":"Enabled"}]}}}
+                            schema: |
+                                {"name":"ConfigurationDetails","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","putDescription":"Identifier for a Carrier in the Carrier Integration service","example":"41","generated":"true"},"ClientID":{"type":"integer","putDescription":"Identifier of the [Company](/api/company-tree/#company) making this request","example":"123","generated":"true"},"CompanyWideSettingsResource":{"type":"object","putDescription":"Company wide configuration settings","ref":"carrier-integration.CompanyWideSettingsResource","properties":{"CompanyWideIntegrationSettings":{"type":"array","arrayType":"object","isNested":"true","description":"Company wide integration settings","ref":"carrier-integration.CompanyWideIntegrationSetting","name":"CompanyWideIntegrationSettings","properties":{"Id":{"type":"integer","description":"Identifier of a configurable setting","putDescription":"For a list of settings see <code>MetaData</code> part of response to <a href='#getting-configurations-by-company-and-carrier'>Getting Configurations By Company and Carrier</a>","example":"1","name":"Id"},"Value":{"type":"string","description":"Value for the setting","example":"True","name":"Value"},"ValueOptions":{"type":"array","arrayType":"string","description":"Set of possible values this setting could be","putDescription":"Will be null or empty for settings that have no such restriction.","example":"True","name":"ValueOptions"}},"required":["Id","Value"]},"MetaData":{"type":"object","putDescription":"List of configurable settings","isNested":"true","ref":"carrier-integration.MetaData","generated":"true","name":"MetaData","properties":{"ConfigurableSettings":{"type":"array","arrayType":"object","isNested":"true","description":"Configurable settings","ref":"carrier-integration.ConfigurableSetting","name":"ConfigurableSettings","properties":{"SettingId":{"type":"integer","description":"Identifier","example":"1","name":"SettingId"},"SettingName":{"type":"string","description":"Type of HTML element this setting represents","example":"YesNo","name":"SettingName"},"InputType":{"type":"string","description":"Value of the setting","example":"Enabled","name":"InputType"}},"required":["SettingId","SettingName","InputType"]}}}},"required":["CompanyWideIntegrationSettings"]},"LocationSettingsResource":{"type":"object","putDescription":"Location specific configuration settings","ref":"carrier-integration.LocationSettingsResource","properties":{"Locations":{"type":"array","arrayType":"object","description":"List of Locations","isNested":"true","ref":"carrier-integration.Location","name":"Locations","properties":{"LocationId":{"type":"integer","putDescription":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>","example":"5678","name":"LocationId"},"IntegrationSettings":{"type":"array","arrayType":"object","putDescription":"Integration settings for the Location","ref":"carrier-integration.CompanyWideIntegrationSetting","name":"IntegrationSettings","properties":{"Id":{"type":"integer","description":"Identifier of a configurable setting","putDescription":"For a list of settings see <code>MetaData</code> part of response to <a href='#getting-configurations-by-company-and-carrier'>Getting Configurations By Company and Carrier</a>","example":"1","name":"Id"},"Value":{"type":"string","description":"Value for the setting","example":"True","name":"Value"},"ValueOptions":{"type":"array","arrayType":"string","description":"Set of possible values this setting could be","putDescription":"Will be null or empty for settings that have no such restriction.","example":"True","name":"ValueOptions"}},"required":["Id","Value"]}},"required":["LocationId","IntegrationSettings"]},"MetaData":{"type":"object","description":"List of configurable settings","isNested":"true","ref":"carrier-integration.MetaData","generated":"true","name":"MetaData","properties":{"ConfigurableSettings":{"type":"array","arrayType":"object","isNested":"true","description":"Configurable settings","ref":"carrier-integration.ConfigurableSetting","name":"ConfigurableSettings","properties":{"SettingId":{"type":"integer","description":"Identifier","example":"1","name":"SettingId"},"SettingName":{"type":"string","description":"Type of HTML element this setting represents","example":"YesNo","name":"SettingName"},"InputType":{"type":"string","description":"Value of the setting","example":"Enabled","name":"InputType"}},"required":["SettingId","SettingName","InputType"]}}}},"required":["Locations"]}},"required":["CompanyWideSettingsResource","LocationSettingsResource"]}
+                            
+                        
+                    
+                
+            
+      
+    post:
+        
+        displayName: Enabling a Carrier Integration for a Location
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |
+                    {
+                      "CompanyWideSettingsResource": {
+                        "CompanyWideIntegrationSettings": [
+                          {
+                            "Id": 1,
+                            "Value": "True",
+                            "ValueOptions": null
+                          }
+                        ]
+                      },
+                      "LocationSettingsResource": {
+                        "Locations": [
+                          {
+                            "LocationID": 5678,
+                            "IntegrationSettings": [
+                              {
+                                "Id": 1,
+                                "Value": "True",
+                                "ValueOptions": null
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                    
+
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                  "Id": 33,
+                                  "ClientID": 123,
+                                  "CompanyWideSettingsResource": {
+                                    "CompanyWideIntegrationSettings": [
+                                      {
+                                        "Id": 1,
+                                        "Value": "True",
+                                        "ValueOptions": null
+                                      }
+                                    ],
+                                    "MetaData": {
+                                      "ConfigurableSettings": [
+                                        {
+                                          "SettingID": 1,
+                                          "SettingName": "YesNo",
+                                          "InputType": "Enabled"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "LocationSettingsResource": {
+                                    "Locations": [
+                                      {
+                                        "LocationID": 5678,
+                                        "IntegrationSettings": [
+                                          {
+                                            "Id": 1,
+                                            "Value": "True",
+                                            "ValueOptions": null
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "MetaData": {
+                                      "ConfigurableSettings": [
+                                        {
+                                          "SettingID": 1,
+                                          "SettingName": "Enabled",
+                                          "InputType": null
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                                
+                        
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Carriers({CarrierId})/Configurations/:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 123
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        CarrierId:
+            displayName: CarrierId
+            type: integer
+            example: 41
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
+          
+      
+    post:
+        
+        displayName: Disabling a Carrier Integration for a Location
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |
+                    {
+                      "CompanyWideSettingsResource": {
+                        "CompanyWideIntegrationSettings": [
+                          {
+                            "Id": 1,
+                            "Value": "True",
+                            "ValueOptions": null
+                          }
+                        ]
+                      },
+                      "LocationSettingsResource": {
+                        "Locations": [
+                          {
+                            "LocationID": 5678,
+                            "IntegrationSettings": [
+                              {
+                                "Id": 1,
+                                "Value": "False",
+                                "ValueOptions": null
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                    
+
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                  "Id": 33,
+                                  "ClientID": 123,
+                                  "CompanyWideSettingsResource": {
+                                    "CompanyWideIntegrationSettings": [
+                                      {
+                                        "Id": 1,
+                                        "Value": "True",
+                                        "ValueOptions": null
+                                      }
+                                    ],
+                                    "MetaData": {
+                                      "ConfigurableSettings": [
+                                        {
+                                          "SettingID": 1,
+                                          "SettingName": "YesNo",
+                                          "InputType": "Enabled"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "LocationSettingsResource": {
+                                    "Locations": [
+                                      {
+                                        "LocationID": 4,
+                                        "IntegrationSettings": [
+                                          {
+                                            "Id": 1,
+                                            "Value": "False",
+                                            "ValueOptions": null
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "MetaData": {
+                                      "ConfigurableSettings": [
+                                        {
+                                          "SettingID": 1,
+                                          "SettingName": "Enabled",
+                                          "InputType": null
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                                
+                        
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Carriers({CarrierId})/ConfirmedActivations?$filter=ConfirmationDateUTC ge DateTime'{ConfirmationDate}'&$skip={Skip}&$top={Top}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 123
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        CarrierId:
+            displayName: CarrierId
+            type: integer
+            example: 41
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
+        
+        ConfirmationDate:
+            displayName: ConfirmationDate
+            type: string
+            example: 2015-7-16
+            required: false
+            description: Limits returned records to ones that were created after the specified date
+        
+        Skip:
+            displayName: Skip
+            type: integer
+            example: 0
+            required: false
+            description: Number of records to skip before returning. See <a href="#pagiation">Pagination</a> for more details
+        
+        Top:
+            displayName: Top
+            type: integer
+            example: 5
+            required: false
+            description: Maximum number of records return. See <a href="#pagiation">Pagination</a> for more details
+          
+      
+    get:
+        
+        displayName: Retrieving Completed Activations
+                
+        
+        description: |            
+            {{tip}} Don't forget to include /v2 in the request URL! {{end}}                    
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/hal+json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/hal+json:
+                        
+                            
+                            example: |
+                                {"_links":{"prev":"null","self":{"href":"v2/Companies(123)/Carriers(41)/ConfirmedActivations?$filter=ConfirmationDateUTC ge DateTime'2015-07-16T15:29:31.091Z'&$skip=0&top=5","templated":false},"next":"null"},"_embedded":{"self":[{"_links":{"self":{"href":"v2/Companies(123)/Carriers(41)/ConfirmedActivations(58)","templated":false}},"_embedded":{},"Id":58,"ActivationConfirmationDetails":[{"ActivationID":153,"BAN":"681883059","IMEI":"990000862471854","OrderNumber":"ORD1234","PhoneNumber":"3023997373","RemoteActivationID":"3023997373"}],"ConfirmationDateUTC":"2015-07-21T15:25:45.323","InvoiceId":"INV0001","InvoiceSubtotal":53.38,"InvoiceTotal":61.54,"LocationId":1,"Taxes":8.16}]}}
+                            schema: |
+                                {"exclude":"true","name":"ConfirmedActivationArrayHal","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"_links":{"type":"object","putDescription":"Relative URL's used for Pagination","ref":"carrier-integration.ConfirmedActivationPropertyLinks","properties":{"prev":{"type":"string","putDescription":"Refers to a resource containing the previous page of results, null if there is no previous page","example":"null","name":"prev"},"self":{"type":"object","putDescription":"The request that returned this result","ref":"carrier-integration.SelfActivations","name":"self","properties":{"href":{"type":"string","putDescription":"A link to the request that will return a related ConfirmedActivation","example":"v2/Companies(123)/Carriers(41)/ConfirmedActivations?$filter=ConfirmationDateUTC ge DateTime'2015-07-16T15:29:31.091Z'&$skip=0&top=5","name":"href"},"templated":{"type":"boolean","putDescription":"A flag to indicate ????????????????","example":"false","name":"templated"}}},"next":{"type":"string","putDescription":"Refers to a resource containing the next page of results, null if this is the last page","example":"null","name":"next"}}},"_embedded":{"type":"object","ref":"carrier-integration.ConfirmedActivationEmbeddedLinks","properties":{"self":{"type":"array","arrayType":"object","ref":"carrier-integration.ConfirmedActivationHal","name":"self","properties":{"_links":{"type":"object","putDescription":"Relative links to requests related to this resource","ref":"carrier-integration.ConfirmedActivationLinks","name":"_links","properties":{"self":{"type":"object","ref":"carrier-integration.SelfActivation","name":"self","properties":{"href":{"type":"string","putDescription":"A link to the request that will return a related ConfirmedActivation","example":"v2/Companies(123)/Carriers(41)/ConfirmedActivations(58)","name":"href"},"templated":{"type":"boolean","putDescription":"A flag to indicate ????????????????","example":"false","name":"templated"}}}}},"_embedded":{"type":"object","putDescription":"?????????????","example":"","name":"_embedded"},"Id":{"type":"integer","description":"Service-generated identifier for the activation confirmation","example":"58","name":"Id"},"ActivationConfirmationDetails":{"type":"array","arrayType":"object","ref":"carrier-integration.ActivationDetails","description":"Contains details of each line that was confirmed as part of this transaction. Each line represents a single device that was activated as part of a ConfirmedActivation","name":"ActivationConfirmationDetails","properties":{"ActivationID":{"type":"integer","description":"Identifier of the activation that is being confirmed (see CarrierActivationDetails.ActivationId)","example":"153","name":"ActivationID"},"BAN":{"type":"string","description":"The billing account number of the account associated with this line","example":"681883059","name":"BAN"},"IMEI":{"type":"string","description":"The IMEI of the device that was activated","example":"990000862471854","name":"IMEI"},"OrderNumber":{"type":"string","description":"The order number of the activation that is being confirmed (see CarrierActivationDetails.OrderNumber)","example":"ORD1234","name":"OrderNumber"},"PhoneNumber":{"type":"string","description":"The phone number of the device that was activated","example":"3023997373","name":"PhoneNumber"},"RemoteActivationID":{"type":"string","description":"Carrier-specific identifier for the activation that is being confirmed (see CarrierActivationDetails.RemoteActivationID)","example":"3023997373","name":"RemoteActivationID"}}},"ConfirmationDateUTC":{"type":"datetime","description":"System generated time the activation confirmation occurred","example":"2015-07-21T15:25:45.323","name":"ConfirmationDateUTC"},"InvoiceId":{"type":"string","description":"Identifier of the invoice that caused these activations to be confirmed","example":"INV0001","name":"InvoiceId"},"InvoiceSubtotal":{"type":"decimal","description":"The subtotal amount from the invoice","example":"53.38","name":"InvoiceSubtotal"},"InvoiceTotal":{"type":"decimal","description":"The total amount from the invoice","example":"61.54","name":"InvoiceTotal"},"LocationId":{"type":"integer","description":"Identifier of the [Location](/api/company-tree/#location) where the transaction occurred","example":"1","name":"LocationId"},"Taxes":{"type":"decimal","description":"The taxes from the invoice","example":"8.16","name":"Taxes"}}}}}}}
+                            
+                        
+                    
+                
+            
+    

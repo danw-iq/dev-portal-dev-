@@ -1,0 +1,108 @@
+---
+title:  {{title | fixTitle }}
+permalink: /api/{{title | replace(" ", "-") }}/
+tags: []
+keywords: 
+audience: 
+last_updated: {{title | insertDate }}
+summary: 
+rouge: false
+---
+%7B% include linkrefs.html %%7D
+
+{% for item in documentation %}{% if item.title == "overview" %}
+## Overview
+
+{{item.content}}{% endif %}{% endfor %}
+
+## Endpoints
+
+* Sandbox: <a href="{{ baseUri | replace("{UrlSuffix}", "demo") }}">{{ baseUri | replace("{UrlSuffix}", "demo") }}</a>
+* Production: <a href="{{ baseUri | replace("{UrlSuffix}", "") }}">{{ baseUri | replace("{UrlSuffix}", "") }}</a>
+
+## Resources
+
+{% if schemas %}{% for schema in schemas %}{% for name, obj in schema %}{{ obj | printResourceTable(name, title) }}
+{% endfor %}{% endfor %}{% endif %}
+
+{% for item in documentation %}{% if item.title == "enumerations" %}{{item.content}}{% endif %}{% endfor %}
+{% for resource in resources %}{% for method in resource.methods %}
+
+<h2 id='{{method.displayName | replace(" ", "-") | lower }}' class='clickable-header top-level-header'>{{method.displayName}}</h2>
+
+{{method.description}}
+
+<h4>Request</h4>
+
+<pre>
+{{method.method | upper }} {{resource.relativeUri}}
+</pre>
+
+{% if method.headers %}
+<h4>Headers</h4>
+<ul>{% for header, headerObj in method.headers %}<li><code>{{header}}: {{headerObj.example}}</code></li>{% endfor %}</ul>
+{% endif %}
+
+{% if resource.uriParameters %}
+<h4>URI Parameters</h4>
+<ul>
+    {% for parameter, objParameter in resource.uriParameters %}
+    <li>
+        <code>{{parameter}}</code> ({% if objParameter.required %}<strong>Required</strong>{% else %}Optional{% endif %}) {% if objParameter.description %} - {{objParameter.description}}{% endif %}
+    </li>
+    {% endfor %}</ul>{% endif %}
+
+{% if method.body["application/json"].schema %}
+
+<h4>Request Parameters</h4>
+
+{{ method.body["application/json"].schema | printRequestParameters(title, method.method) }}{% elif method.body["multipart/form-data"] %}
+
+<h4>Request Parameters</h4>
+
+{{ method.body["multipart/form-data"].formParameters | printFormParameters() }}{% elif method.body["application/x-www-form-urlencoded"] %}
+
+<h4>Request Parameters</h4>
+
+{{ method.body["application/x-www-form-urlencoded"].formParameters | printFormParameters() }}{% endif %}
+
+<h5>Example</h5>
+
+<pre>
+{{method.method | upper }} {{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}
+{% if method.headers %}{% for header, headerObj in method.headers %}{{header}}: {{headerObj.example}}
+{% endfor %}{% endif %}{% if method.body["application/json"].example %}{{ method.body["application/json"].example }}{% elif method.body["application/json"].schema %}{% if method.method == "put" %}{{ method.body["application/json"].schema | printExample(title, false) }}{% else %}{{ method.body["application/json"].schema | printExample(title, true) }}{% endif %}{% endif %}
+</pre>
+
+<h4>Response</h4>
+
+{% for code, body in method.responses %}{% if body %}{% for body, schema in body %}{% for scheme, schemeProperties in schema %}{% if schemeProperties.schema %}
+{% if scheme == "application/json" %} {{ schemeProperties.schema | printResponseSchema(title) }}{% endif %}{% endif %}
+
+<h5>Example</h5>
+
+<pre>
+HTTP {{code}} Content-Type: {{scheme}}
+</pre>{% if schemeProperties.example %}<pre>{{ schemeProperties.example }}</pre>{% elif schemeProperties.schema %}<pre>{{ schemeProperties.schema | printExample(title, null) }}</pre>{% endif %}{% endfor %}{% endfor %}{% else %}
+
+<h5>Example</h5>
+
+<pre>HTTP {{code}}</pre>
+
+{% endif %}{% endfor %}{% endfor %}{% endfor %}{% for item in documentation %}{% if item.title == "extended-examples" %}
+
+<h2 id="extended-examples" class="clickable-header top-level-header">Extended Examples</h2>
+
+{{item.content}}{% endif %}{% if item.title == "searching" %}
+
+<h2 id="searching" class="clickable-header top-level-header">Searching</h2>
+
+{{item.content}}{% endif %}{% if item.title == "pagination" %}
+
+<h2 id="pagination" class="clickable-header top-level-header">Pagination</h2>
+
+{{item.content}}{% endif %}{% if item.title == "errors" %}
+
+<h2 id="errors" class="clickable-header top-level-header">Errors</h2>
+
+{{item.content}}{% endif %}{% endfor %}

@@ -1,0 +1,967 @@
+#%RAML 0.8
+title: epc
+baseUri: https://platformepcdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - ImportProduct: |
+        {
+          "exclude": "true",
+          "name": "ImportProduct",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "RegularProducts": { "type": "array", "arrayType": "object", "ref": "epc.RegularProduct" },
+            "NonStockedProducts": { "type": "array", "arrayType": "object", "ref": "epc.NonStockedProduct" },
+            "NonRevenueProducts": { "type": "array", "arrayType": "object", "ref": "epc.NonRevenueProduct" },
+            "VendorRebateProducts": { "type": "array", "arrayType": "object", "ref": "epc.VendorRebateProduct" }
+          },
+          "required": []
+        }
+        
+
+    
+
+    
+    - ImportProductRegular: |
+        {
+          "exclude": "true",
+          "name": "ImportProductRegular",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "RegularProducts": { "type": "array", "arrayType": "object", "ref": "epc.RegularProduct" }
+          },
+          "required": []
+        }
+        
+
+    
+
+    
+    - ImportProductNonStocked: |
+        {
+          "exclude": "true",
+          "name": "ImportProductNonStocked",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "NonStockedProducts": { "type": "array", "arrayType": "object", "ref": "epc.NonStockedProduct" }
+          },
+          "required": []
+        }
+        
+
+    
+
+    
+    - ImportProductNonRevenue: |
+        {
+          "exclude": "true",
+          "name": "ImportProductNonRevenue",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "NonRevenueProducts": { "type": "array", "arrayType": "object", "ref": "epc.NonRevenueProduct" }
+          },
+          "required": []
+        }                  
+        
+
+    
+
+    
+    - ImportProductVendorRebate: |
+        {
+          "exclude": "true",
+          "name": "ImportProductVendorRebate",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "VendorRebateProducts": { "type": "array", "arrayType": "object", "ref": "epc.VendorRebateProduct" }
+          },
+          "required": []
+        }      
+        
+
+    
+
+    
+    - RegularProduct: |
+        {
+          "name": "RegularProduct",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "For more information about Regular Products, see {{support_RegularProducts}}.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "12", "generated": "true" }, 
+            "Barcodes": { "type": "array", "arrayType": "string", "description": "Barcodes for this Product", "example": "BARCODE123" }, 
+            "ProductName": { "type": "string",  "description": "Name", "example": "iPhone 4S 16GB White" }, 
+            "CategoryName": { "type": "string",  "description": "Path to the Category, delimited by >", "example": "Products > Phones > Smartphones" }, 
+            "ClassificationTreeId": { "type": "integer", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>", "example": "1" },
+            "DaysKeptInStock": { "type": "object", "description": "Number of days the Product can remain in stock", "example": "10" }, 
+            "DefaultPricingAndPurchasing": { "type":"object", "description": "Default pricing", "ref": "epc.RegularProductPricing" }, 
+            "Enabled": { "type": "boolean", "description": "A flag to indicate if this Product is Enabled. Defaults to true", "example": "true" }, 
+            "EnforcedTrackingNumberLength": { "type": "integer", "putDescription":"This value can only be set if Serialized is true", "description": "A value that restricts tracking number length", "example": "50" }, 
+            "ExtendedAttributes": { "type": "array", "arrayType": "object", "description": "Additional attributes to store with the Product", "isNested": "true", "ref": "epc.ExtendedAttribute" }, 
+            "GlCostOfSalesAccountNumber": { "type": "string",  "description": "Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information", "example": "1001" }, 
+            "GlInventoryAccountNumber": { "type": "string",  "description": "Account number for Inventory, see {{support_GLAccountSetup}} for more information", "example": "1002" }, 
+            "GlInventoryCorrectionsAccountNumber": { "type": "string",  "description": "Account number for Inventory Corrections, see {{support_GLAccountSetup}} for more information", "example": "1001" }, 
+            "GlSalesAccountNumber": { "type": "string",  "description": "Account number for Sales, see {{support_GLAccountSetup}} for more information", "example": "1003" }, 
+            "IgnoreAutomaticTaxAddition": { "type": "boolean", "description": "Ensures that taxes will not be added as part of the automatic tax process. Defaults to false", "example": "false" }, 
+            "LocationVendors": { "type":"array", "arrayType": "object", "description": "Vendors for each location", "ref": "epc.LocationVendor" }, 
+            "LongDescription": { "type": "string",  "description": "Long description", "example": "The iPhone 4S is a gradualstep over the iPhone 4." }, 
+            "ManufacturerName": { "type": "string",  "description": "Name of a Manufacturer", "example": "Apple" }, 
+            "ManufacturerSku": { "type": "string",  "description": "Manufacturer SKU", "example": "ABC123" }, 
+            "Model": { "type": "string",  "description": "Model", "example": "iPhone 6" }, 
+            "PricingAndPurchasingLocations": { "type": "array", "arrayType": "object", "description": "Pricing for locations", "ref": "epc.RegularProductPricingLocation" }, 
+            "PricingMethod": { "type": "string",  "description": "See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed", "example": "Fixed" }, 
+            "ProductLabel": { "type": "string",  "description": "Defaults to first 30 characters of the ProductName, but can be edited", "example": "iPhone 4S 16GB White" }, 
+            "ProductTypeId": { "type": "integer", "description": "Identifier for a [ProductType](#producttype)", "example": "0", "generated": "true" },         
+            "ReleaseDate": { "type": "DateTime", "description": "Release Date, in UTC", "example": "2011-10-14T12:00:00.000" }, 
+            "Serialized": { "type": "boolean", "description": "A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.", "example": "true" }, 
+            "SerialNumberPromptText": { "type": "string", "description": "Text displayed when user is prompted to enter a serial number for the product", "example": "Serial prompt text here" }, 
+            "ShortDescription": { "type": "string",  "description": "Short description", "example": "Better than the iPhone 3G" }, 
+            "SourceRowNumber": { "type": "integer", "description": "If this product was imported from a spreadsheet, the row location of the product in the spreadsheet", "example": "15", "generated": "true"},          
+            "Vendors": { "type": "array", "arrayType": "object", "description": "Collection of Vendor SKUs", "ref": "epc.Vendor" },
+            "WarehouseLocation": { "type": "string",  "description": "Name of the Warehouse location", "example": "Cornwall" },
+            "RefundLink": { "type": "string", "description": "Reserved for internal use", "example": "" },                    
+            "ProductLink": { "type": "string", "description": "Reserved for internal use", "example": "" }
+          },
+          "required": [ "DefaultPricingAndPurchasing", "Barcodes", "CategoryName", "ProductName", "ManufacturerName", "ProductLabel" ]
+        }
+        
+
+    
+
+    
+    - ExtendedAttribute: |
+        {
+          "name": "ExtendedAttribute",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "For more information about Regular Products, see {{support_RegularProducts}}",
+          "properties": {
+              "Name": { "type": "string",  "description": "Name", "example": "ProductId" }, 
+              "Value": { "type": "string",  "description": "Value", "example": "66" }
+          },
+          "required": [ "Name", "Value"]
+        }
+        
+
+    
+
+    
+    - RegularProductPricing: |
+        {
+          "name": "RegularProductPricing",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "{{important}}When a new RegularProductPricing is created, the <b>default pricing</b> values will be used for any properties that are not supplied. However, for any subsequent updates, each RegularProductPricing will have to be changed individually as the change(s) to <b>default pricing fields</b> will not propagate.{{end}}",
+          "properties": {
+            "AllowReturns": { "type": "boolean", "description": "A flag to indicate if the Product can be returned", "example": "true" }, 
+            "Discountable": { "type": "boolean", "description": "A flag to indicate if the Product can be discounted, defaults to true", "example": "true" }, 
+            "FloorPrice": { "type": "object", "description": "Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.", "example": "0.0" }, 
+            "ForSale": { "type": "boolean", "description": "A flag to indicate if the product can be sold. Defaults to true", "example": "true" }, 
+            "InvoiceComments": { "type": "string",  "description": "Comments that will be printed on the invoice every time the Product is sold", "example": "Invoice comment" }, 
+            "LockMinMaxed": { "type": "boolean", "description": "A flag to indicate if the MinimumQuantity/MaximumQuantity amounts are locked (true) which prevents them from being updated by mass updates. Defaults to false", "example": "true" }, 
+            "Margin": { "type": "object", "description": "Margin automatically applied to this Product", "example": "1" }, 
+            "MaximumQuantity": { "type": "integer", "description": "Maximum quantity that should be on hand at any time. Defaults to 0", "example": "10" }, 
+            "MinimumQuantity": { "type": "integer", "description": "Minimum quantity that should be on hand at any time. Defaults to 0", "example": "1" }, 
+            "MsrpAmount": { "type": "object", "description": "Manufacturer's suggested retail price. Defaults to 0", "example": "499.99" }, 
+            "MsrpCurrencyCode": { "type": "string",  "description": "Currency", "example": "USD" }, 
+            "Price": { "type": "object", "description": "Company-wide default unit price, must be greater then 0", "example": "499.99" }, 
+            "PrimaryVendorName": { "type": "string",  "description": "Name of the primary vendor for this Product", "example": "Apple" }, 
+            "RefundPeriod": { "type": "integer", "description": "Number of days the Product can be refunded before an override is required to refund. Defaults to 0", "example": "10" }, 
+            "RefundToUsed": { "type": "boolean", "description": "A flag to indicate that this Product can be refunded and then tagged as used. Defaults to true", "example": "false" }, 
+            "ShowOnInvoice": { "type": "boolean", "description": "A flag to indicate if the price should be shown on the invoice", "example": "true" }, 
+            "StoreInStorePrice": { "type": "object", "description": "Store in Store price. See {{support_StoreInStore}} for more information", "example": "399.99" }
+          },
+          "required": [ "Price", "PrimaryVendorName"]
+        }
+        
+
+    
+
+    
+    - RegularProductPricingLocation: |
+        {
+          "name": "RegularProductPricingLocation",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "AllowReturns": { "type": "boolean", "description": "A flag to indicate if the Product can be returned", "example": "true" }, 
+            "Discountable": { "type": "boolean", "description": "A flag to indicate if the Product can be discounted, defaults to true", "example": "true" }, 
+            "FloorPrice": { "type": "object", "description": "Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.", "example": "0.0" }, 
+            "ForSale": { "type": "boolean", "description": "A flag to indicate if the product can be sold. Defaults to true", "example": "true" }, 
+            "InvoiceComments": { "type": "string",  "description": "Comments that will be printed on the invoice every time the Product is sold", "example": "Invoice comment" }, 
+            "LockMinMaxed": { "type": "boolean", "description": "A flag to indicate if the MinimumQuantity/MaximumQuantity amounts are locked (true) which prevents them from being updated by mass updates. Defaults to false", "example": "true" }, 
+            "Margin": { "type": "object", "description": "Margin automatically applied to this Product", "example": "1" }, 
+            "MaximumQuantity": { "type": "integer", "description": "Maximum quantity that should be on hand at any time. Defaults to 0", "example": "10" }, 
+            "MinimumQuantity": { "type": "integer", "description": "Minimum quantity that should be on hand at any time. Defaults to 0", "example": "1" }, 
+            "MsrpAmount": { "type": "object", "description": "Manufacturer's suggested retail price. Defaults to 0", "example": "499.99" }, 
+            "MsrpCurrencyCode": { "type": "string",  "description": "Currency", "example": "USD" }, 
+            "Price": { "type": "object", "description": "Company-wide default unit price, must be greater then 0", "example": "499.99" }, 
+            "PrimaryVendorName": { "type": "string",  "description": "Name of the primary vendor for this Product", "example": "Apple" }, 
+            "RefundPeriod": { "type": "integer", "description": "Number of days the Product can be refunded before an override is required to refund. Defaults to 0", "example": "10" }, 
+            "RefundToUsed": { "type": "boolean", "description": "A flag to indicate that this Product can be refunded and then tagged as used. Defaults to true", "example": "false" }, 
+            "SaleBeginDate": { "type": "DateTime", "description": "Sale begin date", "example": "2015-10-14T12:00:00.000" }, 
+            "SaleEndDate": { "type": "DateTime", "description": "Sale end date", "example": "2015-10-18T12:00:00.000" }, 
+            "SalePrice": { "type": "object", "description": "Sale price will override FloorPrice if it is lower. Defaults to 0", "example": "399.99" }, 
+            "ShowOnInvoice": { "type": "boolean", "description": "A flag to indicate if the price should be shown on the invoice", "example": "true" }, 
+            "StoreInStorePrice": { "type": "object", "description": "Store in Store price. See {{support_StoreInStore}} for more information", "example": "399.99" },
+            "TargetLocationName": { "type": "string",  "description": "Name of a channel, region, district or location to apply this pricing to. To select the entire Company, leave this value empty and select All for TargetLocationType", "example": "Saskatchewan" }, 
+            "TargetLocationType": { "type": "string",  "description": "See [TargetLocations](#targetlocations) for a list of acceptable values", "example": "RegionName" }
+          },
+          "required": [ "Price", "PrimaryVendorName", "TargetLocationType" ]
+        }      
+        
+
+    
+
+    
+    - NonStockedProduct: |
+        {
+          "name": "NonStockedProduct",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "For more information about Non-Stocked Products, see {{support_NonStockedProducts}}.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "14", "generated": "true" }, 
+            "ProductName": { "type": "string",  "description": "Name", "example": "Prepaid Rate Plan" }, 
+            "CategoryName": { "type": "string",  "description": "Name of the Category/Classification for this Product", "example": "Rate Plans > Rate Plans" }, 
+            "ClassificationTreeId": { "type": "integer", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>", "example": "1" },          
+            "DefaultPricing": { "type":"object", "description": "Default pricing", "ref": "epc.NonStockedProductPricing" },   
+            "Enabled": { "type": "boolean", "description": "A flag to indicate if this Product is Enabled. Defaults to true", "example": "true" }, 
+            "EnforcedTrackingNumberLength": { "type": "integer", "putDescription":"This value can only be set if Serialized is true", "description": "A value that restricts tracking number length", "example": "50" }, 
+            "ExtendedAttributes": { "type": "array", "arrayType": "object", "description": "Additional attributes to store with the Product", "isNested": "true", "ref": "epc.ExtendedAttribute" },           
+            "FloorPrice": { "type": "object", "description": "Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.", "example": "0.0" },           
+            "GlCostOfSalesAccountNumber": { "type": "string",  "description": "Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information", "example": "1001" }, 
+            "GlInventoryAccountNumber": { "type": "string",  "description": "Account number for Inventory, see {{support_GLAccountSetup}} for more information", "example": "1002" }, 
+            "GlSalesAccountNumber": { "type": "string",  "description": "Account number for Sales, see {{support_GLAccountSetup}} for more information", "example": "1003" }, 
+            "IgnoreAutomaticTaxAddition": { "type": "boolean", "description": "Ensures that taxes will not be added as part of the automatic tax process. Defaults to false", "example": "true" }, 
+            "LongDescription": { "type": "string",  "description": "Long description", "example": "Prepaid plan forpeople on the go" }, 
+            "PricingLocations": { "type": "array", "arrayType": "object", "description": "Pricing for Locations", "ref": "epc.NonStockedProductPricingLocation" },   
+            "PricingMethod": { "type": "string",  "description": "See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed", "example": "Fixed" }, 
+            "ProductLabel": { "type": "string",  "description": "Defaults to first 30 characters of the ProductName, but can be edited", "example": "Prepaid Rate Plan" }, 
+            "ProductTypeId": { "type": "integer", "description": "Identifier for a [ProductType](#producttype)", "example": "2", "generated": "true" },
+            "Serialized": { "type": "boolean", "description": "A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.", "example": "false" }, 
+            "SerialNumberPromptText": { "type": "string",  "description": "Text displayed when user is prompted to enter a serial number for the product", "example": "null" }, 
+            "ShortDescription": { "type": "string",  "description": "Short description", "example": "Prepaid plan" },
+            "SourceRowNumber": { "type": "integer", "description": "If this product was imported from a spreadsheet, the row location of the product in the spreadsheet", "example": "15", "generated": "true"},          
+            "VendorSku": { "type": "string", "putDescription" : "If provided, must be unique per Vendor", "description": "Vendor sku", "example": "DEF987" }   ,     
+            "RefundLink": { "type": "string", "description": "Reserved for internal use", "example": "" },                    
+            "ProductLink": { "type": "string", "description": "Reserved for internal use", "example": "" }
+          },
+          "required": [ "CategoryName", "ProductName", "ProductLabel", "DefaultPricing" ]
+        }
+        
+
+    
+
+    
+    - NonStockedProductPricing: |
+        {
+          "name": "NonStockedProductPricing",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "{{important}}When a new NonStockedProductPricing is created, the <b>default pricing</b> values will be used for any properties that are not supplied. However, for any subsequent updates, each NonStockedProductPricing will have to be changed individually as the change(s) to <b>default pricing fields</b> will not propagate.{{end}}",
+          "properties": {
+            "AllowReturns": { "type": "boolean", "description": "A flag to indicate if the Product can be returned. Defaults to true", "example": "false" }, 
+            "CarrierPrice": { "type": "object", "description": "Carrier price", "example": "0.0" }, 
+            "Cost": { "type": "object", "description": "Cost of the Item from the Vendor. Defaults to 0", "example": "0.0" }, 
+            "Discountable": { "type": "boolean", "description": "A flag to indicate if the Product can be discounted. Defaults to true", "example": "false" }, 
+            "FloorPrice": { "type": "object", "description": "Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.", "example": "0.0" }, 
+            "ForSale": { "type": "boolean", "description": "A flag to indicate if the product can be sold. Defaults to true", "example": "true" }, 
+            "InvoiceComments": { "type": "string",  "description": "Comments that will be printed on the invoice every time the Product is sold", "example": "Invoice comment" }, 
+            "Margin": { "type": "object", "description": "Margin automatically applied to this Product", "example": "0.0" }, 
+            "Price": { "type": "object", "description": "Company-wide default unit price, must be greater then 0", "example": "499.99" }, 
+            "RefundPeriod": { "type": "integer", "description": "Number of days before the Product can be refunded, in days", "example": "null" }, 
+            "ShowOnInvoice": { "type": "boolean", "description": "A flag to indicate if the price should be shown on the invoice", "example": "true" }, 
+            "StoreInStorePrice": { "type": "object", "description": "Store in Store price. See {{support_StoreInStore}} for more information", "example": "399.99" }
+          },
+          "required": [ "Price" ]
+        }
+        
+
+    
+
+    
+    - NonStockedProductPricingLocation: |
+        {
+          "name": "NonStockedProductPricingLocation",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "AllowReturns": { "type": "boolean", "description": "A flag to indicate if the Product can be returned. Defaults to true", "example": "false" }, 
+            "CarrierPrice": { "type": "object", "description": "Carrier price", "example": "0.0" }, 
+            "Cost": { "type": "object", "description": "Cost of the Item from the Vendor. Defaults to 0", "example": "0.0" }, 
+            "Discountable": { "type": "boolean", "description": "A flag to indicate if the Product can be discounted. Defaults to true", "example": "false" }, 
+            "FloorPrice": { "type": "object", "description": "Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.", "example": "0.0" }, 
+            "ForSale": { "type": "boolean", "description": "A flag to indicate if the product can be sold. Defaults to true", "example": "true" }, 
+            "InvoiceComments": { "type": "string",  "description": "Comments that will be printed on the invoice every time the Product is sold", "example": "Invoice comment" }, 
+            "Margin": { "type": "object", "description": "Margin automatically applied to this Product", "example": "0.0" }, 
+            "Price": { "type": "object", "description": "Company-wide default unit price, must be greater then 0", "example": "499.99" }, 
+            "SalePrice": { "type": "object", "description": "Sale price, will override Floor Price if it is lower. Defaults to 0", "example": "0.0" }, 
+            "SaleBeginDate": { "type": "DateTime", "description": "Sale begin date", "example": "null" }, 
+            "SaleEndDate": { "type": "DateTime", "description": "Sale end date", "example": "null" },         
+            "ShowOnInvoice": { "type": "boolean", "description": "A flag to indicate if the price should be shown on the invoice", "example": "true" }, 
+            "RefundPeriod": { "type": "integer", "description": "Number of days before the Product can be refunded, in days", "example": "null" }, 
+            "StoreInStorePrice": { "type": "object", "description": "Store in Store price. See {{support_StoreInStore}} for more information", "example": "399.99" },
+            "TargetLocationName": { "type": "string",  "description": "Applies pricing to a single location, or all locations in a company, channel, region or district", "example": "Saskatchewan" }, 
+            "TargetLocationType": { "type": "string",  "description": "Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values", "example": "RegionName" } 
+          },
+          "required": [ "Price", "TargetLocationType"]
+        }
+        
+
+    
+
+    
+    - VendorRebateProduct: |
+        {
+          "name": "VendorRebateProduct",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "For more information about Vendor Rebates, see {{support_VendorRebates}}.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "16", "generated": "true" }, 
+            "VendorName": { "type": "string",  "description": "Vendor name", "example": "SampleVendor" }, 
+            "ProductName": { "type": "string",  "description": "Name", "example": "2 YR New Act" }, 
+            "CategoryName": { "type": "string",  "description": "Name of the Category/Classification for this Product", "example": "Rate Plans > Rate Plan Rebates" }, 
+            "ClassificationTreeId": { "type": "integer", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>", "example": "1" },         
+            "DefaultPricing": { "type":"object", "description": "Default pricing information", "ref": "epc.NonStockedProductPricing" }, 
+            "Enabled": { "type": "boolean", "description": "A flag to indicate if this Product is Enabled. Defaults to true", "example": "true" }, 
+            "EnforcedTrackingNumberLength": { "type": "integer", "putDescription":"This value can only be set if Serialized is true", "description": "A value that restricts tracking number length", "example": "50" }, 
+            "ExtendedAttributes": { "type": "array", "arrayType": "object", "description": "Additional attributes to store with the Product", "isNested": "true", "ref": "epc.ExtendedAttribute" },           
+            "GlCostOfSalesAccountNumber": { "type": "string",  "description": "Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information", "example": "1001" }, 
+            "GlInventoryAccountNumber": { "type": "string",  "description": "Account number for Inventory, see {{support_GLAccountSetup}} for more information", "example": "1002" }, 
+            "GlSalesAccountNumber": { "type": "string",  "description": "Account number for Sales, see {{support_GLAccountSetup}} for more information", "example": "1003" }, 
+            "IgnoreAutomaticTaxAddition": { "type": "boolean", "description": "Ensures that taxes will not be added as part of the automatic tax process. Defaults to false", "example": "false" }, 
+            "LongDescription": { "type": "string",  "description": "Long description", "example": "Rebate on 2 year actiations" }, 
+            "PricingLocations": { "type":"array", "arrayType": "object", "description": "Pricing for Locations", "ref": "epc.NonStockedProductPricingLocation" }, 
+            "PricingMethod": { "type": "string",  "description": "See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed", "example": "Fixed" }, 
+            "ProductLabel": { "type": "string",  "description": "Defaults to first 30 characters of the ProductName, but can be edited", "example": "2 YR New Act" }, 
+            "ProductTypeId": { "type": "integer", "description": "Identifier for a [ProductType](#producttype)", "example": "1", "generated": "true" },          
+            "Serialized": { "type": "boolean", "description": "A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.", "example": "true" }, 
+            "SerialNumberPromptText": { "type": "string", "description": "Text displayed when user is prompted to enter a serial number for the product", "example": "Serial prompt text here" }, 
+            "ShortDescription": { "type": "string",  "description": "Short description", "example": "2 yr rebate" }, 
+            "SourceRowNumber": { "type": "integer", "description": "If this product was imported from a spreadsheet, the row location of the product in the spreadsheet", "example": "15", "generated": "true"},          
+            "VendorAccountName": { "type": "string",  "description": "Vendor name", "example": "Verizon" },
+            "VendorSku": { "type": "string", "putDescription" : "If provided, must be unique per Vendor", "description": "Vendor sku", "example": "DEF987" },
+            "RefundLink": { "type": "string", "description": "Reserved for internal use", "example": "" },                    
+            "ProductLink": { "type": "string", "description": "Reserved for internal use", "example": "" }          
+          },
+          "required": [ "CategoryName", "ProductName", "ProductLabel", "DefaultPricing" ]
+        }
+        
+
+    
+
+    
+    - NonRevenueProduct: |
+        {
+          "name": "NonRevenueProduct",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "{{note}}The NonStockedProduct and NonRevenueProduct resources are identical, but will diverge in the future as different properties are added the resources{{end}}\n\nFor more information about Non-Revenue Products, see {{support_NonRevenueProducts}}",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "18", "generated": "true" }, 
+            "ProductName": { "type": "string",  "description": "Name", "example": "Recycling Fee" }, 
+            "CategoryName": { "type": "string",  "description": "Name of the Category/Classification for this Product", "example": "Misc > Misc. Fees" }, 
+            "ClassificationTreeId": { "type": "integer", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>", "example": "1" },          
+            "DefaultPricing": { "type": "object", "description": "Default pricing information", "ref": "epc.NonStockedProductPricing" }, 
+            "Enabled": { "type": "boolean", "description": "A flag to indicate if this Product is Enabled. Defaults to true", "example": "true" }, 
+            "EnforcedTrackingNumberLength": { "type": "integer", "putDescription":"This value can only be set if Serialized is true", "description": "A value that restricts tracking number length", "example": "50" }, 
+            "ExtendedAttributes": { "type": "array", "arrayType": "object", "description": "Additional attributes to store with the Product", "isNested": "true", "ref": "epc.ExtendedAttribute" }, 
+            "FloorPrice": { "type": "object", "description": "Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.", "example": "0.0" },                     
+            "GlCostOfSalesAccountNumber": { "type": "string",  "description": "Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information", "example": "1001" }, 
+            "GlInventoryAccountNumber": { "type": "string",  "description": "Account number for Inventory, see {{support_GLAccountSetup}} for more information", "example": "1002" }, 
+            "GlSalesAccountNumber": { "type": "string",  "description": "Account number for Sales, see {{support_GLAccountSetup}} for more information", "example": "1003" }, 
+            "IgnoreAutomaticTaxAddition": { "type": "boolean", "description": "Ensures that taxes will not be added as part of the automatic tax process. Defaults to false", "example": "false" }, 
+            "LongDescription": { "type": "string",  "description": "Long description", "example": "Recycling fee to disposeof old handset" }, 
+            "PricingLocations": { "type":"array", "arrayType": "object", "description": "Pricing for Locations", "ref": "epc.NonStockedProductPricingLocation" },    
+            "PricingMethod": { "type": "string",  "description": "See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed", "example": "Fixed" }, 
+            "ProductLabel": { "type": "string",  "description": "Defaults to first 30 characters of the ProductName, but can be edited", "example": "Recycling Fee" }, 
+            "ProductTypeId": { "type": "integer", "description": "Identifier for a [ProductType](#producttype)", "example": "4", "generated": "true" },
+            "Serialized": { "type": "boolean", "description": "A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.", "example": "true" }, 
+            "SerialNumberPromptText": { "type": "string", "description": "Text displayed when user is prompted to enter a serial number for the product", "example": "Serial prompt text here" }, 
+            "ShortDescription": { "type": "string",  "description": "Short description", "example": "Recycling fee" },
+            "SourceRowNumber": { "type": "integer", "description": "If this product was imported from a spreadsheet, the row location of the product in the spreadsheet", "example": "15", "generated": "true"},          
+            "VendorSku": { "type": "string", "putDescription" : "If provided, must be unique per Vendor", "description": "Vendor sku", "example": "DEF987" },
+            "RefundLink": { "type": "string", "description": "Reserved for internal use", "example": "" },                    
+            "ProductLink": { "type": "string", "description": "Reserved for internal use", "example": "" }          
+          },
+          "required": [ "CategoryName", "DefaultPricing", "ProductName", "ProductLabel" ]
+        }
+        
+
+    
+
+    
+    - LocationVendor: |
+        {
+          "name": "LocationVendor",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Cost": { "type": "object", "description": "Vendor cost. Defaults to 0", "example": "99.99" }, 
+            "DiscontinuedDate": { "type": "DateTime", "description": "Date the Product will no longer be sold, in UTC", "example": "2016-01-01T12:00:00.000" }, 
+            "DoNotOrder": { "type": "boolean", "putDescription":"Defaults to false, case sensitive", "description": "A flag to indicate the Product can not be ordered from this Location. Defaults to false", "example": "false" }, 
+            "EndOfLife": { "type": "DateTime", "description": "Date for the Product as appropriate", "example": "2016-01-01T12:00:00.000" }, 
+            "SpecialOrder": { "type": "boolean", "putDescription":"Defaults to false, case sensitive", "description": "A flag to indicate that the Product is a special order. Defaults to false", "example": "false" }, 
+            "TargetLocationName": { "type": "string",  "description": "Applies pricing to a single location, or all locations in a company, channel, region or district", "example": "Saskatchewan" }, 
+            "TargetLocationType": { "type": "string",  "description": "Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values", "example": "RegionName" }, 
+            "VendorName": { "type": "string",  "description": "Vendor name", "example": "SampleVendor" }, 
+            "WriteOff": { "type": "boolean", "putDescription":"Defaults to false, case sensitive", "description": "A flag to indicate that the Product is a write-off. Defaults to false", "example": "false" }
+          },
+          "required": [ "TargetLocationType", "VendorName"]
+        }
+        
+
+    
+
+    
+    - Vendor: |
+        {
+          "name": "Vendor",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Cost": { "type": "object", "description": "Vendor cost. Defaults to 0", "example": "99.99" }, 
+            "DiscontinuedDate": { "type": "DateTime", "description": "Date the Product will no longer be sold, in UTC", "example": "2016-01-01T12:00:00.000" }, 
+            "DoNotOrder": { "type": "boolean","putDescription":"Defaults to false, case sensitive", "description": "A flag to indicate the Product can not be ordered from this Location. Defaults to false", "example": "false" }, 
+            "EndOfLife": { "type": "DateTime", "description": "Date for the Product as appropriate", "example": "2016-01-01T12:00:00.000" }, 
+            "SpecialOrder": { "type": "boolean","putDescription":"Defaults to false, case sensitive", "description": "A flag to indicate that the Product is a special order. Defaults to false", "example": "false" },           
+            "VendorName": { "type": "string", "description": "Vendor name", "example": "SampleVendor" }, 
+            "VendorSku": { "type": "string", "putDescription" : "If provided, must be unique per Vendor", "description": "Vendor sku", "example": "DEF987" },
+            "WriteOff": { "type": "boolean", "putDescription":"Defaults to false, case sensitive", "description": "A flag to indicate that the Product is a write-off. Defaults to false", "example": "false" }
+          },
+          "required": [ "VendorName", "VendorSku" ]
+        }      
+        
+
+    
+
+    
+    - Status: |
+        {
+          "name": "Status",
+          "type": "object",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Status": { "type": "string", "putDescription": "Relative endpoint of status", "example":"/v1/companies(21090)/batchStatus(123)"},
+            "TimestampUTC": { "type": "datetime", "example": "2016-11-15T16:43:15.1396674Z" }
+          }
+        }      
+        
+
+    
+
+    
+    - BatchStatus: |
+        {
+          "name": "BatchStatus",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "BatchId": { "type": "integer", "description": "Identifier of the Batch", "example": "3" }, 
+            "CompanyId": { "type": "integer", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>", "example": "14146" },           
+            "DateCreated": { "type": "datetime", "description": "Date this Batch was created", "example": "2015-09-14T22:11:16.5670000Z" }, 
+            "FailedCount": { "type": "integer", "description": "Number of products that failled to process", "example": "1" },
+            "PendingCount": { "type": "integer", "description": "Number of products pending processing", "example": "1" },       
+            "Products": { "type": "array", "arrayType": "object", "description": "Product statuses", "ref": "epc.ProductStatus" },
+            "SourceFileName": { "type": "string", "description": "Name of a spreadsheet, if this batch was created from an import", "example": "Products.xslx" },
+            "StatusCode": { "type": "integer", "description": "Status of the Batch, see [BatchStatusCode](#batchstatuscode) for a list of possible values", "example": "3" }, 
+            "StatusName": { "type": "string",  "description": "Name of the associated BatchStatus", "example": "Completed" }, 
+            "SuccessfulCount": { "type": "integer", "description": "Number of products successfully processed", "example": "1" },
+            "TotalProductCount": { "type": "integer", "description": "Total number of Products in the Batch", "example": "2" }
+          }
+        }
+        
+
+    
+
+    
+    - ProductStatus: |
+        {
+          "name": "ProductStatus",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ProductName": { "type": "string",  "description": "Product name", "example": "Galaxy Note 6" },       
+            "SourceRowNumber": { "type": "integer", "description": "If this product was imported from a spreadsheet, the row location of the product in the spreadsheet", "example": "15"},
+            "StatusCode": { "type": "integer", "description": "Status of the import, see [StatusCode](#statuscode) for a list of possible values", "example": "2" }, 
+            "StatusName": { "type": "string",  "description": "Name of the associated StatusCode", "example": "Error" }, 
+            "ErrorMessage": { "type": "string",  "description": "Error message", "example": "No matching RQ manufacturer found with the name appple" }
+          }
+        }      
+        
+
+    
+
+    
+    - PendingProducts: |
+        {
+          "name": "PendingProducts",
+          "type": "object",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CompanyId": { "type": "integer", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>", "example": "14146" }, 
+            "BatchId": { "type": "integer", "description": "Identifier of the Batch", "example": "3" }, 
+            "RegularProducts": { "type": "array", "arrayType": "object", "ref": "epc.RegularProduct" },
+            "NonStockedProducts": { "type": "array", "arrayType": "object", "ref": "epc.NonStockedProduct" },
+            "NonRevenueProducts": { "type": "array", "arrayType": "object", "ref": "epc.NonRevenueProduct" },
+            "VendorRebateProducts": { "type": "array", "arrayType": "object", "ref": "epc.VendorRebateProduct" },
+            "SourceFileName": { "type": "string", "description": "Name of a spreadsheet, if this batch was created from an import", "example": "Products.xslx" },
+            "TotalProductCount": { "type": "integer", "description": "Total number of Products in the Batch", "example": "2" }
+          }
+        }
+        
+
+    
+
+    
+    - BatchList: |
+        {
+          "name": "BatchList",
+          "type": "object",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Items": { "type": "array", "arrayType": "object", "ref": "epc.BatchStatus" },
+            "MetaData": { "type": "object", "ref": "epc.MetaData" }
+          }
+        }
+        
+
+    
+
+    
+    - MetaData: |
+        {
+          "name": "MetaData",
+          "type": "object",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "TotalResults": { "type": "integer", "putDescription": "Number of batches", "example": "1" }
+          }
+        }      
+        
+
+    
+
+
+/companies({CompanyId})/products:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for the Company
+          
+      
+    post:
+        
+        displayName: Bulk Importing Products to RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"RegularProducts":[{"Barcodes":["BARCODE123"],"ProductName":"iPhone 4S 16GB White","CategoryName":"Products > Phones > Smartphones","ClassificationTreeId":1,"DaysKeptInStock":10,"DefaultPricingAndPurchasing":{"AllowReturns":true,"Discountable":true,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","LockMinMaxed":true,"Margin":1,"MaximumQuantity":10,"MinimumQuantity":1,"MsrpAmount":499.99,"MsrpCurrencyCode":"USD","Price":499.99,"PrimaryVendorName":"Apple","RefundPeriod":10,"RefundToUsed":false,"ShowOnInvoice":true,"StoreInStorePrice":399.99},"Enabled":true,"EnforcedTrackingNumberLength":50,"ExtendedAttributes":[{"Name":"ProductId","Value":"66"}],"GlCostOfSalesAccountNumber":"1001","GlInventoryAccountNumber":"1002","GlInventoryCorrectionsAccountNumber":"1001","GlSalesAccountNumber":"1003","IgnoreAutomaticTaxAddition":false,"LocationVendors":[{"Cost":99.99,"DiscontinuedDate":"2016-01-01T12:00:00.000","DoNotOrder":false,"EndOfLife":"2016-01-01T12:00:00.000","SpecialOrder":false,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName","VendorName":"SampleVendor","WriteOff":false}],"LongDescription":"The iPhone 4S is a gradualstep over the iPhone 4.","ManufacturerName":"Apple","ManufacturerSku":"ABC123","Model":"iPhone 6","PricingAndPurchasingLocations":[{"AllowReturns":true,"Discountable":true,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","LockMinMaxed":true,"Margin":1,"MaximumQuantity":10,"MinimumQuantity":1,"MsrpAmount":499.99,"MsrpCurrencyCode":"USD","Price":499.99,"PrimaryVendorName":"Apple","RefundPeriod":10,"RefundToUsed":false,"SaleBeginDate":"2015-10-14T12:00:00.000","SaleEndDate":"2015-10-18T12:00:00.000","SalePrice":399.99,"ShowOnInvoice":true,"StoreInStorePrice":399.99,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName"}],"PricingMethod":"Fixed","ProductLabel":"iPhone 4S 16GB White","ReleaseDate":"2011-10-14T12:00:00.000","Serialized":true,"SerialNumberPromptText":"Serial prompt text here","ShortDescription":"Better than the iPhone 3G","Vendors":[{"Cost":99.99,"DiscontinuedDate":"2016-01-01T12:00:00.000","DoNotOrder":false,"EndOfLife":"2016-01-01T12:00:00.000","SpecialOrder":false,"VendorName":"SampleVendor","VendorSku":"DEF987","WriteOff":false}],"WarehouseLocation":"Cornwall"}],"NonStockedProducts":[{"ProductName":"Prepaid Rate Plan","CategoryName":"Rate Plans > Rate Plans","ClassificationTreeId":1,"DefaultPricing":{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"RefundPeriod":null,"ShowOnInvoice":true,"StoreInStorePrice":399.99},"Enabled":true,"EnforcedTrackingNumberLength":50,"ExtendedAttributes":[{"Name":"ProductId","Value":"66"}],"FloorPrice":0,"GlCostOfSalesAccountNumber":"1001","GlInventoryAccountNumber":"1002","GlSalesAccountNumber":"1003","IgnoreAutomaticTaxAddition":true,"LongDescription":"Prepaid plan forpeople on the go","PricingLocations":[{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"SalePrice":0,"SaleBeginDate":"null","SaleEndDate":"null","ShowOnInvoice":true,"RefundPeriod":null,"StoreInStorePrice":399.99,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName"}],"PricingMethod":"Fixed","ProductLabel":"Prepaid Rate Plan","Serialized":false,"SerialNumberPromptText":"null","ShortDescription":"Prepaid plan","VendorSku":"DEF987"}],"NonRevenueProducts":[{"ProductName":"Recycling Fee","CategoryName":"Misc > Misc. Fees","ClassificationTreeId":1,"DefaultPricing":{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"RefundPeriod":null,"ShowOnInvoice":true,"StoreInStorePrice":399.99},"Enabled":true,"EnforcedTrackingNumberLength":50,"ExtendedAttributes":[{"Name":"ProductId","Value":"66"}],"FloorPrice":0,"GlCostOfSalesAccountNumber":"1001","GlInventoryAccountNumber":"1002","GlSalesAccountNumber":"1003","IgnoreAutomaticTaxAddition":false,"LongDescription":"Recycling fee to disposeof old handset","PricingLocations":[{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"SalePrice":0,"SaleBeginDate":"null","SaleEndDate":"null","ShowOnInvoice":true,"RefundPeriod":null,"StoreInStorePrice":399.99,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName"}],"PricingMethod":"Fixed","ProductLabel":"Recycling Fee","Serialized":true,"SerialNumberPromptText":"Serial prompt text here","ShortDescription":"Recycling fee","VendorSku":"DEF987"}],"VendorRebateProducts":[{"VendorName":"SampleVendor","ProductName":"2 YR New Act","CategoryName":"Rate Plans > Rate Plan Rebates","ClassificationTreeId":1,"DefaultPricing":{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"RefundPeriod":null,"ShowOnInvoice":true,"StoreInStorePrice":399.99},"Enabled":true,"EnforcedTrackingNumberLength":50,"ExtendedAttributes":[{"Name":"ProductId","Value":"66"}],"GlCostOfSalesAccountNumber":"1001","GlInventoryAccountNumber":"1002","GlSalesAccountNumber":"1003","IgnoreAutomaticTaxAddition":false,"LongDescription":"Rebate on 2 year actiations","PricingLocations":[{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"SalePrice":0,"SaleBeginDate":"null","SaleEndDate":"null","ShowOnInvoice":true,"RefundPeriod":null,"StoreInStorePrice":399.99,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName"}],"PricingMethod":"Fixed","ProductLabel":"2 YR New Act","Serialized":true,"SerialNumberPromptText":"Serial prompt text here","ShortDescription":"2 yr rebate","VendorAccountName":"Verizon","VendorSku":"DEF987"}]}
+                    
+                schema: |
+                    {"exclude":"true","name":"ImportProduct","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"RegularProducts":{"type":"array","arrayType":"object","ref":"epc.RegularProduct","properties":{"Id":{"type":"integer","description":"Identifier","example":"12","generated":"true"},"Barcodes":{"type":"array","arrayType":"string","description":"Barcodes for this Product","example":"BARCODE123","name":"Barcodes"},"ProductName":{"type":"string","description":"Name","example":"iPhone 4S 16GB White","name":"ProductName"},"CategoryName":{"type":"string","description":"Path to the Category, delimited by >","example":"Products > Phones > Smartphones","name":"CategoryName"},"ClassificationTreeId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>","example":"1","name":"ClassificationTreeId"},"DaysKeptInStock":{"type":"object","description":"Number of days the Product can remain in stock","example":"10","name":"DaysKeptInStock"},"DefaultPricingAndPurchasing":{"type":"object","description":"Default pricing","ref":"epc.RegularProductPricing","name":"DefaultPricingAndPurchasing","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned","example":"true","name":"AllowReturns"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted, defaults to true","example":"true","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"LockMinMaxed":{"type":"boolean","description":"A flag to indicate if the MinimumQuantity/MaximumQuantity amounts are locked (true) which prevents them from being updated by mass updates. Defaults to false","example":"true","name":"LockMinMaxed"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"1","name":"Margin"},"MaximumQuantity":{"type":"integer","description":"Maximum quantity that should be on hand at any time. Defaults to 0","example":"10","name":"MaximumQuantity"},"MinimumQuantity":{"type":"integer","description":"Minimum quantity that should be on hand at any time. Defaults to 0","example":"1","name":"MinimumQuantity"},"MsrpAmount":{"type":"object","description":"Manufacturer's suggested retail price. Defaults to 0","example":"499.99","name":"MsrpAmount"},"MsrpCurrencyCode":{"type":"string","description":"Currency","example":"USD","name":"MsrpCurrencyCode"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"PrimaryVendorName":{"type":"string","description":"Name of the primary vendor for this Product","example":"Apple","name":"PrimaryVendorName"},"RefundPeriod":{"type":"integer","description":"Number of days the Product can be refunded before an override is required to refund. Defaults to 0","example":"10","name":"RefundPeriod"},"RefundToUsed":{"type":"boolean","description":"A flag to indicate that this Product can be refunded and then tagged as used. Defaults to true","example":"false","name":"RefundToUsed"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"}},"required":["Price","PrimaryVendorName"]},"Enabled":{"type":"boolean","description":"A flag to indicate if this Product is Enabled. Defaults to true","example":"true","name":"Enabled"},"EnforcedTrackingNumberLength":{"type":"integer","putDescription":"This value can only be set if Serialized is true","description":"A value that restricts tracking number length","example":"50","name":"EnforcedTrackingNumberLength"},"ExtendedAttributes":{"type":"array","arrayType":"object","description":"Additional attributes to store with the Product","isNested":"true","ref":"epc.ExtendedAttribute","name":"ExtendedAttributes","properties":{"Name":{"type":"string","description":"Name","example":"ProductId","name":"Name"},"Value":{"type":"string","description":"Value","example":"66","name":"Value"}},"required":["Name","Value"]},"GlCostOfSalesAccountNumber":{"type":"string","description":"Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlCostOfSalesAccountNumber"},"GlInventoryAccountNumber":{"type":"string","description":"Account number for Inventory, see {{support_GLAccountSetup}} for more information","example":"1002","name":"GlInventoryAccountNumber"},"GlInventoryCorrectionsAccountNumber":{"type":"string","description":"Account number for Inventory Corrections, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlInventoryCorrectionsAccountNumber"},"GlSalesAccountNumber":{"type":"string","description":"Account number for Sales, see {{support_GLAccountSetup}} for more information","example":"1003","name":"GlSalesAccountNumber"},"IgnoreAutomaticTaxAddition":{"type":"boolean","description":"Ensures that taxes will not be added as part of the automatic tax process. Defaults to false","example":"false","name":"IgnoreAutomaticTaxAddition"},"LocationVendors":{"type":"array","arrayType":"object","description":"Vendors for each location","ref":"epc.LocationVendor","name":"LocationVendors","properties":{"Cost":{"type":"object","description":"Vendor cost. Defaults to 0","example":"99.99","name":"Cost"},"DiscontinuedDate":{"type":"datetime","description":"Date the Product will no longer be sold, in UTC","example":"2016-01-01T12:00:00.000","name":"DiscontinuedDate"},"DoNotOrder":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate the Product can not be ordered from this Location. Defaults to false","example":"false","name":"DoNotOrder"},"EndOfLife":{"type":"datetime","description":"Date for the Product as appropriate","example":"2016-01-01T12:00:00.000","name":"EndOfLife"},"SpecialOrder":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate that the Product is a special order. Defaults to false","example":"false","name":"SpecialOrder"},"TargetLocationName":{"type":"string","description":"Applies pricing to a single location, or all locations in a company, channel, region or district","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"},"VendorName":{"type":"string","description":"Vendor name","example":"SampleVendor","name":"VendorName"},"WriteOff":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate that the Product is a write-off. Defaults to false","example":"false","name":"WriteOff"}},"required":["TargetLocationType","VendorName"]},"LongDescription":{"type":"string","description":"Long description","example":"The iPhone 4S is a gradualstep over the iPhone 4.","name":"LongDescription"},"ManufacturerName":{"type":"string","description":"Name of a Manufacturer","example":"Apple","name":"ManufacturerName"},"ManufacturerSku":{"type":"string","description":"Manufacturer SKU","example":"ABC123","name":"ManufacturerSku"},"Model":{"type":"string","description":"Model","example":"iPhone 6","name":"Model"},"PricingAndPurchasingLocations":{"type":"array","arrayType":"object","description":"Pricing for locations","ref":"epc.RegularProductPricingLocation","name":"PricingAndPurchasingLocations","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned","example":"true","name":"AllowReturns"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted, defaults to true","example":"true","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"LockMinMaxed":{"type":"boolean","description":"A flag to indicate if the MinimumQuantity/MaximumQuantity amounts are locked (true) which prevents them from being updated by mass updates. Defaults to false","example":"true","name":"LockMinMaxed"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"1","name":"Margin"},"MaximumQuantity":{"type":"integer","description":"Maximum quantity that should be on hand at any time. Defaults to 0","example":"10","name":"MaximumQuantity"},"MinimumQuantity":{"type":"integer","description":"Minimum quantity that should be on hand at any time. Defaults to 0","example":"1","name":"MinimumQuantity"},"MsrpAmount":{"type":"object","description":"Manufacturer's suggested retail price. Defaults to 0","example":"499.99","name":"MsrpAmount"},"MsrpCurrencyCode":{"type":"string","description":"Currency","example":"USD","name":"MsrpCurrencyCode"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"PrimaryVendorName":{"type":"string","description":"Name of the primary vendor for this Product","example":"Apple","name":"PrimaryVendorName"},"RefundPeriod":{"type":"integer","description":"Number of days the Product can be refunded before an override is required to refund. Defaults to 0","example":"10","name":"RefundPeriod"},"RefundToUsed":{"type":"boolean","description":"A flag to indicate that this Product can be refunded and then tagged as used. Defaults to true","example":"false","name":"RefundToUsed"},"SaleBeginDate":{"type":"datetime","description":"Sale begin date","example":"2015-10-14T12:00:00.000","name":"SaleBeginDate"},"SaleEndDate":{"type":"datetime","description":"Sale end date","example":"2015-10-18T12:00:00.000","name":"SaleEndDate"},"SalePrice":{"type":"object","description":"Sale price will override FloorPrice if it is lower. Defaults to 0","example":"399.99","name":"SalePrice"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"},"TargetLocationName":{"type":"string","description":"Name of a channel, region, district or location to apply this pricing to. To select the entire Company, leave this value empty and select All for TargetLocationType","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"See [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"}},"required":["Price","PrimaryVendorName","TargetLocationType"]},"PricingMethod":{"type":"string","description":"See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed","example":"Fixed","name":"PricingMethod"},"ProductLabel":{"type":"string","description":"Defaults to first 30 characters of the ProductName, but can be edited","example":"iPhone 4S 16GB White","name":"ProductLabel"},"ProductTypeId":{"type":"integer","description":"Identifier for a [ProductType](#producttype)","example":"0","generated":"true"},"ReleaseDate":{"type":"datetime","description":"Release Date, in UTC","example":"2011-10-14T12:00:00.000","name":"ReleaseDate"},"Serialized":{"type":"boolean","description":"A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.","example":"true","name":"Serialized"},"SerialNumberPromptText":{"type":"string","description":"Text displayed when user is prompted to enter a serial number for the product","example":"Serial prompt text here","name":"SerialNumberPromptText"},"ShortDescription":{"type":"string","description":"Short description","example":"Better than the iPhone 3G","name":"ShortDescription"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","generated":"true"},"Vendors":{"type":"array","arrayType":"object","description":"Collection of Vendor SKUs","ref":"epc.Vendor","name":"Vendors","properties":{"Cost":{"type":"object","description":"Vendor cost. Defaults to 0","example":"99.99","name":"Cost"},"DiscontinuedDate":{"type":"datetime","description":"Date the Product will no longer be sold, in UTC","example":"2016-01-01T12:00:00.000","name":"DiscontinuedDate"},"DoNotOrder":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate the Product can not be ordered from this Location. Defaults to false","example":"false","name":"DoNotOrder"},"EndOfLife":{"type":"datetime","description":"Date for the Product as appropriate","example":"2016-01-01T12:00:00.000","name":"EndOfLife"},"SpecialOrder":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate that the Product is a special order. Defaults to false","example":"false","name":"SpecialOrder"},"VendorName":{"type":"string","description":"Vendor name","example":"SampleVendor","name":"VendorName"},"VendorSku":{"type":"string","putDescription":"If provided, must be unique per Vendor","description":"Vendor sku","example":"DEF987","name":"VendorSku"},"WriteOff":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate that the Product is a write-off. Defaults to false","example":"false","name":"WriteOff"}},"required":["VendorName","VendorSku"]},"WarehouseLocation":{"type":"string","description":"Name of the Warehouse location","example":"Cornwall","name":"WarehouseLocation"},"RefundLink":{"type":"string","description":"Reserved for internal use","example":""},"ProductLink":{"type":"string","description":"Reserved for internal use","example":""}},"required":["DefaultPricingAndPurchasing","Barcodes","CategoryName","ProductName","ManufacturerName","ProductLabel"]},"NonStockedProducts":{"type":"array","arrayType":"object","ref":"epc.NonStockedProduct","properties":{"Id":{"type":"integer","description":"Identifier","example":"14","generated":"true"},"ProductName":{"type":"string","description":"Name","example":"Prepaid Rate Plan","name":"ProductName"},"CategoryName":{"type":"string","description":"Name of the Category/Classification for this Product","example":"Rate Plans > Rate Plans","name":"CategoryName"},"ClassificationTreeId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>","example":"1","name":"ClassificationTreeId"},"DefaultPricing":{"type":"object","description":"Default pricing","ref":"epc.NonStockedProductPricing","name":"DefaultPricing","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"}},"required":["Price"]},"Enabled":{"type":"boolean","description":"A flag to indicate if this Product is Enabled. Defaults to true","example":"true","name":"Enabled"},"EnforcedTrackingNumberLength":{"type":"integer","putDescription":"This value can only be set if Serialized is true","description":"A value that restricts tracking number length","example":"50","name":"EnforcedTrackingNumberLength"},"ExtendedAttributes":{"type":"array","arrayType":"object","description":"Additional attributes to store with the Product","isNested":"true","ref":"epc.ExtendedAttribute","name":"ExtendedAttributes","properties":{"Name":{"type":"string","description":"Name","example":"ProductId","name":"Name"},"Value":{"type":"string","description":"Value","example":"66","name":"Value"}},"required":["Name","Value"]},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"GlCostOfSalesAccountNumber":{"type":"string","description":"Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlCostOfSalesAccountNumber"},"GlInventoryAccountNumber":{"type":"string","description":"Account number for Inventory, see {{support_GLAccountSetup}} for more information","example":"1002","name":"GlInventoryAccountNumber"},"GlSalesAccountNumber":{"type":"string","description":"Account number for Sales, see {{support_GLAccountSetup}} for more information","example":"1003","name":"GlSalesAccountNumber"},"IgnoreAutomaticTaxAddition":{"type":"boolean","description":"Ensures that taxes will not be added as part of the automatic tax process. Defaults to false","example":"true","name":"IgnoreAutomaticTaxAddition"},"LongDescription":{"type":"string","description":"Long description","example":"Prepaid plan forpeople on the go","name":"LongDescription"},"PricingLocations":{"type":"array","arrayType":"object","description":"Pricing for Locations","ref":"epc.NonStockedProductPricingLocation","name":"PricingLocations","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"SalePrice":{"type":"object","description":"Sale price, will override Floor Price if it is lower. Defaults to 0","example":"0.0","name":"SalePrice"},"SaleBeginDate":{"type":"datetime","description":"Sale begin date","example":"null","name":"SaleBeginDate"},"SaleEndDate":{"type":"datetime","description":"Sale end date","example":"null","name":"SaleEndDate"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"},"TargetLocationName":{"type":"string","description":"Applies pricing to a single location, or all locations in a company, channel, region or district","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"}},"required":["Price","TargetLocationType"]},"PricingMethod":{"type":"string","description":"See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed","example":"Fixed","name":"PricingMethod"},"ProductLabel":{"type":"string","description":"Defaults to first 30 characters of the ProductName, but can be edited","example":"Prepaid Rate Plan","name":"ProductLabel"},"ProductTypeId":{"type":"integer","description":"Identifier for a [ProductType](#producttype)","example":"2","generated":"true"},"Serialized":{"type":"boolean","description":"A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.","example":"false","name":"Serialized"},"SerialNumberPromptText":{"type":"string","description":"Text displayed when user is prompted to enter a serial number for the product","example":"null","name":"SerialNumberPromptText"},"ShortDescription":{"type":"string","description":"Short description","example":"Prepaid plan","name":"ShortDescription"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","generated":"true"},"VendorSku":{"type":"string","putDescription":"If provided, must be unique per Vendor","description":"Vendor sku","example":"DEF987","name":"VendorSku"},"RefundLink":{"type":"string","description":"Reserved for internal use","example":""},"ProductLink":{"type":"string","description":"Reserved for internal use","example":""}},"required":["CategoryName","ProductName","ProductLabel","DefaultPricing"]},"NonRevenueProducts":{"type":"array","arrayType":"object","ref":"epc.NonRevenueProduct","properties":{"Id":{"type":"integer","description":"Identifier","example":"18","generated":"true"},"ProductName":{"type":"string","description":"Name","example":"Recycling Fee","name":"ProductName"},"CategoryName":{"type":"string","description":"Name of the Category/Classification for this Product","example":"Misc > Misc. Fees","name":"CategoryName"},"ClassificationTreeId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>","example":"1","name":"ClassificationTreeId"},"DefaultPricing":{"type":"object","description":"Default pricing information","ref":"epc.NonStockedProductPricing","name":"DefaultPricing","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"}},"required":["Price"]},"Enabled":{"type":"boolean","description":"A flag to indicate if this Product is Enabled. Defaults to true","example":"true","name":"Enabled"},"EnforcedTrackingNumberLength":{"type":"integer","putDescription":"This value can only be set if Serialized is true","description":"A value that restricts tracking number length","example":"50","name":"EnforcedTrackingNumberLength"},"ExtendedAttributes":{"type":"array","arrayType":"object","description":"Additional attributes to store with the Product","isNested":"true","ref":"epc.ExtendedAttribute","name":"ExtendedAttributes","properties":{"Name":{"type":"string","description":"Name","example":"ProductId","name":"Name"},"Value":{"type":"string","description":"Value","example":"66","name":"Value"}},"required":["Name","Value"]},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"GlCostOfSalesAccountNumber":{"type":"string","description":"Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlCostOfSalesAccountNumber"},"GlInventoryAccountNumber":{"type":"string","description":"Account number for Inventory, see {{support_GLAccountSetup}} for more information","example":"1002","name":"GlInventoryAccountNumber"},"GlSalesAccountNumber":{"type":"string","description":"Account number for Sales, see {{support_GLAccountSetup}} for more information","example":"1003","name":"GlSalesAccountNumber"},"IgnoreAutomaticTaxAddition":{"type":"boolean","description":"Ensures that taxes will not be added as part of the automatic tax process. Defaults to false","example":"false","name":"IgnoreAutomaticTaxAddition"},"LongDescription":{"type":"string","description":"Long description","example":"Recycling fee to disposeof old handset","name":"LongDescription"},"PricingLocations":{"type":"array","arrayType":"object","description":"Pricing for Locations","ref":"epc.NonStockedProductPricingLocation","name":"PricingLocations","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"SalePrice":{"type":"object","description":"Sale price, will override Floor Price if it is lower. Defaults to 0","example":"0.0","name":"SalePrice"},"SaleBeginDate":{"type":"datetime","description":"Sale begin date","example":"null","name":"SaleBeginDate"},"SaleEndDate":{"type":"datetime","description":"Sale end date","example":"null","name":"SaleEndDate"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"},"TargetLocationName":{"type":"string","description":"Applies pricing to a single location, or all locations in a company, channel, region or district","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"}},"required":["Price","TargetLocationType"]},"PricingMethod":{"type":"string","description":"See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed","example":"Fixed","name":"PricingMethod"},"ProductLabel":{"type":"string","description":"Defaults to first 30 characters of the ProductName, but can be edited","example":"Recycling Fee","name":"ProductLabel"},"ProductTypeId":{"type":"integer","description":"Identifier for a [ProductType](#producttype)","example":"4","generated":"true"},"Serialized":{"type":"boolean","description":"A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.","example":"true","name":"Serialized"},"SerialNumberPromptText":{"type":"string","description":"Text displayed when user is prompted to enter a serial number for the product","example":"Serial prompt text here","name":"SerialNumberPromptText"},"ShortDescription":{"type":"string","description":"Short description","example":"Recycling fee","name":"ShortDescription"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","generated":"true"},"VendorSku":{"type":"string","putDescription":"If provided, must be unique per Vendor","description":"Vendor sku","example":"DEF987","name":"VendorSku"},"RefundLink":{"type":"string","description":"Reserved for internal use","example":""},"ProductLink":{"type":"string","description":"Reserved for internal use","example":""}},"required":["CategoryName","DefaultPricing","ProductName","ProductLabel"]},"VendorRebateProducts":{"type":"array","arrayType":"object","ref":"epc.VendorRebateProduct","properties":{"Id":{"type":"integer","description":"Identifier","example":"16","generated":"true"},"VendorName":{"type":"string","description":"Vendor name","example":"SampleVendor","name":"VendorName"},"ProductName":{"type":"string","description":"Name","example":"2 YR New Act","name":"ProductName"},"CategoryName":{"type":"string","description":"Name of the Category/Classification for this Product","example":"Rate Plans > Rate Plan Rebates","name":"CategoryName"},"ClassificationTreeId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>","example":"1","name":"ClassificationTreeId"},"DefaultPricing":{"type":"object","description":"Default pricing information","ref":"epc.NonStockedProductPricing","name":"DefaultPricing","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"}},"required":["Price"]},"Enabled":{"type":"boolean","description":"A flag to indicate if this Product is Enabled. Defaults to true","example":"true","name":"Enabled"},"EnforcedTrackingNumberLength":{"type":"integer","putDescription":"This value can only be set if Serialized is true","description":"A value that restricts tracking number length","example":"50","name":"EnforcedTrackingNumberLength"},"ExtendedAttributes":{"type":"array","arrayType":"object","description":"Additional attributes to store with the Product","isNested":"true","ref":"epc.ExtendedAttribute","name":"ExtendedAttributes","properties":{"Name":{"type":"string","description":"Name","example":"ProductId","name":"Name"},"Value":{"type":"string","description":"Value","example":"66","name":"Value"}},"required":["Name","Value"]},"GlCostOfSalesAccountNumber":{"type":"string","description":"Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlCostOfSalesAccountNumber"},"GlInventoryAccountNumber":{"type":"string","description":"Account number for Inventory, see {{support_GLAccountSetup}} for more information","example":"1002","name":"GlInventoryAccountNumber"},"GlSalesAccountNumber":{"type":"string","description":"Account number for Sales, see {{support_GLAccountSetup}} for more information","example":"1003","name":"GlSalesAccountNumber"},"IgnoreAutomaticTaxAddition":{"type":"boolean","description":"Ensures that taxes will not be added as part of the automatic tax process. Defaults to false","example":"false","name":"IgnoreAutomaticTaxAddition"},"LongDescription":{"type":"string","description":"Long description","example":"Rebate on 2 year actiations","name":"LongDescription"},"PricingLocations":{"type":"array","arrayType":"object","description":"Pricing for Locations","ref":"epc.NonStockedProductPricingLocation","name":"PricingLocations","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"SalePrice":{"type":"object","description":"Sale price, will override Floor Price if it is lower. Defaults to 0","example":"0.0","name":"SalePrice"},"SaleBeginDate":{"type":"datetime","description":"Sale begin date","example":"null","name":"SaleBeginDate"},"SaleEndDate":{"type":"datetime","description":"Sale end date","example":"null","name":"SaleEndDate"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"},"TargetLocationName":{"type":"string","description":"Applies pricing to a single location, or all locations in a company, channel, region or district","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"}},"required":["Price","TargetLocationType"]},"PricingMethod":{"type":"string","description":"See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed","example":"Fixed","name":"PricingMethod"},"ProductLabel":{"type":"string","description":"Defaults to first 30 characters of the ProductName, but can be edited","example":"2 YR New Act","name":"ProductLabel"},"ProductTypeId":{"type":"integer","description":"Identifier for a [ProductType](#producttype)","example":"1","generated":"true"},"Serialized":{"type":"boolean","description":"A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.","example":"true","name":"Serialized"},"SerialNumberPromptText":{"type":"string","description":"Text displayed when user is prompted to enter a serial number for the product","example":"Serial prompt text here","name":"SerialNumberPromptText"},"ShortDescription":{"type":"string","description":"Short description","example":"2 yr rebate","name":"ShortDescription"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","generated":"true"},"VendorAccountName":{"type":"string","description":"Vendor name","example":"Verizon","name":"VendorAccountName"},"VendorSku":{"type":"string","putDescription":"If provided, must be unique per Vendor","description":"Vendor sku","example":"DEF987","name":"VendorSku"},"RefundLink":{"type":"string","description":"Reserved for internal use","example":""},"ProductLink":{"type":"string","description":"Reserved for internal use","example":""}},"required":["CategoryName","ProductName","ProductLabel","DefaultPricing"]}},"required":[]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Status":"/v1/companies(21090)/batchStatus(123)","TimestampUTC":"2016-11-15T16:43:15.1396674Z"}
+                            schema: |
+                                {"name":"Status","type":"object","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"Status":{"type":"string","putDescription":"Relative endpoint of status","example":"/v1/companies(21090)/batchStatus(123)"},"TimestampUTC":{"type":"datetime","example":"2016-11-15T16:43:15.1396674Z"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/companies({CompanyId})/Products:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for the Company
+          
+      
+    post:
+        
+        displayName: Importing Regular Products into RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"RegularProducts":[{"Barcodes":["BARCODE123"],"ProductName":"iPhone 4S 16GB White","CategoryName":"Products > Phones > Smartphones","ClassificationTreeId":1,"DaysKeptInStock":10,"DefaultPricingAndPurchasing":{"AllowReturns":true,"Discountable":true,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","LockMinMaxed":true,"Margin":1,"MaximumQuantity":10,"MinimumQuantity":1,"MsrpAmount":499.99,"MsrpCurrencyCode":"USD","Price":499.99,"PrimaryVendorName":"Apple","RefundPeriod":10,"RefundToUsed":false,"ShowOnInvoice":true,"StoreInStorePrice":399.99},"Enabled":true,"EnforcedTrackingNumberLength":50,"ExtendedAttributes":[{"Name":"ProductId","Value":"66"}],"GlCostOfSalesAccountNumber":"1001","GlInventoryAccountNumber":"1002","GlInventoryCorrectionsAccountNumber":"1001","GlSalesAccountNumber":"1003","IgnoreAutomaticTaxAddition":false,"LocationVendors":[{"Cost":99.99,"DiscontinuedDate":"2016-01-01T12:00:00.000","DoNotOrder":false,"EndOfLife":"2016-01-01T12:00:00.000","SpecialOrder":false,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName","VendorName":"SampleVendor","WriteOff":false}],"LongDescription":"The iPhone 4S is a gradualstep over the iPhone 4.","ManufacturerName":"Apple","ManufacturerSku":"ABC123","Model":"iPhone 6","PricingAndPurchasingLocations":[{"AllowReturns":true,"Discountable":true,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","LockMinMaxed":true,"Margin":1,"MaximumQuantity":10,"MinimumQuantity":1,"MsrpAmount":499.99,"MsrpCurrencyCode":"USD","Price":499.99,"PrimaryVendorName":"Apple","RefundPeriod":10,"RefundToUsed":false,"SaleBeginDate":"2015-10-14T12:00:00.000","SaleEndDate":"2015-10-18T12:00:00.000","SalePrice":399.99,"ShowOnInvoice":true,"StoreInStorePrice":399.99,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName"}],"PricingMethod":"Fixed","ProductLabel":"iPhone 4S 16GB White","ReleaseDate":"2011-10-14T12:00:00.000","Serialized":true,"SerialNumberPromptText":"Serial prompt text here","ShortDescription":"Better than the iPhone 3G","Vendors":[{"Cost":99.99,"DiscontinuedDate":"2016-01-01T12:00:00.000","DoNotOrder":false,"EndOfLife":"2016-01-01T12:00:00.000","SpecialOrder":false,"VendorName":"SampleVendor","VendorSku":"DEF987","WriteOff":false}],"WarehouseLocation":"Cornwall"}]}
+                    
+                schema: |
+                    {"exclude":"true","name":"ImportProductRegular","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"RegularProducts":{"type":"array","arrayType":"object","ref":"epc.RegularProduct","properties":{"Id":{"type":"integer","description":"Identifier","example":"12","generated":"true"},"Barcodes":{"type":"array","arrayType":"string","description":"Barcodes for this Product","example":"BARCODE123","name":"Barcodes"},"ProductName":{"type":"string","description":"Name","example":"iPhone 4S 16GB White","name":"ProductName"},"CategoryName":{"type":"string","description":"Path to the Category, delimited by >","example":"Products > Phones > Smartphones","name":"CategoryName"},"ClassificationTreeId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>","example":"1","name":"ClassificationTreeId"},"DaysKeptInStock":{"type":"object","description":"Number of days the Product can remain in stock","example":"10","name":"DaysKeptInStock"},"DefaultPricingAndPurchasing":{"type":"object","description":"Default pricing","ref":"epc.RegularProductPricing","name":"DefaultPricingAndPurchasing","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned","example":"true","name":"AllowReturns"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted, defaults to true","example":"true","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"LockMinMaxed":{"type":"boolean","description":"A flag to indicate if the MinimumQuantity/MaximumQuantity amounts are locked (true) which prevents them from being updated by mass updates. Defaults to false","example":"true","name":"LockMinMaxed"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"1","name":"Margin"},"MaximumQuantity":{"type":"integer","description":"Maximum quantity that should be on hand at any time. Defaults to 0","example":"10","name":"MaximumQuantity"},"MinimumQuantity":{"type":"integer","description":"Minimum quantity that should be on hand at any time. Defaults to 0","example":"1","name":"MinimumQuantity"},"MsrpAmount":{"type":"object","description":"Manufacturer's suggested retail price. Defaults to 0","example":"499.99","name":"MsrpAmount"},"MsrpCurrencyCode":{"type":"string","description":"Currency","example":"USD","name":"MsrpCurrencyCode"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"PrimaryVendorName":{"type":"string","description":"Name of the primary vendor for this Product","example":"Apple","name":"PrimaryVendorName"},"RefundPeriod":{"type":"integer","description":"Number of days the Product can be refunded before an override is required to refund. Defaults to 0","example":"10","name":"RefundPeriod"},"RefundToUsed":{"type":"boolean","description":"A flag to indicate that this Product can be refunded and then tagged as used. Defaults to true","example":"false","name":"RefundToUsed"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"}},"required":["Price","PrimaryVendorName"]},"Enabled":{"type":"boolean","description":"A flag to indicate if this Product is Enabled. Defaults to true","example":"true","name":"Enabled"},"EnforcedTrackingNumberLength":{"type":"integer","putDescription":"This value can only be set if Serialized is true","description":"A value that restricts tracking number length","example":"50","name":"EnforcedTrackingNumberLength"},"ExtendedAttributes":{"type":"array","arrayType":"object","description":"Additional attributes to store with the Product","isNested":"true","ref":"epc.ExtendedAttribute","name":"ExtendedAttributes","properties":{"Name":{"type":"string","description":"Name","example":"ProductId","name":"Name"},"Value":{"type":"string","description":"Value","example":"66","name":"Value"}},"required":["Name","Value"]},"GlCostOfSalesAccountNumber":{"type":"string","description":"Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlCostOfSalesAccountNumber"},"GlInventoryAccountNumber":{"type":"string","description":"Account number for Inventory, see {{support_GLAccountSetup}} for more information","example":"1002","name":"GlInventoryAccountNumber"},"GlInventoryCorrectionsAccountNumber":{"type":"string","description":"Account number for Inventory Corrections, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlInventoryCorrectionsAccountNumber"},"GlSalesAccountNumber":{"type":"string","description":"Account number for Sales, see {{support_GLAccountSetup}} for more information","example":"1003","name":"GlSalesAccountNumber"},"IgnoreAutomaticTaxAddition":{"type":"boolean","description":"Ensures that taxes will not be added as part of the automatic tax process. Defaults to false","example":"false","name":"IgnoreAutomaticTaxAddition"},"LocationVendors":{"type":"array","arrayType":"object","description":"Vendors for each location","ref":"epc.LocationVendor","name":"LocationVendors","properties":{"Cost":{"type":"object","description":"Vendor cost. Defaults to 0","example":"99.99","name":"Cost"},"DiscontinuedDate":{"type":"datetime","description":"Date the Product will no longer be sold, in UTC","example":"2016-01-01T12:00:00.000","name":"DiscontinuedDate"},"DoNotOrder":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate the Product can not be ordered from this Location. Defaults to false","example":"false","name":"DoNotOrder"},"EndOfLife":{"type":"datetime","description":"Date for the Product as appropriate","example":"2016-01-01T12:00:00.000","name":"EndOfLife"},"SpecialOrder":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate that the Product is a special order. Defaults to false","example":"false","name":"SpecialOrder"},"TargetLocationName":{"type":"string","description":"Applies pricing to a single location, or all locations in a company, channel, region or district","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"},"VendorName":{"type":"string","description":"Vendor name","example":"SampleVendor","name":"VendorName"},"WriteOff":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate that the Product is a write-off. Defaults to false","example":"false","name":"WriteOff"}},"required":["TargetLocationType","VendorName"]},"LongDescription":{"type":"string","description":"Long description","example":"The iPhone 4S is a gradualstep over the iPhone 4.","name":"LongDescription"},"ManufacturerName":{"type":"string","description":"Name of a Manufacturer","example":"Apple","name":"ManufacturerName"},"ManufacturerSku":{"type":"string","description":"Manufacturer SKU","example":"ABC123","name":"ManufacturerSku"},"Model":{"type":"string","description":"Model","example":"iPhone 6","name":"Model"},"PricingAndPurchasingLocations":{"type":"array","arrayType":"object","description":"Pricing for locations","ref":"epc.RegularProductPricingLocation","name":"PricingAndPurchasingLocations","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned","example":"true","name":"AllowReturns"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted, defaults to true","example":"true","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"LockMinMaxed":{"type":"boolean","description":"A flag to indicate if the MinimumQuantity/MaximumQuantity amounts are locked (true) which prevents them from being updated by mass updates. Defaults to false","example":"true","name":"LockMinMaxed"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"1","name":"Margin"},"MaximumQuantity":{"type":"integer","description":"Maximum quantity that should be on hand at any time. Defaults to 0","example":"10","name":"MaximumQuantity"},"MinimumQuantity":{"type":"integer","description":"Minimum quantity that should be on hand at any time. Defaults to 0","example":"1","name":"MinimumQuantity"},"MsrpAmount":{"type":"object","description":"Manufacturer's suggested retail price. Defaults to 0","example":"499.99","name":"MsrpAmount"},"MsrpCurrencyCode":{"type":"string","description":"Currency","example":"USD","name":"MsrpCurrencyCode"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"PrimaryVendorName":{"type":"string","description":"Name of the primary vendor for this Product","example":"Apple","name":"PrimaryVendorName"},"RefundPeriod":{"type":"integer","description":"Number of days the Product can be refunded before an override is required to refund. Defaults to 0","example":"10","name":"RefundPeriod"},"RefundToUsed":{"type":"boolean","description":"A flag to indicate that this Product can be refunded and then tagged as used. Defaults to true","example":"false","name":"RefundToUsed"},"SaleBeginDate":{"type":"datetime","description":"Sale begin date","example":"2015-10-14T12:00:00.000","name":"SaleBeginDate"},"SaleEndDate":{"type":"datetime","description":"Sale end date","example":"2015-10-18T12:00:00.000","name":"SaleEndDate"},"SalePrice":{"type":"object","description":"Sale price will override FloorPrice if it is lower. Defaults to 0","example":"399.99","name":"SalePrice"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"},"TargetLocationName":{"type":"string","description":"Name of a channel, region, district or location to apply this pricing to. To select the entire Company, leave this value empty and select All for TargetLocationType","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"See [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"}},"required":["Price","PrimaryVendorName","TargetLocationType"]},"PricingMethod":{"type":"string","description":"See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed","example":"Fixed","name":"PricingMethod"},"ProductLabel":{"type":"string","description":"Defaults to first 30 characters of the ProductName, but can be edited","example":"iPhone 4S 16GB White","name":"ProductLabel"},"ProductTypeId":{"type":"integer","description":"Identifier for a [ProductType](#producttype)","example":"0","generated":"true"},"ReleaseDate":{"type":"datetime","description":"Release Date, in UTC","example":"2011-10-14T12:00:00.000","name":"ReleaseDate"},"Serialized":{"type":"boolean","description":"A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.","example":"true","name":"Serialized"},"SerialNumberPromptText":{"type":"string","description":"Text displayed when user is prompted to enter a serial number for the product","example":"Serial prompt text here","name":"SerialNumberPromptText"},"ShortDescription":{"type":"string","description":"Short description","example":"Better than the iPhone 3G","name":"ShortDescription"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","generated":"true"},"Vendors":{"type":"array","arrayType":"object","description":"Collection of Vendor SKUs","ref":"epc.Vendor","name":"Vendors","properties":{"Cost":{"type":"object","description":"Vendor cost. Defaults to 0","example":"99.99","name":"Cost"},"DiscontinuedDate":{"type":"datetime","description":"Date the Product will no longer be sold, in UTC","example":"2016-01-01T12:00:00.000","name":"DiscontinuedDate"},"DoNotOrder":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate the Product can not be ordered from this Location. Defaults to false","example":"false","name":"DoNotOrder"},"EndOfLife":{"type":"datetime","description":"Date for the Product as appropriate","example":"2016-01-01T12:00:00.000","name":"EndOfLife"},"SpecialOrder":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate that the Product is a special order. Defaults to false","example":"false","name":"SpecialOrder"},"VendorName":{"type":"string","description":"Vendor name","example":"SampleVendor","name":"VendorName"},"VendorSku":{"type":"string","putDescription":"If provided, must be unique per Vendor","description":"Vendor sku","example":"DEF987","name":"VendorSku"},"WriteOff":{"type":"boolean","putDescription":"Defaults to false, case sensitive","description":"A flag to indicate that the Product is a write-off. Defaults to false","example":"false","name":"WriteOff"}},"required":["VendorName","VendorSku"]},"WarehouseLocation":{"type":"string","description":"Name of the Warehouse location","example":"Cornwall","name":"WarehouseLocation"},"RefundLink":{"type":"string","description":"Reserved for internal use","example":""},"ProductLink":{"type":"string","description":"Reserved for internal use","example":""}},"required":["DefaultPricingAndPurchasing","Barcodes","CategoryName","ProductName","ManufacturerName","ProductLabel"]}},"required":[]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Status":"/v1/companies(21090)/batchStatus(123)","TimestampUTC":"2016-11-15T16:43:15.1396674Z"}
+                            schema: |
+                                {"name":"Status","type":"object","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"Status":{"type":"string","putDescription":"Relative endpoint of status","example":"/v1/companies(21090)/batchStatus(123)"},"TimestampUTC":{"type":"datetime","example":"2016-11-15T16:43:15.1396674Z"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/companies({CompanyId})/products/:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for the Company
+          
+      
+    post:
+        
+        displayName: Importing Non-Stocked Products into RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"NonStockedProducts":[{"ProductName":"Prepaid Rate Plan","CategoryName":"Rate Plans > Rate Plans","ClassificationTreeId":1,"DefaultPricing":{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"RefundPeriod":null,"ShowOnInvoice":true,"StoreInStorePrice":399.99},"Enabled":true,"EnforcedTrackingNumberLength":50,"ExtendedAttributes":[{"Name":"ProductId","Value":"66"}],"FloorPrice":0,"GlCostOfSalesAccountNumber":"1001","GlInventoryAccountNumber":"1002","GlSalesAccountNumber":"1003","IgnoreAutomaticTaxAddition":true,"LongDescription":"Prepaid plan forpeople on the go","PricingLocations":[{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"SalePrice":0,"SaleBeginDate":"null","SaleEndDate":"null","ShowOnInvoice":true,"RefundPeriod":null,"StoreInStorePrice":399.99,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName"}],"PricingMethod":"Fixed","ProductLabel":"Prepaid Rate Plan","Serialized":false,"SerialNumberPromptText":"null","ShortDescription":"Prepaid plan","VendorSku":"DEF987"}]}
+                    
+                schema: |
+                    {"exclude":"true","name":"ImportProductNonStocked","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"NonStockedProducts":{"type":"array","arrayType":"object","ref":"epc.NonStockedProduct","properties":{"Id":{"type":"integer","description":"Identifier","example":"14","generated":"true"},"ProductName":{"type":"string","description":"Name","example":"Prepaid Rate Plan","name":"ProductName"},"CategoryName":{"type":"string","description":"Name of the Category/Classification for this Product","example":"Rate Plans > Rate Plans","name":"CategoryName"},"ClassificationTreeId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>","example":"1","name":"ClassificationTreeId"},"DefaultPricing":{"type":"object","description":"Default pricing","ref":"epc.NonStockedProductPricing","name":"DefaultPricing","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"}},"required":["Price"]},"Enabled":{"type":"boolean","description":"A flag to indicate if this Product is Enabled. Defaults to true","example":"true","name":"Enabled"},"EnforcedTrackingNumberLength":{"type":"integer","putDescription":"This value can only be set if Serialized is true","description":"A value that restricts tracking number length","example":"50","name":"EnforcedTrackingNumberLength"},"ExtendedAttributes":{"type":"array","arrayType":"object","description":"Additional attributes to store with the Product","isNested":"true","ref":"epc.ExtendedAttribute","name":"ExtendedAttributes","properties":{"Name":{"type":"string","description":"Name","example":"ProductId","name":"Name"},"Value":{"type":"string","description":"Value","example":"66","name":"Value"}},"required":["Name","Value"]},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"GlCostOfSalesAccountNumber":{"type":"string","description":"Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlCostOfSalesAccountNumber"},"GlInventoryAccountNumber":{"type":"string","description":"Account number for Inventory, see {{support_GLAccountSetup}} for more information","example":"1002","name":"GlInventoryAccountNumber"},"GlSalesAccountNumber":{"type":"string","description":"Account number for Sales, see {{support_GLAccountSetup}} for more information","example":"1003","name":"GlSalesAccountNumber"},"IgnoreAutomaticTaxAddition":{"type":"boolean","description":"Ensures that taxes will not be added as part of the automatic tax process. Defaults to false","example":"true","name":"IgnoreAutomaticTaxAddition"},"LongDescription":{"type":"string","description":"Long description","example":"Prepaid plan forpeople on the go","name":"LongDescription"},"PricingLocations":{"type":"array","arrayType":"object","description":"Pricing for Locations","ref":"epc.NonStockedProductPricingLocation","name":"PricingLocations","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"SalePrice":{"type":"object","description":"Sale price, will override Floor Price if it is lower. Defaults to 0","example":"0.0","name":"SalePrice"},"SaleBeginDate":{"type":"datetime","description":"Sale begin date","example":"null","name":"SaleBeginDate"},"SaleEndDate":{"type":"datetime","description":"Sale end date","example":"null","name":"SaleEndDate"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"},"TargetLocationName":{"type":"string","description":"Applies pricing to a single location, or all locations in a company, channel, region or district","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"}},"required":["Price","TargetLocationType"]},"PricingMethod":{"type":"string","description":"See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed","example":"Fixed","name":"PricingMethod"},"ProductLabel":{"type":"string","description":"Defaults to first 30 characters of the ProductName, but can be edited","example":"Prepaid Rate Plan","name":"ProductLabel"},"ProductTypeId":{"type":"integer","description":"Identifier for a [ProductType](#producttype)","example":"2","generated":"true"},"Serialized":{"type":"boolean","description":"A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.","example":"false","name":"Serialized"},"SerialNumberPromptText":{"type":"string","description":"Text displayed when user is prompted to enter a serial number for the product","example":"null","name":"SerialNumberPromptText"},"ShortDescription":{"type":"string","description":"Short description","example":"Prepaid plan","name":"ShortDescription"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","generated":"true"},"VendorSku":{"type":"string","putDescription":"If provided, must be unique per Vendor","description":"Vendor sku","example":"DEF987","name":"VendorSku"},"RefundLink":{"type":"string","description":"Reserved for internal use","example":""},"ProductLink":{"type":"string","description":"Reserved for internal use","example":""}},"required":["CategoryName","ProductName","ProductLabel","DefaultPricing"]}},"required":[]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Status":"/v1/companies(21090)/batchStatus(123)","TimestampUTC":"2016-11-15T16:43:15.1396674Z"}
+                            schema: |
+                                {"name":"Status","type":"object","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"Status":{"type":"string","putDescription":"Relative endpoint of status","example":"/v1/companies(21090)/batchStatus(123)"},"TimestampUTC":{"type":"datetime","example":"2016-11-15T16:43:15.1396674Z"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/companies({CompanyId})/Products/:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for the Company
+          
+      
+    post:
+        
+        displayName: Importing Non-Revenue Products into RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"NonRevenueProducts":[{"ProductName":"Recycling Fee","CategoryName":"Misc > Misc. Fees","ClassificationTreeId":1,"DefaultPricing":{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"RefundPeriod":null,"ShowOnInvoice":true,"StoreInStorePrice":399.99},"Enabled":true,"EnforcedTrackingNumberLength":50,"ExtendedAttributes":[{"Name":"ProductId","Value":"66"}],"FloorPrice":0,"GlCostOfSalesAccountNumber":"1001","GlInventoryAccountNumber":"1002","GlSalesAccountNumber":"1003","IgnoreAutomaticTaxAddition":false,"LongDescription":"Recycling fee to disposeof old handset","PricingLocations":[{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"SalePrice":0,"SaleBeginDate":"null","SaleEndDate":"null","ShowOnInvoice":true,"RefundPeriod":null,"StoreInStorePrice":399.99,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName"}],"PricingMethod":"Fixed","ProductLabel":"Recycling Fee","Serialized":true,"SerialNumberPromptText":"Serial prompt text here","ShortDescription":"Recycling fee","VendorSku":"DEF987"}]}
+                    
+                schema: |
+                    {"exclude":"true","name":"ImportProductNonRevenue","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"NonRevenueProducts":{"type":"array","arrayType":"object","ref":"epc.NonRevenueProduct","properties":{"Id":{"type":"integer","description":"Identifier","example":"18","generated":"true"},"ProductName":{"type":"string","description":"Name","example":"Recycling Fee","name":"ProductName"},"CategoryName":{"type":"string","description":"Name of the Category/Classification for this Product","example":"Misc > Misc. Fees","name":"CategoryName"},"ClassificationTreeId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>","example":"1","name":"ClassificationTreeId"},"DefaultPricing":{"type":"object","description":"Default pricing information","ref":"epc.NonStockedProductPricing","name":"DefaultPricing","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"}},"required":["Price"]},"Enabled":{"type":"boolean","description":"A flag to indicate if this Product is Enabled. Defaults to true","example":"true","name":"Enabled"},"EnforcedTrackingNumberLength":{"type":"integer","putDescription":"This value can only be set if Serialized is true","description":"A value that restricts tracking number length","example":"50","name":"EnforcedTrackingNumberLength"},"ExtendedAttributes":{"type":"array","arrayType":"object","description":"Additional attributes to store with the Product","isNested":"true","ref":"epc.ExtendedAttribute","name":"ExtendedAttributes","properties":{"Name":{"type":"string","description":"Name","example":"ProductId","name":"Name"},"Value":{"type":"string","description":"Value","example":"66","name":"Value"}},"required":["Name","Value"]},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"GlCostOfSalesAccountNumber":{"type":"string","description":"Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlCostOfSalesAccountNumber"},"GlInventoryAccountNumber":{"type":"string","description":"Account number for Inventory, see {{support_GLAccountSetup}} for more information","example":"1002","name":"GlInventoryAccountNumber"},"GlSalesAccountNumber":{"type":"string","description":"Account number for Sales, see {{support_GLAccountSetup}} for more information","example":"1003","name":"GlSalesAccountNumber"},"IgnoreAutomaticTaxAddition":{"type":"boolean","description":"Ensures that taxes will not be added as part of the automatic tax process. Defaults to false","example":"false","name":"IgnoreAutomaticTaxAddition"},"LongDescription":{"type":"string","description":"Long description","example":"Recycling fee to disposeof old handset","name":"LongDescription"},"PricingLocations":{"type":"array","arrayType":"object","description":"Pricing for Locations","ref":"epc.NonStockedProductPricingLocation","name":"PricingLocations","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"SalePrice":{"type":"object","description":"Sale price, will override Floor Price if it is lower. Defaults to 0","example":"0.0","name":"SalePrice"},"SaleBeginDate":{"type":"datetime","description":"Sale begin date","example":"null","name":"SaleBeginDate"},"SaleEndDate":{"type":"datetime","description":"Sale end date","example":"null","name":"SaleEndDate"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"},"TargetLocationName":{"type":"string","description":"Applies pricing to a single location, or all locations in a company, channel, region or district","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"}},"required":["Price","TargetLocationType"]},"PricingMethod":{"type":"string","description":"See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed","example":"Fixed","name":"PricingMethod"},"ProductLabel":{"type":"string","description":"Defaults to first 30 characters of the ProductName, but can be edited","example":"Recycling Fee","name":"ProductLabel"},"ProductTypeId":{"type":"integer","description":"Identifier for a [ProductType](#producttype)","example":"4","generated":"true"},"Serialized":{"type":"boolean","description":"A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.","example":"true","name":"Serialized"},"SerialNumberPromptText":{"type":"string","description":"Text displayed when user is prompted to enter a serial number for the product","example":"Serial prompt text here","name":"SerialNumberPromptText"},"ShortDescription":{"type":"string","description":"Short description","example":"Recycling fee","name":"ShortDescription"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","generated":"true"},"VendorSku":{"type":"string","putDescription":"If provided, must be unique per Vendor","description":"Vendor sku","example":"DEF987","name":"VendorSku"},"RefundLink":{"type":"string","description":"Reserved for internal use","example":""},"ProductLink":{"type":"string","description":"Reserved for internal use","example":""}},"required":["CategoryName","DefaultPricing","ProductName","ProductLabel"]}},"required":[]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Status":"/v1/companies(21090)/batchStatus(123)","TimestampUTC":"2016-11-15T16:43:15.1396674Z"}
+                            schema: |
+                                {"name":"Status","type":"object","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"Status":{"type":"string","putDescription":"Relative endpoint of status","example":"/v1/companies(21090)/batchStatus(123)"},"TimestampUTC":{"type":"datetime","example":"2016-11-15T16:43:15.1396674Z"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/products:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for the Company
+          
+      
+    post:
+        
+        displayName: Importing Vendor Rebates into RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"VendorRebateProducts":[{"VendorName":"SampleVendor","ProductName":"2 YR New Act","CategoryName":"Rate Plans > Rate Plan Rebates","ClassificationTreeId":1,"DefaultPricing":{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"RefundPeriod":null,"ShowOnInvoice":true,"StoreInStorePrice":399.99},"Enabled":true,"EnforcedTrackingNumberLength":50,"ExtendedAttributes":[{"Name":"ProductId","Value":"66"}],"GlCostOfSalesAccountNumber":"1001","GlInventoryAccountNumber":"1002","GlSalesAccountNumber":"1003","IgnoreAutomaticTaxAddition":false,"LongDescription":"Rebate on 2 year actiations","PricingLocations":[{"AllowReturns":false,"CarrierPrice":0,"Cost":0,"Discountable":false,"FloorPrice":0,"ForSale":true,"InvoiceComments":"Invoice comment","Margin":0,"Price":499.99,"SalePrice":0,"SaleBeginDate":"null","SaleEndDate":"null","ShowOnInvoice":true,"RefundPeriod":null,"StoreInStorePrice":399.99,"TargetLocationName":"Saskatchewan","TargetLocationType":"RegionName"}],"PricingMethod":"Fixed","ProductLabel":"2 YR New Act","Serialized":true,"SerialNumberPromptText":"Serial prompt text here","ShortDescription":"2 yr rebate","VendorAccountName":"Verizon","VendorSku":"DEF987"}]}
+                    
+                schema: |
+                    {"exclude":"true","name":"ImportProductVendorRebate","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"VendorRebateProducts":{"type":"array","arrayType":"object","ref":"epc.VendorRebateProduct","properties":{"Id":{"type":"integer","description":"Identifier","example":"16","generated":"true"},"VendorName":{"type":"string","description":"Vendor name","example":"SampleVendor","name":"VendorName"},"ProductName":{"type":"string","description":"Name","example":"2 YR New Act","name":"ProductName"},"CategoryName":{"type":"string","description":"Name of the Category/Classification for this Product","example":"Rate Plans > Rate Plan Rebates","name":"CategoryName"},"ClassificationTreeId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>","example":"1","name":"ClassificationTreeId"},"DefaultPricing":{"type":"object","description":"Default pricing information","ref":"epc.NonStockedProductPricing","name":"DefaultPricing","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"}},"required":["Price"]},"Enabled":{"type":"boolean","description":"A flag to indicate if this Product is Enabled. Defaults to true","example":"true","name":"Enabled"},"EnforcedTrackingNumberLength":{"type":"integer","putDescription":"This value can only be set if Serialized is true","description":"A value that restricts tracking number length","example":"50","name":"EnforcedTrackingNumberLength"},"ExtendedAttributes":{"type":"array","arrayType":"object","description":"Additional attributes to store with the Product","isNested":"true","ref":"epc.ExtendedAttribute","name":"ExtendedAttributes","properties":{"Name":{"type":"string","description":"Name","example":"ProductId","name":"Name"},"Value":{"type":"string","description":"Value","example":"66","name":"Value"}},"required":["Name","Value"]},"GlCostOfSalesAccountNumber":{"type":"string","description":"Account number for Cost of Sales, see {{support_GLAccountSetup}} for more information","example":"1001","name":"GlCostOfSalesAccountNumber"},"GlInventoryAccountNumber":{"type":"string","description":"Account number for Inventory, see {{support_GLAccountSetup}} for more information","example":"1002","name":"GlInventoryAccountNumber"},"GlSalesAccountNumber":{"type":"string","description":"Account number for Sales, see {{support_GLAccountSetup}} for more information","example":"1003","name":"GlSalesAccountNumber"},"IgnoreAutomaticTaxAddition":{"type":"boolean","description":"Ensures that taxes will not be added as part of the automatic tax process. Defaults to false","example":"false","name":"IgnoreAutomaticTaxAddition"},"LongDescription":{"type":"string","description":"Long description","example":"Rebate on 2 year actiations","name":"LongDescription"},"PricingLocations":{"type":"array","arrayType":"object","description":"Pricing for Locations","ref":"epc.NonStockedProductPricingLocation","name":"PricingLocations","properties":{"AllowReturns":{"type":"boolean","description":"A flag to indicate if the Product can be returned. Defaults to true","example":"false","name":"AllowReturns"},"CarrierPrice":{"type":"object","description":"Carrier price","example":"0.0","name":"CarrierPrice"},"Cost":{"type":"object","description":"Cost of the Item from the Vendor. Defaults to 0","example":"0.0","name":"Cost"},"Discountable":{"type":"boolean","description":"A flag to indicate if the Product can be discounted. Defaults to true","example":"false","name":"Discountable"},"FloorPrice":{"type":"object","description":"Floor pricing allows you to keep a product as Discountable but set a minimum price that it can be sold at to ensure margins.  Will default to 0 and cannot be negative. See {{support_FloorPricing}} for more details.","example":"0.0","name":"FloorPrice"},"ForSale":{"type":"boolean","description":"A flag to indicate if the product can be sold. Defaults to true","example":"true","name":"ForSale"},"InvoiceComments":{"type":"string","description":"Comments that will be printed on the invoice every time the Product is sold","example":"Invoice comment","name":"InvoiceComments"},"Margin":{"type":"object","description":"Margin automatically applied to this Product","example":"0.0","name":"Margin"},"Price":{"type":"object","description":"Company-wide default unit price, must be greater then 0","example":"499.99","name":"Price"},"SalePrice":{"type":"object","description":"Sale price, will override Floor Price if it is lower. Defaults to 0","example":"0.0","name":"SalePrice"},"SaleBeginDate":{"type":"datetime","description":"Sale begin date","example":"null","name":"SaleBeginDate"},"SaleEndDate":{"type":"datetime","description":"Sale end date","example":"null","name":"SaleEndDate"},"ShowOnInvoice":{"type":"boolean","description":"A flag to indicate if the price should be shown on the invoice","example":"true","name":"ShowOnInvoice"},"RefundPeriod":{"type":"integer","description":"Number of days before the Product can be refunded, in days","example":"null","name":"RefundPeriod"},"StoreInStorePrice":{"type":"object","description":"Store in Store price. See {{support_StoreInStore}} for more information","example":"399.99","name":"StoreInStorePrice"},"TargetLocationName":{"type":"string","description":"Applies pricing to a single location, or all locations in a company, channel, region or district","example":"Saskatchewan","name":"TargetLocationName"},"TargetLocationType":{"type":"string","description":"Where to apply the pricing, see [TargetLocations](#targetlocations) for a list of acceptable values","example":"RegionName","name":"TargetLocationType"}},"required":["Price","TargetLocationType"]},"PricingMethod":{"type":"string","description":"See [PricingMethods](#pricingmethods) for a list of acceptable values. Defaults to Fixed","example":"Fixed","name":"PricingMethod"},"ProductLabel":{"type":"string","description":"Defaults to first 30 characters of the ProductName, but can be edited","example":"2 YR New Act","name":"ProductLabel"},"ProductTypeId":{"type":"integer","description":"Identifier for a [ProductType](#producttype)","example":"1","generated":"true"},"Serialized":{"type":"boolean","description":"A flag to indicate if this Product is serialized, meaning a serial number must be entered when the Product is purchased. Defaults to false. Once selected, this cannot be changed.","example":"true","name":"Serialized"},"SerialNumberPromptText":{"type":"string","description":"Text displayed when user is prompted to enter a serial number for the product","example":"Serial prompt text here","name":"SerialNumberPromptText"},"ShortDescription":{"type":"string","description":"Short description","example":"2 yr rebate","name":"ShortDescription"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","generated":"true"},"VendorAccountName":{"type":"string","description":"Vendor name","example":"Verizon","name":"VendorAccountName"},"VendorSku":{"type":"string","putDescription":"If provided, must be unique per Vendor","description":"Vendor sku","example":"DEF987","name":"VendorSku"},"RefundLink":{"type":"string","description":"Reserved for internal use","example":""},"ProductLink":{"type":"string","description":"Reserved for internal use","example":""}},"required":["CategoryName","ProductName","ProductLabel","DefaultPricing"]}},"required":[]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Status":"/v1/companies(21090)/batchStatus(123)","TimestampUTC":"2016-11-15T16:43:15.1396674Z"}
+                            schema: |
+                                {"name":"Status","type":"object","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"Status":{"type":"string","putDescription":"Relative endpoint of status","example":"/v1/companies(21090)/batchStatus(123)"},"TimestampUTC":{"type":"datetime","example":"2016-11-15T16:43:15.1396674Z"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/companies({CompanyId})/batchStatus({BatchId}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for the Company
+        
+        BatchId:
+            displayName: BatchId
+            type: integer
+            example: 3
+            required: true
+            description: Identifier of the batch, which is supplied in responses to other requests to the EPC API
+          
+      
+    get:
+        
+        displayName: Getting Status for a Batch
+                
+        
+        description: |            
+            This request can be used to get the status of a request previously sent to EPC.
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"BatchId":3,"CompanyId":14146,"DateCreated":"2015-09-14T22:11:16.5670000Z","FailedCount":1,"PendingCount":1,"Products":[{"ProductName":"Galaxy Note 6","SourceRowNumber":15,"StatusCode":2,"StatusName":"Error","ErrorMessage":"No matching RQ manufacturer found with the name appple"}],"SourceFileName":"Products.xslx","StatusCode":3,"StatusName":"Completed","SuccessfulCount":1,"TotalProductCount":2}
+                            schema: |
+                                {"name":"BatchStatus","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"BatchId":{"type":"integer","description":"Identifier of the Batch","example":"3"},"CompanyId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14146"},"DateCreated":{"type":"datetime","description":"Date this Batch was created","example":"2015-09-14T22:11:16.5670000Z"},"FailedCount":{"type":"integer","description":"Number of products that failled to process","example":"1"},"PendingCount":{"type":"integer","description":"Number of products pending processing","example":"1"},"Products":{"type":"array","arrayType":"object","description":"Product statuses","ref":"epc.ProductStatus","properties":{"ProductName":{"type":"string","description":"Product name","example":"Galaxy Note 6","name":"ProductName"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","name":"SourceRowNumber"},"StatusCode":{"type":"integer","description":"Status of the import, see [StatusCode](#statuscode) for a list of possible values","example":"2","name":"StatusCode"},"StatusName":{"type":"string","description":"Name of the associated StatusCode","example":"Error","name":"StatusName"},"ErrorMessage":{"type":"string","description":"Error message","example":"No matching RQ manufacturer found with the name appple","name":"ErrorMessage"}}},"SourceFileName":{"type":"string","description":"Name of a spreadsheet, if this batch was created from an import","example":"Products.xslx"},"StatusCode":{"type":"integer","description":"Status of the Batch, see [BatchStatusCode](#batchstatuscode) for a list of possible values","example":"3"},"StatusName":{"type":"string","description":"Name of the associated BatchStatus","example":"Completed"},"SuccessfulCount":{"type":"integer","description":"Number of products successfully processed","example":"1"},"TotalProductCount":{"type":"integer","description":"Total number of Products in the Batch","example":"2"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/companies({CompanyId})/batchStatus:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for the Company
+          
+      
+    get:
+        
+        displayName: Getting All Batches
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Items":[{"BatchId":3,"CompanyId":14146,"DateCreated":"2015-09-14T22:11:16.5670000Z","FailedCount":1,"PendingCount":1,"Products":[{"ProductName":"Galaxy Note 6","SourceRowNumber":15,"StatusCode":2,"StatusName":"Error","ErrorMessage":"No matching RQ manufacturer found with the name appple"}],"SourceFileName":"Products.xslx","StatusCode":3,"StatusName":"Completed","SuccessfulCount":1,"TotalProductCount":2}],"MetaData":{"TotalResults":1}}
+                            schema: |
+                                {"name":"BatchList","type":"object","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"Items":{"type":"array","arrayType":"object","ref":"epc.BatchStatus","properties":{"BatchId":{"type":"integer","description":"Identifier of the Batch","example":"3","name":"BatchId"},"CompanyId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14146","name":"CompanyId"},"DateCreated":{"type":"datetime","description":"Date this Batch was created","example":"2015-09-14T22:11:16.5670000Z","name":"DateCreated"},"FailedCount":{"type":"integer","description":"Number of products that failled to process","example":"1","name":"FailedCount"},"PendingCount":{"type":"integer","description":"Number of products pending processing","example":"1","name":"PendingCount"},"Products":{"type":"array","arrayType":"object","description":"Product statuses","ref":"epc.ProductStatus","name":"Products","properties":{"ProductName":{"type":"string","description":"Product name","example":"Galaxy Note 6","name":"ProductName"},"SourceRowNumber":{"type":"integer","description":"If this product was imported from a spreadsheet, the row location of the product in the spreadsheet","example":"15","name":"SourceRowNumber"},"StatusCode":{"type":"integer","description":"Status of the import, see [StatusCode](#statuscode) for a list of possible values","example":"2","name":"StatusCode"},"StatusName":{"type":"string","description":"Name of the associated StatusCode","example":"Error","name":"StatusName"},"ErrorMessage":{"type":"string","description":"Error message","example":"No matching RQ manufacturer found with the name appple","name":"ErrorMessage"}}},"SourceFileName":{"type":"string","description":"Name of a spreadsheet, if this batch was created from an import","example":"Products.xslx","name":"SourceFileName"},"StatusCode":{"type":"integer","description":"Status of the Batch, see [BatchStatusCode](#batchstatuscode) for a list of possible values","example":"3","name":"StatusCode"},"StatusName":{"type":"string","description":"Name of the associated BatchStatus","example":"Completed","name":"StatusName"},"SuccessfulCount":{"type":"integer","description":"Number of products successfully processed","example":"1","name":"SuccessfulCount"},"TotalProductCount":{"type":"integer","description":"Total number of Products in the Batch","example":"2","name":"TotalProductCount"}}},"MetaData":{"type":"object","ref":"epc.MetaData","properties":{"TotalResults":{"type":"integer","putDescription":"Number of batches","example":"1","name":"TotalResults"}}}}}
+                            
+                        
+                    
+                
+            
+    

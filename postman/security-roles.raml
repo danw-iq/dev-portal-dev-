@@ -1,0 +1,523 @@
+#%RAML 0.8
+title: security-roles
+baseUri: https://usermanagerdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - SecurityRole: |
+        {
+          "name": "SecurityRole",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "A SecurityRole represents the relationship between a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> and a set of Permissions. SecurityRoles allow you create custom groups that can hold Permissions",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "316", "generated": "true", "putGenerate": "true" }, 
+            "Name": { "type": "string",  "description": "Name", "putDescription": "A descriptive name, must be unique within the Company", "example": "Store Manager" }
+          },
+          "required": [ "Name" ]
+        }
+        
+
+    
+
+    
+    - SecurityRoleArray: |
+        {
+          "exclude": "true",
+          "name": "SecurityRole",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+    
+    - AssignedRole: |
+        {
+          "name": "AssignedRole",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "An AssignedRole represents the relationship between a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>, <a href='http://developers.iqmetrix.com/api/security-roles/#securityrole'>SecurityRole</a> and Entity.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "6548", "generated": "true", "putGenerate": "true" }, 
+            "EntityId": { "type": "integer", "description": "Identifier of a [CompanyTreeNode](/api/company-tree/#companytreenode)", "putDescription": "Identifier of a <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>", "ref": "company tree.Location.Id" }, 
+            "SecurityRoleId": { "type": "integer", "description": "Identifier of a [SecurityRole](#securityrole)", "ref": "security-roles.SecurityRole.Id" }, 
+            "UserId": { "type": "integer", "description": "Identifier of a [User](/api/usermanager/#user)", "ref": "user-manager.User.Id", "generated": "true", "putGenerate": "true" }
+          },
+          "required": [ "EntityId", "SecurityRoleId" ]        
+        }      
+        
+
+    
+
+    
+    - AssignedRoleArray: |
+        {
+          "exclude": "true",
+          "name": "AssignedRole",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }
+        
+
+    
+
+    
+    - Permission: |
+        {
+          "name": "Permission",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Permissions are the building blocks of SecurityRoles and represent the ability to perform an action within iQmetrix APIs.\n\n* Assigning a Permission to a Security Role always **grants** an action\n* A Permission will never overrule another Permission\n* When `IsAssignable` is set to `false`, the Permission is Restricted by iQmetrix. If you require access to a Restricted Permission, contact {{contact_support}}",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "101" }, 
+            "Name": { "type": "string",  "description": "Descriptive name", "example": "Edit Products" }, 
+            "Category": { "type": "string",  "description": "This field is used internally to group Permissions by how they impact the iQmetrix ecosystem", "example": "Products" }, 
+            "Code": { "type": "string",  "description": "Unique, system generated name used for sorting Permissions", "example": "editproducts" }, 
+            "Description": { "type": "string",  "description": "Describes the function of the Permission", "example": "Enables the user to create, update and archive their private products and retailer revisions." }, 
+            "IsAssignable": { "type": "boolean", "description": "A flag to indicate if this Permission is Restricted, see Notes above", "example": "true" }, 
+            "ParentPermissionId": { "type": "integer", "description": "Identifier of a similar Permission, used for organizing Permissions into groups", "example": "99" }
+          }
+        }
+        
+
+    
+
+    
+    - PermissionArray: |
+        {
+          "exclude": "true",
+          "name": "Permission",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+
+/Entities({EntityId})/Permissions:
+    
+    uriParameters:
+        
+        EntityId:
+            displayName: EntityId
+            type: string
+            example: 14146
+            required: true
+            description: Identifier of a <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>
+          
+      
+    get:
+        
+        displayName: Getting All Permissions for an Entity
+                
+        
+        description: |            
+            This request will return all [Permissions](#permission) within the [SecurityRoles](#security-role) belonging to the specified Entity.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":101,"Name":"Edit Products","Category":"Products","Code":"editproducts","Description":"Enables the user to create, update and archive their private products and retailer revisions.","IsAssignable":true,"ParentPermissionId":99}]
+                            schema: |
+                                {"exclude":"true","name":"Permission","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Entities({EntityId})/SecurityRoles:
+    
+    uriParameters:
+        
+        EntityId:
+            displayName: EntityId
+            type: string
+            example: 14146
+            required: true
+            description: Identifier of a <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>
+          
+      
+    post:
+        
+        displayName: Creating a Security Role
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Name":"Store Manager"}
+                    
+                schema: |
+                    {"name":"SecurityRole","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"A SecurityRole represents the relationship between a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> and a set of Permissions. SecurityRoles allow you create custom groups that can hold Permissions","properties":{"Id":{"type":"integer","description":"Identifier","example":"316","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","putDescription":"A descriptive name, must be unique within the Company","example":"Store Manager"}},"required":["Name"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":316,"Name":"Store Manager"}
+                            schema: |
+                                {"name":"SecurityRole","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"A SecurityRole represents the relationship between a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> and a set of Permissions. SecurityRoles allow you create custom groups that can hold Permissions","properties":{"Id":{"type":"integer","description":"Identifier","example":"316","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","putDescription":"A descriptive name, must be unique within the Company","example":"Store Manager"}},"required":["Name"]}
+                            
+                        
+                    
+                
+            
+      
+    get:
+        
+        displayName: Getting All Security Roles for an Entity
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":316,"Name":"Store Manager"}]
+                            schema: |
+                                {"exclude":"true","name":"SecurityRole","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Entities({EntityId})/SecurityRoles({SecurityRoleId})/Permissions({PermissionId}):
+    
+    uriParameters:
+        
+        EntityId:
+            displayName: EntityId
+            type: string
+            example: 14146
+            required: true
+            description: Identifier of a <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>
+        
+        SecurityRoleId:
+            displayName: SecurityRoleId
+            type: string
+            example: 316
+            required: true
+            description: Identifier of a SecurityRole
+        
+        PermissionId:
+            displayName: PermissionId
+            type: string
+            example: 101
+            required: true
+            description: Identifier of a Permission
+          
+      
+    put:
+        
+        displayName: Enabling a Permission for a Security Role
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+      
+    delete:
+        
+        displayName: Disabling a Permission for a Security Role
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    
+
+/Entities({EntityId})/SecurityRoles({SecurityRoleId})/Permissions:
+    
+    uriParameters:
+        
+        EntityId:
+            displayName: EntityId
+            type: string
+            example: 14146
+            required: true
+            description: Identifier of a <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>
+        
+        SecurityRoleId:
+            displayName: SecurityRoleId
+            type: string
+            example: 316
+            required: true
+            description: Identifier of a SecurityRole
+          
+      
+    get:
+        
+        displayName: Getting Permissions for a Security Role
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":101,"Name":"Edit Products","Category":"Products","Code":"editproducts","Description":"Enables the user to create, update and archive their private products and retailer revisions.","IsAssignable":true,"ParentPermissionId":99}]
+                            schema: |
+                                {"exclude":"true","name":"Permission","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Users({UserId})/AssignedRoles:
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: string
+            example: 2576
+            required: true
+            description: Identifier of a User
+          
+      
+    post:
+        
+        displayName: Assigning a Security Role to a User
+                
+        
+        description: |            
+            If the User is assigned a SecurityRole they already have, the result will be a `HTTP 200` with the <a href='http://developers.iqmetrix.com/api/security-roles/#assignedrole'>AssignedRole</a>, the same response as assigning a new SecurityRole to a User.
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"EntityId":14202,"SecurityRoleId":316}
+                    
+                schema: |
+                    {"name":"AssignedRole","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"An AssignedRole represents the relationship between a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>, <a href='http://developers.iqmetrix.com/api/security-roles/#securityrole'>SecurityRole</a> and Entity.","properties":{"Id":{"type":"integer","description":"Identifier","example":"6548","generated":"true","putGenerate":"true"},"EntityId":{"type":"integer","description":"Identifier of a [CompanyTreeNode](/api/company-tree/#companytreenode)","putDescription":"Identifier of a <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>","ref":"company tree.Location.Id","example":"14202"},"SecurityRoleId":{"type":"integer","description":"Identifier of a [SecurityRole](#securityrole)","ref":"security-roles.SecurityRole.Id","example":"316"},"UserId":{"type":"integer","description":"Identifier of a [User](/api/usermanager/#user)","ref":"user-manager.User.Id","generated":"true","putGenerate":"true","example":"2576"}},"required":["EntityId","SecurityRoleId"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":6548,"EntityId":14202,"SecurityRoleId":316,"UserId":2576}
+                            schema: |
+                                {"name":"AssignedRole","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"An AssignedRole represents the relationship between a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>, <a href='http://developers.iqmetrix.com/api/security-roles/#securityrole'>SecurityRole</a> and Entity.","properties":{"Id":{"type":"integer","description":"Identifier","example":"6548","generated":"true","putGenerate":"true"},"EntityId":{"type":"integer","description":"Identifier of a [CompanyTreeNode](/api/company-tree/#companytreenode)","putDescription":"Identifier of a <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>","ref":"company tree.Location.Id","example":"14202"},"SecurityRoleId":{"type":"integer","description":"Identifier of a [SecurityRole](#securityrole)","ref":"security-roles.SecurityRole.Id","example":"316"},"UserId":{"type":"integer","description":"Identifier of a [User](/api/usermanager/#user)","ref":"user-manager.User.Id","generated":"true","putGenerate":"true","example":"2576"}},"required":["EntityId","SecurityRoleId"]}
+                            
+                        
+                    
+                
+            
+      
+    get:
+        
+        displayName: Getting Assigned Roles for a User
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":6548,"EntityId":14202,"SecurityRoleId":316,"UserId":2576}]
+                            schema: |
+                                {"exclude":"true","name":"AssignedRole","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Users({UserId})/AssignedRoles({SecurityRoleId}):
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: string
+            example: 2572
+            required: true
+            description: Identifier of a User
+        
+        SecurityRoleId:
+            displayName: SecurityRoleId
+            type: string
+            example: 316
+            required: true
+            description: Identifier of a SecurityRole
+          
+      
+    delete:
+        
+        displayName: Unassigning a Security Role from a User
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    

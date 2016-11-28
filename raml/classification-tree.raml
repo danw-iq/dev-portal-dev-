@@ -1,0 +1,142 @@
+#%RAML 0.8
+title: classification-tree
+version: v1
+baseUri: https://productlibrary{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: | 
+      Product Library
+  - title: overview
+    content: |
+      A **Classification Tree** is a hierarchical structure describing a taxonomy of {{Products}}. 
+
+      To learn more about Classification Trees, see {{ClassificationTree_Concept}}.
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 404` | `Unable to find document id {x}` | Ensure ClassificationTreeId is correct |
+      | `HTTP 406` | `Locale not available` | This error occurs with some browser extensions such as Postman. To resolve, add the header `Accept-Language: en-US` |
+resourceTypes:
+    - singularEndpointReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json        
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Classification: |
+      {
+        "name": "Classification",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Classifications are used to group Products together by similar features.\nA Product can only have a single Classification.\nFor example, a Samsung Galaxy S6 Edge, HTC One M9 and iPhone 5C might all have a Classification of Smartphones.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "4" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "Smartphones" }, 
+          "Order": { "type": "integer", "description": "Sorting order", "example": "1" }, 
+          "ProductTemplate": { "type": "object", "ref": "classification-tree.ProductTemplate", "arraydescription": "A reference to a [ProductTemplate](/api/glossary/#producttemplate)" }
+        }
+      }
+  - ProductTemplate: |
+      {
+        "name": "ProductTemplate",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "16" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "Wireless Device" }
+        }
+      }
+  - Category: |
+      {
+        "name": "Category",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "A Category is a node in a Classification Tree that represents a logical grouping of related Classifications.\nFor example, 'iPhone' and 'Tablet' Classifications might both be children of a 'Device' Category.\nThere is a limit to 20 levels of depth for Categories.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "2" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "Devices" }, 
+          "Categories": { "type": "array", "arrayType": "object", "description": "Child Categories", "example": "" }, 
+          "Classifications": { "type": "array", "arrayType": "object", "description": "Child Classifications", "example": "" }, 
+          "Order": { "type": "integer", "description": "Sorting order", "example": "1" }
+        }
+      }
+  - ClassificationTree: |
+      {
+        "name": "ClassificationTree",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "1" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "Cellular & Accessories" }, 
+          "Description": { "type": "string",  "description": "Description", "example": "Classification of products for wireless retail" }, 
+          "Categories": { "type": "array", "arrayType": "object", "description": "Categories in the Tree", "ref": "classification-tree.Category" }, 
+          "Classifications": { "type": "array", "arrayType": "object", "description": "Classifications for the Tree", "ref": "classification-tree.Classification" }, 
+          "Owner": { "type": "object", "ref": "classification-tree.Owner", "description": "Information about the [Company](/api/company-tree/#company) that owns this Tree" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "41" }, 
+          "IsCanonical": { "type": "boolean", "description": "Reserved for internal use"}
+        }
+      }
+  - Owner: |
+      {
+        "name": "Owner",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "[Company](/api/company-tree/#company) Identifier", "example": "1" }, 
+          "Name": { "type": "string",  "description": "[Company](/api/company-tree/#company) Name", "example": "iQmetrix" }
+        }
+      }
+/ClassificationTrees({ClassificationTreeId}):
+  displayName: classificationtree
+  uriParameters:
+    ClassificationTreeId:
+      displayName: ClassificationTreeId
+      type: string
+      example: 1
+      description: Identifier for the {{ClassificationTree}}
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: ClassificationTree
+  get:
+      displayName: Getting a Classification Tree

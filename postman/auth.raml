@@ -1,0 +1,38 @@
+#%RAML 0.8
+title: Authentication
+baseUri: https://accountsdemo.iqmetrix.net/v1
+/oauth2/token:
+  displayName: Obtaining an Access Token
+  post:
+    headers: 
+      Content-Type:
+        example: application/x-www-form-urlencoded
+        required: true
+    body:
+      application/x-www-form-urlencoded:
+        formParameters:
+          grant_type: 
+            type: string
+            description: The value must be password for getting an access token or refresh_token for  refreshing
+            example: password
+            required: true
+          username:
+            type: string
+            description: The username provided to iQmetrix, usually an email address. Required for acquiring an access token
+            required: true
+            example: email@example.com
+          password:
+            type: string
+            description: The password, provided when an account is created. Required for acquiring an access token
+            required: true
+            example: examplepassword
+          client_id:
+            type: string
+            description: The client ID, provided by iQmetrix
+            example: exampleclient
+            required: true
+          client_secret:
+            type: string
+            description: The client secret
+            example: examplesecret
+            required: true 

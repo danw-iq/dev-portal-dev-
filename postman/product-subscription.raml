@@ -1,0 +1,424 @@
+#%RAML 0.8
+title: product-subscription
+baseUri: https://productsubscriptionsdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - Subscription: |
+        {
+          "name": "Subscription",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Companies": { "type": "array", "arrayType": "object", "description": "Companies for the subscription", "ref": "product-subscription.Company" }, 
+            "ListId": { "type": "GUID", "description": "Subscription identifier", "example": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4" }
+          }
+        }
+        
+
+    
+
+    
+    - Company: |
+        {
+          "name": "Company",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "DateSubscribedUtc": { "type": "DateTime", "description": "Date company subscribed to product subscription, in UTC", "example": "2015-09-23T23:48:37.744Z" }, 
+            "Id": { "type": "integer", "description": "Company identifier", "example": "146454" }, 
+            "Name": { "type": "string",  "description": "Company Name", "example": "Kentel Corp" }
+          }
+        }
+        
+
+    
+
+    
+    - SubscribableList: |
+        {
+          "name": "SubscribableList",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "EntityId": { "type": "integer", "description": "[Supplier](/api/entity-store/#supplier) identifier", "ref": "entity-store.Supplier.Id" }, 
+            "Id": { "type": "GUID", "description": "Subscribable List identifer", "example": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4" }, 
+            "Name": { "type": "string",  "description": "Title of product subscription", "example": "Nozama's Product List" }, 
+            "Dropshippable": { "type": "boolean",  "description": "Indicates if products in list are dropshippable. Defaults to false", "example": "true" },
+            "Products": { "type": "array", "arrayType": "object", "description": "Products for the subscribable list", "ref": "product-subscription.Product" }, 
+            "Version": { "type": "integer", "description": "Subscription revision", "example": "2", "generated": "true", "putGenerate": "true" },
+            "CountOfProducts": { "type": "integer", "description": "Number of Products in the List", "example": "1", "generated": "true" },
+            "MasterEntityId": { "type": "integer",  "description": "Reserved for internal use", "example": "" }
+          },
+          "required": [ "EntityId", "Name", "Products" ]
+        }
+        
+
+    
+
+    
+    - Product: |
+        {
+            "name": "Product",
+            "type": "object",
+            "$schema": "http://json-schema.org/draft-03/schema",      
+            "properties": {
+              "Dropshippable": { "type": "boolean", "description": "Indicates if the product is dropshippable", "example": "true" }, 
+              "Price": { "type": "decimal", "description": "Product MSRP. Currency code defaults internally to retailer location. ", "example": "24.99" }, 
+              "ProductName": { "type": "string",  "description": "Name of product", "example": "Samsung Galaxy S4 Standard Battery" }, 
+              "ProductSlugs": { "type": "array", "arrayType": "string", "description": "List of slugs that match the vendor sku", "example": "M5218" }, 
+              "VendorSku": { "type": "string",  "description": "Vendor product SKU", "example": "B00LAOKN4S" }, 
+              "Version": { "type": "integer", "description": "Product revision", "example": "2", "generated": "true", "putGenerate": "true"  }
+            },
+            "required": [ "ProductName", "VendorSku" ]
+        }
+        
+
+    
+
+    
+    - SubListHidden: |
+        {
+          "exclude": "true",
+          "name": "SubListHidden",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "type": "object",
+          "properties": {
+            "EntityId": { "type": "integer", "putDescription": "<a href='http://developers.iqmetrix.com/api/entity-store/#supplier'>Supplier</a> identifier", "ref": "entity-store.Supplier.Id" }, 
+            "Name": { "type": "string",  "putDescription": "Title of product subscription", "example": "Nozama's Product List" },
+            "Dropshippable": { "type": "boolean",  "putDescription": "Defaults to false", "example": "true" }     
+          },
+          "required": [ "EntityId", "Name" ]
+        }
+        
+
+    
+
+
+/subscription({ListId}):
+    
+    uriParameters:
+        
+        ListId:
+            displayName: ListId
+            type: string
+            example: 43d92a51-650e-4b85-b5d0-8d51bf4c59f4
+            required: true
+            description: 
+          
+      
+    get:
+        
+        displayName: Getting All Companies in a Product Subscription
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                  "ListId": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4",
+                                  "Companies": [
+                                      {
+                                        "Id": 14146,
+                                        "Name": "KENTEL Corp",
+                                        "DateSubscribedUtc": "2015-11-23T19:12:09.92Z"
+                                      },
+                                    ...  
+                                  ]
+                                }
+                                
+                        
+                        
+                    
+                
+            
+    
+
+/subscribablelists({ListId}):
+    
+    uriParameters:
+        
+        ListId:
+            displayName: GUID
+            type: string
+            example: 43d92a51-650e-4b85-b5d0-8d51bf4c59f4
+            required: true
+            description: GUID you have added for <a href='http://developers.iqmetrix.com/api/product-subscription/#subscribablelist'>SubscribableList</a>
+          
+      
+    put:
+        
+        displayName: Creating a Subscribable List
+                
+        
+        description: |            
+            Allows you to create your own subscribable list. You must provide a GUID for the  `SubscribableListId`.{{note}}The naming convention for subscribable lists is in the format "Vendor Name - Product List Name". For example, Supplier123 - Otterbox Products.{{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |
+                    {
+                        "EntityId": 14107,
+                        "Name": "Test List Name",
+                        "Dropshippable": true
+                    }
+                    
+
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                    "Id": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4",
+                                    "EntityId": 14107,
+                                    "Name": "Nozama - Samsung Products",
+                                    "Dropshippable": true,
+                                    "Products": [],
+                                    "Version": 2
+                                }
+                                
+                        
+                        
+                    
+                
+            
+    
+
+/subscribablelists({SubscribableListId}):
+    
+    uriParameters:
+        
+        SubscribableListId:
+            displayName: Id
+            type: string
+            example: 43d92a51-650e-4b85-b5d0-8d51bf4c59f4
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/product-subscription/#subscribablelist'>SubscribableList</a>
+          
+      
+    get:
+        
+        displayName: Getting a Subscribable List
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"EntityId":14107,"Id":"43d92a51-650e-4b85-b5d0-8d51bf4c59f4","Name":"Nozama's Product List","Dropshippable":true,"Products":[{"Dropshippable":true,"Price":24.99,"ProductName":"Samsung Galaxy S4 Standard Battery","ProductSlugs":["M5218"],"VendorSku":"B00LAOKN4S","Version":2}],"Version":2,"CountOfProducts":1}
+                            schema: |
+                                {"name":"SubscribableList","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"EntityId":{"type":"integer","description":"[Supplier](/api/entity-store/#supplier) identifier","ref":"entity-store.Supplier.Id","example":"14107"},"Id":{"type":"GUID","description":"Subscribable List identifer","example":"43d92a51-650e-4b85-b5d0-8d51bf4c59f4"},"Name":{"type":"string","description":"Title of product subscription","example":"Nozama's Product List"},"Dropshippable":{"type":"boolean","description":"Indicates if products in list are dropshippable. Defaults to false","example":"true"},"Products":{"type":"array","arrayType":"object","description":"Products for the subscribable list","ref":"product-subscription.Product","properties":{"Dropshippable":{"type":"boolean","description":"Indicates if the product is dropshippable","example":"true","name":"Dropshippable"},"Price":{"type":"decimal","description":"Product MSRP. Currency code defaults internally to retailer location. ","example":"24.99","name":"Price"},"ProductName":{"type":"string","description":"Name of product","example":"Samsung Galaxy S4 Standard Battery","name":"ProductName"},"ProductSlugs":{"type":"array","arrayType":"string","description":"List of slugs that match the vendor sku","example":"M5218","name":"ProductSlugs"},"VendorSku":{"type":"string","description":"Vendor product SKU","example":"B00LAOKN4S","name":"VendorSku"},"Version":{"type":"integer","description":"Product revision","example":"2","generated":"true","putGenerate":"true","name":"Version"}},"required":["ProductName","VendorSku"]},"Version":{"type":"integer","description":"Subscription revision","example":"2","generated":"true","putGenerate":"true"},"CountOfProducts":{"type":"integer","description":"Number of Products in the List","example":"1","generated":"true"},"MasterEntityId":{"type":"integer","description":"Reserved for internal use","example":""}},"required":["EntityId","Name","Products"]}
+                            
+                        
+                    
+                
+            
+      
+    put:
+        
+        displayName: Updating Products in a Subscribable List
+                
+        
+        description: |            
+            {{note}}The new product list in the payload replaces the old product list. Any matching old products (determined by vendor sku) will have their slug and version data copied over into the new products.{{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |
+                    {
+                       "EntityId": 14107,
+                       "Name": "Nozama's Product List",
+                       "Products": [
+                           {
+                               "ProductName": "Samsung Galaxy S4 Standard Battery",
+                               "VendorSku": "B00LAOKN4S",
+                               "Price": 24.99,
+                               "Dropshippable": true
+                           }
+                       ]          
+                    }
+                    
+
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                    "Id": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4",
+                                    "EntityId": 41407,
+                                    "Name": "Nozama's Product List",
+                                    "Products": [
+                                        {
+                                            "ProductName": "Samsung Galaxy S4 Standard Battery",
+                                            "VendorSku": "B00LAOKN4S",
+                                            "Price": 24.99,
+                                            "Dropshippable": true
+                                            "ProductSlugs": [],
+                                            "Version": 1
+                                        }
+                                    ],
+                                    "Version": 2
+                                }
+                                
+                        
+                        
+                    
+                
+            
+    
+
+/subscription({ListId})/company({CompanyId}):
+    
+    uriParameters:
+        
+        ListId:
+            displayName: ListId
+            type: string
+            example: 43d92a51-650e-4b85-b5d0-8d51bf4c59f4
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/product-subscription/#subscribablelist'>SubscribableList</a>
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+          
+      
+    put:
+        
+        displayName: Adding a Company to a Subscribable List
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+      
+    delete:
+        
+        displayName: Deleting a Company from a Subscribable List
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    

@@ -1,0 +1,183 @@
+#%RAML 0.8
+title: att-auth-proxy
+baseUri: https://authproxyatt.iqmetrix.net/v1
+schemas: 
+
+    
+    - MappingReferenceData: |
+        {
+          "name": "MappingReferenceData",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Mappings": { "type": "array", "arrayType": "object", "description": "Array, that consists of multiples of the following", "isNested": "true", "ref": "att-auth-proxy.MappingReference" }
+          }
+        }
+        
+
+    
+
+    
+    - MappingReference: |
+        {
+          "exclude": "true",
+          "name": "MappingReference",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "MyLoginsCspGroup": { "type": "string", "description": "Alphabetic string that corresponds to the column 'MyLogins CSP Group' in the mapping spreadsheet", "example": "CKPDEM" },
+            "TrainingComplianceCspGroup": { "type": "string", "description": "Alphabetic string that corresponds to the column 'Training Compliance CSP Group' in the mapping spreadsheet", "example": "CKUNTM" },
+            "RQSecurityRoleName": { "type": "string", "description": "Alphabetic string that corresponds to the column 'Resulting Base RQ Profile' in the mapping spreadsheet", "example": "Dealer Store Manager Basic" },
+            "IsDealerSpecific":{ "type": "boolean", "description": "A flag to indicate if the service will prepend the user's dealer specific prefix to the RQSecurityRoleName to find the matching security role", "example": "false" }
+          }
+        }    
+        
+
+    
+
+    
+    - SetPrefix: |
+        {
+          "exclude": "true",
+          "name": "SetPrefix",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "UserName": { "type": "string", "example": "sample@iqmetrix.com" },
+            "SecurityRolePrefix": { "type": "string", "putDescription": "The prefix that will be pre-pended to the user's Hub security role", "example": "iQMetrix" }
+          },
+          "required": [ "UserName", "SecurityRolePrefix" ]
+        }         
+        
+
+    
+
+
+/users({UserId}):
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: integer
+            example: 12321
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>
+          
+      
+    put:
+        
+        displayName: Setting a Prefix for a User
+                
+        
+        description: |            
+            The prefix will be prepended to the User's role with whitespace in the form `{SecurityRolePrefix} {rqSecurityRoleName}`.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"UserName":"sample@iqmetrix.com","SecurityRolePrefix":"iQMetrix"}
+                    
+                schema: |
+                    {"exclude":"true","name":"SetPrefix","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"UserName":{"type":"string","example":"sample@iqmetrix.com"},"SecurityRolePrefix":{"type":"string","putDescription":"The prefix that will be pre-pended to the user's Hub security role","example":"iQMetrix"}},"required":["UserName","SecurityRolePrefix"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"UserName":"sample@iqmetrix.com","SecurityRolePrefix":"iQMetrix"}
+                            schema: |
+                                {"exclude":"true","name":"SetPrefix","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"UserName":{"type":"string","example":"sample@iqmetrix.com"},"SecurityRolePrefix":{"type":"string","putDescription":"The prefix that will be pre-pended to the user's Hub security role","example":"iQMetrix"}},"required":["UserName","SecurityRolePrefix"]}
+                            
+                        
+                    
+                
+            
+    
+
+/cspGroupMappingReference:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting the Security Role Mapping Reference Data
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                  "Mappings": [
+                                      {
+                                          "MyLoginsCspGroup": "CKPDEM",
+                                          "TrainingComplianceCspGroup": null,
+                                          "RQSecurityRoleName": "Chief of Staff",
+                                          "IsDealerSpecific": false
+                                      },
+                                      {
+                                          "MyLoginsCspGroup": "CKPDEM",
+                                          "TrainingComplianceCspGroup": "CKUNTM",
+                                          "RQSecurityRoleName": "Dealer Store Manager Basic",
+                                          "IsDealerSpecific": false
+                                      },
+                                      {
+                                          "MyLoginsCspGroup": "CKPDPM",
+                                          "TrainingComplianceCspGroup": null,
+                                          "RQSecurityRoleName": "Dealer Principal",
+                                          "IsDealerSpecific": false
+                                      },
+                                      {
+                                          "MyLoginsCspGroup": "CKPDPM",
+                                          "TrainingComplianceCspGroup": "CKUNTM",
+                                          "RQSecurityRoleName": "Dealer Store Manager Basic",
+                                          "IsDealerSpecific": false
+                                      }
+                                      ...
+                                  ]                      
+                                }
+                                
+                        
+                        
+                    
+                
+            
+    

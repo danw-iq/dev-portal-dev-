@@ -1,0 +1,244 @@
+#%RAML 0.8
+title: entity-store
+version: v1
+baseUri: https://entitymanager{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |    
+      The Entity Store helps manage your Company structure. It also manages relationships your Company has with Suppliers, Manufacturers and Carriers. 
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json      
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+    - singularEndpointReadOnly:
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json     
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Carrier: |
+      {
+        "name": "Carrier",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Unique identifier", "example": "9" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "Helios" }, 
+          "Description": { "type": "string",  "description": "Description", "example": "" }, 
+          "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data", "example": "" }, 
+          "CreatedUTC": { "type": "DateTime", "description": "Created date, in UTC", "example": "2014-07-28T20:52:12.929Z" }, 
+          "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "Carrier_25" }, 
+          "LastModifiedUtc": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z" }, 
+          "Logo": { "type": "object", "description": "A reference to an [Asset](/api/assets/#asset)", "example": ""}, 
+          "Relationships": { "type": "array", "arrayType": "object", "description": "Relationships", "example": "" }, 
+          "Role": { "type": "string",  "description": "Role", "example": "Carrier" }, 
+          "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Carrier", "ref": "entity-store.CarrierRole", "isNested": "true" }, 
+          "SortName": { "type": "string",  "description": "A string used for sorting", "example": "helios" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1" }, 
+          "CorrelationId": { "type": "string", "description": "Reserved for internal use" },
+          "TypeId": { "type": "string",  "description": "Reserved for future use"  }
+        }
+      }
+  - CarrierRole: |
+      {
+          "name": "CarrierRole",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "example": "Carrier" }
+          }
+      }
+  - CarrierArray: |
+      {
+        "name": "Carrier",
+        "exclude": "true",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - Manufacturer: |
+      {
+        "name": "Manufacturer",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Unique identifier", "example": "13149" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "OtterBox" }, 
+          "Description": { "type": "string",  "description": "Description", "example": "#1 Most Trusted Brand in Smartphone Protection" }, 
+          "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data", "example": "" }, 
+          "CreatedUtc": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-02-24T19:29:31.073Z" }, 
+          "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "Manufacturer_145" }, 
+          "LastModifiedUtc": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z" }, 
+          "Logo": { "type": "object", "description": "A reference to an [Asset](/api/assets/#asset)", "example": ""}, 
+          "Relationships": { "type": "array", "arrayType": "object", "description": "Relationships", "example": "" }, 
+          "Role": { "type": "string",  "description": "Role", "example": "Manufacturer" }, 
+          "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Manufacturer", "ref": "entity-store.ManufacturerRole", "isNested": "true" }, 
+          "SortName": { "type": "string",  "description": "A string used for sorting", "example": "otterbox" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1" }, 
+          "CorrelationId": { "type": "string",  "description": "Reserved for internal use" },
+          "TypeId": { "type": "string",  "description": "Reserved for future use"  }
+        }
+      }    
+  - ManufacturerRole: |
+      {
+          "name": "ManufacturerRole",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "example": "Manufacturer" }
+          }
+      }      
+  - ManufacturerArray: |
+      {
+        "name": "Manufacturer",        
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "exclude": "true"
+      }        
+  - Supplier: |
+      {
+        "name": "Supplier",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Unique identifier", "example": "14107" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "NOZAMA Inc." }, 
+          "Description": { "type": "string",  "description": "Description", "example": "Provides supplies for KENTEL Corp." }, 
+          "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data", "example": "" }, 
+          "CreatedUtc": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-11-05T18:15:26.558Z" }, 
+          "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "Supplier_151" }, 
+          "LastModifiedUtc": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z" }, 
+          "Logo": { "type": "object", "description": "A reference to an [Asset](/api/assets/#asset)", "example": ""}, 
+          "Relationships": { "type": "array", "arrayType": "object", "description": "Relationships", "example": "" }, 
+          "Role": { "type": "string",  "description": "Role", "example": "Vendor" }, 
+          "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Vendor", "ref": "entity-store.SupplierRole", "isNested": "true" }, 
+          "SortName": { "type": "string",  "description": "A string used for sorting", "example": "nozama inc." }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1" }, 
+          "CorrelationId": { "type": "string",  "description": "Reserved for internal use" },
+          "TypeId": { "type": "string",  "description": "Reserved for future use"  }
+        }
+      }
+  - SupplierArray: |
+      {
+        "name": "Supplier",        
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "exclude": "true"
+      }
+  - SupplierRole: |
+      {
+          "name": "SupplierRole",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Name": { "type": "string", "example": "Vendor" }
+          }
+      }            
+/Carriers:
+  type:
+    collectionReadOnly:
+      resource: CarrierArray
+  get:
+    displayName: Getting All Carriers
+/Carriers({CarrierId}):
+  uriParameters:
+    CarrierId:
+      displayName: CarrierId
+      type: string
+      example: 9
+      description: Identifier for the {{Carrier}}
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: Carrier
+  get: 
+    displayName: Getting a Carrier
+/Manufacturers:
+  type:
+    collectionReadOnly:
+      resource: ManufacturerArray
+  get:
+    displayName: Getting All Manufacturers
+/Manufacturers({ManufacturerId}):
+  uriParameters:
+    ManufacturerId:
+      displayName: Manufacturer Id
+      type: string
+      example: 13149
+      description: Identifier for the {{Manufacturer}}
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: Manufacturer
+  get: 
+    displayName: Getting a Manufacturer
+/Suppliers:
+  type:
+    collectionReadOnly:
+      resource: SupplierArray
+  get:
+    displayName: Getting all Suppliers
+/Suppliers({SupplierId}):
+  uriParameters:
+    SupplierId:
+      displayName: Supplier Id
+      type: string
+      example: 14107
+      description: Identifier for the {{Supplier}}
+      required: true  
+  type:
+    singularEndpointReadOnly:
+      resource: Supplier
+  get:
+    displayName: Getting a Supplier

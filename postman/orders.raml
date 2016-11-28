@@ -1,0 +1,939 @@
+#%RAML 0.8
+title: orders
+baseUri: https://orderdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - ProcessOrder: |
+        {
+          "name": "ProcessOrder",
+          "type": "object",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {  
+            "OrderId": { "type": "GUID", "ref": "orders.Order.Id" }
+          },
+          "required": [ "OrderId"]
+        }
+        
+
+    
+
+    
+    - Order: |
+        {
+          "name": "Order",                
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "GUID", "description": "Unique identifier", "example": "cdd26b8f-4ed1-409d-9984-982e081c425e", "generated": "true", "putGenerate": "true" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "iPhone 5 Order" }, 
+            "BillingAddressId": { "type": "GUID", "description": "Unique identifier for the billing [Address](/api/crm/#address)", "ref": "crm.Address.Id" }, 
+            "BillingCustomerId": { "type": "GUID", "description": "Unique identifier for the billing [Customer](/api/crm/#customer)", "putDescription": "Must belong to the Company specified in the URI. Required to Process an Order", "ref": "crm.Customer.Id" }, 
+            "CreatedDateUtc": { "type": "DateTime", "description": "The date and time the Order was created, in UTC", "example": "2015-03-27T18:47:29.9012402+00:00", "generated": "true" }, 
+            "DiscountAmount": { "type": "decimal", "description": "The value of the discount to be applied at the Order level", "example": "15.0" }, 
+            "DiscountCode": { "type": "string",  "description": "The discount code for a discount applied to this Order", "example": "MTRY-15" }, 
+            "DiscountDescription": { "type": "string",  "description": "A description of the discount", "example": "Military discount" }, 
+            "EmployeeId": { "type": "integer", "description": "Identifier for the Employee who created this Order", "putDescription": "Must belong to the Company specified in the URI", "example": "15" }, 
+            "EntityId": { "type": "integer", "description": "Identifier for the [Location](/api/company-tree/#location)", "ref": "company tree.Location.Id" }, 
+            "OrderExpiryDate": { "type": "DateTime", "description": "The date and time this Order expires and can no longer be updated, in UTC", "example": "2015-05-05T14:32:05.9140188+00:00", "generated": "true"  }, 
+            "OrderExpiryHours": { "type": "integer", "description": "The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.", "example": "20" }, 
+            "OrderType": { "type": "string", "description": "Name of the [OrderType](#ordertype)", "example": "Sales", "generated": "true"  }, 
+            "OrderTypeId": { "type": "integer","description": "See [OrderType](#ordertype) for a list of acceptable values", "example": "3" }, 
+            "PrintableId": { "type": "string", "description": "An identifier for this Order that can used to print on invoices. This value is system-generated and read-only", "example": "8765-1234-987", "generated": "true"  }, 
+            "ShippingAddressId": { "type": "GUID", "description": "Unique identifier for the shipping [Address](/api/crm/#address)", "ref": "crm.Address.Id"  }, 
+            "ShippingCustomerId": { "type": "GUID", "description": "Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded", "ref": "crm.Customer.Id"  }, 
+            "ShippingEntityId": { "type": "integer", "description": "Identifier for the Location this Order will be shipped to.", "putDescription": "If this value is provided, ShippingCustomerId must be excluded", "ref": "company tree.Location.Id" }, 
+            "State": { "type": "string", "description": "See [OrderState](#orderstate) for a list of acceptable values", "example": "Created", "generated": "true"  }, 
+            "TenderId": { "type": "string", "description": "An invoice number from the system that created the Order, Invoice Number in RQ", "example": "TT101IN18" }, 
+            "CustomerId": { "type": "string", "description": "This is a legacy property that should not be used", "example": "" }, 
+            "SourceId": { "type": "string", "description": "Reserved for future use", "example": "" },
+            "SourceName": { "type": "string", "description": "Reserved for future use", "example": "" },
+            "TenderOrigin": { "type": "string", "description": "Reserved for future use", "example": "" }
+          },
+          "required": ["OrderTypeId", "EntityId"]
+        }
+        
+
+    
+
+    
+    - OrderArray: |
+        {
+          "exclude": "true",        
+          "name": "Order",                
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+    
+    - Item: |
+        {
+          "name": "Item",        
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "GUID", "description": "Unique identifier for this Item", "example": "8592718e-bcca-468c-8009-38678929b693", "generated":"true" }, 
+            "Cost": { "type": "decimal", "description": "Cost of this Item, defaults to 0", "example": "5.99" }, 
+            "Description": { "type": "string",  "description": "Description of this Item", "example": "Samsung Galaxy S4 Standard Battery" }, 
+            "ItemStatus": { "type": "string",  "description": "Name of the [ItemStatus](#itemstatus)", "example": "New", "generated": "true" }, 
+            "ItemStatusId": { "type": "integer", "description": "See [ItemStatus](#itemstatus) for a list of acceptable values", "example": "1" }, 
+            "ItemType": { "type": "string",  "description": "Name of the [ItemType](#itemtype)", "example": "DropShip", "generated":"true" }, 
+            "ItemTypeId": { "type": "string",  "description": "See [ItemType](#itemtype) for a list of acceptable values", "example": "1" }, 
+            "Index": { "type": "integer", "description": "A value used for sorting Items, such as in a shopping cart", "example": "0" }, 
+            "ListPrice": { "type": "decimal", "description": "List Price of this Item, defaults to 0", "example": "12.99" }, 
+            "Notes": { "type": "string",  "description": "Notes for this Item", "example": "Dented corner" }, 
+            "OrderId": { "type": "GUID", "description": "Unique identifier for the [Order](#order), specified by the OrderId in the URI", "ref": "orders.Order.Id", "generated":"true" }, 
+            "ProductId": { "type": "string",  "description": "Identifier for the Product. Generally, this is a CatalogItemId", "ref": "catalog.CatalogItem.CatalogItemId" }, 
+            "Quantity": { "type": "integer", "description": "Amount of this Item In Stock, defaults to 0", "example": "2" }, 
+            "SellingPrice": { "type": "decimal", "description": "Selling Price of this Item, defaults to 0", "example": "9.99" }, 
+            "SerialNumbers": { "type": "array", "arrayType": "string", "description": "Serial numbers intended for product serialization", "example": "abc321" }, 
+            "SKU": { "type": "string",  "description": "SKU for this Item", "example": "00001" }, 
+            "ShippingOptionId": { "type": "string",  "description": "Identifier for the ShippingOption that this Item will use", "example": "1" }, 
+            "SupplierEntityId": { "type": "integer", "description": "Identifier for the Supplier of this Item", "ref": "entity-store.Supplier.Id" }, 
+            "SupplierReference": { "type": "string",  "description": "May be used for additional Supplier reference information", "example": "10" }, 
+            "TrackingInformation": { "type": "array", "arrayType": "object", "description": "Tracking information in the form of key-value pairs", "ref": "orders.TrackingInformation", "isNested": "true" },
+            "ItemExtensions": { "type": "array", "arrayType": "object", "description": "Reserved for future use", "example": ""  }                   
+          },
+          "required": ["ItemStatusId", "ItemTypeId" ]
+        }
+        
+
+    
+
+    
+    - ItemExtension: |
+        {
+          "exclude": "true",
+          "name": "ItemExtension",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "GUID", "description": "Unique identifier", "example": "063c3712-eb08-44f9-8a13-8537c6276a72", "generated":"true" },
+            "ItemId": { "type": "string", "description": "Identifier for a [Item](/api/orders/#item)", "ref": "orders.Item.Id", "generated": "true" }, 
+            "ExtensionTypeId": { "type": "integer", "putDescription": "Identifier for a {{ItemExtensionType}}", "description": "Identifier for a [ItemExtensionType](/api/orders/#itemextensiontype)", "ref": "orders.ItemExtensionType.Id" }, 
+            "ExtensionType": { "type": "string", "description": "Name of the associated [ItemExtensionType](/api/orders/#itemextensiontype)", "ref": "orders.ItemExtensionType.Name", "generated": "true" },      
+            "Value": { "type": "string", "description": "Value of the extension", "example": "True" }
+          },
+          "required": [ "ExtensionTypeId" ]
+        }
+        
+
+    
+
+    
+    - ItemExtensionArray: |
+        {
+          "exclude": "true",
+          "name": "ItemExtension",        
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }   
+        
+
+    
+
+    
+    - ItemExtensionType: |
+        {
+          "exclude": "true",        
+          "name": "ItemExtensionType",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "2", "generated":"true" }, 
+            "Name": { "type": "string", "description": "Name", "example": "eCommerce_PricingChanged" },
+            "Enabled": { "type": "boolean", "description": "A flag to indicate if this ItemExtensionType is Enabled", "example": "true" }
+          }        
+        }
+        
+
+    
+
+    
+    - ItemExtensionTypeArray: |
+        {
+          "exclude": "true",
+          "name": "ItemExtensionType",        
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }          
+        
+
+    
+
+    
+    - TrackingInformation: |
+        {
+          "exclude": "true",
+          "name": "TrackingInformation",        
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Quantity": { "type": "integer", "description": "Number of items being tracked", "example": "1" }, 
+            "TrackingNumber": { "type": "string",  "description": "Tracking number", "example": "1TTTTN4421" }
+          },
+          "required": [ "Quantity", "TrackingNumber"]
+        }      
+        
+
+    
+
+    
+    - ItemArray: |
+        {
+          "exclude": "true",
+          "name": "Item",        
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+    
+    - OrderFull: |
+        {
+          "name": "OrderFull",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "**OrderFull** is an extension on the Order resource",
+          "properties": {
+            "Id": { "type": "GUID", "description": "Unique identifier", "example": "cdd26b8f-4ed1-409d-9984-982e081c425e", "generated": "true", "putGenerate": "true" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "iPhone 5 Order" }, 
+            "BillingAddressId": { "type": "GUID", "description": "Unique identifier for the billing [Address](/api/crm/#address)", "ref": "crm.Address.Id" }, 
+            "BillingCustomerId": { "type": "GUID", "description": "Unique identifier for the billing [Customer](/api/crm/#customer)", "putDescription": "Must belong to the Company specified in the URI. Required to Process an Order", "ref": "crm.Customer.Id" }, 
+            "CreatedDateUtc": { "type": "DateTime", "description": "The date and time the Order was created, in UTC", "example": "2015-03-27T18:47:29.9012402+00:00", "generated": "true" }, 
+            "DiscountAmount": { "type": "decimal", "description": "The value of the discount to be applied at the Order level", "example": "15.0" }, 
+            "DiscountCode": { "type": "string",  "description": "The discount code for a discount applied to this Order", "example": "MTRY-15" }, 
+            "DiscountDescription": { "type": "string",  "description": "A description of the discount", "example": "Military discount" }, 
+            "EmployeeId": { "type": "integer", "description": "Identifier for the Employee who created this Order", "putDescription": "Must belong to the Company specified in the URI", "example": "15" }, 
+            "EntityId": { "type": "integer", "description": "Identifier for the [Location](/api/company-tree/#location)", "ref": "company tree.Location.Id" }, 
+            "OrderExpiryDate": { "type": "DateTime", "description": "The date and time this Order expires and can no longer be updated, in UTC", "example": "2015-05-05T14:32:05.9140188+00:00", "generated": "true"  }, 
+            "OrderExpiryHours": { "type": "integer", "description": "The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.", "example": "20" }, 
+            "OrderType": { "type": "string", "description": "Name of the [OrderType](#ordertype)", "example": "Sales", "generated": "true"  }, 
+            "OrderTypeId": { "type": "integer","description": "See [OrderType](#ordertype) for a list of acceptable values", "example": "3" }, 
+            "PrintableId": { "type": "string", "description": "An identifier for this Order that can used to print on invoices. This value is system-generated and read-only", "example": "8765-1234-987", "generated": "true"  }, 
+            "ShippingAddressId": { "type": "GUID", "description": "Unique identifier for the shipping [Address](/api/crm/#address)", "ref": "crm.Address.Id"  }, 
+            "ShippingCustomerId": { "type": "GUID", "description": "Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded", "ref": "crm.Customer.Id"  }, 
+            "ShippingEntityId": { "type": "integer", "description": "Identifier for the Location this Order will be shipped to.", "putDescription": "If this value is provided, ShippingCustomerId must be excluded", "ref": "company tree.Location.Id" }, 
+            "State": { "type": "string", "description": "See [OrderState](#orderstate) for a list of acceptable values", "example": "Created", "generated": "true"  }, 
+            "TenderId": { "type": "string", "description": "An invoice number from the system that created the Order, Invoice Number in RQ", "example": "INV112" }, 
+            "Items": { "type": "array", "arrayType": "object", "ref": "orders.Item", "description": "The Items in the [Order](#order)", "example": "" },
+            "CustomerId": { "type": "string", "description": "This is a legacy property that should not be used", "example": "" }, 
+            "SourceId": { "type": "string", "description": "Reserved for future use", "example": "" },
+            "SourceName": { "type": "string", "description": "Reserved for future use", "example": "" },          
+            "TenderOrigin": { "type": "string", "description": "Reserved for future use", "example": "" }
+          },
+          "required": ["OrderTypeId"]        
+        }
+        
+
+    
+
+    
+    - OrderFullArray: |
+        {
+          "exclude": "true",        
+          "name": "OrderFull",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+
+/Companies({CompanyId})/Orders:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+          
+      
+    post:
+        
+        displayName: Creating an Order
+                
+        
+        description: |            
+            {{note}}The <code>EntityId</code> used in the request parameters must belong to the <code>CompanyId</code> used in the URI.{{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryHours":20,"OrderTypeId":3,"ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"TenderId":"TT101IN18"}
+                    
+                schema: |
+                    {"name":"Order","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"TT101IN18"},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId","EntityId"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"TT101IN18"}
+                            schema: |
+                                {"name":"Order","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"TT101IN18"},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId","EntityId"]}
+                            
+                        
+                    
+                
+            
+      
+    get:
+        
+        displayName: Getting All Order Summaries for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"TT101IN18"}]
+                            schema: |
+                                {"exclude":"true","name":"Order","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Orders({OrderId})/Items:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        OrderId:
+            displayName: OrderId
+            type: string
+            example: 2ad88692-7757-4a72-915b-dfe8f2539279
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/orders/#order'>Order</a> being updated
+          
+      
+    post:
+        
+        displayName: Adding an Item to an Order
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatusId":1,"ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}
+                    
+                schema: |
+                    {"name":"Item","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier for this Item","example":"8592718e-bcca-468c-8009-38678929b693","generated":"true"},"Cost":{"type":"decimal","description":"Cost of this Item, defaults to 0","example":"5.99"},"Description":{"type":"string","description":"Description of this Item","example":"Samsung Galaxy S4 Standard Battery"},"ItemStatus":{"type":"string","description":"Name of the [ItemStatus](#itemstatus)","example":"New","generated":"true"},"ItemStatusId":{"type":"integer","description":"See [ItemStatus](#itemstatus) for a list of acceptable values","example":"1"},"ItemType":{"type":"string","description":"Name of the [ItemType](#itemtype)","example":"DropShip","generated":"true"},"ItemTypeId":{"type":"string","description":"See [ItemType](#itemtype) for a list of acceptable values","example":"1"},"Index":{"type":"integer","description":"A value used for sorting Items, such as in a shopping cart","example":"0"},"ListPrice":{"type":"decimal","description":"List Price of this Item, defaults to 0","example":"12.99"},"Notes":{"type":"string","description":"Notes for this Item","example":"Dented corner"},"OrderId":{"type":"GUID","description":"Unique identifier for the [Order](#order), specified by the OrderId in the URI","ref":"orders.Order.Id","generated":"true","example":"cdd26b8f-4ed1-409d-9984-982e081c425e"},"ProductId":{"type":"string","description":"Identifier for the Product. Generally, this is a CatalogItemId","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"Quantity":{"type":"integer","description":"Amount of this Item In Stock, defaults to 0","example":"2"},"SellingPrice":{"type":"decimal","description":"Selling Price of this Item, defaults to 0","example":"9.99"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers intended for product serialization","example":"abc321"},"SKU":{"type":"string","description":"SKU for this Item","example":"00001"},"ShippingOptionId":{"type":"string","description":"Identifier for the ShippingOption that this Item will use","example":"1"},"SupplierEntityId":{"type":"integer","description":"Identifier for the Supplier of this Item","ref":"entity-store.Supplier.Id","example":"14107"},"SupplierReference":{"type":"string","description":"May be used for additional Supplier reference information","example":"10"},"TrackingInformation":{"type":"array","arrayType":"object","description":"Tracking information in the form of key-value pairs","ref":"orders.TrackingInformation","isNested":"true","properties":{"Quantity":{"type":"integer","description":"Number of items being tracked","example":"1","name":"Quantity"},"TrackingNumber":{"type":"string","description":"Tracking number","example":"1TTTTN4421","name":"TrackingNumber"}},"required":["Quantity","TrackingNumber"]},"ItemExtensions":{"type":"array","arrayType":"object","description":"Reserved for future use","example":""}},"required":["ItemStatusId","ItemTypeId"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"8592718e-bcca-468c-8009-38678929b693","Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatus":"New","ItemStatusId":1,"ItemType":"DropShip","ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","OrderId":"cdd26b8f-4ed1-409d-9984-982e081c425e","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}
+                            schema: |
+                                {"name":"Item","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier for this Item","example":"8592718e-bcca-468c-8009-38678929b693","generated":"true"},"Cost":{"type":"decimal","description":"Cost of this Item, defaults to 0","example":"5.99"},"Description":{"type":"string","description":"Description of this Item","example":"Samsung Galaxy S4 Standard Battery"},"ItemStatus":{"type":"string","description":"Name of the [ItemStatus](#itemstatus)","example":"New","generated":"true"},"ItemStatusId":{"type":"integer","description":"See [ItemStatus](#itemstatus) for a list of acceptable values","example":"1"},"ItemType":{"type":"string","description":"Name of the [ItemType](#itemtype)","example":"DropShip","generated":"true"},"ItemTypeId":{"type":"string","description":"See [ItemType](#itemtype) for a list of acceptable values","example":"1"},"Index":{"type":"integer","description":"A value used for sorting Items, such as in a shopping cart","example":"0"},"ListPrice":{"type":"decimal","description":"List Price of this Item, defaults to 0","example":"12.99"},"Notes":{"type":"string","description":"Notes for this Item","example":"Dented corner"},"OrderId":{"type":"GUID","description":"Unique identifier for the [Order](#order), specified by the OrderId in the URI","ref":"orders.Order.Id","generated":"true","example":"cdd26b8f-4ed1-409d-9984-982e081c425e"},"ProductId":{"type":"string","description":"Identifier for the Product. Generally, this is a CatalogItemId","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"Quantity":{"type":"integer","description":"Amount of this Item In Stock, defaults to 0","example":"2"},"SellingPrice":{"type":"decimal","description":"Selling Price of this Item, defaults to 0","example":"9.99"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers intended for product serialization","example":"abc321"},"SKU":{"type":"string","description":"SKU for this Item","example":"00001"},"ShippingOptionId":{"type":"string","description":"Identifier for the ShippingOption that this Item will use","example":"1"},"SupplierEntityId":{"type":"integer","description":"Identifier for the Supplier of this Item","ref":"entity-store.Supplier.Id","example":"14107"},"SupplierReference":{"type":"string","description":"May be used for additional Supplier reference information","example":"10"},"TrackingInformation":{"type":"array","arrayType":"object","description":"Tracking information in the form of key-value pairs","ref":"orders.TrackingInformation","isNested":"true","properties":{"Quantity":{"type":"integer","description":"Number of items being tracked","example":"1","name":"Quantity"},"TrackingNumber":{"type":"string","description":"Tracking number","example":"1TTTTN4421","name":"TrackingNumber"}},"required":["Quantity","TrackingNumber"]},"ItemExtensions":{"type":"array","arrayType":"object","description":"Reserved for future use","example":""}},"required":["ItemStatusId","ItemTypeId"]}
+                            
+                        
+                    
+                
+            
+      
+    get:
+        
+        displayName: Getting all Items on an Order
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"8592718e-bcca-468c-8009-38678929b693","Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatus":"New","ItemStatusId":1,"ItemType":"DropShip","ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","OrderId":"cdd26b8f-4ed1-409d-9984-982e081c425e","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}]
+                            schema: |
+                                {"exclude":"true","name":"Item","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Orders({OrderId}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        OrderId:
+            displayName: OrderId
+            type: string
+            example: 2ad88692-7757-4a72-915b-dfe8f2539279
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/orders/#order'>Order</a>
+          
+      
+    get:
+        
+        displayName: Getting an Order
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"TT101IN18"}
+                            schema: |
+                                {"name":"Order","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"TT101IN18"},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId","EntityId"]}
+                            
+                        
+                    
+                
+            
+      
+    put:
+        
+        displayName: Updating an Order
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"TT101IN18"}
+                    
+                schema: |
+                    {"name":"Order","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"TT101IN18"},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId","EntityId"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"TT101IN18"}
+                            schema: |
+                                {"name":"Order","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"TT101IN18"},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId","EntityId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Orders({OrderId})/Process:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        OrderId:
+            displayName: OrderId
+            type: string
+            example: 2ad88692-7757-4a72-915b-dfe8f2539279
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/orders/#order'>Order</a>
+          
+      
+    post:
+        
+        displayName: Processing an Order
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"OrderId":"cdd26b8f-4ed1-409d-9984-982e081c425e"}
+                    
+                schema: |
+                    {"name":"ProcessOrder","type":"object","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","properties":{"OrderId":{"type":"GUID","ref":"orders.Order.Id","example":"cdd26b8f-4ed1-409d-9984-982e081c425e"}},"required":["OrderId"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"TT101IN18"}
+                            schema: |
+                                {"name":"Order","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"TT101IN18"},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId","EntityId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/OrderFull:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+          
+      
+    post:
+        
+        displayName: Creating an Order with Items
+                
+        
+        description: |            
+            {{note}}Instead of creating an Order and then adding Items to the Order one at a time, this request can be used to create an Order with Items all at once.{{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryHours":20,"OrderTypeId":3,"ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"TenderId":"INV112","Items":[{"Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatusId":1,"ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}]}
+                    
+                schema: |
+                    {"name":"OrderFull","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"**OrderFull** is an extension on the Order resource","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"INV112"},"Items":{"type":"array","arrayType":"object","ref":"orders.Item","description":"The Items in the [Order](#order)","example":"","properties":{"Id":{"type":"guid","description":"Unique identifier for this Item","example":"8592718e-bcca-468c-8009-38678929b693","generated":"true","name":"Id"},"Cost":{"type":"decimal","description":"Cost of this Item, defaults to 0","example":"5.99","name":"Cost"},"Description":{"type":"string","description":"Description of this Item","example":"Samsung Galaxy S4 Standard Battery","name":"Description"},"ItemStatus":{"type":"string","description":"Name of the [ItemStatus](#itemstatus)","example":"New","generated":"true","name":"ItemStatus"},"ItemStatusId":{"type":"integer","description":"See [ItemStatus](#itemstatus) for a list of acceptable values","example":"1","name":"ItemStatusId"},"ItemType":{"type":"string","description":"Name of the [ItemType](#itemtype)","example":"DropShip","generated":"true","name":"ItemType"},"ItemTypeId":{"type":"string","description":"See [ItemType](#itemtype) for a list of acceptable values","example":"1","name":"ItemTypeId"},"Index":{"type":"integer","description":"A value used for sorting Items, such as in a shopping cart","example":"0","name":"Index"},"ListPrice":{"type":"decimal","description":"List Price of this Item, defaults to 0","example":"12.99","name":"ListPrice"},"Notes":{"type":"string","description":"Notes for this Item","example":"Dented corner","name":"Notes"},"OrderId":{"type":"guid","description":"Unique identifier for the [Order](#order), specified by the OrderId in the URI","ref":"orders.Order.Id","generated":"true","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","name":"OrderId"},"ProductId":{"type":"string","description":"Identifier for the Product. Generally, this is a CatalogItemId","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed","name":"ProductId"},"Quantity":{"type":"integer","description":"Amount of this Item In Stock, defaults to 0","example":"2","name":"Quantity"},"SellingPrice":{"type":"decimal","description":"Selling Price of this Item, defaults to 0","example":"9.99","name":"SellingPrice"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers intended for product serialization","example":"abc321","name":"SerialNumbers"},"SKU":{"type":"string","description":"SKU for this Item","example":"00001","name":"SKU"},"ShippingOptionId":{"type":"string","description":"Identifier for the ShippingOption that this Item will use","example":"1","name":"ShippingOptionId"},"SupplierEntityId":{"type":"integer","description":"Identifier for the Supplier of this Item","ref":"entity-store.Supplier.Id","example":"14107","name":"SupplierEntityId"},"SupplierReference":{"type":"string","description":"May be used for additional Supplier reference information","example":"10","name":"SupplierReference"},"TrackingInformation":{"type":"array","arrayType":"object","description":"Tracking information in the form of key-value pairs","ref":"orders.TrackingInformation","isNested":"true","name":"TrackingInformation","properties":{"Quantity":{"type":"integer","description":"Number of items being tracked","example":"1","name":"Quantity"},"TrackingNumber":{"type":"string","description":"Tracking number","example":"1TTTTN4421","name":"TrackingNumber"}},"required":["Quantity","TrackingNumber"]},"ItemExtensions":{"type":"array","arrayType":"object","description":"Reserved for future use","example":""}},"required":["ItemStatusId","ItemTypeId"]},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"INV112","Items":[{"Id":"8592718e-bcca-468c-8009-38678929b693","Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatus":"New","ItemStatusId":1,"ItemType":"DropShip","ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","OrderId":"cdd26b8f-4ed1-409d-9984-982e081c425e","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}]}
+                            schema: |
+                                {"name":"OrderFull","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"**OrderFull** is an extension on the Order resource","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"INV112"},"Items":{"type":"array","arrayType":"object","ref":"orders.Item","description":"The Items in the [Order](#order)","example":"","properties":{"Id":{"type":"guid","description":"Unique identifier for this Item","example":"8592718e-bcca-468c-8009-38678929b693","generated":"true","name":"Id"},"Cost":{"type":"decimal","description":"Cost of this Item, defaults to 0","example":"5.99","name":"Cost"},"Description":{"type":"string","description":"Description of this Item","example":"Samsung Galaxy S4 Standard Battery","name":"Description"},"ItemStatus":{"type":"string","description":"Name of the [ItemStatus](#itemstatus)","example":"New","generated":"true","name":"ItemStatus"},"ItemStatusId":{"type":"integer","description":"See [ItemStatus](#itemstatus) for a list of acceptable values","example":"1","name":"ItemStatusId"},"ItemType":{"type":"string","description":"Name of the [ItemType](#itemtype)","example":"DropShip","generated":"true","name":"ItemType"},"ItemTypeId":{"type":"string","description":"See [ItemType](#itemtype) for a list of acceptable values","example":"1","name":"ItemTypeId"},"Index":{"type":"integer","description":"A value used for sorting Items, such as in a shopping cart","example":"0","name":"Index"},"ListPrice":{"type":"decimal","description":"List Price of this Item, defaults to 0","example":"12.99","name":"ListPrice"},"Notes":{"type":"string","description":"Notes for this Item","example":"Dented corner","name":"Notes"},"OrderId":{"type":"guid","description":"Unique identifier for the [Order](#order), specified by the OrderId in the URI","ref":"orders.Order.Id","generated":"true","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","name":"OrderId"},"ProductId":{"type":"string","description":"Identifier for the Product. Generally, this is a CatalogItemId","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed","name":"ProductId"},"Quantity":{"type":"integer","description":"Amount of this Item In Stock, defaults to 0","example":"2","name":"Quantity"},"SellingPrice":{"type":"decimal","description":"Selling Price of this Item, defaults to 0","example":"9.99","name":"SellingPrice"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers intended for product serialization","example":"abc321","name":"SerialNumbers"},"SKU":{"type":"string","description":"SKU for this Item","example":"00001","name":"SKU"},"ShippingOptionId":{"type":"string","description":"Identifier for the ShippingOption that this Item will use","example":"1","name":"ShippingOptionId"},"SupplierEntityId":{"type":"integer","description":"Identifier for the Supplier of this Item","ref":"entity-store.Supplier.Id","example":"14107","name":"SupplierEntityId"},"SupplierReference":{"type":"string","description":"May be used for additional Supplier reference information","example":"10","name":"SupplierReference"},"TrackingInformation":{"type":"array","arrayType":"object","description":"Tracking information in the form of key-value pairs","ref":"orders.TrackingInformation","isNested":"true","name":"TrackingInformation","properties":{"Quantity":{"type":"integer","description":"Number of items being tracked","example":"1","name":"Quantity"},"TrackingNumber":{"type":"string","description":"Tracking number","example":"1TTTTN4421","name":"TrackingNumber"}},"required":["Quantity","TrackingNumber"]},"ItemExtensions":{"type":"array","arrayType":"object","description":"Reserved for future use","example":""}},"required":["ItemStatusId","ItemTypeId"]},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId"]}
+                            
+                        
+                    
+                
+            
+      
+    get:
+        
+        displayName: Getting All Orders for a Company
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"INV112","Items":[{"Id":"8592718e-bcca-468c-8009-38678929b693","Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatus":"New","ItemStatusId":1,"ItemType":"DropShip","ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","OrderId":"cdd26b8f-4ed1-409d-9984-982e081c425e","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}]}]
+                            schema: |
+                                {"exclude":"true","name":"OrderFull","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/OrderFull({OrderId}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        OrderId:
+            displayName: OrderId
+            type: string
+            example: 2ad88692-7757-4a72-915b-dfe8f2539279
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/orders/#order'>Order</a> being updated
+          
+      
+    get:
+        
+        displayName: Getting an Order with Items
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"INV112","Items":[{"Id":"8592718e-bcca-468c-8009-38678929b693","Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatus":"New","ItemStatusId":1,"ItemType":"DropShip","ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","OrderId":"cdd26b8f-4ed1-409d-9984-982e081c425e","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}]}
+                            schema: |
+                                {"name":"OrderFull","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"**OrderFull** is an extension on the Order resource","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"INV112"},"Items":{"type":"array","arrayType":"object","ref":"orders.Item","description":"The Items in the [Order](#order)","example":"","properties":{"Id":{"type":"guid","description":"Unique identifier for this Item","example":"8592718e-bcca-468c-8009-38678929b693","generated":"true","name":"Id"},"Cost":{"type":"decimal","description":"Cost of this Item, defaults to 0","example":"5.99","name":"Cost"},"Description":{"type":"string","description":"Description of this Item","example":"Samsung Galaxy S4 Standard Battery","name":"Description"},"ItemStatus":{"type":"string","description":"Name of the [ItemStatus](#itemstatus)","example":"New","generated":"true","name":"ItemStatus"},"ItemStatusId":{"type":"integer","description":"See [ItemStatus](#itemstatus) for a list of acceptable values","example":"1","name":"ItemStatusId"},"ItemType":{"type":"string","description":"Name of the [ItemType](#itemtype)","example":"DropShip","generated":"true","name":"ItemType"},"ItemTypeId":{"type":"string","description":"See [ItemType](#itemtype) for a list of acceptable values","example":"1","name":"ItemTypeId"},"Index":{"type":"integer","description":"A value used for sorting Items, such as in a shopping cart","example":"0","name":"Index"},"ListPrice":{"type":"decimal","description":"List Price of this Item, defaults to 0","example":"12.99","name":"ListPrice"},"Notes":{"type":"string","description":"Notes for this Item","example":"Dented corner","name":"Notes"},"OrderId":{"type":"guid","description":"Unique identifier for the [Order](#order), specified by the OrderId in the URI","ref":"orders.Order.Id","generated":"true","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","name":"OrderId"},"ProductId":{"type":"string","description":"Identifier for the Product. Generally, this is a CatalogItemId","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed","name":"ProductId"},"Quantity":{"type":"integer","description":"Amount of this Item In Stock, defaults to 0","example":"2","name":"Quantity"},"SellingPrice":{"type":"decimal","description":"Selling Price of this Item, defaults to 0","example":"9.99","name":"SellingPrice"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers intended for product serialization","example":"abc321","name":"SerialNumbers"},"SKU":{"type":"string","description":"SKU for this Item","example":"00001","name":"SKU"},"ShippingOptionId":{"type":"string","description":"Identifier for the ShippingOption that this Item will use","example":"1","name":"ShippingOptionId"},"SupplierEntityId":{"type":"integer","description":"Identifier for the Supplier of this Item","ref":"entity-store.Supplier.Id","example":"14107","name":"SupplierEntityId"},"SupplierReference":{"type":"string","description":"May be used for additional Supplier reference information","example":"10","name":"SupplierReference"},"TrackingInformation":{"type":"array","arrayType":"object","description":"Tracking information in the form of key-value pairs","ref":"orders.TrackingInformation","isNested":"true","name":"TrackingInformation","properties":{"Quantity":{"type":"integer","description":"Number of items being tracked","example":"1","name":"Quantity"},"TrackingNumber":{"type":"string","description":"Tracking number","example":"1TTTTN4421","name":"TrackingNumber"}},"required":["Quantity","TrackingNumber"]},"ItemExtensions":{"type":"array","arrayType":"object","description":"Reserved for future use","example":""}},"required":["ItemStatusId","ItemTypeId"]},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId"]}
+                            
+                        
+                    
+                
+            
+      
+    put:
+        
+        displayName: Updating an Order with Items
+                
+        
+        description: |            
+            {{note}}The <code>OrderId</code> in the URI must match the <code>OrderId</code> used in the request parameters{{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"INV112","Items":[{"Id":"8592718e-bcca-468c-8009-38678929b693","Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatus":"New","ItemStatusId":1,"ItemType":"DropShip","ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","OrderId":"cdd26b8f-4ed1-409d-9984-982e081c425e","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}]}
+                    
+                schema: |
+                    {"name":"OrderFull","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"**OrderFull** is an extension on the Order resource","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"INV112"},"Items":{"type":"array","arrayType":"object","ref":"orders.Item","description":"The Items in the [Order](#order)","example":"","properties":{"Id":{"type":"guid","description":"Unique identifier for this Item","example":"8592718e-bcca-468c-8009-38678929b693","generated":"true","name":"Id"},"Cost":{"type":"decimal","description":"Cost of this Item, defaults to 0","example":"5.99","name":"Cost"},"Description":{"type":"string","description":"Description of this Item","example":"Samsung Galaxy S4 Standard Battery","name":"Description"},"ItemStatus":{"type":"string","description":"Name of the [ItemStatus](#itemstatus)","example":"New","generated":"true","name":"ItemStatus"},"ItemStatusId":{"type":"integer","description":"See [ItemStatus](#itemstatus) for a list of acceptable values","example":"1","name":"ItemStatusId"},"ItemType":{"type":"string","description":"Name of the [ItemType](#itemtype)","example":"DropShip","generated":"true","name":"ItemType"},"ItemTypeId":{"type":"string","description":"See [ItemType](#itemtype) for a list of acceptable values","example":"1","name":"ItemTypeId"},"Index":{"type":"integer","description":"A value used for sorting Items, such as in a shopping cart","example":"0","name":"Index"},"ListPrice":{"type":"decimal","description":"List Price of this Item, defaults to 0","example":"12.99","name":"ListPrice"},"Notes":{"type":"string","description":"Notes for this Item","example":"Dented corner","name":"Notes"},"OrderId":{"type":"guid","description":"Unique identifier for the [Order](#order), specified by the OrderId in the URI","ref":"orders.Order.Id","generated":"true","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","name":"OrderId"},"ProductId":{"type":"string","description":"Identifier for the Product. Generally, this is a CatalogItemId","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed","name":"ProductId"},"Quantity":{"type":"integer","description":"Amount of this Item In Stock, defaults to 0","example":"2","name":"Quantity"},"SellingPrice":{"type":"decimal","description":"Selling Price of this Item, defaults to 0","example":"9.99","name":"SellingPrice"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers intended for product serialization","example":"abc321","name":"SerialNumbers"},"SKU":{"type":"string","description":"SKU for this Item","example":"00001","name":"SKU"},"ShippingOptionId":{"type":"string","description":"Identifier for the ShippingOption that this Item will use","example":"1","name":"ShippingOptionId"},"SupplierEntityId":{"type":"integer","description":"Identifier for the Supplier of this Item","ref":"entity-store.Supplier.Id","example":"14107","name":"SupplierEntityId"},"SupplierReference":{"type":"string","description":"May be used for additional Supplier reference information","example":"10","name":"SupplierReference"},"TrackingInformation":{"type":"array","arrayType":"object","description":"Tracking information in the form of key-value pairs","ref":"orders.TrackingInformation","isNested":"true","name":"TrackingInformation","properties":{"Quantity":{"type":"integer","description":"Number of items being tracked","example":"1","name":"Quantity"},"TrackingNumber":{"type":"string","description":"Tracking number","example":"1TTTTN4421","name":"TrackingNumber"}},"required":["Quantity","TrackingNumber"]},"ItemExtensions":{"type":"array","arrayType":"object","description":"Reserved for future use","example":""}},"required":["ItemStatusId","ItemTypeId"]},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"INV112","Items":[{"Id":"8592718e-bcca-468c-8009-38678929b693","Cost":5.99,"Description":"Samsung Galaxy S4 Standard Battery","ItemStatus":"New","ItemStatusId":1,"ItemType":"DropShip","ItemTypeId":"1","Index":0,"ListPrice":12.99,"Notes":"Dented corner","OrderId":"cdd26b8f-4ed1-409d-9984-982e081c425e","ProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","Quantity":2,"SellingPrice":9.99,"SerialNumbers":["abc321"],"SKU":"00001","ShippingOptionId":"1","SupplierEntityId":14107,"SupplierReference":"10","TrackingInformation":[{"Quantity":1,"TrackingNumber":"1TTTTN4421"}]}]}
+                            schema: |
+                                {"name":"OrderFull","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"**OrderFull** is an extension on the Order resource","properties":{"Id":{"type":"GUID","description":"Unique identifier","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","generated":"true","putGenerate":"true"},"Name":{"type":"string","description":"Name","example":"iPhone 5 Order"},"BillingAddressId":{"type":"GUID","description":"Unique identifier for the billing [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"BillingCustomerId":{"type":"GUID","description":"Unique identifier for the billing [Customer](/api/crm/#customer)","putDescription":"Must belong to the Company specified in the URI. Required to Process an Order","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"CreatedDateUtc":{"type":"DateTime","description":"The date and time the Order was created, in UTC","example":"2015-03-27T18:47:29.9012402+00:00","generated":"true"},"DiscountAmount":{"type":"decimal","description":"The value of the discount to be applied at the Order level","example":"15.0"},"DiscountCode":{"type":"string","description":"The discount code for a discount applied to this Order","example":"MTRY-15"},"DiscountDescription":{"type":"string","description":"A description of the discount","example":"Military discount"},"EmployeeId":{"type":"integer","description":"Identifier for the Employee who created this Order","putDescription":"Must belong to the Company specified in the URI","example":"15"},"EntityId":{"type":"integer","description":"Identifier for the [Location](/api/company-tree/#location)","ref":"company tree.Location.Id","example":"14202"},"OrderExpiryDate":{"type":"DateTime","description":"The date and time this Order expires and can no longer be updated, in UTC","example":"2015-05-05T14:32:05.9140188+00:00","generated":"true"},"OrderExpiryHours":{"type":"integer","description":"The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.","example":"20"},"OrderType":{"type":"string","description":"Name of the [OrderType](#ordertype)","example":"Sales","generated":"true"},"OrderTypeId":{"type":"integer","description":"See [OrderType](#ordertype) for a list of acceptable values","example":"3"},"PrintableId":{"type":"string","description":"An identifier for this Order that can used to print on invoices. This value is system-generated and read-only","example":"8765-1234-987","generated":"true"},"ShippingAddressId":{"type":"GUID","description":"Unique identifier for the shipping [Address](/api/crm/#address)","ref":"crm.Address.Id","example":"a08b0640-606a-41f0-901a-facaf50e75dd"},"ShippingCustomerId":{"type":"GUID","description":"Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded","ref":"crm.Customer.Id","example":"659c2a38-d083-4421-9330-46d779702f85"},"ShippingEntityId":{"type":"integer","description":"Identifier for the Location this Order will be shipped to.","putDescription":"If this value is provided, ShippingCustomerId must be excluded","ref":"company tree.Location.Id","example":"14202"},"State":{"type":"string","description":"See [OrderState](#orderstate) for a list of acceptable values","example":"Created","generated":"true"},"TenderId":{"type":"string","description":"An invoice number from the system that created the Order, Invoice Number in RQ","example":"INV112"},"Items":{"type":"array","arrayType":"object","ref":"orders.Item","description":"The Items in the [Order](#order)","example":"","properties":{"Id":{"type":"guid","description":"Unique identifier for this Item","example":"8592718e-bcca-468c-8009-38678929b693","generated":"true","name":"Id"},"Cost":{"type":"decimal","description":"Cost of this Item, defaults to 0","example":"5.99","name":"Cost"},"Description":{"type":"string","description":"Description of this Item","example":"Samsung Galaxy S4 Standard Battery","name":"Description"},"ItemStatus":{"type":"string","description":"Name of the [ItemStatus](#itemstatus)","example":"New","generated":"true","name":"ItemStatus"},"ItemStatusId":{"type":"integer","description":"See [ItemStatus](#itemstatus) for a list of acceptable values","example":"1","name":"ItemStatusId"},"ItemType":{"type":"string","description":"Name of the [ItemType](#itemtype)","example":"DropShip","generated":"true","name":"ItemType"},"ItemTypeId":{"type":"string","description":"See [ItemType](#itemtype) for a list of acceptable values","example":"1","name":"ItemTypeId"},"Index":{"type":"integer","description":"A value used for sorting Items, such as in a shopping cart","example":"0","name":"Index"},"ListPrice":{"type":"decimal","description":"List Price of this Item, defaults to 0","example":"12.99","name":"ListPrice"},"Notes":{"type":"string","description":"Notes for this Item","example":"Dented corner","name":"Notes"},"OrderId":{"type":"guid","description":"Unique identifier for the [Order](#order), specified by the OrderId in the URI","ref":"orders.Order.Id","generated":"true","example":"cdd26b8f-4ed1-409d-9984-982e081c425e","name":"OrderId"},"ProductId":{"type":"string","description":"Identifier for the Product. Generally, this is a CatalogItemId","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed","name":"ProductId"},"Quantity":{"type":"integer","description":"Amount of this Item In Stock, defaults to 0","example":"2","name":"Quantity"},"SellingPrice":{"type":"decimal","description":"Selling Price of this Item, defaults to 0","example":"9.99","name":"SellingPrice"},"SerialNumbers":{"type":"array","arrayType":"string","description":"Serial numbers intended for product serialization","example":"abc321","name":"SerialNumbers"},"SKU":{"type":"string","description":"SKU for this Item","example":"00001","name":"SKU"},"ShippingOptionId":{"type":"string","description":"Identifier for the ShippingOption that this Item will use","example":"1","name":"ShippingOptionId"},"SupplierEntityId":{"type":"integer","description":"Identifier for the Supplier of this Item","ref":"entity-store.Supplier.Id","example":"14107","name":"SupplierEntityId"},"SupplierReference":{"type":"string","description":"May be used for additional Supplier reference information","example":"10","name":"SupplierReference"},"TrackingInformation":{"type":"array","arrayType":"object","description":"Tracking information in the form of key-value pairs","ref":"orders.TrackingInformation","isNested":"true","name":"TrackingInformation","properties":{"Quantity":{"type":"integer","description":"Number of items being tracked","example":"1","name":"Quantity"},"TrackingNumber":{"type":"string","description":"Tracking number","example":"1TTTTN4421","name":"TrackingNumber"}},"required":["Quantity","TrackingNumber"]},"ItemExtensions":{"type":"array","arrayType":"object","description":"Reserved for future use","example":""}},"required":["ItemStatusId","ItemTypeId"]},"CustomerId":{"type":"string","description":"This is a legacy property that should not be used","example":""},"SourceId":{"type":"string","description":"Reserved for future use","example":""},"SourceName":{"type":"string","description":"Reserved for future use","example":""},"TenderOrigin":{"type":"string","description":"Reserved for future use","example":""}},"required":["OrderTypeId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Orders?$filter=State eq 'Pending' and EntityId eq {LocationId}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: string
+            example: 14202
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+          
+      
+    get:
+        
+        displayName: Getting Pending Orders by Location
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"TT101IN18"}]
+                            schema: |
+                                {"exclude":"true","name":"Order","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Orders?$filter=PrintableId eq '{PrintableId}':
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        PrintableId:
+            displayName: PrintableId
+            type: string
+            example: TT101IN18
+            required: true
+            description: An <a href='http://developers.iqmetrix.com/api/orders/#order'>Order</a> identifier printed on invoices
+          
+      
+    get:
+        
+        displayName: Getting Orders by PrintableId
+                
+        
+        description: |            
+            {{tip}}<code>PrintableId</code> is an identifier for an Order that can used to print on invoices. This request is useful for searching for an Order using a previously printed or saved invoice.{{end}}
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"cdd26b8f-4ed1-409d-9984-982e081c425e","Name":"iPhone 5 Order","BillingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","BillingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","CreatedDateUtc":"2015-03-27T18:47:29.9012402+00:00","DiscountAmount":15,"DiscountCode":"MTRY-15","DiscountDescription":"Military discount","EmployeeId":15,"EntityId":14202,"OrderExpiryDate":"2015-05-05T14:32:05.9140188+00:00","OrderExpiryHours":20,"OrderType":"Sales","OrderTypeId":3,"PrintableId":"8765-1234-987","ShippingAddressId":"a08b0640-606a-41f0-901a-facaf50e75dd","ShippingCustomerId":"659c2a38-d083-4421-9330-46d779702f85","ShippingEntityId":14202,"State":"Created","TenderId":"TT101IN18"}]
+                            schema: |
+                                {"exclude":"true","name":"Order","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    

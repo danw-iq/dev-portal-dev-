@@ -1,0 +1,140 @@
+#%RAML 0.8
+title: classification-tree
+baseUri: https://productlibrarydemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - Classification: |
+        {
+          "name": "Classification",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Classifications are used to group Products together by similar features.\nA Product can only have a single Classification.\nFor example, a Samsung Galaxy S6 Edge, HTC One M9 and iPhone 5C might all have a Classification of Smartphones.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "4" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "Smartphones" }, 
+            "Order": { "type": "integer", "description": "Sorting order", "example": "1" }, 
+            "ProductTemplate": { "type": "object", "ref": "classification-tree.ProductTemplate", "arraydescription": "A reference to a [ProductTemplate](/api/glossary/#producttemplate)" }
+          }
+        }
+        
+
+    
+
+    
+    - ProductTemplate: |
+        {
+          "name": "ProductTemplate",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "16" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "Wireless Device" }
+          }
+        }
+        
+
+    
+
+    
+    - Category: |
+        {
+          "name": "Category",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "A Category is a node in a Classification Tree that represents a logical grouping of related Classifications.\nFor example, 'iPhone' and 'Tablet' Classifications might both be children of a 'Device' Category.\nThere is a limit to 20 levels of depth for Categories.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "2" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "Devices" }, 
+            "Categories": { "type": "array", "arrayType": "object", "description": "Child Categories", "example": "" }, 
+            "Classifications": { "type": "array", "arrayType": "object", "description": "Child Classifications", "example": "" }, 
+            "Order": { "type": "integer", "description": "Sorting order", "example": "1" }
+          }
+        }
+        
+
+    
+
+    
+    - ClassificationTree: |
+        {
+          "name": "ClassificationTree",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "1" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "Cellular & Accessories" }, 
+            "Description": { "type": "string",  "description": "Description", "example": "Classification of products for wireless retail" }, 
+            "Categories": { "type": "array", "arrayType": "object", "description": "Categories in the Tree", "ref": "classification-tree.Category" }, 
+            "Classifications": { "type": "array", "arrayType": "object", "description": "Classifications for the Tree", "ref": "classification-tree.Classification" }, 
+            "Owner": { "type": "object", "ref": "classification-tree.Owner", "description": "Information about the [Company](/api/company-tree/#company) that owns this Tree" }, 
+            "Version": { "type": "integer", "description": "Latest revision number", "example": "41" }, 
+            "IsCanonical": { "type": "boolean", "description": "Reserved for internal use"}
+          }
+        }
+        
+
+    
+
+    
+    - Owner: |
+        {
+          "name": "Owner",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "[Company](/api/company-tree/#company) Identifier", "example": "1" }, 
+            "Name": { "type": "string",  "description": "[Company](/api/company-tree/#company) Name", "example": "iQmetrix" }
+          }
+        }
+        
+
+    
+
+
+/ClassificationTrees({ClassificationTreeId}):
+    
+    uriParameters:
+        
+        ClassificationTreeId:
+            displayName: ClassificationTreeId
+            type: string
+            example: 1
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>
+          
+      
+    get:
+        
+        displayName: Getting a Classification Tree
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":1,"Name":"Cellular & Accessories","Description":"Classification of products for wireless retail","Categories":[{"Id":2,"Name":"Devices","Categories":[],"Classifications":[],"Order":1}],"Classifications":[{"Id":4,"Name":"Smartphones","Order":1,"ProductTemplate":{"Id":16,"Name":"Wireless Device"}}],"Owner":{"Id":1,"Name":"iQmetrix"},"Version":41}
+                            schema: |
+                                {"name":"ClassificationTree","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"1"},"Name":{"type":"string","description":"Name","example":"Cellular & Accessories"},"Description":{"type":"string","description":"Description","example":"Classification of products for wireless retail"},"Categories":{"type":"array","arrayType":"object","description":"Categories in the Tree","ref":"classification-tree.Category","properties":{"Id":{"type":"integer","description":"Identifier","example":"2","name":"Id"},"Name":{"type":"string","description":"Name","example":"Devices","name":"Name"},"Categories":{"type":"array","arrayType":"object","description":"Child Categories","example":"","name":"Categories"},"Classifications":{"type":"array","arrayType":"object","description":"Child Classifications","example":"","name":"Classifications"},"Order":{"type":"integer","description":"Sorting order","example":"1","name":"Order"}}},"Classifications":{"type":"array","arrayType":"object","description":"Classifications for the Tree","ref":"classification-tree.Classification","properties":{"Id":{"type":"integer","description":"Identifier","example":"4","name":"Id"},"Name":{"type":"string","description":"Name","example":"Smartphones","name":"Name"},"Order":{"type":"integer","description":"Sorting order","example":"1","name":"Order"},"ProductTemplate":{"type":"object","ref":"classification-tree.ProductTemplate","arraydescription":"A reference to a [ProductTemplate](/api/glossary/#producttemplate)","name":"ProductTemplate","properties":{"Id":{"type":"integer","description":"Identifier","example":"16","name":"Id"},"Name":{"type":"string","description":"Name","example":"Wireless Device","name":"Name"}}}}},"Owner":{"type":"object","ref":"classification-tree.Owner","description":"Information about the [Company](/api/company-tree/#company) that owns this Tree","properties":{"Id":{"type":"integer","description":"[Company](/api/company-tree/#company) Identifier","example":"1","name":"Id"},"Name":{"type":"string","description":"[Company](/api/company-tree/#company) Name","example":"iQmetrix","name":"Name"}}},"Version":{"type":"integer","description":"Latest revision number","example":"41"},"IsCanonical":{"type":"boolean","description":"Reserved for internal use"}}}
+                            
+                        
+                    
+                
+            
+    

@@ -1,0 +1,169 @@
+#%RAML 0.8
+title: RQ Data Connect Import
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - TrafficCount: |
+        {   
+            "type": "array",
+            "name": "TrafficCount",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "TrafficCountID": { "type": "integer", "database": "INT", "example": "656", "description": "Identifier", "putDescription": "Identifier for a traffic count row, this value is used as a URL parameter when updating a row" },  
+              "StartDate": { "type": "datetime", "database": "DATETIME", "example": "2016-11-09T10:00:00", "description": "Start date" },  
+              "EndDate": { "type": "datetime", "database": "DATETIME", "example": "2016-11-09T11:00:00", "description": "End date" },  
+              "TrafficCount": { "type": "integer", "database": "INT", "example": "20", "description": "Traffic count" },  
+              "StoreID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for a store in RQ" },  
+              "GLCode": { "type": "string", "database": "VARCHAR(100)", "example": "84WEA", "description": "General Ledger code. For more information about G/L, {{support_GLAccountSetup}}." }  
+            }  
+          }
+        
+
+    
+
+
+/Import/TrafficCount?StoreID={StoreID}&StartDate={StartDate}&StopDate={StopDate}&TrafficCount={TrafficCount}&TrafficCountID={TrafficCountID}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        StoreID:
+            displayName: StoreID
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for a store in RQ
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 2016-11-9
+            required: true
+            description: Start date for traffic count data
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-11-9
+            required: true
+            description: End date for traffic count data
+        
+        TrafficCount:
+            displayName: TrafficCount
+            type: integer
+            example: 20
+            required: true
+            description: Traffic count
+        
+        TrafficCountID:
+            displayName: TrafficCountID
+            type: string
+            example: 645
+            required: false
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect-Import/#trafficcount'>TrafficCount</a>. Provide this value to update a specific traffic count row in the database
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Importing Traffic Count Data into RQ
+                
+        
+        description: |            
+            This request allows you to import and update Traffic Count Data into RQ. 
+            
+            For more information, see {{support_TrafficCountDashboard}}.
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"TrafficCountID":656,"StartDate":"2016-11-09T10:00:00","EndDate":"2016-11-09T11:00:00","TrafficCount":20,"StoreID":1,"GLCode":"84WEA"}]
+                            schema: |
+                                {"type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"TrafficCountID":{"type":"integer","database":"INT","example":"656","description":"Identifier","putDescription":"Identifier for a traffic count row, this value is used as a URL parameter when updating a row"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T10:00:00","description":"Start date"},"EndDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T11:00:00","description":"End date"},"TrafficCount":{"type":"integer","database":"INT","example":"20","description":"Traffic count"},"StoreID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"},"GLCode":{"type":"string","database":"VARCHAR(100)","example":"84WEA","description":"General Ledger code. For more information about G/L, {{support_GLAccountSetup}}."}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"TrafficCountID":656,"StartDate":"2016-11-09T10:00:00","EndDate":"2016-11-09T11:00:00","TrafficCount":20,"StoreID":1,"GLCode":"84WEA"}]
+                            schema: |
+                                {"type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"TrafficCountID":{"type":"integer","database":"INT","example":"656","description":"Identifier","putDescription":"Identifier for a traffic count row, this value is used as a URL parameter when updating a row"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T10:00:00","description":"Start date"},"EndDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T11:00:00","description":"End date"},"TrafficCount":{"type":"integer","database":"INT","example":"20","description":"Traffic count"},"StoreID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"},"GLCode":{"type":"string","database":"VARCHAR(100)","example":"84WEA","description":"General Ledger code. For more information about G/L, {{support_GLAccountSetup}}."}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"TrafficCountID":656,"StartDate":"2016-11-09T10:00:00","EndDate":"2016-11-09T11:00:00","TrafficCount":20,"StoreID":1,"GLCode":"84WEA"}]
+                            schema: |
+                                {"type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"TrafficCountID":{"type":"integer","database":"INT","example":"656","description":"Identifier","putDescription":"Identifier for a traffic count row, this value is used as a URL parameter when updating a row"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T10:00:00","description":"Start date"},"EndDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T11:00:00","description":"End date"},"TrafficCount":{"type":"integer","database":"INT","example":"20","description":"Traffic count"},"StoreID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"},"GLCode":{"type":"string","database":"VARCHAR(100)","example":"84WEA","description":"General Ledger code. For more information about G/L, {{support_GLAccountSetup}}."}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"TrafficCountID":656,"StartDate":"2016-11-09T10:00:00","EndDate":"2016-11-09T11:00:00","TrafficCount":20,"StoreID":1,"GLCode":"84WEA"}]
+                            schema: |
+                                {"type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"TrafficCountID":{"type":"integer","database":"INT","example":"656","description":"Identifier","putDescription":"Identifier for a traffic count row, this value is used as a URL parameter when updating a row"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T10:00:00","description":"Start date"},"EndDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T11:00:00","description":"End date"},"TrafficCount":{"type":"integer","database":"INT","example":"20","description":"Traffic count"},"StoreID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"},"GLCode":{"type":"string","database":"VARCHAR(100)","example":"84WEA","description":"General Ledger code. For more information about G/L, {{support_GLAccountSetup}}."}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"TrafficCountID":656,"StartDate":"2016-11-09T10:00:00","EndDate":"2016-11-09T11:00:00","TrafficCount":20,"StoreID":1,"GLCode":"84WEA"}]
+                            schema: |
+                                {"type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"TrafficCountID":{"type":"integer","database":"INT","example":"656","description":"Identifier","putDescription":"Identifier for a traffic count row, this value is used as a URL parameter when updating a row"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T10:00:00","description":"Start date"},"EndDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T11:00:00","description":"End date"},"TrafficCount":{"type":"integer","database":"INT","example":"20","description":"Traffic count"},"StoreID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"},"GLCode":{"type":"string","database":"VARCHAR(100)","example":"84WEA","description":"General Ledger code. For more information about G/L, {{support_GLAccountSetup}}."}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"TrafficCountID":656,"StartDate":"2016-11-09T10:00:00","EndDate":"2016-11-09T11:00:00","TrafficCount":20,"StoreID":1,"GLCode":"84WEA"}]
+                            schema: |
+                                {"type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"TrafficCountID":{"type":"integer","database":"INT","example":"656","description":"Identifier","putDescription":"Identifier for a traffic count row, this value is used as a URL parameter when updating a row"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T10:00:00","description":"Start date"},"EndDate":{"type":"datetime","database":"DATETIME","example":"2016-11-09T11:00:00","description":"End date"},"TrafficCount":{"type":"integer","database":"INT","example":"20","description":"Traffic count"},"StoreID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"},"GLCode":{"type":"string","database":"VARCHAR(100)","example":"84WEA","description":"General Ledger code. For more information about G/L, {{support_GLAccountSetup}}."}}}
+                            
+                        
+                    
+                
+            
+    

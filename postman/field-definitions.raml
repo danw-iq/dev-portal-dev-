@@ -1,0 +1,142 @@
+#%RAML 0.8
+title: field-definitions
+baseUri: https://productlibrarydemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - FieldDefinition: |
+        {
+          "name": "FieldDefinition",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "{{note}} Use the <strong>StringId</strong> identifier instead of <strong>Id</strong>, as Id may change across Environments {{end}}",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "1" }, 
+            "StringId": { "type": "string",  "description": "Consistent identifier across all [Environments](/#environments)", "example": "Product Name" }, 
+            "InputType": { "type": "string",  "description": "Type of UI element this FieldDefinition uses, see [InputTypes](#inputypes) for a list of acceptable values", "example": "TestSingleLine" }, 
+            "IsRequired": { "type": "boolean", "description": "A flag to indicate if the input represented by this FieldDefinition can be empty (false) or not (true)", "example": "true" }, 
+            "LanguageInvariantUnit": { "type": "string",  "description": "Unit", "example": "mm", "hideFromExample": "true" }, 
+            "DisplayName": { "type": "string",  "description": "Value to be displayed in the UI", "example": "Product Name" }, 
+            "Options": { "type": "array", "arrayType": "object","description": "List of Options, only used when InputType is SingleSelect or MultiSelect", "ref": "field-definitions.Option", "isNested": "true" }, 
+            "LanguageInvariantName": { "type": "string",  "description": "This is a legacy property that should not be used" }
+          }
+        }
+        
+
+    
+
+    
+    - Option: |
+        {
+          "exclude": "true",
+          "name": "Option",        
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "1", "hideFromExample": "true" }, 
+            "Value": { "type": "String", "description": "Value", "example": "Blue", "hideFromExample": "true" }          
+          }
+        }        
+        
+
+    
+
+    
+    - FieldDefinitionArray: |
+        {
+          "exclude": "true",
+          "name": "FieldDefinition",        
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+
+/FieldDefinitions:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting All Field Definitions
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":1,"StringId":"Product Name","InputType":"TestSingleLine","IsRequired":true,"DisplayName":"Product Name","Options":[{}]}]
+                            schema: |
+                                {"exclude":"true","name":"FieldDefinition","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/FieldDefinitions({FieldDefinitionId}):
+    
+    uriParameters:
+        
+        FieldDefinitionId:
+            displayName: FieldDefinitionId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/field-definitions/#fielddefinition'>FieldDefinition</a>
+          
+      
+    get:
+        
+        displayName: Getting a Field Definition
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":1,"StringId":"Product Name","InputType":"TestSingleLine","IsRequired":true,"DisplayName":"Product Name","Options":[{}]}
+                            schema: |
+                                {"name":"FieldDefinition","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"{{note}} Use the <strong>StringId</strong> identifier instead of <strong>Id</strong>, as Id may change across Environments {{end}}","properties":{"Id":{"type":"integer","description":"Identifier","example":"1"},"StringId":{"type":"string","description":"Consistent identifier across all [Environments](/#environments)","example":"Product Name"},"InputType":{"type":"string","description":"Type of UI element this FieldDefinition uses, see [InputTypes](#inputypes) for a list of acceptable values","example":"TestSingleLine"},"IsRequired":{"type":"boolean","description":"A flag to indicate if the input represented by this FieldDefinition can be empty (false) or not (true)","example":"true"},"LanguageInvariantUnit":{"type":"string","description":"Unit","example":"mm","hideFromExample":"true"},"DisplayName":{"type":"string","description":"Value to be displayed in the UI","example":"Product Name"},"Options":{"type":"array","arrayType":"object","description":"List of Options, only used when InputType is SingleSelect or MultiSelect","ref":"field-definitions.Option","isNested":"true","properties":{"Id":{"type":"integer","description":"Identifier","example":"1","hideFromExample":"true"},"Value":{"type":"String","description":"Value","example":"Blue","hideFromExample":"true"}}},"LanguageInvariantName":{"type":"string","description":"This is a legacy property that should not be used"}}}
+                            
+                        
+                    
+                
+            
+    

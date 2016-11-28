@@ -1,0 +1,182 @@
+---
+title:  {{title | fixTitle }}
+permalink: /api/{{title | replace(" ", "-") }}/
+tags: []
+keywords: 
+audience: 
+last_updated: {{title | insertDate }}
+summary: 
+rouge: false
+---
+
+<link rel="stylesheet" type="text/css" href="../../css/prism.css">
+
+<script src="../../js/prism.js"></script>
+
+
+%7B% include linkrefs.html %%7D
+
+{{ title | printVersions }}
+
+{% for item in documentation %}{% if item.title == "overview" %}
+## Overview
+
+{{item.content}}{% endif %}{% endfor %}
+
+## Endpoints
+
+{% if baseUriParameters %}
+* Sandbox: <a href="{{ baseUri | replace("{UrlSuffix}", "demo") }}">{{ baseUri | replace("{UrlSuffix}", "demo") }}</a>
+* Production: <a href="{{ baseUri | replace("{UrlSuffix}", "") }}">{{ baseUri | replace("{UrlSuffix}", "") }}</a>
+{% else %}
+* Production: <a href="{{ baseUri }}">{{ baseUri }}</a>
+{% endif %}
+
+## Resources
+
+{% if schemas %}{% for schema in schemas %}{% for name, obj in schema %}{{ obj | printResourceTable(name, title) }}
+{% endfor %}{% endfor %}{% endif %}
+
+{% for item in documentation %}{% if item.title == "enumerations" %}{{item.content}}{% endif %}{% endfor %}
+
+## Requests
+
+{% for resource in resources %}{% for method in resource.methods %}
+
+<h3 id='{{method.displayName | replace(" ", "-") | lower }}' class='clickable-header top-level-header'>{{method.displayName}}</h3>
+
+{{method.description}}
+
+<h4>Request</h4>
+
+<pre>
+{{method.method | upper }} {{resource.relativeUri}}
+</pre>
+
+{% if method.headers %}
+<h4>Headers</h4>
+<ul>{% for header, headerObj in method.headers %}<li><code>{{header}}: {{headerObj.example}}</code>{% if headerObj.description %} - {{headerObj.description}}{% endif %}</li>{% endfor %}</ul>
+{% endif %}
+
+{% if resource.uriParameters %}
+<h4>URI Parameters</h4>
+<ul>
+    {% for parameter, objParameter in resource.uriParameters %}
+    <li>
+        <code>{{parameter}}</code> ({% if objParameter.required %}<strong>Required</strong>{% else %}Optional{% endif %}) {% if objParameter.description %} - {{objParameter.description}}{% endif %}
+    </li>
+    {% endfor %}</ul>{% endif %}
+
+{% if method.body["application/json"].schema %}
+
+<h4>Request Parameters</h4>
+
+{{ method.body["application/json"].schema | printRequestParameters(title, method.method) }}{% elif method.body["multipart/form-data"] %}
+
+<h4>Request Parameters</h4>
+
+{{ method.body["multipart/form-data"].formParameters | printFormParameters() }}{% elif method.body["application/x-www-form-urlencoded"] %}
+
+<h4>Request Parameters</h4>
+
+{{ method.body["application/x-www-form-urlencoded"].formParameters | printFormParameters() }}{% endif %}
+
+<h5>Example</h5>
+
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#http-{{method.displayName | replace(" ", "-") | lower }}" data-toggle="tab">HTTP</a></li>
+    <li><a href="#curl-{{method.displayName | replace(" ", "-") | lower }}" data-toggle="tab">cURL</a></li>
+    <li><a href="#csharp-{{method.displayName | replace(" ", "-") | lower }}" data-toggle="tab">C# (RestSharp)</a></li>
+    <li><a href="#java-{{method.displayName | replace(" ", "-") | lower }}" data-toggle="tab">Java (HttpComponents)</a></li>
+    <li><a href="#ruby-{{method.displayName | replace(" ", "-") | lower }}" data-toggle="tab">Ruby (rest-client)</a></li>
+    <button id="copy-{{method.displayName | replace(" ", "-") | lower }}" class="copy-button btn btn-default btn-sm" data-clipboard-action="copy" data-clipboard-target="#http-code-{{method.displayName | replace(" ", "-") | lower }}"><i class="fa fa-clipboard" title="Copy to Clipboard"></i></button>
+</ul>
+<div class="tab-content"> 
+    <div role="tabpanel" class="tab-pane active" id="http-{{method.displayName | replace(" ", "-") | lower }}">
+<pre id="http-code-{{method.displayName | replace(" ", "-") | lower }}"><code class="language-http">{{method.method | upper }} {{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}
+{% if method.headers %}{% for header, headerObj in method.headers %}{{header}}: {{headerObj.example}}
+{% endfor %}{% endif %}</code><code class="language-csharp">{% if method.body["application/json"].example %}{{ method.body["application/json"].example }}{% elif method.body["application/json"].schema %}{% if method.method == "put" %}{{ method.body["application/json"].schema | printExample(title, false) }}{% else %}{{ method.body["application/json"].schema | printExample(title, true) }}{% endif %}{% endif %}</code></pre>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="curl-{{method.displayName | replace(" ", "-") | lower }}">
+<pre id="curl-code-{{method.displayName | replace(" ", "-") | lower }}"><code class="language-http">curl -X {{ method.method | upper }} "{{ baseUri | replace("{UrlSuffix}", "demo") }}{{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}"{% if method.headers %}{% for header, headerObj in method.headers %} -H "{{header}}: {{headerObj.example}}"{% endfor %}{% endif %}{% if method.body["application/json"].example %} -d '{{ method.body["application/json"].example }}'{% elif method.body["application/json"].schema %}{% if method.method == "put" %} -d '{{ method.body["application/json"].schema | printExample(title, false) }}'{% else %} -d '{{ method.body["application/json"].schema | printExample(title, true) }}'{% endif %}{% endif %}</code></pre>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="csharp-{{method.displayName | replace(" ", "-") | lower }}">
+        This code sample uses <a href="http://restsharp.org/">RestSharp</a>, ensure you install the nuget package and include <code>Using RestSharp;</code> at the top of your file.
+<pre id="csharp-code-{{method.displayName | replace(" ", "-") | lower }}"><code class="language-csharp">static IRestResponse {{ method.displayName | printMethodName }}()
+{
+    var client = new RestClient("{{ baseUri | replace("{UrlSuffix}", "demo") }}{{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}");
+    var request = new RestRequest(Method.{{method.method | upper}});
+    {% if method.headers %}{% for header, headerObj in method.headers %} 
+    request.AddHeader("{{header}}", "{{headerObj.example}}");{% endfor %}{% endif %} 
+
+    {% if method.body["application/json"] %} request.AddParameter("application/json", "{% if method.body["application/json"].example %}{{ method.body["application/json"].example | serialize }}{% elif method.body["application/json"].schema %}{% if method.method == "put" %}{{ method.body["application/json"].schema | printSerialized(title, false) }}{% else %}{{ method.body["application/json"].schema | printSerialized(title, true) }}{% endif %}{% endif %}", ParameterType.RequestBody);{% endif %}
+
+    return client.Execute(request);
+}</code></pre>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="java-{{method.displayName | replace(" ", "-") | lower }}">
+        This code sample uses <a href="https://hc.apache.org/">Apache HttpComponents</a>, ensure you download and include the required Jars.
+<pre id="java-code-{{method.displayName | replace(" ", "-") | lower }}"><code class="language-java">{% if method.method == "post" %}import org.apache.http.entity.StringEntity;{% endif %}{% if method.method == "put" %}import org.apache.http.entity.StringEntity;{% endif %}
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.Http{{ method.method | fixTitle }};
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import java.io.IOException;
+
+public static CloseableHttpResponse {{ method.displayName | printMethodName }}() throws IOException {
+    CloseableHttpClient httpClient = HttpClients.createDefault();
+    {% if method.method == "get" %}HttpGet request = new HttpGet("{{ baseUri | replace("{UrlSuffix}", "demo") }}{{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}");{% elif method.method == "post" %}HttpPost request = new HttpPost("{{ baseUri | replace("{UrlSuffix}", "demo") }}{{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}");{% elif method.method == "put" %}HttpPut request = new HttpPut("{{ baseUri | replace("{UrlSuffix}", "demo") }}{{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}");{% elif method.method == "delete" %}HttpDelete request = new HttpDelete("{{ baseUri | replace("{UrlSuffix}", "demo") }}{{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}");{% endif %}
+    {% if method.headers %}{% for header, headerObj in method.headers %} 
+    request.addHeader("{{header}}", "{{headerObj.example}}");{% endfor %}{% endif %} 
+    {% if method.body["application/json"] %}StringEntity body = new StringEntity("{% if method.body["application/json"].example %}{{ method.body["application/json"].example | serialize }}{% elif method.body["application/json"].schema %}{% if method.method == "put" %}{{ method.body["application/json"].schema | printSerialized(title, false) }}{% else %}{{ method.body["application/json"].schema | printSerialized(title, true) }}{% endif %}{% endif %}");
+    request.setEntity(body);
+    {% endif %}
+    return httpClient.execute(request);
+}</code></pre>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="ruby-{{method.displayName | replace(" ", "-") | lower }}">
+        This code sample uses <a href="https://github.com/rest-client/rest-client">rest-client</a>, ensure you <code>gem install rest-client</code>.
+<pre id="ruby-code-{{method.displayName | replace(" ", "-") | lower }}"><code class="language-ruby">require 'rest-client'
+
+{% if method.body["application/json"] %}body = "{% if method.body["application/json"].example %}{{ method.body["application/json"].example | serialize }}{% elif method.body["application/json"].schema %}{% if method.method == "put" %}{{ method.body["application/json"].schema | printSerialized(title, false) }}{% else %}{{ method.body["application/json"].schema | printSerialized(title, true) }}{% endif %}";{% endif %}{% endif %}
+
+response = RestClient.{{method.method}} '{{ baseUri | replace("{UrlSuffix}", "demo") }}{{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}'{% if method.method == "post" %}, body{% elif method.method == "put" %}, body{% endif %}{% if method.headers %}, {
+    {% for header, headerObj in method.headers %} :'{{header}}' => '{{headerObj.example}}',
+    {% endfor %}}{% endif %} 
+
+puts response</code></pre>
+    </div>
+</div>
+
+<h4>Response</h4>
+
+{% for code, body in method.responses %}{% if body %}{% for body, schema in body %}{% for scheme, schemeProperties in schema %}{% if schemeProperties.schema %}
+{% if scheme == "application/json" %} {{ schemeProperties.schema | printResponseSchema(title) }}{% endif %}{% endif %}
+
+<h5>Example</h5>
+
+<pre>
+HTTP {{code}} Content-Type: {{scheme}}
+</pre>{% if schemeProperties.example %}<pre>{{ schemeProperties.example }}</pre>{% elif schemeProperties.schema %}<pre>{{ schemeProperties.schema | printExample(title, null) }}</pre>{% endif %}{% endfor %}{% endfor %}{% else %}
+
+<h5>Example</h5>
+
+<pre>HTTP {{code}}</pre>
+
+{% endif %}{% endfor %}{% endfor %}{% endfor %}{% for item in documentation %}{% if item.title == "extended-examples" %}
+
+<h2 id="extended-examples" class="clickable-header top-level-header">Extended Examples</h2>
+
+{{item.content}}{% endif %}{% if item.title == "searching" %}
+
+<h2 id="searching" class="clickable-header top-level-header">Searching</h2>
+
+{{item.content}}{% endif %}{% if item.title == "pagination" %}
+
+<h2 id="pagination" class="clickable-header top-level-header">Pagination</h2>
+
+{{item.content}}{% endif %}{% if item.title == "errors" %}
+
+<h2 id="errors" class="clickable-header top-level-header">Errors</h2>
+
+{{item.content}}{% endif %}{% endfor %}

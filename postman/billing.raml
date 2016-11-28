@@ -1,0 +1,1449 @@
+#%RAML 0.8
+title: Billing Reports
+baseUri: https://rqdataconnectdemo.iqmetrix.net/private/
+schemas: 
+
+    
+    - SaleInvoice: |
+        {
+            "type": "array",
+            "name": "SaleInvoice",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": { 
+              "CustomerId": { "type": "integer", "database": "INT", "example": "13699", "description": "Identifier for a customer" },  
+              "InvoiceId": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for this invoice" },  
+              "PaymentTypeId": { "type": "integer", "database": "INT", "example": "3", "description": "Identifier for a Payment Type" },  
+              "AccountsReceivableId": { "type": "integer", "database": "INT", "example": "68", "description": "" },  
+              "AccountsReceivableName": { "type": "string", "database": "VARCHAR(14)", "example": "TTL10AR1", "description": "" },  
+              "InvoiceName": { "type": "string", "database": "VARCHAR(14)", "example": "TARGEIN1", "description": "Invoice name" },  
+              "CustomerName": { "type": "string", "database": "VARCHAR(50)", "example": "KENTEL corp", "description": "Customer name" },  
+              "DatabaseName": { "type": "string", "database": "VARCHAR(25)", "example": "KENTE", "description": "Database name" },
+              "TotalAmount": { "type": "decimal", "database": "MONEY", "example": "38.14", "description": "Total amount" },  
+              "TotalPaid": { "type": "decimal", "database": "MONEY", "example": "50", "description": "Total paid" },  
+              "CreatedDate": { "type": "datetime", "database": "DATETIME", "example": "2010-07-03T11:07:19.59", "description": "Created date" },  
+              "OriginalId": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier of the original invoice" }  
+            }  
+          }
+        
+
+    
+
+    
+    - EnabledRecurringInvoiceData: |
+        {
+            
+            "type": "array",
+            "name": "EnabledRecurringInvoiceData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "CustomerId": { "type": "integer", "database": "INT", "example": "124059", "description": "Identifier for a customer" },  
+              "AccountsReceivableId": { "type": "integer", "database": "INT", "example": "68", "description": "" },  
+              "AccountsReceivableName": { "type": "string", "database": "VARCHAR(14)", "example": "TTL10AR1", "description": "" },  
+              "StartDate": { "type": "datetime", "database": "DATETIME", "example": "2014-12-16T00:00:00", "description": "Start date" },  
+              "StopDate": { "type": "datetime", "database": "DATETIME", "example": "", "description": "End date" },  
+              "RecurringInvoiceId": { "type": "integer", "database": "INT", "example": "8", "description": "Identifier for the recurring invoice" },  
+              "RecurringInvoiceName": { "type": "string", "database": "VARCHAR(14)", "example": "ML101RI1", "description": "Recurring invoice name" },  
+              "ProductId": { "type": "integer", "database": "INT", "example": "5002", "description": "Product Id" },  
+              "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },  
+              "Price": { "type": "decimal", "database": "MONEY", "example": "100", "description": "Price" },  
+              "Sku": { "type": "string", "database": "VARCHAR(12)", "example": "ASBANS000070", "description": "SKU" },  
+              "Description": { "type": "string", "database": "NVARCHAR(MAX)", "example": "NSP", "description": "Description" }  
+            }  
+          }
+        
+
+    
+
+    
+    - InvoicesWithUnpaidBalanceData: |
+        {
+            "exclude": "true",
+            "type": "array",
+            "name": "InvoicesWithUnpaidBalanceData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "InvoiceId": { "type": "integer", "database": "INT", "example": "130313", "description": "Identifier for an invoice" }  
+            }  
+          }
+        
+
+    
+
+    
+    - SaleInvoicesByProductFilterData: |
+        {
+            
+            "type": "array",
+            "name": "SaleInvoicesByProductFilterData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "CustomerId": { "type": "integer", "database": "INT", "example": "2922", "description": "Identifier for a customer" },  
+              "SaleInvoiceId": { "type": "integer", "database": "INT", "example": "2", "description": "Identifier for the sale invoice" },  
+              "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },  
+              "Price": { "type": "decimal", "database": "MONEY", "example": "49.99", "description": "Price" },  
+              "AccountsReceivableId": { "type": "integer", "database": "INT", "example": "5", "description": "" },  
+              "AccountsReceivableName": { "type": "string", "database": "VARCHAR(14)", "example": "", "description": "" },  
+              "Year": { "type": "integer", "database": "INT", "example": "2011", "description": "Year (full)" },  
+              "Month": { "type": "integer", "database": "INT", "example": "1", "description": "Month as an integer" },  
+              "OriginalId": { "type": "integer", "database": "INT", "example": "0", "description": "Original invoice id" },  
+              "RefundCodeId": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "159c193f-1904-deaa-2fed-a318b17f2b70", "description": "Identifier for a refund code" },  
+              "SaleInvoiceName": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN1", "description": "Sale invoice name" },  
+              "CustomerName": { "type": "string", "database": "VARCHAR(50)", "example": "KENTEL corp", "description": "Customer name" },  
+              "DatabaseName": { "type": "string", "database": "VARCHAR(25)", "example": "KENTE", "description": "Database name" }  
+            }  
+          }
+        
+
+    
+
+    
+    - SummaryOfSaaSProductData: |
+        {
+            
+            "type": "array",
+            "name": "SummaryOfSaaSProductData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "CustomerID": { "type": "integer", "database": "INT", "example": "85161", "description": "Identifier for a customer" },  
+              "LocationCount": { "type": "integer", "database": "INT", "example": "0", "description": "Number of locations" },  
+              "WorkstationCount": { "type": "integer", "database": "INT", "example": "0", "description": "Number of workstations" },  
+              "RqMobileCount": { "type": "integer", "database": "INT", "example": "0", "description": "Number of RQ Mobile devices" }  
+            }  
+          }
+        
+
+    
+
+    
+    - InvoicesWithMatchingEpinIDData: |
+        {
+            
+            "type": "array",
+            "name": "InvoicesWithMatchingEpinIDData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "InvoiceID": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN16524", "description": "Identifier for an invoice" },  
+              "ProductSKU": { "type": "string", "database": "VARCHAR(12)", "example": "INEPNS000001", "description": "Product SKU" },  
+              "SaleInvoiceID": { "type": "integer", "database": "INT", "example": "130511", "description": "Identifier for an invoice" },  
+              "Priority": { "type": "integer", "database": "INT", "example": "1", "description": "Priority" },  
+              "PinTypeID": { "type": "integer", "database": "INT", "example": "21", "description": "Identifier for a pin type" },  
+              "PinCode": { "type": "string", "database": "VARCHAR(30)", "example": "9875564858978", "description": "EPIN pin code" },  
+              "SerialNumber": { "type": "string", "database": "VARCHAR(100)", "example": "987465328", "description": "Serial number" },  
+              "Amount": { "type": "decimal", "database": "MONEY", "example": "50", "description": "Amount" },  
+              "CostToCustomer": { "type": "decimal", "database": "MONEY", "example": "50", "description": "Customer cost" }  
+            }  
+          }
+        
+
+    
+
+    
+    - TrafficCount: |
+        {
+            
+            "exclude": "true",
+            "type": "array",
+            "name": "TrafficCount",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "storeid": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for a store in RQ" }  
+            }  
+          }
+        
+
+    
+
+    
+    - InvoicesPaidToAccountData: |
+        {         
+            "type": "array",
+            "name": "InvoicesPaidToAccountData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "CustomerId": { "type": "integer", "database": "INT", "example": "54514", "description": "Identifier for a customer" },  
+              "SaleInvoiceId": { "type": "integer", "database": "INT", "example": "1891", "description": "" },  
+              "ProductId": { "type": "integer", "database": "INT", "example": "1355", "description": "Identifier for a product" },  
+              "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },  
+              "Price": { "type": "decimal", "database": "MONEY", "example": "79.99", "description": "Price" },  
+              "Sku": { "type": "string", "database": "VARCHAR(12)", "example": "ASMIRI000016", "description": "SKU" },  
+              "Description": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Blackberry Curve 3 Grey", "description": "Description" }  
+            }  
+          }
+        
+
+    
+
+    
+    - GlobalProduct: |
+        {
+            "type": "array",
+            "name": "GlobalProduct",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "GlobalProductID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>" },  
+              "ProductIdentifier": { "type": "string", "database": "VARCHAR(12)", "example": "ASCLMO000001", "description": "Product identifier" },  
+              "ProductName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "CLA Mot V262/265 Platinum_TestCLA", "description": "Product name" }  
+            }  
+          }
+        
+
+    
+
+
+/billing/GetSaleInvoicesByIDS?CompanyID={CompanyID}&SaleInvoiceIds={SaleInvoiceIds}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        SaleInvoiceIds:
+            displayName: SaleInvoiceIds
+            type: string
+            example: 1,2,3
+            required: true
+            description: Comma seperated list of identifiers for invoices
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: true
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: true
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Get Sale Invoices By IDs
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CustomerId":13699,"InvoiceId":1,"PaymentTypeId":3,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","InvoiceName":"TARGEIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE","TotalAmount":38.14,"TotalPaid":50,"CreatedDate":"2010-07-03T11:07:19.59","OriginalId":1}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoice","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CustomerId":{"type":"integer","database":"INT","example":"13699","description":"Identifier for a customer"},"InvoiceId":{"type":"integer","database":"INT","example":"1","description":"Identifier for this invoice"},"PaymentTypeId":{"type":"integer","database":"INT","example":"3","description":"Identifier for a Payment Type"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"InvoiceName":{"type":"string","database":"VARCHAR(14)","example":"TARGEIN1","description":"Invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"},"TotalAmount":{"type":"decimal","database":"MONEY","example":"38.14","description":"Total amount"},"TotalPaid":{"type":"decimal","database":"MONEY","example":"50","description":"Total paid"},"CreatedDate":{"type":"datetime","database":"DATETIME","example":"2010-07-03T11:07:19.59","description":"Created date"},"OriginalId":{"type":"integer","database":"INT","example":"1","description":"Identifier of the original invoice"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerId":13699,"InvoiceId":1,"PaymentTypeId":3,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","InvoiceName":"TARGEIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE","TotalAmount":38.14,"TotalPaid":50,"CreatedDate":"2010-07-03T11:07:19.59","OriginalId":1}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoice","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CustomerId":{"type":"integer","database":"INT","example":"13699","description":"Identifier for a customer"},"InvoiceId":{"type":"integer","database":"INT","example":"1","description":"Identifier for this invoice"},"PaymentTypeId":{"type":"integer","database":"INT","example":"3","description":"Identifier for a Payment Type"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"InvoiceName":{"type":"string","database":"VARCHAR(14)","example":"TARGEIN1","description":"Invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"},"TotalAmount":{"type":"decimal","database":"MONEY","example":"38.14","description":"Total amount"},"TotalPaid":{"type":"decimal","database":"MONEY","example":"50","description":"Total paid"},"CreatedDate":{"type":"datetime","database":"DATETIME","example":"2010-07-03T11:07:19.59","description":"Created date"},"OriginalId":{"type":"integer","database":"INT","example":"1","description":"Identifier of the original invoice"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CustomerId":13699,"InvoiceId":1,"PaymentTypeId":3,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","InvoiceName":"TARGEIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE","TotalAmount":38.14,"TotalPaid":50,"CreatedDate":"2010-07-03T11:07:19.59","OriginalId":1}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoice","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CustomerId":{"type":"integer","database":"INT","example":"13699","description":"Identifier for a customer"},"InvoiceId":{"type":"integer","database":"INT","example":"1","description":"Identifier for this invoice"},"PaymentTypeId":{"type":"integer","database":"INT","example":"3","description":"Identifier for a Payment Type"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"InvoiceName":{"type":"string","database":"VARCHAR(14)","example":"TARGEIN1","description":"Invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"},"TotalAmount":{"type":"decimal","database":"MONEY","example":"38.14","description":"Total amount"},"TotalPaid":{"type":"decimal","database":"MONEY","example":"50","description":"Total paid"},"CreatedDate":{"type":"datetime","database":"DATETIME","example":"2010-07-03T11:07:19.59","description":"Created date"},"OriginalId":{"type":"integer","database":"INT","example":"1","description":"Identifier of the original invoice"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerId":13699,"InvoiceId":1,"PaymentTypeId":3,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","InvoiceName":"TARGEIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE","TotalAmount":38.14,"TotalPaid":50,"CreatedDate":"2010-07-03T11:07:19.59","OriginalId":1}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoice","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CustomerId":{"type":"integer","database":"INT","example":"13699","description":"Identifier for a customer"},"InvoiceId":{"type":"integer","database":"INT","example":"1","description":"Identifier for this invoice"},"PaymentTypeId":{"type":"integer","database":"INT","example":"3","description":"Identifier for a Payment Type"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"InvoiceName":{"type":"string","database":"VARCHAR(14)","example":"TARGEIN1","description":"Invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"},"TotalAmount":{"type":"decimal","database":"MONEY","example":"38.14","description":"Total amount"},"TotalPaid":{"type":"decimal","database":"MONEY","example":"50","description":"Total paid"},"CreatedDate":{"type":"datetime","database":"DATETIME","example":"2010-07-03T11:07:19.59","description":"Created date"},"OriginalId":{"type":"integer","database":"INT","example":"1","description":"Identifier of the original invoice"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CustomerId":13699,"InvoiceId":1,"PaymentTypeId":3,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","InvoiceName":"TARGEIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE","TotalAmount":38.14,"TotalPaid":50,"CreatedDate":"2010-07-03T11:07:19.59","OriginalId":1}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoice","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CustomerId":{"type":"integer","database":"INT","example":"13699","description":"Identifier for a customer"},"InvoiceId":{"type":"integer","database":"INT","example":"1","description":"Identifier for this invoice"},"PaymentTypeId":{"type":"integer","database":"INT","example":"3","description":"Identifier for a Payment Type"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"InvoiceName":{"type":"string","database":"VARCHAR(14)","example":"TARGEIN1","description":"Invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"},"TotalAmount":{"type":"decimal","database":"MONEY","example":"38.14","description":"Total amount"},"TotalPaid":{"type":"decimal","database":"MONEY","example":"50","description":"Total paid"},"CreatedDate":{"type":"datetime","database":"DATETIME","example":"2010-07-03T11:07:19.59","description":"Created date"},"OriginalId":{"type":"integer","database":"INT","example":"1","description":"Identifier of the original invoice"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CustomerId":13699,"InvoiceId":1,"PaymentTypeId":3,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","InvoiceName":"TARGEIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE","TotalAmount":38.14,"TotalPaid":50,"CreatedDate":"2010-07-03T11:07:19.59","OriginalId":1}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoice","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CustomerId":{"type":"integer","database":"INT","example":"13699","description":"Identifier for a customer"},"InvoiceId":{"type":"integer","database":"INT","example":"1","description":"Identifier for this invoice"},"PaymentTypeId":{"type":"integer","database":"INT","example":"3","description":"Identifier for a Payment Type"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"InvoiceName":{"type":"string","database":"VARCHAR(14)","example":"TARGEIN1","description":"Invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"},"TotalAmount":{"type":"decimal","database":"MONEY","example":"38.14","description":"Total amount"},"TotalPaid":{"type":"decimal","database":"MONEY","example":"50","description":"Total paid"},"CreatedDate":{"type":"datetime","database":"DATETIME","example":"2010-07-03T11:07:19.59","description":"Created date"},"OriginalId":{"type":"integer","database":"INT","example":"1","description":"Identifier of the original invoice"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetTrafficCounts?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: true
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: true
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Traffic Counts
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"storeid":1}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"storeid":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"storeid":1}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"storeid":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"storeid":1}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"storeid":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"storeid":1}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"storeid":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"storeid":1}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"storeid":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"storeid":1}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"TrafficCount","$schema":"http://json-schema.org/draft-03/schema","properties":{"storeid":{"type":"integer","database":"INT","example":"1","description":"Identifier for a store in RQ"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetInvoicesWithMatchingEpinIDS?CompanyID={CompanyID}&IDs={IDs}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        IDs:
+            displayName: IDs
+            type: string
+            example: 84WEAIN16524
+            required: true
+            description: Comma seperated list of identifiers for invoices
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: true
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: true
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Invoices With Matching Epins IDs
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":"84WEAIN16524","ProductSKU":"INEPNS000001","SaleInvoiceID":130511,"Priority":1,"PinTypeID":21,"PinCode":"9875564858978","SerialNumber":"987465328","Amount":50,"CostToCustomer":50}]
+                            schema: |
+                                {"type":"array","name":"InvoicesWithMatchingEpinIDData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN16524","description":"Identifier for an invoice"},"ProductSKU":{"type":"string","database":"VARCHAR(12)","example":"INEPNS000001","description":"Product SKU"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"130511","description":"Identifier for an invoice"},"Priority":{"type":"integer","database":"INT","example":"1","description":"Priority"},"PinTypeID":{"type":"integer","database":"INT","example":"21","description":"Identifier for a pin type"},"PinCode":{"type":"string","database":"VARCHAR(30)","example":"9875564858978","description":"EPIN pin code"},"SerialNumber":{"type":"string","database":"VARCHAR(100)","example":"987465328","description":"Serial number"},"Amount":{"type":"decimal","database":"MONEY","example":"50","description":"Amount"},"CostToCustomer":{"type":"decimal","database":"MONEY","example":"50","description":"Customer cost"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":"84WEAIN16524","ProductSKU":"INEPNS000001","SaleInvoiceID":130511,"Priority":1,"PinTypeID":21,"PinCode":"9875564858978","SerialNumber":"987465328","Amount":50,"CostToCustomer":50}]
+                            schema: |
+                                {"type":"array","name":"InvoicesWithMatchingEpinIDData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN16524","description":"Identifier for an invoice"},"ProductSKU":{"type":"string","database":"VARCHAR(12)","example":"INEPNS000001","description":"Product SKU"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"130511","description":"Identifier for an invoice"},"Priority":{"type":"integer","database":"INT","example":"1","description":"Priority"},"PinTypeID":{"type":"integer","database":"INT","example":"21","description":"Identifier for a pin type"},"PinCode":{"type":"string","database":"VARCHAR(30)","example":"9875564858978","description":"EPIN pin code"},"SerialNumber":{"type":"string","database":"VARCHAR(100)","example":"987465328","description":"Serial number"},"Amount":{"type":"decimal","database":"MONEY","example":"50","description":"Amount"},"CostToCustomer":{"type":"decimal","database":"MONEY","example":"50","description":"Customer cost"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":"84WEAIN16524","ProductSKU":"INEPNS000001","SaleInvoiceID":130511,"Priority":1,"PinTypeID":21,"PinCode":"9875564858978","SerialNumber":"987465328","Amount":50,"CostToCustomer":50}]
+                            schema: |
+                                {"type":"array","name":"InvoicesWithMatchingEpinIDData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN16524","description":"Identifier for an invoice"},"ProductSKU":{"type":"string","database":"VARCHAR(12)","example":"INEPNS000001","description":"Product SKU"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"130511","description":"Identifier for an invoice"},"Priority":{"type":"integer","database":"INT","example":"1","description":"Priority"},"PinTypeID":{"type":"integer","database":"INT","example":"21","description":"Identifier for a pin type"},"PinCode":{"type":"string","database":"VARCHAR(30)","example":"9875564858978","description":"EPIN pin code"},"SerialNumber":{"type":"string","database":"VARCHAR(100)","example":"987465328","description":"Serial number"},"Amount":{"type":"decimal","database":"MONEY","example":"50","description":"Amount"},"CostToCustomer":{"type":"decimal","database":"MONEY","example":"50","description":"Customer cost"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":"84WEAIN16524","ProductSKU":"INEPNS000001","SaleInvoiceID":130511,"Priority":1,"PinTypeID":21,"PinCode":"9875564858978","SerialNumber":"987465328","Amount":50,"CostToCustomer":50}]
+                            schema: |
+                                {"type":"array","name":"InvoicesWithMatchingEpinIDData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN16524","description":"Identifier for an invoice"},"ProductSKU":{"type":"string","database":"VARCHAR(12)","example":"INEPNS000001","description":"Product SKU"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"130511","description":"Identifier for an invoice"},"Priority":{"type":"integer","database":"INT","example":"1","description":"Priority"},"PinTypeID":{"type":"integer","database":"INT","example":"21","description":"Identifier for a pin type"},"PinCode":{"type":"string","database":"VARCHAR(30)","example":"9875564858978","description":"EPIN pin code"},"SerialNumber":{"type":"string","database":"VARCHAR(100)","example":"987465328","description":"Serial number"},"Amount":{"type":"decimal","database":"MONEY","example":"50","description":"Amount"},"CostToCustomer":{"type":"decimal","database":"MONEY","example":"50","description":"Customer cost"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":"84WEAIN16524","ProductSKU":"INEPNS000001","SaleInvoiceID":130511,"Priority":1,"PinTypeID":21,"PinCode":"9875564858978","SerialNumber":"987465328","Amount":50,"CostToCustomer":50}]
+                            schema: |
+                                {"type":"array","name":"InvoicesWithMatchingEpinIDData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN16524","description":"Identifier for an invoice"},"ProductSKU":{"type":"string","database":"VARCHAR(12)","example":"INEPNS000001","description":"Product SKU"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"130511","description":"Identifier for an invoice"},"Priority":{"type":"integer","database":"INT","example":"1","description":"Priority"},"PinTypeID":{"type":"integer","database":"INT","example":"21","description":"Identifier for a pin type"},"PinCode":{"type":"string","database":"VARCHAR(30)","example":"9875564858978","description":"EPIN pin code"},"SerialNumber":{"type":"string","database":"VARCHAR(100)","example":"987465328","description":"Serial number"},"Amount":{"type":"decimal","database":"MONEY","example":"50","description":"Amount"},"CostToCustomer":{"type":"decimal","database":"MONEY","example":"50","description":"Customer cost"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"InvoiceID":"84WEAIN16524","ProductSKU":"INEPNS000001","SaleInvoiceID":130511,"Priority":1,"PinTypeID":21,"PinCode":"9875564858978","SerialNumber":"987465328","Amount":50,"CostToCustomer":50}]
+                            schema: |
+                                {"type":"array","name":"InvoicesWithMatchingEpinIDData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceID":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN16524","description":"Identifier for an invoice"},"ProductSKU":{"type":"string","database":"VARCHAR(12)","example":"INEPNS000001","description":"Product SKU"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"130511","description":"Identifier for an invoice"},"Priority":{"type":"integer","database":"INT","example":"1","description":"Priority"},"PinTypeID":{"type":"integer","database":"INT","example":"21","description":"Identifier for a pin type"},"PinCode":{"type":"string","database":"VARCHAR(30)","example":"9875564858978","description":"EPIN pin code"},"SerialNumber":{"type":"string","database":"VARCHAR(100)","example":"987465328","description":"Serial number"},"Amount":{"type":"decimal","database":"MONEY","example":"50","description":"Amount"},"CostToCustomer":{"type":"decimal","database":"MONEY","example":"50","description":"Customer cost"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetSummaryOfSaaSProducts?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&CustomerIDS={CustomerIDS}&LocationGlobalProductIDs={LocationGlobalProductIDs}&WorkstationsGlobalProductIDs={WorkstationsGlobalProductIDs}&RQMobileGlobalProductIDs={RQMobileGlobalProductIDs}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        CustomerIDS:
+            displayName: CustomerIDS
+            type: string
+            example: 85161,119121,113548
+            required: true
+            description: Comma seperated list of identifiers for customers
+        
+        LocationGlobalProductIDs:
+            displayName: LocationGlobalProductIDs
+            type: string
+            example: 760,764
+            required: true
+            description: Comma seperated list of identifiers for RQ location line items
+        
+        WorkstationsGlobalProductIDs:
+            displayName: WorkstationsGlobalProductIDs
+            type: string
+            example: 938,1456
+            required: true
+            description: Comma seperated list of identifiers for RQ workstation line items
+        
+        RQMobileGlobalProductIDs:
+            displayName: RQMobileGlobalProductIDs
+            type: integer
+            example: 1721
+            required: true
+            description: Comma seperated list of identifiers for RQ mobile line items
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: true
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: true
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Summary of SaaS Products
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CustomerID":85161,"LocationCount":0,"WorkstationCount":0,"RqMobileCount":0}]
+                            schema: |
+                                {"type":"array","name":"SummaryOfSaaSProductData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerID":{"type":"integer","database":"INT","example":"85161","description":"Identifier for a customer"},"LocationCount":{"type":"integer","database":"INT","example":"0","description":"Number of locations"},"WorkstationCount":{"type":"integer","database":"INT","example":"0","description":"Number of workstations"},"RqMobileCount":{"type":"integer","database":"INT","example":"0","description":"Number of RQ Mobile devices"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerID":85161,"LocationCount":0,"WorkstationCount":0,"RqMobileCount":0}]
+                            schema: |
+                                {"type":"array","name":"SummaryOfSaaSProductData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerID":{"type":"integer","database":"INT","example":"85161","description":"Identifier for a customer"},"LocationCount":{"type":"integer","database":"INT","example":"0","description":"Number of locations"},"WorkstationCount":{"type":"integer","database":"INT","example":"0","description":"Number of workstations"},"RqMobileCount":{"type":"integer","database":"INT","example":"0","description":"Number of RQ Mobile devices"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CustomerID":85161,"LocationCount":0,"WorkstationCount":0,"RqMobileCount":0}]
+                            schema: |
+                                {"type":"array","name":"SummaryOfSaaSProductData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerID":{"type":"integer","database":"INT","example":"85161","description":"Identifier for a customer"},"LocationCount":{"type":"integer","database":"INT","example":"0","description":"Number of locations"},"WorkstationCount":{"type":"integer","database":"INT","example":"0","description":"Number of workstations"},"RqMobileCount":{"type":"integer","database":"INT","example":"0","description":"Number of RQ Mobile devices"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerID":85161,"LocationCount":0,"WorkstationCount":0,"RqMobileCount":0}]
+                            schema: |
+                                {"type":"array","name":"SummaryOfSaaSProductData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerID":{"type":"integer","database":"INT","example":"85161","description":"Identifier for a customer"},"LocationCount":{"type":"integer","database":"INT","example":"0","description":"Number of locations"},"WorkstationCount":{"type":"integer","database":"INT","example":"0","description":"Number of workstations"},"RqMobileCount":{"type":"integer","database":"INT","example":"0","description":"Number of RQ Mobile devices"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CustomerID":85161,"LocationCount":0,"WorkstationCount":0,"RqMobileCount":0}]
+                            schema: |
+                                {"type":"array","name":"SummaryOfSaaSProductData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerID":{"type":"integer","database":"INT","example":"85161","description":"Identifier for a customer"},"LocationCount":{"type":"integer","database":"INT","example":"0","description":"Number of locations"},"WorkstationCount":{"type":"integer","database":"INT","example":"0","description":"Number of workstations"},"RqMobileCount":{"type":"integer","database":"INT","example":"0","description":"Number of RQ Mobile devices"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CustomerID":85161,"LocationCount":0,"WorkstationCount":0,"RqMobileCount":0}]
+                            schema: |
+                                {"type":"array","name":"SummaryOfSaaSProductData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerID":{"type":"integer","database":"INT","example":"85161","description":"Identifier for a customer"},"LocationCount":{"type":"integer","database":"INT","example":"0","description":"Number of locations"},"WorkstationCount":{"type":"integer","database":"INT","example":"0","description":"Number of workstations"},"RqMobileCount":{"type":"integer","database":"INT","example":"0","description":"Number of RQ Mobile devices"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetEnabledRecurringInvoices?CompanyID={CompanyID}&LanguageCode={LanguageCode}&StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='#getting-language-codes'>Getting Language Codes</a>
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Enabled Recurring Invoices
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CustomerId":124059,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","StartDate":"2014-12-16T00:00:00","StopDate":"","RecurringInvoiceId":8,"RecurringInvoiceName":"ML101RI1","ProductId":5002,"Quantity":1,"Price":100,"Sku":"ASBANS000070","Description":"NSP"}]
+                            schema: |
+                                {"type":"array","name":"EnabledRecurringInvoiceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"124059","description":"Identifier for a customer"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"StartDate":{"type":"datetime","database":"DATETIME","example":"2014-12-16T00:00:00","description":"Start date"},"StopDate":{"type":"datetime","database":"DATETIME","example":"","description":"End date"},"RecurringInvoiceId":{"type":"integer","database":"INT","example":"8","description":"Identifier for the recurring invoice"},"RecurringInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"ML101RI1","description":"Recurring invoice name"},"ProductId":{"type":"integer","database":"INT","example":"5002","description":"Product Id"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"100","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASBANS000070","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"NSP","description":"Description"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerId":124059,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","StartDate":"2014-12-16T00:00:00","StopDate":"","RecurringInvoiceId":8,"RecurringInvoiceName":"ML101RI1","ProductId":5002,"Quantity":1,"Price":100,"Sku":"ASBANS000070","Description":"NSP"}]
+                            schema: |
+                                {"type":"array","name":"EnabledRecurringInvoiceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"124059","description":"Identifier for a customer"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"StartDate":{"type":"datetime","database":"DATETIME","example":"2014-12-16T00:00:00","description":"Start date"},"StopDate":{"type":"datetime","database":"DATETIME","example":"","description":"End date"},"RecurringInvoiceId":{"type":"integer","database":"INT","example":"8","description":"Identifier for the recurring invoice"},"RecurringInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"ML101RI1","description":"Recurring invoice name"},"ProductId":{"type":"integer","database":"INT","example":"5002","description":"Product Id"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"100","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASBANS000070","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"NSP","description":"Description"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CustomerId":124059,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","StartDate":"2014-12-16T00:00:00","StopDate":"","RecurringInvoiceId":8,"RecurringInvoiceName":"ML101RI1","ProductId":5002,"Quantity":1,"Price":100,"Sku":"ASBANS000070","Description":"NSP"}]
+                            schema: |
+                                {"type":"array","name":"EnabledRecurringInvoiceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"124059","description":"Identifier for a customer"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"StartDate":{"type":"datetime","database":"DATETIME","example":"2014-12-16T00:00:00","description":"Start date"},"StopDate":{"type":"datetime","database":"DATETIME","example":"","description":"End date"},"RecurringInvoiceId":{"type":"integer","database":"INT","example":"8","description":"Identifier for the recurring invoice"},"RecurringInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"ML101RI1","description":"Recurring invoice name"},"ProductId":{"type":"integer","database":"INT","example":"5002","description":"Product Id"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"100","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASBANS000070","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"NSP","description":"Description"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerId":124059,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","StartDate":"2014-12-16T00:00:00","StopDate":"","RecurringInvoiceId":8,"RecurringInvoiceName":"ML101RI1","ProductId":5002,"Quantity":1,"Price":100,"Sku":"ASBANS000070","Description":"NSP"}]
+                            schema: |
+                                {"type":"array","name":"EnabledRecurringInvoiceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"124059","description":"Identifier for a customer"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"StartDate":{"type":"datetime","database":"DATETIME","example":"2014-12-16T00:00:00","description":"Start date"},"StopDate":{"type":"datetime","database":"DATETIME","example":"","description":"End date"},"RecurringInvoiceId":{"type":"integer","database":"INT","example":"8","description":"Identifier for the recurring invoice"},"RecurringInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"ML101RI1","description":"Recurring invoice name"},"ProductId":{"type":"integer","database":"INT","example":"5002","description":"Product Id"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"100","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASBANS000070","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"NSP","description":"Description"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CustomerId":124059,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","StartDate":"2014-12-16T00:00:00","StopDate":"","RecurringInvoiceId":8,"RecurringInvoiceName":"ML101RI1","ProductId":5002,"Quantity":1,"Price":100,"Sku":"ASBANS000070","Description":"NSP"}]
+                            schema: |
+                                {"type":"array","name":"EnabledRecurringInvoiceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"124059","description":"Identifier for a customer"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"StartDate":{"type":"datetime","database":"DATETIME","example":"2014-12-16T00:00:00","description":"Start date"},"StopDate":{"type":"datetime","database":"DATETIME","example":"","description":"End date"},"RecurringInvoiceId":{"type":"integer","database":"INT","example":"8","description":"Identifier for the recurring invoice"},"RecurringInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"ML101RI1","description":"Recurring invoice name"},"ProductId":{"type":"integer","database":"INT","example":"5002","description":"Product Id"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"100","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASBANS000070","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"NSP","description":"Description"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CustomerId":124059,"AccountsReceivableId":68,"AccountsReceivableName":"TTL10AR1","StartDate":"2014-12-16T00:00:00","StopDate":"","RecurringInvoiceId":8,"RecurringInvoiceName":"ML101RI1","ProductId":5002,"Quantity":1,"Price":100,"Sku":"ASBANS000070","Description":"NSP"}]
+                            schema: |
+                                {"type":"array","name":"EnabledRecurringInvoiceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"124059","description":"Identifier for a customer"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"68","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"TTL10AR1","description":""},"StartDate":{"type":"datetime","database":"DATETIME","example":"2014-12-16T00:00:00","description":"Start date"},"StopDate":{"type":"datetime","database":"DATETIME","example":"","description":"End date"},"RecurringInvoiceId":{"type":"integer","database":"INT","example":"8","description":"Identifier for the recurring invoice"},"RecurringInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"ML101RI1","description":"Recurring invoice name"},"ProductId":{"type":"integer","database":"INT","example":"5002","description":"Product Id"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"100","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASBANS000070","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"NSP","description":"Description"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetInvoicesWithUnpaidBalance?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&PaymentTypeID={PaymentTypeID}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        PaymentTypeID:
+            displayName: PaymentTypeID
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for a Payment Type
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Invoices With Unpaid Balances
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"InvoiceId":130313}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"InvoicesWithUnpaidBalanceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceId":{"type":"integer","database":"INT","example":"130313","description":"Identifier for an invoice"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"InvoiceId":130313}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"InvoicesWithUnpaidBalanceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceId":{"type":"integer","database":"INT","example":"130313","description":"Identifier for an invoice"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"InvoiceId":130313}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"InvoicesWithUnpaidBalanceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceId":{"type":"integer","database":"INT","example":"130313","description":"Identifier for an invoice"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"InvoiceId":130313}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"InvoicesWithUnpaidBalanceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceId":{"type":"integer","database":"INT","example":"130313","description":"Identifier for an invoice"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"InvoiceId":130313}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"InvoicesWithUnpaidBalanceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceId":{"type":"integer","database":"INT","example":"130313","description":"Identifier for an invoice"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"InvoiceId":130313}]
+                            schema: |
+                                {"exclude":"true","type":"array","name":"InvoicesWithUnpaidBalanceData","$schema":"http://json-schema.org/draft-03/schema","properties":{"InvoiceId":{"type":"integer","database":"INT","example":"130313","description":"Identifier for an invoice"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetSaleInvoicesByProductFilter?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&GlobalProductIds={GlobalProductIds}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        GlobalProductIds:
+            displayName: GlobalProductIds
+            type: string
+            example: 760,764,768,1808,1809,1810
+            required: true
+            description: Comma seperated list of identifiers for <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProducts</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Sale Invoices By Product Filter
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CustomerId":2922,"SaleInvoiceId":2,"Quantity":1,"Price":49.99,"AccountsReceivableId":5,"AccountsReceivableName":"","Year":2011,"Month":1,"OriginalId":0,"RefundCodeId":"159c193f-1904-deaa-2fed-a318b17f2b70","SaleInvoiceName":"84WEAIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE"}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoicesByProductFilterData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"2922","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"2","description":"Identifier for the sale invoice"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"49.99","description":"Price"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"5","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"","description":""},"Year":{"type":"integer","database":"INT","example":"2011","description":"Year (full)"},"Month":{"type":"integer","database":"INT","example":"1","description":"Month as an integer"},"OriginalId":{"type":"integer","database":"INT","example":"0","description":"Original invoice id"},"RefundCodeId":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"159c193f-1904-deaa-2fed-a318b17f2b70","description":"Identifier for a refund code"},"SaleInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN1","description":"Sale invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerId":2922,"SaleInvoiceId":2,"Quantity":1,"Price":49.99,"AccountsReceivableId":5,"AccountsReceivableName":"","Year":2011,"Month":1,"OriginalId":0,"RefundCodeId":"159c193f-1904-deaa-2fed-a318b17f2b70","SaleInvoiceName":"84WEAIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE"}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoicesByProductFilterData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"2922","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"2","description":"Identifier for the sale invoice"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"49.99","description":"Price"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"5","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"","description":""},"Year":{"type":"integer","database":"INT","example":"2011","description":"Year (full)"},"Month":{"type":"integer","database":"INT","example":"1","description":"Month as an integer"},"OriginalId":{"type":"integer","database":"INT","example":"0","description":"Original invoice id"},"RefundCodeId":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"159c193f-1904-deaa-2fed-a318b17f2b70","description":"Identifier for a refund code"},"SaleInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN1","description":"Sale invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CustomerId":2922,"SaleInvoiceId":2,"Quantity":1,"Price":49.99,"AccountsReceivableId":5,"AccountsReceivableName":"","Year":2011,"Month":1,"OriginalId":0,"RefundCodeId":"159c193f-1904-deaa-2fed-a318b17f2b70","SaleInvoiceName":"84WEAIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE"}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoicesByProductFilterData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"2922","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"2","description":"Identifier for the sale invoice"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"49.99","description":"Price"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"5","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"","description":""},"Year":{"type":"integer","database":"INT","example":"2011","description":"Year (full)"},"Month":{"type":"integer","database":"INT","example":"1","description":"Month as an integer"},"OriginalId":{"type":"integer","database":"INT","example":"0","description":"Original invoice id"},"RefundCodeId":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"159c193f-1904-deaa-2fed-a318b17f2b70","description":"Identifier for a refund code"},"SaleInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN1","description":"Sale invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerId":2922,"SaleInvoiceId":2,"Quantity":1,"Price":49.99,"AccountsReceivableId":5,"AccountsReceivableName":"","Year":2011,"Month":1,"OriginalId":0,"RefundCodeId":"159c193f-1904-deaa-2fed-a318b17f2b70","SaleInvoiceName":"84WEAIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE"}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoicesByProductFilterData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"2922","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"2","description":"Identifier for the sale invoice"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"49.99","description":"Price"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"5","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"","description":""},"Year":{"type":"integer","database":"INT","example":"2011","description":"Year (full)"},"Month":{"type":"integer","database":"INT","example":"1","description":"Month as an integer"},"OriginalId":{"type":"integer","database":"INT","example":"0","description":"Original invoice id"},"RefundCodeId":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"159c193f-1904-deaa-2fed-a318b17f2b70","description":"Identifier for a refund code"},"SaleInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN1","description":"Sale invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CustomerId":2922,"SaleInvoiceId":2,"Quantity":1,"Price":49.99,"AccountsReceivableId":5,"AccountsReceivableName":"","Year":2011,"Month":1,"OriginalId":0,"RefundCodeId":"159c193f-1904-deaa-2fed-a318b17f2b70","SaleInvoiceName":"84WEAIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE"}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoicesByProductFilterData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"2922","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"2","description":"Identifier for the sale invoice"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"49.99","description":"Price"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"5","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"","description":""},"Year":{"type":"integer","database":"INT","example":"2011","description":"Year (full)"},"Month":{"type":"integer","database":"INT","example":"1","description":"Month as an integer"},"OriginalId":{"type":"integer","database":"INT","example":"0","description":"Original invoice id"},"RefundCodeId":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"159c193f-1904-deaa-2fed-a318b17f2b70","description":"Identifier for a refund code"},"SaleInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN1","description":"Sale invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CustomerId":2922,"SaleInvoiceId":2,"Quantity":1,"Price":49.99,"AccountsReceivableId":5,"AccountsReceivableName":"","Year":2011,"Month":1,"OriginalId":0,"RefundCodeId":"159c193f-1904-deaa-2fed-a318b17f2b70","SaleInvoiceName":"84WEAIN1","CustomerName":"KENTEL corp","DatabaseName":"KENTE"}]
+                            schema: |
+                                {"type":"array","name":"SaleInvoicesByProductFilterData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"2922","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"2","description":"Identifier for the sale invoice"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"49.99","description":"Price"},"AccountsReceivableId":{"type":"integer","database":"INT","example":"5","description":""},"AccountsReceivableName":{"type":"string","database":"VARCHAR(14)","example":"","description":""},"Year":{"type":"integer","database":"INT","example":"2011","description":"Year (full)"},"Month":{"type":"integer","database":"INT","example":"1","description":"Month as an integer"},"OriginalId":{"type":"integer","database":"INT","example":"0","description":"Original invoice id"},"RefundCodeId":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"159c193f-1904-deaa-2fed-a318b17f2b70","description":"Identifier for a refund code"},"SaleInvoiceName":{"type":"string","database":"VARCHAR(14)","example":"84WEAIN1","description":"Sale invoice name"},"CustomerName":{"type":"string","database":"VARCHAR(50)","example":"KENTEL corp","description":"Customer name"},"DatabaseName":{"type":"string","database":"VARCHAR(25)","example":"KENTE","description":"Database name"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetInvoicesPaidToAccount?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Invoices Paid To Account
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CustomerId":54514,"SaleInvoiceId":1891,"ProductId":1355,"Quantity":1,"Price":79.99,"Sku":"ASMIRI000016","Description":"Blackberry Curve 3 Grey"}]
+                            schema: |
+                                {"type":"array","name":"InvoicesPaidToAccountData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"54514","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"1891","description":""},"ProductId":{"type":"integer","database":"INT","example":"1355","description":"Identifier for a product"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"79.99","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASMIRI000016","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"Blackberry Curve 3 Grey","description":"Description"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerId":54514,"SaleInvoiceId":1891,"ProductId":1355,"Quantity":1,"Price":79.99,"Sku":"ASMIRI000016","Description":"Blackberry Curve 3 Grey"}]
+                            schema: |
+                                {"type":"array","name":"InvoicesPaidToAccountData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"54514","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"1891","description":""},"ProductId":{"type":"integer","database":"INT","example":"1355","description":"Identifier for a product"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"79.99","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASMIRI000016","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"Blackberry Curve 3 Grey","description":"Description"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CustomerId":54514,"SaleInvoiceId":1891,"ProductId":1355,"Quantity":1,"Price":79.99,"Sku":"ASMIRI000016","Description":"Blackberry Curve 3 Grey"}]
+                            schema: |
+                                {"type":"array","name":"InvoicesPaidToAccountData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"54514","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"1891","description":""},"ProductId":{"type":"integer","database":"INT","example":"1355","description":"Identifier for a product"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"79.99","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASMIRI000016","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"Blackberry Curve 3 Grey","description":"Description"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CustomerId":54514,"SaleInvoiceId":1891,"ProductId":1355,"Quantity":1,"Price":79.99,"Sku":"ASMIRI000016","Description":"Blackberry Curve 3 Grey"}]
+                            schema: |
+                                {"type":"array","name":"InvoicesPaidToAccountData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"54514","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"1891","description":""},"ProductId":{"type":"integer","database":"INT","example":"1355","description":"Identifier for a product"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"79.99","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASMIRI000016","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"Blackberry Curve 3 Grey","description":"Description"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CustomerId":54514,"SaleInvoiceId":1891,"ProductId":1355,"Quantity":1,"Price":79.99,"Sku":"ASMIRI000016","Description":"Blackberry Curve 3 Grey"}]
+                            schema: |
+                                {"type":"array","name":"InvoicesPaidToAccountData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"54514","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"1891","description":""},"ProductId":{"type":"integer","database":"INT","example":"1355","description":"Identifier for a product"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"79.99","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASMIRI000016","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"Blackberry Curve 3 Grey","description":"Description"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CustomerId":54514,"SaleInvoiceId":1891,"ProductId":1355,"Quantity":1,"Price":79.99,"Sku":"ASMIRI000016","Description":"Blackberry Curve 3 Grey"}]
+                            schema: |
+                                {"type":"array","name":"InvoicesPaidToAccountData","$schema":"http://json-schema.org/draft-03/schema","properties":{"CustomerId":{"type":"integer","database":"INT","example":"54514","description":"Identifier for a customer"},"SaleInvoiceId":{"type":"integer","database":"INT","example":"1891","description":""},"ProductId":{"type":"integer","database":"INT","example":"1355","description":"Identifier for a product"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"Price":{"type":"decimal","database":"MONEY","example":"79.99","description":"Price"},"Sku":{"type":"string","database":"VARCHAR(12)","example":"ASMIRI000016","description":"SKU"},"Description":{"type":"string","database":"NVARCHAR(MAX)","example":"Blackberry Curve 3 Grey","description":"Description"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetARPaymentInvoice?CompanyID={CompanyID}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting AR Payment Invoice
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/billing/GetAllGlobalProducts?CompanyID={CompanyID}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 22573
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Get All Global Products
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"GlobalProductID":1,"ProductIdentifier":"ASCLMO000001","ProductName":"CLA Mot V262/265 Platinum_TestCLA"}]
+                            schema: |
+                                {"type":"array","name":"GlobalProduct","$schema":"http://json-schema.org/draft-03/schema","properties":{"GlobalProductID":{"type":"integer","database":"INT","example":"1","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/Billing-Reports/#globalproduct'>GlobalProduct</a>"},"ProductIdentifier":{"type":"string","database":"VARCHAR(12)","example":"ASCLMO000001","description":"Product identifier"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"CLA Mot V262/265 Platinum_TestCLA","description":"Product name"}}}
+                            
+                        
+                    
+                
+            
+    

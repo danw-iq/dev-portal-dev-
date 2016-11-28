@@ -1,0 +1,437 @@
+#%RAML 0.8
+title: availability
+baseUri: https://availabilitydemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - Availability: |
+        {
+          "name": "Availability",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "GUID", "description": "Unique identifier for a [CatalogItem](/api/catalog/#catalogitem)", "putDescription": "Unique identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>", "ref": "catalog.CatalogItem.CatalogItemId" }, 
+            "CompanyId": { "type": "integer", "description": "Identifier for a [Company](/api/company-tree/#company)", "ref": "company tree.Company.Id", "generated": "true" }, 
+            "EntityId": { "type": "integer", "description": "Identifier for a [CompanyTreeNode](/api/company-tree/#companytreenode)", "putDescription": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>. Must be related to Company specified in URI", "ref": "company tree.Location.Id" }, 
+            "Quantity": { "type": "integer", "description": "Quantity", "putDescription": "If IsSerialized is true, this value must be omitted. Defaults to 0", "example": "15" }, 
+            "IsDropShippable": { "type": "boolean", "description": "A flag to indicate if the [CatalogItem](/api/catalog/#catalogitem) can be shipped", "putDescription": "Defaults to false. Indicates if the catalog item can be shipped.", "example": "false" },
+            "IsSerialized": { "type": "boolean", "description": "A flag to indicate Quantity is determined by a count of SerialNumbers. When true, Quantitiy is read-only and flag cannot be modified", "putDescription": "Defaults to false", "example": "false" }
+          },
+          "required": [ "Id", "EntityId" ]
+        }
+        
+
+    
+
+    
+    - AvailabilityArray: |
+        {
+          "exclude": "true",
+          "name": "Availability",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+    
+    - SerialNumber: |
+        {
+          "name": "SerialNumber",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "string", "description": "Serial number", "generated": "true", "example": "B7FQ-RANC" }, 
+            "CatalogProductId": { "type": "GUID", "description": "Unique identifier for a [CatalogItem](/api/catalog/#catalogitem)", "ref": "catalog.CatalogItem.CatalogItemId", "generated": "true" }, 
+            "EntityId": { "type": "integer", "description": "Identifier for a [CompanyTreeNode](/api/company-tree/#companytreenode)", "ref": "company tree.Location.Id", "generated": "true" }, 
+            "CompanyId": { "type": "integer", "description": "Identifier for a [Company](/api/company-tree/#company)", "ref": "company tree.Company.Id", "generated": "true" }
+          },
+          "required": [ "Id" ]
+        } 
+        
+
+    
+
+    
+    - SerialNumberArray: |
+        {
+          "exclude": "true",
+          "name": "SerialNumber",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }         
+        
+
+    
+
+
+/Companies({CompanyId})/CatalogItems:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+          
+      
+    post:
+        
+        displayName: Configuring Availability
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Id":"a183f1a9-c58f-426a-930a-9a6357db52ed","EntityId":14202,"Quantity":15,"IsDropShippable":false,"IsSerialized":false}
+                    
+                schema: |
+                    {"name":"Availability","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier for a [CatalogItem](/api/catalog/#catalogitem)","putDescription":"Unique identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"CompanyId":{"type":"integer","description":"Identifier for a [Company](/api/company-tree/#company)","ref":"company tree.Company.Id","generated":"true","example":"14146"},"EntityId":{"type":"integer","description":"Identifier for a [CompanyTreeNode](/api/company-tree/#companytreenode)","putDescription":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>. Must be related to Company specified in URI","ref":"company tree.Location.Id","example":"14202"},"Quantity":{"type":"integer","description":"Quantity","putDescription":"If IsSerialized is true, this value must be omitted. Defaults to 0","example":"15"},"IsDropShippable":{"type":"boolean","description":"A flag to indicate if the [CatalogItem](/api/catalog/#catalogitem) can be shipped","putDescription":"Defaults to false. Indicates if the catalog item can be shipped.","example":"false"},"IsSerialized":{"type":"boolean","description":"A flag to indicate Quantity is determined by a count of SerialNumbers. When true, Quantitiy is read-only and flag cannot be modified","putDescription":"Defaults to false","example":"false"}},"required":["Id","EntityId"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"Quantity":15,"IsDropShippable":false,"IsSerialized":false}
+                            schema: |
+                                {"name":"Availability","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier for a [CatalogItem](/api/catalog/#catalogitem)","putDescription":"Unique identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"CompanyId":{"type":"integer","description":"Identifier for a [Company](/api/company-tree/#company)","ref":"company tree.Company.Id","generated":"true","example":"14146"},"EntityId":{"type":"integer","description":"Identifier for a [CompanyTreeNode](/api/company-tree/#companytreenode)","putDescription":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>. Must be related to Company specified in URI","ref":"company tree.Location.Id","example":"14202"},"Quantity":{"type":"integer","description":"Quantity","putDescription":"If IsSerialized is true, this value must be omitted. Defaults to 0","example":"15"},"IsDropShippable":{"type":"boolean","description":"A flag to indicate if the [CatalogItem](/api/catalog/#catalogitem) can be shipped","putDescription":"Defaults to false. Indicates if the catalog item can be shipped.","example":"false"},"IsSerialized":{"type":"boolean","description":"A flag to indicate Quantity is determined by a count of SerialNumbers. When true, Quantitiy is read-only and flag cannot be modified","putDescription":"Defaults to false","example":"false"}},"required":["Id","EntityId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Entities({LocationId})/CatalogItems({CatalogItemId}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: integer
+            example: 14202
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+        
+        CatalogItemId:
+            displayName: CatalogItemId
+            type: string
+            example: 41519509-b798-4630-abba-89c9a30df83a
+            required: true
+            description: Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
+          
+      
+    get:
+        
+        displayName: Getting Availability For a Catalog Item For a Location
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"Quantity":15,"IsDropShippable":false,"IsSerialized":false}
+                            schema: |
+                                {"name":"Availability","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifier for a [CatalogItem](/api/catalog/#catalogitem)","putDescription":"Unique identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"CompanyId":{"type":"integer","description":"Identifier for a [Company](/api/company-tree/#company)","ref":"company tree.Company.Id","generated":"true","example":"14146"},"EntityId":{"type":"integer","description":"Identifier for a [CompanyTreeNode](/api/company-tree/#companytreenode)","putDescription":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>. Must be related to Company specified in URI","ref":"company tree.Location.Id","example":"14202"},"Quantity":{"type":"integer","description":"Quantity","putDescription":"If IsSerialized is true, this value must be omitted. Defaults to 0","example":"15"},"IsDropShippable":{"type":"boolean","description":"A flag to indicate if the [CatalogItem](/api/catalog/#catalogitem) can be shipped","putDescription":"Defaults to false. Indicates if the catalog item can be shipped.","example":"false"},"IsSerialized":{"type":"boolean","description":"A flag to indicate Quantity is determined by a count of SerialNumbers. When true, Quantitiy is read-only and flag cannot be modified","putDescription":"Defaults to false","example":"false"}},"required":["Id","EntityId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/CatalogItems({CatalogItemId})/Availability:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        CatalogItemId:
+            displayName: CatalogItemId
+            type: string
+            example: 41519509-b798-4630-abba-89c9a30df83a
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
+          
+      
+    get:
+        
+        displayName: Getting Availability For a Catalog Item For All Locations
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"Quantity":15,"IsDropShippable":false,"IsSerialized":false}]
+                            schema: |
+                                {"exclude":"true","name":"Availability","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Entities({LocationId})/CatalogItems({CatalogItemId})/SerialNumbers:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: integer
+            example: 14202
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+        
+        CatalogItemId:
+            displayName: CatalogItemId
+            type: string
+            example: 41519509-b798-4630-abba-89c9a30df83a
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
+          
+      
+    get:
+        
+        displayName: Getting Serial Numbers For a Catalog Item
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"B7FQ-RANC","CatalogProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","EntityId":14202,"CompanyId":14146}]
+                            schema: |
+                                {"exclude":"true","name":"SerialNumber","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Entities({LocationId})/CatalogItems({CatalogItemId})/SerialNumbers({SerialNumber}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: integer
+            example: 14202
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+        
+        CatalogItemId:
+            displayName: CatalogItemId
+            type: string
+            example: 41519509-b798-4630-abba-89c9a30df83a
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
+        
+        SerialNumber:
+            displayName: SerialNumber
+            type: string
+            example: B7FQ-RANC
+            required: true
+            description: Serial Number
+          
+      
+    get:
+        
+        displayName: Getting a Serial Number
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"B7FQ-RANC","CatalogProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","EntityId":14202,"CompanyId":14146}
+                            schema: |
+                                {"name":"SerialNumber","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"string","description":"Serial number","generated":"true","example":"B7FQ-RANC"},"CatalogProductId":{"type":"GUID","description":"Unique identifier for a [CatalogItem](/api/catalog/#catalogitem)","ref":"catalog.CatalogItem.CatalogItemId","generated":"true","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"EntityId":{"type":"integer","description":"Identifier for a [CompanyTreeNode](/api/company-tree/#companytreenode)","ref":"company tree.Location.Id","generated":"true","example":"14202"},"CompanyId":{"type":"integer","description":"Identifier for a [Company](/api/company-tree/#company)","ref":"company tree.Company.Id","generated":"true","example":"14146"}},"required":["Id"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Entities({LocationId})/SerialNumbers?$filter=Id eq '{SerialNumber}':
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: integer
+            example: 14202
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+        
+        SerialNumber:
+            displayName: SerialNumber
+            type: string
+            example: B7FQ-RANC
+            required: true
+            description: Serial Number
+          
+      
+    get:
+        
+        displayName: Getting a Serial Number by Location
+                
+        
+        description: |            
+            This request may return multiple <a href='http://developers.iqmetrix.com/api/availability/#serialnumber'>SerialNumber</a> resources if a Serial Number is associated with more than one <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a> for a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>.
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":"B7FQ-RANC","CatalogProductId":"a183f1a9-c58f-426a-930a-9a6357db52ed","EntityId":14202,"CompanyId":14146}]
+                            schema: |
+                                {"exclude":"true","name":"SerialNumber","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    

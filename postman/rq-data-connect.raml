@@ -1,0 +1,1907 @@
+#%RAML 0.8
+title: RQ Data Connect
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - Session: |
+        {
+          "exclude": "true",
+          "name": "Session",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "access_token": { "type": "guid", "putDescription": "{{AccessToken_Glossary}}", "example": "b0k0dY70N3Vv9jR1b9oEdW9IeT5WIn85WCYFJRo6AiIKLEMBFwNbEQsfeCUeM3gdPA1gAAVxWTJacX8mJyBaGRcFVwQOEV49NgBz" },
+            "isValid": { "type": "boolean", "putDescription": "A flag to indicate if the token is valid", "example": "true" },
+            "ParentEntityId": { "type": "integer", "putDescription": "Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> belongs to", "example": "21090" },
+            "RQEmployeeId": { "type": "integer", "putDescription": "Identifier for the employee in RQ associated with this session", "example": "3494" }
+          }
+        }
+        
+
+    
+
+    
+    - BasicTokenResponse: |
+        {
+          "exclude": "true",
+          "name": "BasicTokenResponse",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "access_token": { "type": "guid", "putDescription": "{{AccessToken_Glossary}}, this value can be used in the Authorization header", "example": "b0k0dY70N3Vv9jR1b9oEdW9IeT5WIn85WCYFJRo6AiIKLEMBFwNbEQsfeCUeM3gdPA1gAAVxWTJacX8mJyBaGRcFVwQOEV49NgBz" },
+            "isValid": { "type": "boolean", "putDescription": "A flag to indicate if the token is valid", "example": "true" },
+            "ParentEntityId": { "type": "integer", "putDescription": "Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> belongs to", "example": "21090" },
+            "RQEmployeeId": { "type": "integer", "putDescription": "Identifier for the employee in RQ associated with the token", "example": "3494" },
+            "basic_token": { "type": "string", "putDescription": "Basic token that can be used as the Auth URL Parameter for reports", "example": "vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw" },
+            "PreferredEndpoint": { "type": "string", "putDescription": "A URL that represents the version of RQ Data Connect that is closest to your RQ database. Use this URL for best performance", "example": "https://rqdataconnect18.iqmetrix.net" }
+          }
+        }
+        
+
+    
+
+    
+    - Employee: |
+        {
+          "exclude": "true",
+          "name": "Employee",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "EmployeeID": { "type": "integer", "database": "INT", "description": "Identifier for an Employee in RQ", "example": "22" },
+            "EmployeeEntityID": { "type": "integer", "database": "INT", "description": "Identifier of the corresponding [User](/api/user-manager/#user)", "example": "44567" },
+            "Name": { "type": "string", "database": "VARCHAR(51)", "description": "Employee name", "example": "Jim Bob" },
+            "First_Name": { "type": "string", "database": "VARCHAR(25)", "description": "First name", "example": "Jim" },
+            "Last_Name": { "type": "string", "database": "VARCHAR(25)", "description": "Last name", "example": "Bob" }
+          }
+        }
+        
+
+    
+
+    
+    - CategoryNumber: |
+        {
+          "name": "CategoryNumber",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": { "type": "string", "description": "Category Identifier", "example": "1010271216" },
+            "Description": { "type": "string", "description": "Category name", "example": "Rate Plans" }
+          }
+        }
+        
+
+    
+
+    
+    - LanguageCode: |
+        {
+          "exclude": "true",
+          "name": "LanguageCode",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": { "type": "string", "description": "Language code", "example": "en-us" }
+          }
+        }      
+        
+
+    
+
+    
+    - RQCompanyTreeNode: |
+        {
+            "type": "array",
+            "name": "RQCompanyTreeNode",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "ID": { "type": "integer", "database": "INT", "description": "Identifier", "example": "0" },
+              "Description": { "type": "string", "database": "VARCHAR(255)", "example": "KENTEL Corp", "description": "Description" },
+              "EntityID": { "type": "integer", "database": "INT", "example": "14146", "description": "Identifier for the appropriate <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>" }
+            }
+        }
+        
+
+    
+
+    
+    - ProductIdentifier: |
+        {
+          "exclude": "true",
+          "name": "ProductIdentifier",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": { "type": "string", "description": "Identifier of a product in RQ", "example": "ASCLMO000001" },
+            "Description": { "type": "string", "description": "Product name", "example": "HC Samsung U340" }
+          }
+        }      
+        
+
+    
+
+    
+    - ReasonCode: |
+        {
+          "name": "ReasonCode",
+          "type": "array",
+          "description": "A ReasonCode allows an employee to provide a reason for an action, such as a ChargeBack. For example, Point of Sale Error.",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": { "type": "string", "description": "Identifier", "example": "1" },
+            "Description": { "type": "string", "description": "Reason", "example": "Write Off" }
+          }
+        }      
+        
+
+    
+
+    
+    - ForWho: |
+        {
+          "exclude": "true",
+          "name": "ForWho",
+          "description": "Levels of a company tree in RQ such as Region, District, Store, etc.",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": { "type": "string", "description": "Identifier", "example": "1" },
+            "Description": { "type": "string", "description": "Name", "example": "Company" }
+          }
+        }
+        
+
+    
+
+    
+    - ForWhoIDs: |
+        {
+          "name": "ForWhoIDs",
+          "exclude": "true",
+          "description": "There is a RQCompanyTreeNode resource for each Company, Channel, Region, District and Store in RQ.",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": { "type": "integer", "description": "Identifier in RQ", "example": "1" },
+            "Column1": { "type": "string", "description": "Name", "example": "KENTEL Corp" },
+            "EntityID": { "type": "integer", "description": "Identifier of the corresponding [CompanyTreeNode](/api/company-tree/#companytreenode)", "example": "11432" }
+          }
+        }      
+        
+
+    
+
+    
+    - Manufacturer: |
+        {
+          "exclude": "true",
+          "name": "Manufacturer",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": { "type": "string", "description": "Identifier", "example": "9" },
+            "Description": { "type": "string", "description": "RQ Manufacturer Name", "example": "LG" }
+          }
+        }      
+        
+
+    
+
+    
+    - Store: |
+        {
+          "exclude": "true",
+          "name": "Store",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "StoreID": { "type": "integer", "description": "Identifier for a Store in RQ", "example": "1188" },
+            "LocationEntityID": { "type": "integer", "description": "Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store", "example": "453" },
+            "StoreName": { "type": "string", "description": "Store name", "example": "Altera Kiosk" }
+          }
+        }      
+        
+
+    
+
+    
+    - LocationType: |
+        {
+            "type": "array",
+            "name": "LocationType",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "Type": { "type": "string", "database": "VARCHAR(8)", "description": "Name of a Location type in RQ", "example": "Channel" }
+            }
+          }      
+        
+
+    
+
+    
+    - Group: |
+        {
+        
+            "type": "array",
+            "name": "Group",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": { 
+              "GroupID": { "type": "integer", "database": "INT", "example": "4", "description": "Identifier" },  
+              "GroupName": { "type": "string", "database": "VARCHAR(50)", "example": "100% (35% GP)", "description": "Name" }  
+            }  
+          }
+        
+
+    
+
+    
+    - Coupon: |
+        {
+            
+            "type": "array",
+            "name": "Coupon",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": { 
+              "CouponID": { "type": "integer", "database": "INT", "example": "1144", "description": "Identifier" },  
+              "CouponName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "TEST2", "description": "Name" }  
+            }  
+          }
+        
+
+    
+
+    
+    - StoreType: |
+        {
+            "type": "array",
+            "name": "StoreType",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "Type": { "type": "integer", "database": "INT", "description": "Identifier", "example": "3" },
+              "StoreTypeName": { "type": "string", "database": "NVARCHAR(MAX)", "description": "Name", "example": "Kiosk" }
+            }
+          }  
+        
+
+    
+
+    
+    - FinancingID: |
+        {
+            "type": "array",
+            "name": "FinancingID",
+            "exclude": "true",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": { 
+              "FinancingDetailID": { "type": "integer", "database": "INT", "example": "19", "description": "Identifier" },  
+              "FinancingDetailName": { "type": "string", "database": "VARCHAR(50)", "example": "Import", "description": "Name" }  
+            }  
+          }      
+        
+
+    
+
+    
+    - CarrierSIP: |
+        {
+        
+            "type": "array",
+            "name": "CarrierSIP",
+            "exclude": "true",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": { 
+              "CarrierID": { "type": "integer", "database": "INT", "example": "10", "description": "Identifier" },  
+              "CarrierName": { "type": "string", "database": "VARCHAR(50)", "example": "Nextel", "description": "Name" }  
+            }  
+          }          
+        
+
+    
+
+
+/session?Auth={Auth}:
+    
+    uriParameters:
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: true
+            description: Basic access token received from the request <a href='#basic-authentication-with-platform-credentials'>Basic Authentication with Platform Credentials</a>
+          
+      
+    get:
+        
+        displayName: Getting Session Information
+                
+        
+        description: |            
+            This request allows you to retrieve information about a Basic access token
+            
+
+        
+        headers:
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"access_token":"b0k0dY70N3Vv9jR1b9oEdW9IeT5WIn85WCYFJRo6AiIKLEMBFwNbEQsfeCUeM3gdPA1gAAVxWTJacX8mJyBaGRcFVwQOEV49NgBz","isValid":true,"ParentEntityId":21090,"RQEmployeeId":3494}
+                            schema: |
+                                {"exclude":"true","name":"Session","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"access_token":{"type":"guid","putDescription":"{{AccessToken_Glossary}}","example":"b0k0dY70N3Vv9jR1b9oEdW9IeT5WIn85WCYFJRo6AiIKLEMBFwNbEQsfeCUeM3gdPA1gAAVxWTJacX8mJyBaGRcFVwQOEV49NgBz"},"isValid":{"type":"boolean","putDescription":"A flag to indicate if the token is valid","example":"true"},"ParentEntityId":{"type":"integer","putDescription":"Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> belongs to","example":"21090"},"RQEmployeeId":{"type":"integer","putDescription":"Identifier for the employee in RQ associated with this session","example":"3494"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/session:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Basic Authentication with Platform Credentials
+                
+        
+        description: |            
+            This request allows you to use Platform credentials to obtain an {{AccessToken_Glossary}}.
+            
+            In the Authorization header, place the base 64 encoded form of your username and password prefixed by the word `Basic`.
+            
+            For examples, see <a href="/guides/rq-data-connect/#basic-authentication">Basic Authentication</a>
+            
+            Note that as long as your username and password do not change, the Basic token generated from your username and password will remain the same.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Basic vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"access_token":"b0k0dY70N3Vv9jR1b9oEdW9IeT5WIn85WCYFJRo6AiIKLEMBFwNbEQsfeCUeM3gdPA1gAAVxWTJacX8mJyBaGRcFVwQOEV49NgBz","isValid":true,"ParentEntityId":21090,"RQEmployeeId":3494,"basic_token":"vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw","PreferredEndpoint":"https://rqdataconnect18.iqmetrix.net"}
+                            schema: |
+                                {"exclude":"true","name":"BasicTokenResponse","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"access_token":{"type":"guid","putDescription":"{{AccessToken_Glossary}}, this value can be used in the Authorization header","example":"b0k0dY70N3Vv9jR1b9oEdW9IeT5WIn85WCYFJRo6AiIKLEMBFwNbEQsfeCUeM3gdPA1gAAVxWTJacX8mJyBaGRcFVwQOEV49NgBz"},"isValid":{"type":"boolean","putDescription":"A flag to indicate if the token is valid","example":"true"},"ParentEntityId":{"type":"integer","putDescription":"Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> belongs to","example":"21090"},"RQEmployeeId":{"type":"integer","putDescription":"Identifier for the employee in RQ associated with the token","example":"3494"},"basic_token":{"type":"string","putDescription":"Basic token that can be used as the Auth URL Parameter for reports","example":"vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw"},"PreferredEndpoint":{"type":"string","putDescription":"A URL that represents the version of RQ Data Connect that is closest to your RQ database. Use this URL for best performance","example":"https://rqdataconnect18.iqmetrix.net"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/employees:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Employees
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":22,"EmployeeEntityID":44567,"Name":"Jim Bob","First_Name":"Jim","Last_Name":"Bob"}]
+                            schema: |
+                                {"exclude":"true","name":"Employee","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"EmployeeID":{"type":"integer","database":"INT","description":"Identifier for an Employee in RQ","example":"22"},"EmployeeEntityID":{"type":"integer","database":"INT","description":"Identifier of the corresponding [User](/api/user-manager/#user)","example":"44567"},"Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"Jim Bob"},"First_Name":{"type":"string","database":"VARCHAR(25)","description":"First name","example":"Jim"},"Last_Name":{"type":"string","database":"VARCHAR(25)","description":"Last name","example":"Bob"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":22,"EmployeeEntityID":44567,"Name":"Jim Bob","First_Name":"Jim","Last_Name":"Bob"}]
+                            schema: |
+                                {"exclude":"true","name":"Employee","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"EmployeeID":{"type":"integer","database":"INT","description":"Identifier for an Employee in RQ","example":"22"},"EmployeeEntityID":{"type":"integer","database":"INT","description":"Identifier of the corresponding [User](/api/user-manager/#user)","example":"44567"},"Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"Jim Bob"},"First_Name":{"type":"string","database":"VARCHAR(25)","description":"First name","example":"Jim"},"Last_Name":{"type":"string","database":"VARCHAR(25)","description":"Last name","example":"Bob"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":22,"EmployeeEntityID":44567,"Name":"Jim Bob","First_Name":"Jim","Last_Name":"Bob"}]
+                            schema: |
+                                {"exclude":"true","name":"Employee","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"EmployeeID":{"type":"integer","database":"INT","description":"Identifier for an Employee in RQ","example":"22"},"EmployeeEntityID":{"type":"integer","database":"INT","description":"Identifier of the corresponding [User](/api/user-manager/#user)","example":"44567"},"Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"Jim Bob"},"First_Name":{"type":"string","database":"VARCHAR(25)","description":"First name","example":"Jim"},"Last_Name":{"type":"string","database":"VARCHAR(25)","description":"Last name","example":"Bob"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":22,"EmployeeEntityID":44567,"Name":"Jim Bob","First_Name":"Jim","Last_Name":"Bob"}]
+                            schema: |
+                                {"exclude":"true","name":"Employee","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"EmployeeID":{"type":"integer","database":"INT","description":"Identifier for an Employee in RQ","example":"22"},"EmployeeEntityID":{"type":"integer","database":"INT","description":"Identifier of the corresponding [User](/api/user-manager/#user)","example":"44567"},"Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"Jim Bob"},"First_Name":{"type":"string","database":"VARCHAR(25)","description":"First name","example":"Jim"},"Last_Name":{"type":"string","database":"VARCHAR(25)","description":"Last name","example":"Bob"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":22,"EmployeeEntityID":44567,"Name":"Jim Bob","First_Name":"Jim","Last_Name":"Bob"}]
+                            schema: |
+                                {"exclude":"true","name":"Employee","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"EmployeeID":{"type":"integer","database":"INT","description":"Identifier for an Employee in RQ","example":"22"},"EmployeeEntityID":{"type":"integer","database":"INT","description":"Identifier of the corresponding [User](/api/user-manager/#user)","example":"44567"},"Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"Jim Bob"},"First_Name":{"type":"string","database":"VARCHAR(25)","description":"First name","example":"Jim"},"Last_Name":{"type":"string","database":"VARCHAR(25)","description":"Last name","example":"Bob"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":22,"EmployeeEntityID":44567,"Name":"Jim Bob","First_Name":"Jim","Last_Name":"Bob"}]
+                            schema: |
+                                {"exclude":"true","name":"Employee","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"EmployeeID":{"type":"integer","database":"INT","description":"Identifier for an Employee in RQ","example":"22"},"EmployeeEntityID":{"type":"integer","database":"INT","description":"Identifier of the corresponding [User](/api/user-manager/#user)","example":"44567"},"Name":{"type":"string","database":"VARCHAR(51)","description":"Employee name","example":"Jim Bob"},"First_Name":{"type":"string","database":"VARCHAR(25)","description":"First name","example":"Jim"},"Last_Name":{"type":"string","database":"VARCHAR(25)","description":"Last name","example":"Bob"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/categorynumber:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Category Numbers
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":"1010271216","Description":"Rate Plans"}]
+                            schema: |
+                                {"name":"CategoryNumber","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Category Identifier","example":"1010271216"},"Description":{"type":"string","description":"Category name","example":"Rate Plans"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"1010271216","Description":"Rate Plans"}]
+                            schema: |
+                                {"name":"CategoryNumber","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Category Identifier","example":"1010271216"},"Description":{"type":"string","description":"Category name","example":"Rate Plans"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":"1010271216","Description":"Rate Plans"}]
+                            schema: |
+                                {"name":"CategoryNumber","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Category Identifier","example":"1010271216"},"Description":{"type":"string","description":"Category name","example":"Rate Plans"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"1010271216","Description":"Rate Plans"}]
+                            schema: |
+                                {"name":"CategoryNumber","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Category Identifier","example":"1010271216"},"Description":{"type":"string","description":"Category name","example":"Rate Plans"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":"1010271216","Description":"Rate Plans"}]
+                            schema: |
+                                {"name":"CategoryNumber","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Category Identifier","example":"1010271216"},"Description":{"type":"string","description":"Category name","example":"Rate Plans"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":"1010271216","Description":"Rate Plans"}]
+                            schema: |
+                                {"name":"CategoryNumber","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Category Identifier","example":"1010271216"},"Description":{"type":"string","description":"Category name","example":"Rate Plans"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/languages:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Language Codes
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":"en-us"}]
+                            schema: |
+                                {"exclude":"true","name":"LanguageCode","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Language code","example":"en-us"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"en-us"}]
+                            schema: |
+                                {"exclude":"true","name":"LanguageCode","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Language code","example":"en-us"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":"en-us"}]
+                            schema: |
+                                {"exclude":"true","name":"LanguageCode","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Language code","example":"en-us"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"en-us"}]
+                            schema: |
+                                {"exclude":"true","name":"LanguageCode","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Language code","example":"en-us"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":"en-us"}]
+                            schema: |
+                                {"exclude":"true","name":"LanguageCode","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Language code","example":"en-us"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":"en-us"}]
+                            schema: |
+                                {"exclude":"true","name":"LanguageCode","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Language code","example":"en-us"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/productidentifier:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Products in RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":"ASCLMO000001","Description":"HC Samsung U340"}]
+                            schema: |
+                                {"exclude":"true","name":"ProductIdentifier","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier of a product in RQ","example":"ASCLMO000001"},"Description":{"type":"string","description":"Product name","example":"HC Samsung U340"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"ASCLMO000001","Description":"HC Samsung U340"}]
+                            schema: |
+                                {"exclude":"true","name":"ProductIdentifier","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier of a product in RQ","example":"ASCLMO000001"},"Description":{"type":"string","description":"Product name","example":"HC Samsung U340"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":"ASCLMO000001","Description":"HC Samsung U340"}]
+                            schema: |
+                                {"exclude":"true","name":"ProductIdentifier","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier of a product in RQ","example":"ASCLMO000001"},"Description":{"type":"string","description":"Product name","example":"HC Samsung U340"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"ASCLMO000001","Description":"HC Samsung U340"}]
+                            schema: |
+                                {"exclude":"true","name":"ProductIdentifier","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier of a product in RQ","example":"ASCLMO000001"},"Description":{"type":"string","description":"Product name","example":"HC Samsung U340"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":"ASCLMO000001","Description":"HC Samsung U340"}]
+                            schema: |
+                                {"exclude":"true","name":"ProductIdentifier","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier of a product in RQ","example":"ASCLMO000001"},"Description":{"type":"string","description":"Product name","example":"HC Samsung U340"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":"ASCLMO000001","Description":"HC Samsung U340"}]
+                            schema: |
+                                {"exclude":"true","name":"ProductIdentifier","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier of a product in RQ","example":"ASCLMO000001"},"Description":{"type":"string","description":"Product name","example":"HC Samsung U340"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/reasoncode:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Reason Codes
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Write Off"}]
+                            schema: |
+                                {"name":"ReasonCode","type":"array","description":"A ReasonCode allows an employee to provide a reason for an action, such as a ChargeBack. For example, Point of Sale Error.","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Reason","example":"Write Off"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Write Off"}]
+                            schema: |
+                                {"name":"ReasonCode","type":"array","description":"A ReasonCode allows an employee to provide a reason for an action, such as a ChargeBack. For example, Point of Sale Error.","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Reason","example":"Write Off"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Write Off"}]
+                            schema: |
+                                {"name":"ReasonCode","type":"array","description":"A ReasonCode allows an employee to provide a reason for an action, such as a ChargeBack. For example, Point of Sale Error.","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Reason","example":"Write Off"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Write Off"}]
+                            schema: |
+                                {"name":"ReasonCode","type":"array","description":"A ReasonCode allows an employee to provide a reason for an action, such as a ChargeBack. For example, Point of Sale Error.","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Reason","example":"Write Off"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Write Off"}]
+                            schema: |
+                                {"name":"ReasonCode","type":"array","description":"A ReasonCode allows an employee to provide a reason for an action, such as a ChargeBack. For example, Point of Sale Error.","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Reason","example":"Write Off"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Write Off"}]
+                            schema: |
+                                {"name":"ReasonCode","type":"array","description":"A ReasonCode allows an employee to provide a reason for an action, such as a ChargeBack. For example, Point of Sale Error.","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Reason","example":"Write Off"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/forwhoid:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Report Levels in RQ
+                
+        
+        description: |            
+            This request will return a list of hierarchical levels in your company tree in RQ.
+            
+            To learn more about Locations in RQ, see {{support_LocationSetup}}.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Company"}]
+                            schema: |
+                                {"exclude":"true","name":"ForWho","description":"Levels of a company tree in RQ such as Region, District, Store, etc.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Name","example":"Company"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Company"}]
+                            schema: |
+                                {"exclude":"true","name":"ForWho","description":"Levels of a company tree in RQ such as Region, District, Store, etc.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Name","example":"Company"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Company"}]
+                            schema: |
+                                {"exclude":"true","name":"ForWho","description":"Levels of a company tree in RQ such as Region, District, Store, etc.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Name","example":"Company"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Company"}]
+                            schema: |
+                                {"exclude":"true","name":"ForWho","description":"Levels of a company tree in RQ such as Region, District, Store, etc.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Name","example":"Company"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Company"}]
+                            schema: |
+                                {"exclude":"true","name":"ForWho","description":"Levels of a company tree in RQ such as Region, District, Store, etc.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Name","example":"Company"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":"1","Description":"Company"}]
+                            schema: |
+                                {"exclude":"true","name":"ForWho","description":"Levels of a company tree in RQ such as Region, District, Store, etc.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"1"},"Description":{"type":"string","description":"Name","example":"Company"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/forwhoids?ForWho={ForWho}:
+    
+    uriParameters:
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for a level at which to perform the request. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>
+          
+      
+    get:
+        
+        displayName: Getting Nodes By Location Type
+                
+        
+        description: |            
+            This request will return a list of locations in RQ a report can be restricted to.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Column1":"KENTEL Corp","EntityID":11432}]
+                            schema: |
+                                {"name":"ForWhoIDs","exclude":"true","description":"There is a RQCompanyTreeNode resource for each Company, Channel, Region, District and Store in RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","description":"Identifier in RQ","example":"1"},"Column1":{"type":"string","description":"Name","example":"KENTEL Corp"},"EntityID":{"type":"integer","description":"Identifier of the corresponding [CompanyTreeNode](/api/company-tree/#companytreenode)","example":"11432"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Column1":"KENTEL Corp","EntityID":11432}]
+                            schema: |
+                                {"name":"ForWhoIDs","exclude":"true","description":"There is a RQCompanyTreeNode resource for each Company, Channel, Region, District and Store in RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","description":"Identifier in RQ","example":"1"},"Column1":{"type":"string","description":"Name","example":"KENTEL Corp"},"EntityID":{"type":"integer","description":"Identifier of the corresponding [CompanyTreeNode](/api/company-tree/#companytreenode)","example":"11432"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Column1":"KENTEL Corp","EntityID":11432}]
+                            schema: |
+                                {"name":"ForWhoIDs","exclude":"true","description":"There is a RQCompanyTreeNode resource for each Company, Channel, Region, District and Store in RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","description":"Identifier in RQ","example":"1"},"Column1":{"type":"string","description":"Name","example":"KENTEL Corp"},"EntityID":{"type":"integer","description":"Identifier of the corresponding [CompanyTreeNode](/api/company-tree/#companytreenode)","example":"11432"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Column1":"KENTEL Corp","EntityID":11432}]
+                            schema: |
+                                {"name":"ForWhoIDs","exclude":"true","description":"There is a RQCompanyTreeNode resource for each Company, Channel, Region, District and Store in RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","description":"Identifier in RQ","example":"1"},"Column1":{"type":"string","description":"Name","example":"KENTEL Corp"},"EntityID":{"type":"integer","description":"Identifier of the corresponding [CompanyTreeNode](/api/company-tree/#companytreenode)","example":"11432"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Column1":"KENTEL Corp","EntityID":11432}]
+                            schema: |
+                                {"name":"ForWhoIDs","exclude":"true","description":"There is a RQCompanyTreeNode resource for each Company, Channel, Region, District and Store in RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","description":"Identifier in RQ","example":"1"},"Column1":{"type":"string","description":"Name","example":"KENTEL Corp"},"EntityID":{"type":"integer","description":"Identifier of the corresponding [CompanyTreeNode](/api/company-tree/#companytreenode)","example":"11432"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Column1":"KENTEL Corp","EntityID":11432}]
+                            schema: |
+                                {"name":"ForWhoIDs","exclude":"true","description":"There is a RQCompanyTreeNode resource for each Company, Channel, Region, District and Store in RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","description":"Identifier in RQ","example":"1"},"Column1":{"type":"string","description":"Name","example":"KENTEL Corp"},"EntityID":{"type":"integer","description":"Identifier of the corresponding [CompanyTreeNode](/api/company-tree/#companytreenode)","example":"11432"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/manufactureid:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting a List of Manufacturers in RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":"9","Description":"LG"}]
+                            schema: |
+                                {"exclude":"true","name":"Manufacturer","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"9"},"Description":{"type":"string","description":"RQ Manufacturer Name","example":"LG"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"9","Description":"LG"}]
+                            schema: |
+                                {"exclude":"true","name":"Manufacturer","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"9"},"Description":{"type":"string","description":"RQ Manufacturer Name","example":"LG"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":"9","Description":"LG"}]
+                            schema: |
+                                {"exclude":"true","name":"Manufacturer","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"9"},"Description":{"type":"string","description":"RQ Manufacturer Name","example":"LG"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":"9","Description":"LG"}]
+                            schema: |
+                                {"exclude":"true","name":"Manufacturer","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"9"},"Description":{"type":"string","description":"RQ Manufacturer Name","example":"LG"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":"9","Description":"LG"}]
+                            schema: |
+                                {"exclude":"true","name":"Manufacturer","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"9"},"Description":{"type":"string","description":"RQ Manufacturer Name","example":"LG"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":"9","Description":"LG"}]
+                            schema: |
+                                {"exclude":"true","name":"Manufacturer","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"string","description":"Identifier","example":"9"},"Description":{"type":"string","description":"RQ Manufacturer Name","example":"LG"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/stores:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting A List of Stores in RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"StoreID":1188,"LocationEntityID":453,"StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"exclude":"true","name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1188"},"LocationEntityID":{"type":"integer","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store","example":"453"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"StoreID":1188,"LocationEntityID":453,"StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"exclude":"true","name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1188"},"LocationEntityID":{"type":"integer","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store","example":"453"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"StoreID":1188,"LocationEntityID":453,"StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"exclude":"true","name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1188"},"LocationEntityID":{"type":"integer","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store","example":"453"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"StoreID":1188,"LocationEntityID":453,"StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"exclude":"true","name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1188"},"LocationEntityID":{"type":"integer","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store","example":"453"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"StoreID":1188,"LocationEntityID":453,"StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"exclude":"true","name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1188"},"LocationEntityID":{"type":"integer","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store","example":"453"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"StoreID":1188,"LocationEntityID":453,"StoreName":"Altera Kiosk"}]
+                            schema: |
+                                {"exclude":"true","name":"Store","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"StoreID":{"type":"integer","description":"Identifier for a Store in RQ","example":"1188"},"LocationEntityID":{"type":"integer","description":"Identifier of the store as a <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> in Entity Store","example":"453"},"StoreName":{"type":"string","description":"Store name","example":"Altera Kiosk"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/CouponID?LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting a List of Coupons in RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CouponID":1144,"CouponName":"TEST2"}]
+                            schema: |
+                                {"type":"array","name":"Coupon","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CouponID":{"type":"integer","database":"INT","example":"1144","description":"Identifier"},"CouponName":{"type":"string","database":"NVARCHAR(MAX)","example":"TEST2","description":"Name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CouponID":1144,"CouponName":"TEST2"}]
+                            schema: |
+                                {"type":"array","name":"Coupon","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CouponID":{"type":"integer","database":"INT","example":"1144","description":"Identifier"},"CouponName":{"type":"string","database":"NVARCHAR(MAX)","example":"TEST2","description":"Name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CouponID":1144,"CouponName":"TEST2"}]
+                            schema: |
+                                {"type":"array","name":"Coupon","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CouponID":{"type":"integer","database":"INT","example":"1144","description":"Identifier"},"CouponName":{"type":"string","database":"NVARCHAR(MAX)","example":"TEST2","description":"Name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CouponID":1144,"CouponName":"TEST2"}]
+                            schema: |
+                                {"type":"array","name":"Coupon","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CouponID":{"type":"integer","database":"INT","example":"1144","description":"Identifier"},"CouponName":{"type":"string","database":"NVARCHAR(MAX)","example":"TEST2","description":"Name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CouponID":1144,"CouponName":"TEST2"}]
+                            schema: |
+                                {"type":"array","name":"Coupon","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CouponID":{"type":"integer","database":"INT","example":"1144","description":"Identifier"},"CouponName":{"type":"string","database":"NVARCHAR(MAX)","example":"TEST2","description":"Name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CouponID":1144,"CouponName":"TEST2"}]
+                            schema: |
+                                {"type":"array","name":"Coupon","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CouponID":{"type":"integer","database":"INT","example":"1144","description":"Identifier"},"CouponName":{"type":"string","database":"NVARCHAR(MAX)","example":"TEST2","description":"Name"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/GroupID:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting a List of Groups in RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"GroupID":4,"GroupName":"100% (35% GP)"}]
+                            schema: |
+                                {"type":"array","name":"Group","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"GroupID":{"type":"integer","database":"INT","example":"4","description":"Identifier"},"GroupName":{"type":"string","database":"VARCHAR(50)","example":"100% (35% GP)","description":"Name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"GroupID":4,"GroupName":"100% (35% GP)"}]
+                            schema: |
+                                {"type":"array","name":"Group","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"GroupID":{"type":"integer","database":"INT","example":"4","description":"Identifier"},"GroupName":{"type":"string","database":"VARCHAR(50)","example":"100% (35% GP)","description":"Name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"GroupID":4,"GroupName":"100% (35% GP)"}]
+                            schema: |
+                                {"type":"array","name":"Group","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"GroupID":{"type":"integer","database":"INT","example":"4","description":"Identifier"},"GroupName":{"type":"string","database":"VARCHAR(50)","example":"100% (35% GP)","description":"Name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"GroupID":4,"GroupName":"100% (35% GP)"}]
+                            schema: |
+                                {"type":"array","name":"Group","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"GroupID":{"type":"integer","database":"INT","example":"4","description":"Identifier"},"GroupName":{"type":"string","database":"VARCHAR(50)","example":"100% (35% GP)","description":"Name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"GroupID":4,"GroupName":"100% (35% GP)"}]
+                            schema: |
+                                {"type":"array","name":"Group","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"GroupID":{"type":"integer","database":"INT","example":"4","description":"Identifier"},"GroupName":{"type":"string","database":"VARCHAR(50)","example":"100% (35% GP)","description":"Name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"GroupID":4,"GroupName":"100% (35% GP)"}]
+                            schema: |
+                                {"type":"array","name":"Group","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"GroupID":{"type":"integer","database":"INT","example":"4","description":"Identifier"},"GroupName":{"type":"string","database":"VARCHAR(50)","example":"100% (35% GP)","description":"Name"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/CarrierSIP?LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting a List of Carriers in RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CarrierID":10,"CarrierName":"Nextel"}]
+                            schema: |
+                                {"type":"array","name":"CarrierSIP","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CarrierID":{"type":"integer","database":"INT","example":"10","description":"Identifier"},"CarrierName":{"type":"string","database":"VARCHAR(50)","example":"Nextel","description":"Name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CarrierID":10,"CarrierName":"Nextel"}]
+                            schema: |
+                                {"type":"array","name":"CarrierSIP","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CarrierID":{"type":"integer","database":"INT","example":"10","description":"Identifier"},"CarrierName":{"type":"string","database":"VARCHAR(50)","example":"Nextel","description":"Name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CarrierID":10,"CarrierName":"Nextel"}]
+                            schema: |
+                                {"type":"array","name":"CarrierSIP","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CarrierID":{"type":"integer","database":"INT","example":"10","description":"Identifier"},"CarrierName":{"type":"string","database":"VARCHAR(50)","example":"Nextel","description":"Name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CarrierID":10,"CarrierName":"Nextel"}]
+                            schema: |
+                                {"type":"array","name":"CarrierSIP","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CarrierID":{"type":"integer","database":"INT","example":"10","description":"Identifier"},"CarrierName":{"type":"string","database":"VARCHAR(50)","example":"Nextel","description":"Name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CarrierID":10,"CarrierName":"Nextel"}]
+                            schema: |
+                                {"type":"array","name":"CarrierSIP","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CarrierID":{"type":"integer","database":"INT","example":"10","description":"Identifier"},"CarrierName":{"type":"string","database":"VARCHAR(50)","example":"Nextel","description":"Name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CarrierID":10,"CarrierName":"Nextel"}]
+                            schema: |
+                                {"type":"array","name":"CarrierSIP","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CarrierID":{"type":"integer","database":"INT","example":"10","description":"Identifier"},"CarrierName":{"type":"string","database":"VARCHAR(50)","example":"Nextel","description":"Name"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/FinancingID?LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting Financing Types
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"FinancingDetailID":19,"FinancingDetailName":"Import"}]
+                            schema: |
+                                {"type":"array","name":"FinancingID","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"FinancingDetailID":{"type":"integer","database":"INT","example":"19","description":"Identifier"},"FinancingDetailName":{"type":"string","database":"VARCHAR(50)","example":"Import","description":"Name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"FinancingDetailID":19,"FinancingDetailName":"Import"}]
+                            schema: |
+                                {"type":"array","name":"FinancingID","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"FinancingDetailID":{"type":"integer","database":"INT","example":"19","description":"Identifier"},"FinancingDetailName":{"type":"string","database":"VARCHAR(50)","example":"Import","description":"Name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"FinancingDetailID":19,"FinancingDetailName":"Import"}]
+                            schema: |
+                                {"type":"array","name":"FinancingID","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"FinancingDetailID":{"type":"integer","database":"INT","example":"19","description":"Identifier"},"FinancingDetailName":{"type":"string","database":"VARCHAR(50)","example":"Import","description":"Name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"FinancingDetailID":19,"FinancingDetailName":"Import"}]
+                            schema: |
+                                {"type":"array","name":"FinancingID","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"FinancingDetailID":{"type":"integer","database":"INT","example":"19","description":"Identifier"},"FinancingDetailName":{"type":"string","database":"VARCHAR(50)","example":"Import","description":"Name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"FinancingDetailID":19,"FinancingDetailName":"Import"}]
+                            schema: |
+                                {"type":"array","name":"FinancingID","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"FinancingDetailID":{"type":"integer","database":"INT","example":"19","description":"Identifier"},"FinancingDetailName":{"type":"string","database":"VARCHAR(50)","example":"Import","description":"Name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"FinancingDetailID":19,"FinancingDetailName":"Import"}]
+                            schema: |
+                                {"type":"array","name":"FinancingID","exclude":"true","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"FinancingDetailID":{"type":"integer","database":"INT","example":"19","description":"Identifier"},"FinancingDetailName":{"type":"string","database":"VARCHAR(50)","example":"Import","description":"Name"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/StoreTypes?LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting Store Types
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Type":3,"StoreTypeName":"Kiosk"}]
+                            schema: |
+                                {"type":"array","name":"StoreType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"integer","database":"INT","description":"Identifier","example":"3"},"StoreTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name","example":"Kiosk"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Type":3,"StoreTypeName":"Kiosk"}]
+                            schema: |
+                                {"type":"array","name":"StoreType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"integer","database":"INT","description":"Identifier","example":"3"},"StoreTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name","example":"Kiosk"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Type":3,"StoreTypeName":"Kiosk"}]
+                            schema: |
+                                {"type":"array","name":"StoreType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"integer","database":"INT","description":"Identifier","example":"3"},"StoreTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name","example":"Kiosk"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Type":3,"StoreTypeName":"Kiosk"}]
+                            schema: |
+                                {"type":"array","name":"StoreType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"integer","database":"INT","description":"Identifier","example":"3"},"StoreTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name","example":"Kiosk"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Type":3,"StoreTypeName":"Kiosk"}]
+                            schema: |
+                                {"type":"array","name":"StoreType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"integer","database":"INT","description":"Identifier","example":"3"},"StoreTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name","example":"Kiosk"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Type":3,"StoreTypeName":"Kiosk"}]
+                            schema: |
+                                {"type":"array","name":"StoreType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"integer","database":"INT","description":"Identifier","example":"3"},"StoreTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Name","example":"Kiosk"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/LocationType:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Location Types
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Type":"Channel"}]
+                            schema: |
+                                {"type":"array","name":"LocationType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"string","database":"VARCHAR(8)","description":"Name of a Location type in RQ","example":"Channel"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Type":"Channel"}]
+                            schema: |
+                                {"type":"array","name":"LocationType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"string","database":"VARCHAR(8)","description":"Name of a Location type in RQ","example":"Channel"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Type":"Channel"}]
+                            schema: |
+                                {"type":"array","name":"LocationType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"string","database":"VARCHAR(8)","description":"Name of a Location type in RQ","example":"Channel"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Type":"Channel"}]
+                            schema: |
+                                {"type":"array","name":"LocationType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"string","database":"VARCHAR(8)","description":"Name of a Location type in RQ","example":"Channel"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Type":"Channel"}]
+                            schema: |
+                                {"type":"array","name":"LocationType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"string","database":"VARCHAR(8)","description":"Name of a Location type in RQ","example":"Channel"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Type":"Channel"}]
+                            schema: |
+                                {"type":"array","name":"LocationType","$schema":"http://json-schema.org/draft-03/schema","properties":{"Type":{"type":"string","database":"VARCHAR(8)","description":"Name of a Location type in RQ","example":"Channel"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/LocationIDs?LocationType={LocationType}&LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Company
+            required: true
+            description: For a complete list, see <a href='#getting-location-types'>Getting Location Types</a>
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting Location Ids
+                
+        
+        description: |            
+            This request allows you to get a list of identifiers for a specific LocationType within a company.
+            
+            For example, `/lists/LocationIDs?LocationType=Region` will return a list of all Regions in the company including the RQ identifier and associated <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a> identifier.      
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":0,"Description":"KENTEL Corp","EntityID":14146}]
+                            schema: |
+                                {"type":"array","name":"RQCompanyTreeNode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier","example":"0"},"Description":{"type":"string","database":"VARCHAR(255)","example":"KENTEL Corp","description":"Description"},"EntityID":{"type":"integer","database":"INT","example":"14146","description":"Identifier for the appropriate <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":0,"Description":"KENTEL Corp","EntityID":14146}]
+                            schema: |
+                                {"type":"array","name":"RQCompanyTreeNode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier","example":"0"},"Description":{"type":"string","database":"VARCHAR(255)","example":"KENTEL Corp","description":"Description"},"EntityID":{"type":"integer","database":"INT","example":"14146","description":"Identifier for the appropriate <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":0,"Description":"KENTEL Corp","EntityID":14146}]
+                            schema: |
+                                {"type":"array","name":"RQCompanyTreeNode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier","example":"0"},"Description":{"type":"string","database":"VARCHAR(255)","example":"KENTEL Corp","description":"Description"},"EntityID":{"type":"integer","database":"INT","example":"14146","description":"Identifier for the appropriate <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":0,"Description":"KENTEL Corp","EntityID":14146}]
+                            schema: |
+                                {"type":"array","name":"RQCompanyTreeNode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier","example":"0"},"Description":{"type":"string","database":"VARCHAR(255)","example":"KENTEL Corp","description":"Description"},"EntityID":{"type":"integer","database":"INT","example":"14146","description":"Identifier for the appropriate <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":0,"Description":"KENTEL Corp","EntityID":14146}]
+                            schema: |
+                                {"type":"array","name":"RQCompanyTreeNode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier","example":"0"},"Description":{"type":"string","database":"VARCHAR(255)","example":"KENTEL Corp","description":"Description"},"EntityID":{"type":"integer","database":"INT","example":"14146","description":"Identifier for the appropriate <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":0,"Description":"KENTEL Corp","EntityID":14146}]
+                            schema: |
+                                {"type":"array","name":"RQCompanyTreeNode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier","example":"0"},"Description":{"type":"string","database":"VARCHAR(255)","example":"KENTEL Corp","description":"Description"},"EntityID":{"type":"integer","database":"INT","example":"14146","description":"Identifier for the appropriate <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>"}}}
+                            
+                        
+                    
+                
+            
+    

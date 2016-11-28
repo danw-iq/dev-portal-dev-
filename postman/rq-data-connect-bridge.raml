@@ -1,0 +1,445 @@
+#%RAML 0.8
+title: RQ Data Connect Bridge
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - TableColumn: |
+        {
+          "name": "TableColumn",
+          "description": "Each table in the latest version of RQ will have a TableColumn resource for each of its columns",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "TableName": { "type": "string", "description": "Name of the table", "example": "iQclerk_ARPaymentInvoicesAndPayments" },
+            "Column_Name": { "type": "string", "description": "Name of the column", "example": "ReferenceNumber" },
+            "Length": { "type": "integer", "description": "Maximum acceptable input size, where applicable", "example": "30" },         
+            "ORDINAL_POSITION": { "type": "integer", "description": "Position of the column in the table", "example": "8" },
+            "Type": { "type": "string", "description": "Database type", "example": "varchar" }
+          }
+        }  
+        
+
+    
+
+    
+    - Delta: |
+        {
+          "name": "Delta",
+          "description": "A resource representing changes to a table in the latest version of RQ.",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "DeltaCount": { "type": "integer", "description": "Number of rows that have changes", "example": "68" },
+            "DeltaTimeSec": { "type": "integer", "description": "", "example": "28704556" },
+            "Table": { "type": "string", "description": "Name of a table in the latest version of RQ", "example": "CarrierIntegrationCustomerHandsets" }
+          }
+        }
+        
+
+    
+
+    
+    - DataExample: |
+        {
+          "exclude": "true",
+          "example": "true",
+          "name": "DataExample",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CarrierCustomerHandsetID": {  "type": "guid", "example": "7f1b91e2-9692-4efe-923b-7bc90720ccb8" },
+            "CarrierCustomerID": {  "type": "guid", "example": "62c24270-503a-4de4-9d75-416c92a748d7" },
+            "SaleInvoiceID": {  "type": "integer", "example": "-1" },
+            "StoreID": {  "type": "integer", "example": "3" },
+            "PhoneMake": {  "type": "string", "example": "null" },
+            "PhoneModel": {  "type": "string", "example": "Unknown Device" },
+            "ESN": {  "type": "string", "example": "" },
+            "IMEI": {  "type": "string", "example": "354493046773064" },
+            "CustomTelephoneNumber": {  "type": "string", "example": "8186368202" },
+            "BAN": {  "type": "string", "example": "null" },
+            "SIM": {  "type": "string", "example": "89014103254674079938" },
+            "MDN": {  "type": "string", "example": "null" },
+            "ActivationDate": {  "type": "datetime", "example": "2014-10-01T15:00:12.05" },
+            "ExpiryDate": {  "type": "datetime", "example": "2014-10-01T15:00:12.05" },
+            "RateORServicePlanName": {  "type": "string", "example": "null" },
+            "RateORServicePlanDescription": {  "type": "string", "example": "null" },
+            "RateORServicePlanInclusions": {  "type": "string", "example": "null" },
+            "RateORServicePlanSOC": {  "type": "string", "example": "FN2NM0A60" },
+            "RateORServicePlanTerm": {  "type": "string", "example": "null" },
+            "RateORServicePlanFeatures": {  "type": "string", "example": "null" },
+            "RateORServicePlanContractTerm": {  "type": "string", "example": "2" },
+            "SalesRepName": {  "type": "string", "example": "null" },
+            "DealerName": {  "type": "string", "example": "HJG6E" },
+            "BillingCycle": {  "type": "string", "example": "null" },
+            "BillingCycleDate": {  "type": "integer", "example": "17" },
+            "DepositAmount": {  "type": "decimal", "example": "0.00" },
+            "BillingCode": {  "type": "string", "example": "" },
+            "IsActivatedIQ": {  "type": "boolean", "example": "0" },
+            "RateORServicePlan2SOC": {  "type": "string", "example": "null" },
+            "RateORServicePlan2Description": {  "type": "string", "example": "null" },
+            "DealerCode": {  "type": "string", "example": "null" },
+            "CompanyCode": {  "type": "string", "example": "null" },
+            "PortInNumber": {  "type": "string", "example": "null" },
+            "DepositIndicator": {  "type": "string", "example": "No Deposit" },
+            "FlowType": {  "type": "string", "example": "null" },
+            "ActivationTermType": {  "type": "string", "example": "null" },
+            "IsBYOD": {  "type": "boolean", "example": "null" },
+            "Priority": {  "type": "integer", "example": "null" },
+            "CarrierServiceResource": {  "type": "string", "example": "null" },
+            "RowThumbprint": {  "type": "guid", "example": "1c1103c2-db83-4df9-a86d-1b649bf304ee" },
+            "RowInserted": {  "type": "datetime", "example": "2014-10-01T15:00:12.05" },
+            "RowUpdated": {  "type": "datetime", "example": "2014-10-01T15:00:12.05" },
+            "Operation": {  "type": "string", "example": "Inserted" }
+          }
+        }    
+        
+
+    
+
+
+/bridge/current/schema?Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Table Schemas in Latest RQ
+                
+        
+        description: |            
+            This request will return a list of the columns in each table in the latest version of RQ.  
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"TableName":"iQclerk_ARPaymentInvoicesAndPayments","Column_Name":"ReferenceNumber","Length":30,"ORDINAL_POSITION":8,"Type":"varchar"}]
+                            schema: |
+                                {"name":"TableColumn","description":"Each table in the latest version of RQ will have a TableColumn resource for each of its columns","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"TableName":{"type":"string","description":"Name of the table","example":"iQclerk_ARPaymentInvoicesAndPayments"},"Column_Name":{"type":"string","description":"Name of the column","example":"ReferenceNumber"},"Length":{"type":"integer","description":"Maximum acceptable input size, where applicable","example":"30"},"ORDINAL_POSITION":{"type":"integer","description":"Position of the column in the table","example":"8"},"Type":{"type":"string","description":"Database type","example":"varchar"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"TableName":"iQclerk_ARPaymentInvoicesAndPayments","Column_Name":"ReferenceNumber","Length":30,"ORDINAL_POSITION":8,"Type":"varchar"}]
+                            schema: |
+                                {"name":"TableColumn","description":"Each table in the latest version of RQ will have a TableColumn resource for each of its columns","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"TableName":{"type":"string","description":"Name of the table","example":"iQclerk_ARPaymentInvoicesAndPayments"},"Column_Name":{"type":"string","description":"Name of the column","example":"ReferenceNumber"},"Length":{"type":"integer","description":"Maximum acceptable input size, where applicable","example":"30"},"ORDINAL_POSITION":{"type":"integer","description":"Position of the column in the table","example":"8"},"Type":{"type":"string","description":"Database type","example":"varchar"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"TableName":"iQclerk_ARPaymentInvoicesAndPayments","Column_Name":"ReferenceNumber","Length":30,"ORDINAL_POSITION":8,"Type":"varchar"}]
+                            schema: |
+                                {"name":"TableColumn","description":"Each table in the latest version of RQ will have a TableColumn resource for each of its columns","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"TableName":{"type":"string","description":"Name of the table","example":"iQclerk_ARPaymentInvoicesAndPayments"},"Column_Name":{"type":"string","description":"Name of the column","example":"ReferenceNumber"},"Length":{"type":"integer","description":"Maximum acceptable input size, where applicable","example":"30"},"ORDINAL_POSITION":{"type":"integer","description":"Position of the column in the table","example":"8"},"Type":{"type":"string","description":"Database type","example":"varchar"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"TableName":"iQclerk_ARPaymentInvoicesAndPayments","Column_Name":"ReferenceNumber","Length":30,"ORDINAL_POSITION":8,"Type":"varchar"}]
+                            schema: |
+                                {"name":"TableColumn","description":"Each table in the latest version of RQ will have a TableColumn resource for each of its columns","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"TableName":{"type":"string","description":"Name of the table","example":"iQclerk_ARPaymentInvoicesAndPayments"},"Column_Name":{"type":"string","description":"Name of the column","example":"ReferenceNumber"},"Length":{"type":"integer","description":"Maximum acceptable input size, where applicable","example":"30"},"ORDINAL_POSITION":{"type":"integer","description":"Position of the column in the table","example":"8"},"Type":{"type":"string","description":"Database type","example":"varchar"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"TableName":"iQclerk_ARPaymentInvoicesAndPayments","Column_Name":"ReferenceNumber","Length":30,"ORDINAL_POSITION":8,"Type":"varchar"}]
+                            schema: |
+                                {"name":"TableColumn","description":"Each table in the latest version of RQ will have a TableColumn resource for each of its columns","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"TableName":{"type":"string","description":"Name of the table","example":"iQclerk_ARPaymentInvoicesAndPayments"},"Column_Name":{"type":"string","description":"Name of the column","example":"ReferenceNumber"},"Length":{"type":"integer","description":"Maximum acceptable input size, where applicable","example":"30"},"ORDINAL_POSITION":{"type":"integer","description":"Position of the column in the table","example":"8"},"Type":{"type":"string","description":"Database type","example":"varchar"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"TableName":"iQclerk_ARPaymentInvoicesAndPayments","Column_Name":"ReferenceNumber","Length":30,"ORDINAL_POSITION":8,"Type":"varchar"}]
+                            schema: |
+                                {"name":"TableColumn","description":"Each table in the latest version of RQ will have a TableColumn resource for each of its columns","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"TableName":{"type":"string","description":"Name of the table","example":"iQclerk_ARPaymentInvoicesAndPayments"},"Column_Name":{"type":"string","description":"Name of the column","example":"ReferenceNumber"},"Length":{"type":"integer","description":"Maximum acceptable input size, where applicable","example":"30"},"ORDINAL_POSITION":{"type":"integer","description":"Position of the column in the table","example":"8"},"Type":{"type":"string","description":"Database type","example":"varchar"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/bridge/current/data?Table={TableName}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        TableName:
+            displayName: TableName
+            type: string
+            example: CarrierIntegrationCustomerHandsets
+            required: true
+            description: Name of a Table in RQ, for a complete list see <a href="#getting-schema-for-the-latest-version-of-rq">Getting Schema for the Latest Version of RQ</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Rows from a Table in RQ
+                
+        
+        description: |            
+            This request will return the contents of a table in the latest version of RQ. The response to this request will match the appropriate table schema defined in [Getting Table Schemas in Latest RQ](#getting-table-schemas-in-latest-rq).
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CarrierCustomerHandsetID":"7f1b91e2-9692-4efe-923b-7bc90720ccb8","CarrierCustomerID":"62c24270-503a-4de4-9d75-416c92a748d7","SaleInvoiceID":-1,"StoreID":3,"PhoneMake":"null","PhoneModel":"Unknown Device","ESN":"","IMEI":"354493046773064","CustomTelephoneNumber":"8186368202","BAN":"null","SIM":"89014103254674079938","MDN":"null","ActivationDate":"2014-10-01T15:00:12.05","ExpiryDate":"2014-10-01T15:00:12.05","RateORServicePlanName":"null","RateORServicePlanDescription":"null","RateORServicePlanInclusions":"null","RateORServicePlanSOC":"FN2NM0A60","RateORServicePlanTerm":"null","RateORServicePlanFeatures":"null","RateORServicePlanContractTerm":"2","SalesRepName":"null","DealerName":"HJG6E","BillingCycle":"null","BillingCycleDate":17,"DepositAmount":0,"BillingCode":"","IsActivatedIQ":0,"RateORServicePlan2SOC":"null","RateORServicePlan2Description":"null","DealerCode":"null","CompanyCode":"null","PortInNumber":"null","DepositIndicator":"No Deposit","FlowType":"null","ActivationTermType":"null","IsBYOD":null,"Priority":null,"CarrierServiceResource":"null","RowThumbprint":"1c1103c2-db83-4df9-a86d-1b649bf304ee","RowInserted":"2014-10-01T15:00:12.05","RowUpdated":"2014-10-01T15:00:12.05","Operation":"Inserted"}]
+                            schema: |
+                                {"exclude":"true","example":"true","name":"DataExample","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CarrierCustomerHandsetID":{"type":"guid","example":"7f1b91e2-9692-4efe-923b-7bc90720ccb8"},"CarrierCustomerID":{"type":"guid","example":"62c24270-503a-4de4-9d75-416c92a748d7"},"SaleInvoiceID":{"type":"integer","example":"-1"},"StoreID":{"type":"integer","example":"3"},"PhoneMake":{"type":"string","example":"null"},"PhoneModel":{"type":"string","example":"Unknown Device"},"ESN":{"type":"string","example":""},"IMEI":{"type":"string","example":"354493046773064"},"CustomTelephoneNumber":{"type":"string","example":"8186368202"},"BAN":{"type":"string","example":"null"},"SIM":{"type":"string","example":"89014103254674079938"},"MDN":{"type":"string","example":"null"},"ActivationDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"ExpiryDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RateORServicePlanName":{"type":"string","example":"null"},"RateORServicePlanDescription":{"type":"string","example":"null"},"RateORServicePlanInclusions":{"type":"string","example":"null"},"RateORServicePlanSOC":{"type":"string","example":"FN2NM0A60"},"RateORServicePlanTerm":{"type":"string","example":"null"},"RateORServicePlanFeatures":{"type":"string","example":"null"},"RateORServicePlanContractTerm":{"type":"string","example":"2"},"SalesRepName":{"type":"string","example":"null"},"DealerName":{"type":"string","example":"HJG6E"},"BillingCycle":{"type":"string","example":"null"},"BillingCycleDate":{"type":"integer","example":"17"},"DepositAmount":{"type":"decimal","example":"0.00"},"BillingCode":{"type":"string","example":""},"IsActivatedIQ":{"type":"boolean","example":"0"},"RateORServicePlan2SOC":{"type":"string","example":"null"},"RateORServicePlan2Description":{"type":"string","example":"null"},"DealerCode":{"type":"string","example":"null"},"CompanyCode":{"type":"string","example":"null"},"PortInNumber":{"type":"string","example":"null"},"DepositIndicator":{"type":"string","example":"No Deposit"},"FlowType":{"type":"string","example":"null"},"ActivationTermType":{"type":"string","example":"null"},"IsBYOD":{"type":"boolean","example":"null"},"Priority":{"type":"integer","example":"null"},"CarrierServiceResource":{"type":"string","example":"null"},"RowThumbprint":{"type":"guid","example":"1c1103c2-db83-4df9-a86d-1b649bf304ee"},"RowInserted":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RowUpdated":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"Operation":{"type":"string","example":"Inserted"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CarrierCustomerHandsetID":"7f1b91e2-9692-4efe-923b-7bc90720ccb8","CarrierCustomerID":"62c24270-503a-4de4-9d75-416c92a748d7","SaleInvoiceID":-1,"StoreID":3,"PhoneMake":"null","PhoneModel":"Unknown Device","ESN":"","IMEI":"354493046773064","CustomTelephoneNumber":"8186368202","BAN":"null","SIM":"89014103254674079938","MDN":"null","ActivationDate":"2014-10-01T15:00:12.05","ExpiryDate":"2014-10-01T15:00:12.05","RateORServicePlanName":"null","RateORServicePlanDescription":"null","RateORServicePlanInclusions":"null","RateORServicePlanSOC":"FN2NM0A60","RateORServicePlanTerm":"null","RateORServicePlanFeatures":"null","RateORServicePlanContractTerm":"2","SalesRepName":"null","DealerName":"HJG6E","BillingCycle":"null","BillingCycleDate":17,"DepositAmount":0,"BillingCode":"","IsActivatedIQ":0,"RateORServicePlan2SOC":"null","RateORServicePlan2Description":"null","DealerCode":"null","CompanyCode":"null","PortInNumber":"null","DepositIndicator":"No Deposit","FlowType":"null","ActivationTermType":"null","IsBYOD":null,"Priority":null,"CarrierServiceResource":"null","RowThumbprint":"1c1103c2-db83-4df9-a86d-1b649bf304ee","RowInserted":"2014-10-01T15:00:12.05","RowUpdated":"2014-10-01T15:00:12.05","Operation":"Inserted"}]
+                            schema: |
+                                {"exclude":"true","example":"true","name":"DataExample","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CarrierCustomerHandsetID":{"type":"guid","example":"7f1b91e2-9692-4efe-923b-7bc90720ccb8"},"CarrierCustomerID":{"type":"guid","example":"62c24270-503a-4de4-9d75-416c92a748d7"},"SaleInvoiceID":{"type":"integer","example":"-1"},"StoreID":{"type":"integer","example":"3"},"PhoneMake":{"type":"string","example":"null"},"PhoneModel":{"type":"string","example":"Unknown Device"},"ESN":{"type":"string","example":""},"IMEI":{"type":"string","example":"354493046773064"},"CustomTelephoneNumber":{"type":"string","example":"8186368202"},"BAN":{"type":"string","example":"null"},"SIM":{"type":"string","example":"89014103254674079938"},"MDN":{"type":"string","example":"null"},"ActivationDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"ExpiryDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RateORServicePlanName":{"type":"string","example":"null"},"RateORServicePlanDescription":{"type":"string","example":"null"},"RateORServicePlanInclusions":{"type":"string","example":"null"},"RateORServicePlanSOC":{"type":"string","example":"FN2NM0A60"},"RateORServicePlanTerm":{"type":"string","example":"null"},"RateORServicePlanFeatures":{"type":"string","example":"null"},"RateORServicePlanContractTerm":{"type":"string","example":"2"},"SalesRepName":{"type":"string","example":"null"},"DealerName":{"type":"string","example":"HJG6E"},"BillingCycle":{"type":"string","example":"null"},"BillingCycleDate":{"type":"integer","example":"17"},"DepositAmount":{"type":"decimal","example":"0.00"},"BillingCode":{"type":"string","example":""},"IsActivatedIQ":{"type":"boolean","example":"0"},"RateORServicePlan2SOC":{"type":"string","example":"null"},"RateORServicePlan2Description":{"type":"string","example":"null"},"DealerCode":{"type":"string","example":"null"},"CompanyCode":{"type":"string","example":"null"},"PortInNumber":{"type":"string","example":"null"},"DepositIndicator":{"type":"string","example":"No Deposit"},"FlowType":{"type":"string","example":"null"},"ActivationTermType":{"type":"string","example":"null"},"IsBYOD":{"type":"boolean","example":"null"},"Priority":{"type":"integer","example":"null"},"CarrierServiceResource":{"type":"string","example":"null"},"RowThumbprint":{"type":"guid","example":"1c1103c2-db83-4df9-a86d-1b649bf304ee"},"RowInserted":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RowUpdated":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"Operation":{"type":"string","example":"Inserted"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CarrierCustomerHandsetID":"7f1b91e2-9692-4efe-923b-7bc90720ccb8","CarrierCustomerID":"62c24270-503a-4de4-9d75-416c92a748d7","SaleInvoiceID":-1,"StoreID":3,"PhoneMake":"null","PhoneModel":"Unknown Device","ESN":"","IMEI":"354493046773064","CustomTelephoneNumber":"8186368202","BAN":"null","SIM":"89014103254674079938","MDN":"null","ActivationDate":"2014-10-01T15:00:12.05","ExpiryDate":"2014-10-01T15:00:12.05","RateORServicePlanName":"null","RateORServicePlanDescription":"null","RateORServicePlanInclusions":"null","RateORServicePlanSOC":"FN2NM0A60","RateORServicePlanTerm":"null","RateORServicePlanFeatures":"null","RateORServicePlanContractTerm":"2","SalesRepName":"null","DealerName":"HJG6E","BillingCycle":"null","BillingCycleDate":17,"DepositAmount":0,"BillingCode":"","IsActivatedIQ":0,"RateORServicePlan2SOC":"null","RateORServicePlan2Description":"null","DealerCode":"null","CompanyCode":"null","PortInNumber":"null","DepositIndicator":"No Deposit","FlowType":"null","ActivationTermType":"null","IsBYOD":null,"Priority":null,"CarrierServiceResource":"null","RowThumbprint":"1c1103c2-db83-4df9-a86d-1b649bf304ee","RowInserted":"2014-10-01T15:00:12.05","RowUpdated":"2014-10-01T15:00:12.05","Operation":"Inserted"}]
+                            schema: |
+                                {"exclude":"true","example":"true","name":"DataExample","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CarrierCustomerHandsetID":{"type":"guid","example":"7f1b91e2-9692-4efe-923b-7bc90720ccb8"},"CarrierCustomerID":{"type":"guid","example":"62c24270-503a-4de4-9d75-416c92a748d7"},"SaleInvoiceID":{"type":"integer","example":"-1"},"StoreID":{"type":"integer","example":"3"},"PhoneMake":{"type":"string","example":"null"},"PhoneModel":{"type":"string","example":"Unknown Device"},"ESN":{"type":"string","example":""},"IMEI":{"type":"string","example":"354493046773064"},"CustomTelephoneNumber":{"type":"string","example":"8186368202"},"BAN":{"type":"string","example":"null"},"SIM":{"type":"string","example":"89014103254674079938"},"MDN":{"type":"string","example":"null"},"ActivationDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"ExpiryDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RateORServicePlanName":{"type":"string","example":"null"},"RateORServicePlanDescription":{"type":"string","example":"null"},"RateORServicePlanInclusions":{"type":"string","example":"null"},"RateORServicePlanSOC":{"type":"string","example":"FN2NM0A60"},"RateORServicePlanTerm":{"type":"string","example":"null"},"RateORServicePlanFeatures":{"type":"string","example":"null"},"RateORServicePlanContractTerm":{"type":"string","example":"2"},"SalesRepName":{"type":"string","example":"null"},"DealerName":{"type":"string","example":"HJG6E"},"BillingCycle":{"type":"string","example":"null"},"BillingCycleDate":{"type":"integer","example":"17"},"DepositAmount":{"type":"decimal","example":"0.00"},"BillingCode":{"type":"string","example":""},"IsActivatedIQ":{"type":"boolean","example":"0"},"RateORServicePlan2SOC":{"type":"string","example":"null"},"RateORServicePlan2Description":{"type":"string","example":"null"},"DealerCode":{"type":"string","example":"null"},"CompanyCode":{"type":"string","example":"null"},"PortInNumber":{"type":"string","example":"null"},"DepositIndicator":{"type":"string","example":"No Deposit"},"FlowType":{"type":"string","example":"null"},"ActivationTermType":{"type":"string","example":"null"},"IsBYOD":{"type":"boolean","example":"null"},"Priority":{"type":"integer","example":"null"},"CarrierServiceResource":{"type":"string","example":"null"},"RowThumbprint":{"type":"guid","example":"1c1103c2-db83-4df9-a86d-1b649bf304ee"},"RowInserted":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RowUpdated":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"Operation":{"type":"string","example":"Inserted"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CarrierCustomerHandsetID":"7f1b91e2-9692-4efe-923b-7bc90720ccb8","CarrierCustomerID":"62c24270-503a-4de4-9d75-416c92a748d7","SaleInvoiceID":-1,"StoreID":3,"PhoneMake":"null","PhoneModel":"Unknown Device","ESN":"","IMEI":"354493046773064","CustomTelephoneNumber":"8186368202","BAN":"null","SIM":"89014103254674079938","MDN":"null","ActivationDate":"2014-10-01T15:00:12.05","ExpiryDate":"2014-10-01T15:00:12.05","RateORServicePlanName":"null","RateORServicePlanDescription":"null","RateORServicePlanInclusions":"null","RateORServicePlanSOC":"FN2NM0A60","RateORServicePlanTerm":"null","RateORServicePlanFeatures":"null","RateORServicePlanContractTerm":"2","SalesRepName":"null","DealerName":"HJG6E","BillingCycle":"null","BillingCycleDate":17,"DepositAmount":0,"BillingCode":"","IsActivatedIQ":0,"RateORServicePlan2SOC":"null","RateORServicePlan2Description":"null","DealerCode":"null","CompanyCode":"null","PortInNumber":"null","DepositIndicator":"No Deposit","FlowType":"null","ActivationTermType":"null","IsBYOD":null,"Priority":null,"CarrierServiceResource":"null","RowThumbprint":"1c1103c2-db83-4df9-a86d-1b649bf304ee","RowInserted":"2014-10-01T15:00:12.05","RowUpdated":"2014-10-01T15:00:12.05","Operation":"Inserted"}]
+                            schema: |
+                                {"exclude":"true","example":"true","name":"DataExample","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CarrierCustomerHandsetID":{"type":"guid","example":"7f1b91e2-9692-4efe-923b-7bc90720ccb8"},"CarrierCustomerID":{"type":"guid","example":"62c24270-503a-4de4-9d75-416c92a748d7"},"SaleInvoiceID":{"type":"integer","example":"-1"},"StoreID":{"type":"integer","example":"3"},"PhoneMake":{"type":"string","example":"null"},"PhoneModel":{"type":"string","example":"Unknown Device"},"ESN":{"type":"string","example":""},"IMEI":{"type":"string","example":"354493046773064"},"CustomTelephoneNumber":{"type":"string","example":"8186368202"},"BAN":{"type":"string","example":"null"},"SIM":{"type":"string","example":"89014103254674079938"},"MDN":{"type":"string","example":"null"},"ActivationDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"ExpiryDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RateORServicePlanName":{"type":"string","example":"null"},"RateORServicePlanDescription":{"type":"string","example":"null"},"RateORServicePlanInclusions":{"type":"string","example":"null"},"RateORServicePlanSOC":{"type":"string","example":"FN2NM0A60"},"RateORServicePlanTerm":{"type":"string","example":"null"},"RateORServicePlanFeatures":{"type":"string","example":"null"},"RateORServicePlanContractTerm":{"type":"string","example":"2"},"SalesRepName":{"type":"string","example":"null"},"DealerName":{"type":"string","example":"HJG6E"},"BillingCycle":{"type":"string","example":"null"},"BillingCycleDate":{"type":"integer","example":"17"},"DepositAmount":{"type":"decimal","example":"0.00"},"BillingCode":{"type":"string","example":""},"IsActivatedIQ":{"type":"boolean","example":"0"},"RateORServicePlan2SOC":{"type":"string","example":"null"},"RateORServicePlan2Description":{"type":"string","example":"null"},"DealerCode":{"type":"string","example":"null"},"CompanyCode":{"type":"string","example":"null"},"PortInNumber":{"type":"string","example":"null"},"DepositIndicator":{"type":"string","example":"No Deposit"},"FlowType":{"type":"string","example":"null"},"ActivationTermType":{"type":"string","example":"null"},"IsBYOD":{"type":"boolean","example":"null"},"Priority":{"type":"integer","example":"null"},"CarrierServiceResource":{"type":"string","example":"null"},"RowThumbprint":{"type":"guid","example":"1c1103c2-db83-4df9-a86d-1b649bf304ee"},"RowInserted":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RowUpdated":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"Operation":{"type":"string","example":"Inserted"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CarrierCustomerHandsetID":"7f1b91e2-9692-4efe-923b-7bc90720ccb8","CarrierCustomerID":"62c24270-503a-4de4-9d75-416c92a748d7","SaleInvoiceID":-1,"StoreID":3,"PhoneMake":"null","PhoneModel":"Unknown Device","ESN":"","IMEI":"354493046773064","CustomTelephoneNumber":"8186368202","BAN":"null","SIM":"89014103254674079938","MDN":"null","ActivationDate":"2014-10-01T15:00:12.05","ExpiryDate":"2014-10-01T15:00:12.05","RateORServicePlanName":"null","RateORServicePlanDescription":"null","RateORServicePlanInclusions":"null","RateORServicePlanSOC":"FN2NM0A60","RateORServicePlanTerm":"null","RateORServicePlanFeatures":"null","RateORServicePlanContractTerm":"2","SalesRepName":"null","DealerName":"HJG6E","BillingCycle":"null","BillingCycleDate":17,"DepositAmount":0,"BillingCode":"","IsActivatedIQ":0,"RateORServicePlan2SOC":"null","RateORServicePlan2Description":"null","DealerCode":"null","CompanyCode":"null","PortInNumber":"null","DepositIndicator":"No Deposit","FlowType":"null","ActivationTermType":"null","IsBYOD":null,"Priority":null,"CarrierServiceResource":"null","RowThumbprint":"1c1103c2-db83-4df9-a86d-1b649bf304ee","RowInserted":"2014-10-01T15:00:12.05","RowUpdated":"2014-10-01T15:00:12.05","Operation":"Inserted"}]
+                            schema: |
+                                {"exclude":"true","example":"true","name":"DataExample","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CarrierCustomerHandsetID":{"type":"guid","example":"7f1b91e2-9692-4efe-923b-7bc90720ccb8"},"CarrierCustomerID":{"type":"guid","example":"62c24270-503a-4de4-9d75-416c92a748d7"},"SaleInvoiceID":{"type":"integer","example":"-1"},"StoreID":{"type":"integer","example":"3"},"PhoneMake":{"type":"string","example":"null"},"PhoneModel":{"type":"string","example":"Unknown Device"},"ESN":{"type":"string","example":""},"IMEI":{"type":"string","example":"354493046773064"},"CustomTelephoneNumber":{"type":"string","example":"8186368202"},"BAN":{"type":"string","example":"null"},"SIM":{"type":"string","example":"89014103254674079938"},"MDN":{"type":"string","example":"null"},"ActivationDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"ExpiryDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RateORServicePlanName":{"type":"string","example":"null"},"RateORServicePlanDescription":{"type":"string","example":"null"},"RateORServicePlanInclusions":{"type":"string","example":"null"},"RateORServicePlanSOC":{"type":"string","example":"FN2NM0A60"},"RateORServicePlanTerm":{"type":"string","example":"null"},"RateORServicePlanFeatures":{"type":"string","example":"null"},"RateORServicePlanContractTerm":{"type":"string","example":"2"},"SalesRepName":{"type":"string","example":"null"},"DealerName":{"type":"string","example":"HJG6E"},"BillingCycle":{"type":"string","example":"null"},"BillingCycleDate":{"type":"integer","example":"17"},"DepositAmount":{"type":"decimal","example":"0.00"},"BillingCode":{"type":"string","example":""},"IsActivatedIQ":{"type":"boolean","example":"0"},"RateORServicePlan2SOC":{"type":"string","example":"null"},"RateORServicePlan2Description":{"type":"string","example":"null"},"DealerCode":{"type":"string","example":"null"},"CompanyCode":{"type":"string","example":"null"},"PortInNumber":{"type":"string","example":"null"},"DepositIndicator":{"type":"string","example":"No Deposit"},"FlowType":{"type":"string","example":"null"},"ActivationTermType":{"type":"string","example":"null"},"IsBYOD":{"type":"boolean","example":"null"},"Priority":{"type":"integer","example":"null"},"CarrierServiceResource":{"type":"string","example":"null"},"RowThumbprint":{"type":"guid","example":"1c1103c2-db83-4df9-a86d-1b649bf304ee"},"RowInserted":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RowUpdated":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"Operation":{"type":"string","example":"Inserted"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CarrierCustomerHandsetID":"7f1b91e2-9692-4efe-923b-7bc90720ccb8","CarrierCustomerID":"62c24270-503a-4de4-9d75-416c92a748d7","SaleInvoiceID":-1,"StoreID":3,"PhoneMake":"null","PhoneModel":"Unknown Device","ESN":"","IMEI":"354493046773064","CustomTelephoneNumber":"8186368202","BAN":"null","SIM":"89014103254674079938","MDN":"null","ActivationDate":"2014-10-01T15:00:12.05","ExpiryDate":"2014-10-01T15:00:12.05","RateORServicePlanName":"null","RateORServicePlanDescription":"null","RateORServicePlanInclusions":"null","RateORServicePlanSOC":"FN2NM0A60","RateORServicePlanTerm":"null","RateORServicePlanFeatures":"null","RateORServicePlanContractTerm":"2","SalesRepName":"null","DealerName":"HJG6E","BillingCycle":"null","BillingCycleDate":17,"DepositAmount":0,"BillingCode":"","IsActivatedIQ":0,"RateORServicePlan2SOC":"null","RateORServicePlan2Description":"null","DealerCode":"null","CompanyCode":"null","PortInNumber":"null","DepositIndicator":"No Deposit","FlowType":"null","ActivationTermType":"null","IsBYOD":null,"Priority":null,"CarrierServiceResource":"null","RowThumbprint":"1c1103c2-db83-4df9-a86d-1b649bf304ee","RowInserted":"2014-10-01T15:00:12.05","RowUpdated":"2014-10-01T15:00:12.05","Operation":"Inserted"}]
+                            schema: |
+                                {"exclude":"true","example":"true","name":"DataExample","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CarrierCustomerHandsetID":{"type":"guid","example":"7f1b91e2-9692-4efe-923b-7bc90720ccb8"},"CarrierCustomerID":{"type":"guid","example":"62c24270-503a-4de4-9d75-416c92a748d7"},"SaleInvoiceID":{"type":"integer","example":"-1"},"StoreID":{"type":"integer","example":"3"},"PhoneMake":{"type":"string","example":"null"},"PhoneModel":{"type":"string","example":"Unknown Device"},"ESN":{"type":"string","example":""},"IMEI":{"type":"string","example":"354493046773064"},"CustomTelephoneNumber":{"type":"string","example":"8186368202"},"BAN":{"type":"string","example":"null"},"SIM":{"type":"string","example":"89014103254674079938"},"MDN":{"type":"string","example":"null"},"ActivationDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"ExpiryDate":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RateORServicePlanName":{"type":"string","example":"null"},"RateORServicePlanDescription":{"type":"string","example":"null"},"RateORServicePlanInclusions":{"type":"string","example":"null"},"RateORServicePlanSOC":{"type":"string","example":"FN2NM0A60"},"RateORServicePlanTerm":{"type":"string","example":"null"},"RateORServicePlanFeatures":{"type":"string","example":"null"},"RateORServicePlanContractTerm":{"type":"string","example":"2"},"SalesRepName":{"type":"string","example":"null"},"DealerName":{"type":"string","example":"HJG6E"},"BillingCycle":{"type":"string","example":"null"},"BillingCycleDate":{"type":"integer","example":"17"},"DepositAmount":{"type":"decimal","example":"0.00"},"BillingCode":{"type":"string","example":""},"IsActivatedIQ":{"type":"boolean","example":"0"},"RateORServicePlan2SOC":{"type":"string","example":"null"},"RateORServicePlan2Description":{"type":"string","example":"null"},"DealerCode":{"type":"string","example":"null"},"CompanyCode":{"type":"string","example":"null"},"PortInNumber":{"type":"string","example":"null"},"DepositIndicator":{"type":"string","example":"No Deposit"},"FlowType":{"type":"string","example":"null"},"ActivationTermType":{"type":"string","example":"null"},"IsBYOD":{"type":"boolean","example":"null"},"Priority":{"type":"integer","example":"null"},"CarrierServiceResource":{"type":"string","example":"null"},"RowThumbprint":{"type":"guid","example":"1c1103c2-db83-4df9-a86d-1b649bf304ee"},"RowInserted":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"RowUpdated":{"type":"datetime","example":"2014-10-01T15:00:12.05"},"Operation":{"type":"string","example":"Inserted"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/bridge/current/delta?Table={TableName}&RowDateTime={RowDateTime}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        TableName:
+            displayName: TableName
+            type: string
+            example: CarrierIntegrationCustomerHandsets
+            required: true
+            description: Name of a Table in RQ, for a complete list see <a href="#getting-schema-for-the-latest-version-of-rq">Getting Schema for the Latest Version of RQ</a>
+        
+        RowDateTime:
+            displayName: RowDateTime
+            type: string
+            example: 2015-7-14
+            required: true
+            description: Changes since this date will be returned in the response
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Changes to a Table in RQ
+                
+        
+        description: |            
+            This request will return a summary of the changes or "deltas" in a table in the latest version of RQ since a specified date.
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"DeltaCount":68,"DeltaTimeSec":28704556,"Table":"CarrierIntegrationCustomerHandsets"}]
+                            schema: |
+                                {"name":"Delta","description":"A resource representing changes to a table in the latest version of RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DeltaCount":{"type":"integer","description":"Number of rows that have changes","example":"68"},"DeltaTimeSec":{"type":"integer","description":"","example":"28704556"},"Table":{"type":"string","description":"Name of a table in the latest version of RQ","example":"CarrierIntegrationCustomerHandsets"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"DeltaCount":68,"DeltaTimeSec":28704556,"Table":"CarrierIntegrationCustomerHandsets"}]
+                            schema: |
+                                {"name":"Delta","description":"A resource representing changes to a table in the latest version of RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DeltaCount":{"type":"integer","description":"Number of rows that have changes","example":"68"},"DeltaTimeSec":{"type":"integer","description":"","example":"28704556"},"Table":{"type":"string","description":"Name of a table in the latest version of RQ","example":"CarrierIntegrationCustomerHandsets"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"DeltaCount":68,"DeltaTimeSec":28704556,"Table":"CarrierIntegrationCustomerHandsets"}]
+                            schema: |
+                                {"name":"Delta","description":"A resource representing changes to a table in the latest version of RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DeltaCount":{"type":"integer","description":"Number of rows that have changes","example":"68"},"DeltaTimeSec":{"type":"integer","description":"","example":"28704556"},"Table":{"type":"string","description":"Name of a table in the latest version of RQ","example":"CarrierIntegrationCustomerHandsets"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"DeltaCount":68,"DeltaTimeSec":28704556,"Table":"CarrierIntegrationCustomerHandsets"}]
+                            schema: |
+                                {"name":"Delta","description":"A resource representing changes to a table in the latest version of RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DeltaCount":{"type":"integer","description":"Number of rows that have changes","example":"68"},"DeltaTimeSec":{"type":"integer","description":"","example":"28704556"},"Table":{"type":"string","description":"Name of a table in the latest version of RQ","example":"CarrierIntegrationCustomerHandsets"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"DeltaCount":68,"DeltaTimeSec":28704556,"Table":"CarrierIntegrationCustomerHandsets"}]
+                            schema: |
+                                {"name":"Delta","description":"A resource representing changes to a table in the latest version of RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DeltaCount":{"type":"integer","description":"Number of rows that have changes","example":"68"},"DeltaTimeSec":{"type":"integer","description":"","example":"28704556"},"Table":{"type":"string","description":"Name of a table in the latest version of RQ","example":"CarrierIntegrationCustomerHandsets"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"DeltaCount":68,"DeltaTimeSec":28704556,"Table":"CarrierIntegrationCustomerHandsets"}]
+                            schema: |
+                                {"name":"Delta","description":"A resource representing changes to a table in the latest version of RQ.","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"DeltaCount":{"type":"integer","description":"Number of rows that have changes","example":"68"},"DeltaTimeSec":{"type":"integer","description":"","example":"28704556"},"Table":{"type":"string","description":"Name of a table in the latest version of RQ","example":"CarrierIntegrationCustomerHandsets"}}}
+                            
+                        
+                    
+                
+            
+    

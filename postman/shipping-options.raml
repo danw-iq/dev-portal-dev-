@@ -1,0 +1,34 @@
+#%RAML 0.8
+title: shipping options
+baseUri: https://api.supplier.com/ShippingOptions
+
+/ShippingOptions:
+    uriParameters:
+          
+      
+    post:
+        displayName: Get Shipping Options
+        headers:
+            
+            Authorization:
+                example: Basic
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+            Host:
+                example: supplier.azure-api.net
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    {"CompanyId":123,"Items":[{"ProductName":"Galaxy S6 Defender Case - Glacier","Quantity":11,"Sku":"87932OTS45S6"}],"PostalCode":"A1A1A1"}
+                
+            
+    

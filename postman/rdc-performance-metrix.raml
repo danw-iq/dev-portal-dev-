@@ -1,0 +1,430 @@
+#%RAML 0.8
+title: RQ Data Connect Performance Metrix Reports
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - GraphedPerformanceMetrixReportData: |
+        {
+          "name": "GraphedPerformanceMetrixReportData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": {  "type": "integer", "database": "INT", "description": "Identifier for a performance metrix group in RQ", "example": "6" },
+            "Name": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Name of a performance metrix group in RQ", "example": "51247 Test_update" },
+            "AttachmentRate": {  "type": "string", "database": "VARCHAR(23)", "description": "Comparison of Performance Groups for the Attachment Rate displayed as a ratio", "example": "1249 : 2" },
+            "AttachmentRateTarget": {  "type": "string", "database": "VARCHAR(23)", "description": "Attachment rate target", "example": "0 : 0" },
+            "DisplayFormat": {  "type": "integer", "database": "INT", "description": "1: Ratio Format, 2: Percentage Format", "example": "2" },
+            "IsAttachmentRate": {  "type": "boolean", "database": "BIT", "description": "A flag to indicate if performance group is an attachment rate", "example": "true" },
+            "Margin": {  "type": "decimal", "database": "MONEY", "description": "Margin on sales in this performance group", "example": "null" },
+            "MarginTarget": {  "type": "decimal", "database": "MONEY", "description": "Margin target", "example": "null" },
+            "Priority": {  "type": "integer", "database": "INT", "description": "Priority", "example": "-1" },
+            "Profit": {  "type": "decimal", "database": "MONEY", "description": "Net profit amount of sales in this performance group", "example": "null" },
+            "ProfitTarget": {  "type": "decimal", "database": "MONEY", "description": "Profit target", "example": "null" },
+            "Quantity": {  "type": "integer", "database": "INT", "description": "Net count of SKUs sold in this performance group", "example": "null" },
+            "QuantityTarget": {  "type": "integer", "database": "INT", "description": "Quantity target", "example": "null" },
+            "Sales": {  "type": "decimal", "database": "MONEY", "description": "Net dollar amount of sales in this performance group", "example": "null" },
+            "SalesTarget": {  "type": "decimal", "database": "MONEY", "description": "Sales target", "example": "null" }
+          }
+        }
+        
+
+    
+
+    
+    - GraphedPerformanceMetrixBreakdownReportData: |
+        {
+          "name": "GraphedPerformanceMetrixBreakdownReportData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": {  "type": "integer", "database": "INT", "description": "Internal idenfier in RQ", "example": "1" },
+            "Name": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Name of company, region, division, location or employee depending on ByWho URL parameter", "example": "84 West" },
+            "GroupInvoiceCount": {  "type": "integer", "database": "INT", "description": "This number represents the size of the section of pie graph", "example": "839" },
+            "IsAttachmentRate": {  "type": "boolean", "database": "BIT", "description": "A flag to indicate if performance group is an attachment rate", "example": "false" },
+            "Margin": {  "type": "decimal", "database": "MONEY", "description": "Margin", "example": "-1691.5747" },
+            "MarginTarget": {  "type": "decimal", "database": "DECIMAL", "description": "Margin target", "example": "0" },
+            "Profit": {  "type": "decimal", "database": "MONEY", "description": "Profit", "example": "-45860859.08" },
+            "ProfitTarget": {  "type": "decimal", "database": "MONEY", "description": "Profit target", "example": "0" },
+            "Quantity": {  "type": "integer", "database": "INT", "description": "Quantity", "example": "530" },
+            "QuantityTarget": {  "type": "integer", "database": "INT", "description": "Quantity target", "example": "0" },
+            "Sales": {  "type": "decimal", "database": "MONEY", "description": "Total sales", "example": "27111.34" },
+            "SalesTarget": {  "type": "decimal", "database": "MONEY", "description": "Sales target", "example": "0" },
+            "TotalInvoiceCount": {  "type": "integer", "database": "INT", "description": "This number represents the total size of the graph ", "example": "2772" }
+          }
+        }
+        
+
+    
+
+
+/reports/graphedperformancemetricsreport_performancemetrix?PeriodID={PeriodID}&StartDate={StartDate}&StopDate={StopDate}&HideRebates={HideRebates}&ForWho={ForWho}&ForWhoID={ForWhoID}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        PeriodID:
+            displayName: PeriodID
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for a Period in RQ, or -1 if a StartDate and StopDate will be used
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin. If PeriodID is -1, this value will be ignored
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end. If PeriodID is -1, this value will be ignored
+        
+        HideRebates:
+            displayName: HideRebates
+            type: integer
+            example: -1
+            required: true
+            description: A flag to indicate if Rebates should be included in the report (1) or not (-1)
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoID:
+            displayName: ForWhoID
+            type: integer
+            example: 6679
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Graphed Performance Metrix Report
+                
+        
+        description: |            
+            For more information, see {{GraphedPerformanceMetrixReport}}.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":6,"Name":"51247 Test_update","AttachmentRate":"1249 : 2","AttachmentRateTarget":"0 : 0","DisplayFormat":2,"IsAttachmentRate":true,"Margin":null,"MarginTarget":null,"Priority":-1,"Profit":null,"ProfitTarget":null,"Quantity":null,"QuantityTarget":null,"Sales":null,"SalesTarget":null}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier for a performance metrix group in RQ","example":"6"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a performance metrix group in RQ","example":"51247 Test_update"},"AttachmentRate":{"type":"string","database":"VARCHAR(23)","description":"Comparison of Performance Groups for the Attachment Rate displayed as a ratio","example":"1249 : 2"},"AttachmentRateTarget":{"type":"string","database":"VARCHAR(23)","description":"Attachment rate target","example":"0 : 0"},"DisplayFormat":{"type":"integer","database":"INT","description":"1: Ratio Format, 2: Percentage Format","example":"2"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"true"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin on sales in this performance group","example":"null"},"MarginTarget":{"type":"decimal","database":"MONEY","description":"Margin target","example":"null"},"Priority":{"type":"integer","database":"INT","description":"Priority","example":"-1"},"Profit":{"type":"decimal","database":"MONEY","description":"Net profit amount of sales in this performance group","example":"null"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"null"},"Quantity":{"type":"integer","database":"INT","description":"Net count of SKUs sold in this performance group","example":"null"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"null"},"Sales":{"type":"decimal","database":"MONEY","description":"Net dollar amount of sales in this performance group","example":"null"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"null"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":6,"Name":"51247 Test_update","AttachmentRate":"1249 : 2","AttachmentRateTarget":"0 : 0","DisplayFormat":2,"IsAttachmentRate":true,"Margin":null,"MarginTarget":null,"Priority":-1,"Profit":null,"ProfitTarget":null,"Quantity":null,"QuantityTarget":null,"Sales":null,"SalesTarget":null}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier for a performance metrix group in RQ","example":"6"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a performance metrix group in RQ","example":"51247 Test_update"},"AttachmentRate":{"type":"string","database":"VARCHAR(23)","description":"Comparison of Performance Groups for the Attachment Rate displayed as a ratio","example":"1249 : 2"},"AttachmentRateTarget":{"type":"string","database":"VARCHAR(23)","description":"Attachment rate target","example":"0 : 0"},"DisplayFormat":{"type":"integer","database":"INT","description":"1: Ratio Format, 2: Percentage Format","example":"2"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"true"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin on sales in this performance group","example":"null"},"MarginTarget":{"type":"decimal","database":"MONEY","description":"Margin target","example":"null"},"Priority":{"type":"integer","database":"INT","description":"Priority","example":"-1"},"Profit":{"type":"decimal","database":"MONEY","description":"Net profit amount of sales in this performance group","example":"null"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"null"},"Quantity":{"type":"integer","database":"INT","description":"Net count of SKUs sold in this performance group","example":"null"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"null"},"Sales":{"type":"decimal","database":"MONEY","description":"Net dollar amount of sales in this performance group","example":"null"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"null"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":6,"Name":"51247 Test_update","AttachmentRate":"1249 : 2","AttachmentRateTarget":"0 : 0","DisplayFormat":2,"IsAttachmentRate":true,"Margin":null,"MarginTarget":null,"Priority":-1,"Profit":null,"ProfitTarget":null,"Quantity":null,"QuantityTarget":null,"Sales":null,"SalesTarget":null}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier for a performance metrix group in RQ","example":"6"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a performance metrix group in RQ","example":"51247 Test_update"},"AttachmentRate":{"type":"string","database":"VARCHAR(23)","description":"Comparison of Performance Groups for the Attachment Rate displayed as a ratio","example":"1249 : 2"},"AttachmentRateTarget":{"type":"string","database":"VARCHAR(23)","description":"Attachment rate target","example":"0 : 0"},"DisplayFormat":{"type":"integer","database":"INT","description":"1: Ratio Format, 2: Percentage Format","example":"2"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"true"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin on sales in this performance group","example":"null"},"MarginTarget":{"type":"decimal","database":"MONEY","description":"Margin target","example":"null"},"Priority":{"type":"integer","database":"INT","description":"Priority","example":"-1"},"Profit":{"type":"decimal","database":"MONEY","description":"Net profit amount of sales in this performance group","example":"null"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"null"},"Quantity":{"type":"integer","database":"INT","description":"Net count of SKUs sold in this performance group","example":"null"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"null"},"Sales":{"type":"decimal","database":"MONEY","description":"Net dollar amount of sales in this performance group","example":"null"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"null"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":6,"Name":"51247 Test_update","AttachmentRate":"1249 : 2","AttachmentRateTarget":"0 : 0","DisplayFormat":2,"IsAttachmentRate":true,"Margin":null,"MarginTarget":null,"Priority":-1,"Profit":null,"ProfitTarget":null,"Quantity":null,"QuantityTarget":null,"Sales":null,"SalesTarget":null}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier for a performance metrix group in RQ","example":"6"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a performance metrix group in RQ","example":"51247 Test_update"},"AttachmentRate":{"type":"string","database":"VARCHAR(23)","description":"Comparison of Performance Groups for the Attachment Rate displayed as a ratio","example":"1249 : 2"},"AttachmentRateTarget":{"type":"string","database":"VARCHAR(23)","description":"Attachment rate target","example":"0 : 0"},"DisplayFormat":{"type":"integer","database":"INT","description":"1: Ratio Format, 2: Percentage Format","example":"2"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"true"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin on sales in this performance group","example":"null"},"MarginTarget":{"type":"decimal","database":"MONEY","description":"Margin target","example":"null"},"Priority":{"type":"integer","database":"INT","description":"Priority","example":"-1"},"Profit":{"type":"decimal","database":"MONEY","description":"Net profit amount of sales in this performance group","example":"null"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"null"},"Quantity":{"type":"integer","database":"INT","description":"Net count of SKUs sold in this performance group","example":"null"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"null"},"Sales":{"type":"decimal","database":"MONEY","description":"Net dollar amount of sales in this performance group","example":"null"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"null"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":6,"Name":"51247 Test_update","AttachmentRate":"1249 : 2","AttachmentRateTarget":"0 : 0","DisplayFormat":2,"IsAttachmentRate":true,"Margin":null,"MarginTarget":null,"Priority":-1,"Profit":null,"ProfitTarget":null,"Quantity":null,"QuantityTarget":null,"Sales":null,"SalesTarget":null}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier for a performance metrix group in RQ","example":"6"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a performance metrix group in RQ","example":"51247 Test_update"},"AttachmentRate":{"type":"string","database":"VARCHAR(23)","description":"Comparison of Performance Groups for the Attachment Rate displayed as a ratio","example":"1249 : 2"},"AttachmentRateTarget":{"type":"string","database":"VARCHAR(23)","description":"Attachment rate target","example":"0 : 0"},"DisplayFormat":{"type":"integer","database":"INT","description":"1: Ratio Format, 2: Percentage Format","example":"2"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"true"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin on sales in this performance group","example":"null"},"MarginTarget":{"type":"decimal","database":"MONEY","description":"Margin target","example":"null"},"Priority":{"type":"integer","database":"INT","description":"Priority","example":"-1"},"Profit":{"type":"decimal","database":"MONEY","description":"Net profit amount of sales in this performance group","example":"null"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"null"},"Quantity":{"type":"integer","database":"INT","description":"Net count of SKUs sold in this performance group","example":"null"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"null"},"Sales":{"type":"decimal","database":"MONEY","description":"Net dollar amount of sales in this performance group","example":"null"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"null"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":6,"Name":"51247 Test_update","AttachmentRate":"1249 : 2","AttachmentRateTarget":"0 : 0","DisplayFormat":2,"IsAttachmentRate":true,"Margin":null,"MarginTarget":null,"Priority":-1,"Profit":null,"ProfitTarget":null,"Quantity":null,"QuantityTarget":null,"Sales":null,"SalesTarget":null}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier for a performance metrix group in RQ","example":"6"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of a performance metrix group in RQ","example":"51247 Test_update"},"AttachmentRate":{"type":"string","database":"VARCHAR(23)","description":"Comparison of Performance Groups for the Attachment Rate displayed as a ratio","example":"1249 : 2"},"AttachmentRateTarget":{"type":"string","database":"VARCHAR(23)","description":"Attachment rate target","example":"0 : 0"},"DisplayFormat":{"type":"integer","database":"INT","description":"1: Ratio Format, 2: Percentage Format","example":"2"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"true"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin on sales in this performance group","example":"null"},"MarginTarget":{"type":"decimal","database":"MONEY","description":"Margin target","example":"null"},"Priority":{"type":"integer","database":"INT","description":"Priority","example":"-1"},"Profit":{"type":"decimal","database":"MONEY","description":"Net profit amount of sales in this performance group","example":"null"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"null"},"Quantity":{"type":"integer","database":"INT","description":"Net count of SKUs sold in this performance group","example":"null"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"null"},"Sales":{"type":"decimal","database":"MONEY","description":"Net dollar amount of sales in this performance group","example":"null"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"null"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/reports/graphedperformancemetricsreport_breakdown?PeriodID={PeriodID}&StartDate={StartDate}&StopDate={StopDate}&HideRebates={HideRebates}&PerformanceGroupID={PerformanceGroupID}&TopN={TopN}&TopCriteria={TopCriteria}&ByWho={ByWho}&ForWho={ForWho}&ForWhoID={ForWhoID}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        PeriodID:
+            displayName: PeriodID
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for a Period in RQ, or -1 if a StartDate and StopDate will be used
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin. If PeriodID is -1, this value will be ignored
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end. If PeriodID is -1, this value will be ignored
+        
+        HideRebates:
+            displayName: HideRebates
+            type: integer
+            example: -1
+            required: true
+            description: A flag to indicate if Rebates should be included in the report (1) or not (-1)
+        
+        PerformanceGroupID:
+            displayName: PerformanceGroupID
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for a Performance Group in RQ
+        
+        TopN:
+            displayName: TopN
+            type: integer
+            example: 10
+            required: true
+            description: Gets the top X entries for the report, ordered by the value in TopCriteria. Use -1 to return all results
+        
+        TopCriteria:
+            displayName: TopCriteria
+            type: string
+            example: Quantity
+            required: true
+            description: Acceptable values include Quantity, Sales, Profit, Margin and Rate
+        
+        ByWho:
+            displayName: ByWho
+            type: integer
+            example: 5
+            required: true
+            description: This value will aggregate the report data at the Company (1), Region (2), Division (3), Location (4) or Employee (5) level
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoID:
+            displayName: ForWhoID
+            type: integer
+            example: 6679
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Graphed Performance Metrix Breakdown Report
+                
+        
+        description: |            
+            For more information, see {{GraphedPerformanceMetrixReport}}.
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Name":"84 West","GroupInvoiceCount":839,"IsAttachmentRate":false,"Margin":-1691.5747,"MarginTarget":0,"Profit":-45860859.08,"ProfitTarget":0,"Quantity":530,"QuantityTarget":0,"Sales":27111.34,"SalesTarget":0,"TotalInvoiceCount":2772}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixBreakdownReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Internal idenfier in RQ","example":"1"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of company, region, division, location or employee depending on ByWho URL parameter","example":"84 West"},"GroupInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the size of the section of pie graph","example":"839"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"false"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin","example":"-1691.5747"},"MarginTarget":{"type":"decimal","database":"DECIMAL","description":"Margin target","example":"0"},"Profit":{"type":"decimal","database":"MONEY","description":"Profit","example":"-45860859.08"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"0"},"Quantity":{"type":"integer","database":"INT","description":"Quantity","example":"530"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"0"},"Sales":{"type":"decimal","database":"MONEY","description":"Total sales","example":"27111.34"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"0"},"TotalInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the total size of the graph ","example":"2772"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Name":"84 West","GroupInvoiceCount":839,"IsAttachmentRate":false,"Margin":-1691.5747,"MarginTarget":0,"Profit":-45860859.08,"ProfitTarget":0,"Quantity":530,"QuantityTarget":0,"Sales":27111.34,"SalesTarget":0,"TotalInvoiceCount":2772}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixBreakdownReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Internal idenfier in RQ","example":"1"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of company, region, division, location or employee depending on ByWho URL parameter","example":"84 West"},"GroupInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the size of the section of pie graph","example":"839"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"false"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin","example":"-1691.5747"},"MarginTarget":{"type":"decimal","database":"DECIMAL","description":"Margin target","example":"0"},"Profit":{"type":"decimal","database":"MONEY","description":"Profit","example":"-45860859.08"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"0"},"Quantity":{"type":"integer","database":"INT","description":"Quantity","example":"530"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"0"},"Sales":{"type":"decimal","database":"MONEY","description":"Total sales","example":"27111.34"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"0"},"TotalInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the total size of the graph ","example":"2772"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Name":"84 West","GroupInvoiceCount":839,"IsAttachmentRate":false,"Margin":-1691.5747,"MarginTarget":0,"Profit":-45860859.08,"ProfitTarget":0,"Quantity":530,"QuantityTarget":0,"Sales":27111.34,"SalesTarget":0,"TotalInvoiceCount":2772}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixBreakdownReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Internal idenfier in RQ","example":"1"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of company, region, division, location or employee depending on ByWho URL parameter","example":"84 West"},"GroupInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the size of the section of pie graph","example":"839"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"false"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin","example":"-1691.5747"},"MarginTarget":{"type":"decimal","database":"DECIMAL","description":"Margin target","example":"0"},"Profit":{"type":"decimal","database":"MONEY","description":"Profit","example":"-45860859.08"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"0"},"Quantity":{"type":"integer","database":"INT","description":"Quantity","example":"530"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"0"},"Sales":{"type":"decimal","database":"MONEY","description":"Total sales","example":"27111.34"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"0"},"TotalInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the total size of the graph ","example":"2772"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Name":"84 West","GroupInvoiceCount":839,"IsAttachmentRate":false,"Margin":-1691.5747,"MarginTarget":0,"Profit":-45860859.08,"ProfitTarget":0,"Quantity":530,"QuantityTarget":0,"Sales":27111.34,"SalesTarget":0,"TotalInvoiceCount":2772}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixBreakdownReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Internal idenfier in RQ","example":"1"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of company, region, division, location or employee depending on ByWho URL parameter","example":"84 West"},"GroupInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the size of the section of pie graph","example":"839"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"false"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin","example":"-1691.5747"},"MarginTarget":{"type":"decimal","database":"DECIMAL","description":"Margin target","example":"0"},"Profit":{"type":"decimal","database":"MONEY","description":"Profit","example":"-45860859.08"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"0"},"Quantity":{"type":"integer","database":"INT","description":"Quantity","example":"530"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"0"},"Sales":{"type":"decimal","database":"MONEY","description":"Total sales","example":"27111.34"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"0"},"TotalInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the total size of the graph ","example":"2772"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Name":"84 West","GroupInvoiceCount":839,"IsAttachmentRate":false,"Margin":-1691.5747,"MarginTarget":0,"Profit":-45860859.08,"ProfitTarget":0,"Quantity":530,"QuantityTarget":0,"Sales":27111.34,"SalesTarget":0,"TotalInvoiceCount":2772}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixBreakdownReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Internal idenfier in RQ","example":"1"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of company, region, division, location or employee depending on ByWho URL parameter","example":"84 West"},"GroupInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the size of the section of pie graph","example":"839"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"false"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin","example":"-1691.5747"},"MarginTarget":{"type":"decimal","database":"DECIMAL","description":"Margin target","example":"0"},"Profit":{"type":"decimal","database":"MONEY","description":"Profit","example":"-45860859.08"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"0"},"Quantity":{"type":"integer","database":"INT","description":"Quantity","example":"530"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"0"},"Sales":{"type":"decimal","database":"MONEY","description":"Total sales","example":"27111.34"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"0"},"TotalInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the total size of the graph ","example":"2772"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ID":1,"Name":"84 West","GroupInvoiceCount":839,"IsAttachmentRate":false,"Margin":-1691.5747,"MarginTarget":0,"Profit":-45860859.08,"ProfitTarget":0,"Quantity":530,"QuantityTarget":0,"Sales":27111.34,"SalesTarget":0,"TotalInvoiceCount":2772}]
+                            schema: |
+                                {"name":"GraphedPerformanceMetrixBreakdownReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Internal idenfier in RQ","example":"1"},"Name":{"type":"string","database":"NVARCHAR(MAX)","description":"Name of company, region, division, location or employee depending on ByWho URL parameter","example":"84 West"},"GroupInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the size of the section of pie graph","example":"839"},"IsAttachmentRate":{"type":"boolean","database":"BIT","description":"A flag to indicate if performance group is an attachment rate","example":"false"},"Margin":{"type":"decimal","database":"MONEY","description":"Margin","example":"-1691.5747"},"MarginTarget":{"type":"decimal","database":"DECIMAL","description":"Margin target","example":"0"},"Profit":{"type":"decimal","database":"MONEY","description":"Profit","example":"-45860859.08"},"ProfitTarget":{"type":"decimal","database":"MONEY","description":"Profit target","example":"0"},"Quantity":{"type":"integer","database":"INT","description":"Quantity","example":"530"},"QuantityTarget":{"type":"integer","database":"INT","description":"Quantity target","example":"0"},"Sales":{"type":"decimal","database":"MONEY","description":"Total sales","example":"27111.34"},"SalesTarget":{"type":"decimal","database":"MONEY","description":"Sales target","example":"0"},"TotalInvoiceCount":{"type":"integer","database":"INT","description":"This number represents the total size of the graph ","example":"2772"}}}
+                            
+                        
+                    
+                
+            
+    

@@ -1,0 +1,1312 @@
+#%RAML 0.8
+title: user-manager
+baseUri: https://usermanagerdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - PasswordUpdate: |
+        {
+          "exclude": "true",
+          "name": "PasswordUpdate",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Password": { "type": "string", "example": "newpa55word" }
+          },
+          "required": ["Password"]
+        }
+        
+
+    
+
+    
+    - ImportUser: |
+        {
+          "exclude": "true",
+          "name": "ImportUser",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "UserName": { "type": "string",  "putDescription": "The name used to identify this User. Must be unique. <strong>RQ Limitation</strong>: To import this User to RQ, ensure username follows the format <code>{Name}@{DatabaseName}</code>", "example": "johnb@kentel" }, 
+            "Password": { "type": "string", "putDescription": "The User's password. If supplied, it must be a nonempty string", "example": "samplepassword" },
+            "Email": { "type": "string", "putDescription": "The User's email address. Must be unique", "example": "johnb@kentel.com" }, 
+            "FirstName": { "type": "string", "example": "John" }, 
+            "LastName": { "type": "string", "example": "Bates" }, 
+            "ParentEntityId": { "type": "integer", "putDescription": "Identifier for the Company to which this User belongs", "example": "1" }, 
+            "ClientUserId": { "type": "string", "putDescription": "Identifier for the User in an external system", "example": "132" }, 
+            "JobTitle": { "type": "string", "example": "Sales Clerk"},          
+            "Address": { "type": "object", "ref": "user-manager.Address" },
+            "PhoneNumbers": { "type": "array", "arrayType": "object", "ref": "user-manager.PhoneNumber" }
+          },
+          "required": ["UserName", "ParentEntityId"]
+        }
+        
+
+    
+
+    
+    - User: |
+        {
+          "name": "User",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "A User represents an account that can be used to perform actions on your data within iQmetrix APIs.",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "2576", "generated": "true" }, 
+            "FirstName": { "type": "string",  "description": "First name", "example": "John" }, 
+            "LastName": { "type": "string",  "description": "Last name", "example": "Bates" }, 
+            "UserName": { "type": "string",  "description": "Name to be used to identify this User, must be unique", "putDescription": "The name used to identify this User. Must be unique", "example": "johnb@kentel.com" }, 
+            "Address": { "type": "object", "description": "Address", "ref": "user-manager.Address" },
+            "ClientUserId": { "type": "string",  "description": "Identifier for the User in an external system", "example": "132" }, 
+            "Email": { "type": "string", "description": "Email for the User. Must be unique. A notification will be sent to this address when a User is created.", "putDescription": "The User's email address. Must be unique. No notification will be sent when this User is updated", "example": "johnb@kentel.com" }, 
+            "IsActive": { "type": "boolean", "description": "Flag to indicate if the Users login is enabled, false if it is disabled", "example": "true", "generated": "true"  }, 
+            "JobTitle": { "type": "string", "description": "Job title", "example": "Sales Clerk"},          
+            "ParentEntityId": { "type": "integer", "description": "Identifier for the Company to which this User belongs", "example": "1" }, 
+            "PhoneNumbers": { "type": "array", "arrayType": "object", "description": "Phone numbers", "ref": "user-manager.PhoneNumber" },
+            "Picture": { "type": "object", "description": "A reference to an Asset that is a photo of the User", "putDescription": "A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest", "example": "" }, 
+            "Version": { "type": "integer", "description": "Latest revision number", "putDescription": "The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date", "example": "1" }, 
+            "Attributes": { "type": "object", "description": "Reserved for future use", "example": ""}, 
+            "CorrelationId": { "type": "string",  "description": "Reserved for internal use", "example": "" }, 
+            "Profiles": { "type": "array", "description": "This is a legacy property that should not be used", "example": "" } 
+          },
+          "required": ["FirstName", "LastName", "UserName", "ParentEntityId"]
+        }
+        
+
+    
+
+    
+    - Address: |
+        {
+          "name": "Address",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "AddressLine1": { "type": "string", "example": "1432 Merry View Road"},
+            "AddressLine2": { "type": "string", "example": ""},
+            "City": { "type": "string", "example": "Big Windy"},
+            "StateCode": { "type": "string",  "description": "Code for the State in which this address resides. Based off the ISO 3166-2 standard", "putDescription": "Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>", "example": "ON"},
+            "CountryCode": { "type": "string",  "description": "Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>", "example": "CA" },
+            "Zip": { "type": "string",  "description": "Zip or Postal Code", "example": "A1A2B2" }
+          }
+        }
+        
+
+    
+
+    
+    - PhoneNumber: |
+        {
+          "name": "PhoneNumber",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Number": { "type": "string", "description": "Must be at least 7 characters", "putDescription": "Must be at least 7 characters", "example": "6135550127" },
+            "Extension": { "type": "string", "description": "Extension", "putDescription": "If provided, Number must also be provided", "example": "5532" },
+            "Type": { "type": "string", "description": "Type of phone number", "putDescription": "Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>", "example": "Work" }
+          }
+        }
+        
+
+    
+
+    
+    - UserArray: |
+        {
+          "exclude": "true",
+          "name": "User",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+    
+    - _links: |
+        {
+          "name": "_links",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Relative URL's used for Pagination",
+          "properties": {
+            "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null"},
+            "self": { "type": "string", "putDescription": "The request that returned these results", "example": "/v1/entities(14146)/users?$skip=0&$top=30"},
+            "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null"}
+          },
+          "required": ["self"]
+        }
+        
+
+    
+
+    
+    - _metadata: |
+        {
+          "name": "_metadata",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "Data representing Pagination details",
+          "properties": {
+            "count": { "type": "integer", "putDescription": "The total number of results returned from the request", "example": "1"},
+            "skip": { "type": "integer", "putDescription": "Value of skip in the request URI, if not specified the value will be 0", "example": "0"},
+            "top": { "type": "integer", "putDescription": "Value of top in the request URI, if not specified the value will be 30", "example": "30"}
+          }
+        }
+        
+
+    
+
+    
+    - SearchSchema: |
+        { 
+          "name": "SearchSchema",
+          "exclude": "true",        
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "user-manager._links" },
+            "_metadata": { "type": "object", "putDescription": "Data representing Pagination details", "ref": "user-manager._metadata" },
+            "items": { "type": "array", "arrayType": "object", "ref": "user-manager.User"}
+          }
+        }
+        
+
+    
+
+    
+    - AssignedLocations: |
+        {
+          "name": "AssignedLocations",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "UserId": { "type": "integer", "ref": "user-manager.User.Id" },
+            "LocationIDs": { "type": "array", "arrayType": "integer", "putDescription": "Location Ids for <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Locations</a> assigned to the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>", "example": "14202"}
+          }
+        }  
+        
+
+    
+
+    
+    - Unlock: |
+        {
+          "name": "Unlock",
+          "exclude": "true",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CanUnlockUser": { "type": "boolean", "example": "true" },
+            "LockReasonId": { "type": "integer", "putDescription": "Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#lockreason'>LockReason</a>", "ref": "user-manager.LockReason.Id" }          
+          }
+        }            
+        
+
+    
+
+    
+    - LockReason: |
+        {
+          "name": "LockReason",
+          "description": "A **LockReason** allows you to provide a reason when [Locking a User](/api/user-manager/#locking-a-user). Examples of reasons might include: \n\n* Incomplete paperwork on a sale \n * Equipment transfer Incomplete inventory count \n * Incomplete cash safe",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "14", "generated": "true" }, 
+            "Name": { "type": "string",  "description": "Lock reason name", "putDescription": "Must be unique within the organization", "example": "PaperworkNotDone" }, 
+            "Description": { "type": "string", "description": "Text that will appear to User when locked out", "putDescription": "Human readable description", "example": "Your account has been locked because the paperwork hasn't been done. Please contact your supervisor."}
+          },
+          "required": [ "Name", "Description" ]
+        }  
+        
+
+    
+
+    
+    - LockReasons: |
+        {
+          "exclude": "true",
+          "name": "LockReason",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+    
+    - LockReasonRequest: |
+        {
+          "exclude": "true",
+          "name": "LockReasonRequest",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "LockReasonId": { "type": "integer", "putDescription": "Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#lockreason'>LockReason</a>", "ref": "user-manager.LockReason.Id"}
+          }
+        }
+        
+
+    
+
+
+/Users/importExisting:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Importing an Existing User
+                
+        
+        description: |            
+            {{important}}
+            This request <strong>will not send an email</strong> to the User
+            {{end}}
+            {{note}}
+            If no password is supplied, the User will not be able to log in, obtain a token or reset their password. Users created this way will <strong>not get a password</strong> and are <strong>not forced to change their password</strong> when logging in for the first time.
+            {{end}}
+            This request allows existing Users to be imported from another system. 
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"UserName":"johnb@kentel","Password":"samplepassword","Email":"johnb@kentel.com","FirstName":"John","LastName":"Bates","ParentEntityId":1,"ClientUserId":"132","JobTitle":"Sales Clerk","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}]}
+                    
+                schema: |
+                    {"exclude":"true","name":"ImportUser","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"UserName":{"type":"string","putDescription":"The name used to identify this User. Must be unique. <strong>RQ Limitation</strong>: To import this User to RQ, ensure username follows the format <code>{Name}@{DatabaseName}</code>","example":"johnb@kentel","name":"UserName"},"Password":{"type":"string","putDescription":"The User's password. If supplied, it must be a nonempty string","example":"samplepassword","name":"Password"},"Email":{"type":"string","putDescription":"The User's email address. Must be unique","example":"johnb@kentel.com","name":"Email"},"FirstName":{"type":"string","example":"John","name":"FirstName"},"LastName":{"type":"string","example":"Bates","name":"LastName"},"ParentEntityId":{"type":"integer","putDescription":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"ClientUserId":{"type":"string","putDescription":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"JobTitle":{"type":"string","example":"Sales Clerk","name":"JobTitle"},"Address":{"type":"object","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"PhoneNumbers":{"type":"array","arrayType":"object","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}}},"required":["UserName","ParentEntityId"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":2576,"FirstName":"John","LastName":"Bates","UserName":"johnb@kentel.com","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"ClientUserId":"132","Email":"johnb@kentel.com","IsActive":true,"JobTitle":"Sales Clerk","ParentEntityId":1,"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}],"Picture":{},"Version":1}
+                            schema: |
+                                {"name":"User","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"A User represents an account that can be used to perform actions on your data within iQmetrix APIs.","properties":{"Id":{"type":"integer","description":"Identifier","example":"2576","generated":"true","name":"Id"},"FirstName":{"type":"string","description":"First name","example":"John","name":"FirstName"},"LastName":{"type":"string","description":"Last name","example":"Bates","name":"LastName"},"UserName":{"type":"string","description":"Name to be used to identify this User, must be unique","putDescription":"The name used to identify this User. Must be unique","example":"johnb@kentel.com","name":"UserName"},"Address":{"type":"object","description":"Address","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"ClientUserId":{"type":"string","description":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"Email":{"type":"string","description":"Email for the User. Must be unique. A notification will be sent to this address when a User is created.","putDescription":"The User's email address. Must be unique. No notification will be sent when this User is updated","example":"johnb@kentel.com","name":"Email"},"IsActive":{"type":"boolean","description":"Flag to indicate if the Users login is enabled, false if it is disabled","example":"true","generated":"true","name":"IsActive"},"JobTitle":{"type":"string","description":"Job title","example":"Sales Clerk","name":"JobTitle"},"ParentEntityId":{"type":"integer","description":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"PhoneNumbers":{"type":"array","arrayType":"object","description":"Phone numbers","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}},"Picture":{"type":"object","description":"A reference to an Asset that is a photo of the User","putDescription":"A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest","example":"","name":"Picture"},"Version":{"type":"integer","description":"Latest revision number","putDescription":"The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date","example":"1","name":"Version"},"Attributes":{"type":"object","description":"Reserved for future use","example":""},"CorrelationId":{"type":"string","description":"Reserved for internal use","example":""},"Profiles":{"type":"array","description":"This is a legacy property that should not be used","example":""}},"required":["FirstName","LastName","UserName","ParentEntityId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Users({UserId}):
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: string
+            example: 2576
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>
+          
+      
+    get:
+        
+        displayName: Getting a User
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":2576,"FirstName":"John","LastName":"Bates","UserName":"johnb@kentel.com","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"ClientUserId":"132","Email":"johnb@kentel.com","IsActive":true,"JobTitle":"Sales Clerk","ParentEntityId":1,"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}],"Picture":{},"Version":1}
+                            schema: |
+                                {"name":"User","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"A User represents an account that can be used to perform actions on your data within iQmetrix APIs.","properties":{"Id":{"type":"integer","description":"Identifier","example":"2576","generated":"true","name":"Id"},"FirstName":{"type":"string","description":"First name","example":"John","name":"FirstName"},"LastName":{"type":"string","description":"Last name","example":"Bates","name":"LastName"},"UserName":{"type":"string","description":"Name to be used to identify this User, must be unique","putDescription":"The name used to identify this User. Must be unique","example":"johnb@kentel.com","name":"UserName"},"Address":{"type":"object","description":"Address","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"ClientUserId":{"type":"string","description":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"Email":{"type":"string","description":"Email for the User. Must be unique. A notification will be sent to this address when a User is created.","putDescription":"The User's email address. Must be unique. No notification will be sent when this User is updated","example":"johnb@kentel.com","name":"Email"},"IsActive":{"type":"boolean","description":"Flag to indicate if the Users login is enabled, false if it is disabled","example":"true","generated":"true","name":"IsActive"},"JobTitle":{"type":"string","description":"Job title","example":"Sales Clerk","name":"JobTitle"},"ParentEntityId":{"type":"integer","description":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"PhoneNumbers":{"type":"array","arrayType":"object","description":"Phone numbers","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}},"Picture":{"type":"object","description":"A reference to an Asset that is a photo of the User","putDescription":"A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest","example":"","name":"Picture"},"Version":{"type":"integer","description":"Latest revision number","putDescription":"The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date","example":"1","name":"Version"},"Attributes":{"type":"object","description":"Reserved for future use","example":""},"CorrelationId":{"type":"string","description":"Reserved for internal use","example":""},"Profiles":{"type":"array","description":"This is a legacy property that should not be used","example":""}},"required":["FirstName","LastName","UserName","ParentEntityId"]}
+                            
+                        
+                    
+                
+            
+      
+    put:
+        
+        displayName: Updating a User
+                
+        
+        description: |            
+            {{important}}All fields that were populated in a User prior to this request must be provided in the body of the <code>PUT</code> request.{{end}}{{tip}}To add an Asset to a User, first <a href="{{"/assets/#creating-an-asset" | prepend: site.api_baseurl}}">Create an Asset</a>, then use this request to associate the Asset with a User.{{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Id":2576,"FirstName":"John","LastName":"Bates","UserName":"johnb@kentel.com","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"ClientUserId":"132","Email":"johnb@kentel.com","IsActive":true,"JobTitle":"Sales Clerk","ParentEntityId":1,"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}],"Picture":{},"Version":1}
+                    
+                schema: |
+                    {"name":"User","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"A User represents an account that can be used to perform actions on your data within iQmetrix APIs.","properties":{"Id":{"type":"integer","description":"Identifier","example":"2576","generated":"true","name":"Id"},"FirstName":{"type":"string","description":"First name","example":"John","name":"FirstName"},"LastName":{"type":"string","description":"Last name","example":"Bates","name":"LastName"},"UserName":{"type":"string","description":"Name to be used to identify this User, must be unique","putDescription":"The name used to identify this User. Must be unique","example":"johnb@kentel.com","name":"UserName"},"Address":{"type":"object","description":"Address","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"ClientUserId":{"type":"string","description":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"Email":{"type":"string","description":"Email for the User. Must be unique. A notification will be sent to this address when a User is created.","putDescription":"The User's email address. Must be unique. No notification will be sent when this User is updated","example":"johnb@kentel.com","name":"Email"},"IsActive":{"type":"boolean","description":"Flag to indicate if the Users login is enabled, false if it is disabled","example":"true","generated":"true","name":"IsActive"},"JobTitle":{"type":"string","description":"Job title","example":"Sales Clerk","name":"JobTitle"},"ParentEntityId":{"type":"integer","description":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"PhoneNumbers":{"type":"array","arrayType":"object","description":"Phone numbers","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}},"Picture":{"type":"object","description":"A reference to an Asset that is a photo of the User","putDescription":"A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest","example":"","name":"Picture"},"Version":{"type":"integer","description":"Latest revision number","putDescription":"The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date","example":"1","name":"Version"},"Attributes":{"type":"object","description":"Reserved for future use","example":""},"CorrelationId":{"type":"string","description":"Reserved for internal use","example":""},"Profiles":{"type":"array","description":"This is a legacy property that should not be used","example":""}},"required":["FirstName","LastName","UserName","ParentEntityId"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":2576,"FirstName":"John","LastName":"Bates","UserName":"johnb@kentel.com","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"ClientUserId":"132","Email":"johnb@kentel.com","IsActive":true,"JobTitle":"Sales Clerk","ParentEntityId":1,"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}],"Picture":{},"Version":1}
+                            schema: |
+                                {"name":"User","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"A User represents an account that can be used to perform actions on your data within iQmetrix APIs.","properties":{"Id":{"type":"integer","description":"Identifier","example":"2576","generated":"true","name":"Id"},"FirstName":{"type":"string","description":"First name","example":"John","name":"FirstName"},"LastName":{"type":"string","description":"Last name","example":"Bates","name":"LastName"},"UserName":{"type":"string","description":"Name to be used to identify this User, must be unique","putDescription":"The name used to identify this User. Must be unique","example":"johnb@kentel.com","name":"UserName"},"Address":{"type":"object","description":"Address","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"ClientUserId":{"type":"string","description":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"Email":{"type":"string","description":"Email for the User. Must be unique. A notification will be sent to this address when a User is created.","putDescription":"The User's email address. Must be unique. No notification will be sent when this User is updated","example":"johnb@kentel.com","name":"Email"},"IsActive":{"type":"boolean","description":"Flag to indicate if the Users login is enabled, false if it is disabled","example":"true","generated":"true","name":"IsActive"},"JobTitle":{"type":"string","description":"Job title","example":"Sales Clerk","name":"JobTitle"},"ParentEntityId":{"type":"integer","description":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"PhoneNumbers":{"type":"array","arrayType":"object","description":"Phone numbers","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}},"Picture":{"type":"object","description":"A reference to an Asset that is a photo of the User","putDescription":"A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest","example":"","name":"Picture"},"Version":{"type":"integer","description":"Latest revision number","putDescription":"The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date","example":"1","name":"Version"},"Attributes":{"type":"object","description":"Reserved for future use","example":""},"CorrelationId":{"type":"string","description":"Reserved for internal use","example":""},"Profiles":{"type":"array","description":"This is a legacy property that should not be used","example":""}},"required":["FirstName","LastName","UserName","ParentEntityId"]}
+                            
+                        
+                    
+                
+            
+      
+    delete:
+        
+        displayName: Disabling a User
+                
+        
+        description: |            
+            {{note}}
+            Disabling a User does <b>NOT</b> free up their email address or username to be used to create another User. To free up an email address or username, you must instead <a href="#updating-a-user">update</a> the email or username of the original User to something else.
+            {{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            example: |
+                                {
+                                    "Id": 2576,
+                                    "FirstName": "John",
+                                    "LastName": "Bates",
+                                    "UserName": "johnb@kentel.com",
+                                    "Address": {
+                                        "AddressLine1": "1432 Merry View Road",
+                                        "AddressLine2": "",
+                                        "City": "Big Windy",
+                                        "StateCode": "ON",
+                                        "CountryCode": "CA",
+                                        "Zip": "A1A2B2"
+                                    },
+                                    "ClientUserId": "132",
+                                    "Email": "johnb@kentel.com",
+                                    "IsActive": false,
+                                    "JobTitle": "Sales Clerk",
+                                    "ParentEntityId": 1,
+                                    "PhoneNumbers": [
+                                        {
+                                            "Number": "6135550127",
+                                            "Extension": "5532",
+                                            "Type": "Work"
+                                        }
+                                    ],
+                                    "Picture": {},
+                                    "Version": 2
+                                }
+                                
+                        
+                        
+                    
+                
+            
+    
+
+/Entities({CompanyId})/Users?$skip={Skip}&$top={Top}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Skip:
+            displayName: skip
+            type: integer
+            example: 1
+            required: false
+            description: Number of records to skip
+        
+        Top:
+            displayName: top
+            type: integer
+            example: 10
+            required: false
+            description: Number of records to take
+          
+      
+    get:
+        
+        displayName: Getting All Users for a Company
+                
+        
+        description: |            
+            This request will only return Users where `IsActive` is set to `true`.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"_links":{"prev":"null","self":"/v1/entities(14146)/users?$skip=0&$top=30","next":"null"},"_metadata":{"count":1,"skip":0,"top":30},"items":[{"Id":2576,"FirstName":"John","LastName":"Bates","UserName":"johnb@kentel.com","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"ClientUserId":"132","Email":"johnb@kentel.com","IsActive":true,"JobTitle":"Sales Clerk","ParentEntityId":1,"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}],"Picture":{},"Version":1}]}
+                            schema: |
+                                {"name":"SearchSchema","exclude":"true","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"_links":{"type":"object","putDescription":"Relative URL's used for Pagination","ref":"user-manager._links","name":"_links","properties":{"prev":{"type":"string","putDescription":"Refers to a resource containing the previous page of results, null if there is no previous page","example":"null","name":"prev"},"self":{"type":"string","putDescription":"The request that returned these results","example":"/v1/entities(14146)/users?$skip=0&$top=30","name":"self"},"next":{"type":"string","putDescription":"Refers to a resource containing the next page of results, null if this is the last page","example":"null","name":"next"}},"required":["self"]},"_metadata":{"type":"object","putDescription":"Data representing Pagination details","ref":"user-manager._metadata","name":"_metadata","properties":{"count":{"type":"integer","putDescription":"The total number of results returned from the request","example":"1","name":"count"},"skip":{"type":"integer","putDescription":"Value of skip in the request URI, if not specified the value will be 0","example":"0","name":"skip"},"top":{"type":"integer","putDescription":"Value of top in the request URI, if not specified the value will be 30","example":"30","name":"top"}}},"items":{"type":"array","arrayType":"object","ref":"user-manager.User","name":"items","properties":{"Id":{"type":"integer","description":"Identifier","example":"2576","generated":"true","name":"Id"},"FirstName":{"type":"string","description":"First name","example":"John","name":"FirstName"},"LastName":{"type":"string","description":"Last name","example":"Bates","name":"LastName"},"UserName":{"type":"string","description":"Name to be used to identify this User, must be unique","putDescription":"The name used to identify this User. Must be unique","example":"johnb@kentel.com","name":"UserName"},"Address":{"type":"object","description":"Address","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"ClientUserId":{"type":"string","description":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"Email":{"type":"string","description":"Email for the User. Must be unique. A notification will be sent to this address when a User is created.","putDescription":"The User's email address. Must be unique. No notification will be sent when this User is updated","example":"johnb@kentel.com","name":"Email"},"IsActive":{"type":"boolean","description":"Flag to indicate if the Users login is enabled, false if it is disabled","example":"true","generated":"true","name":"IsActive"},"JobTitle":{"type":"string","description":"Job title","example":"Sales Clerk","name":"JobTitle"},"ParentEntityId":{"type":"integer","description":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"PhoneNumbers":{"type":"array","arrayType":"object","description":"Phone numbers","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}},"Picture":{"type":"object","description":"A reference to an Asset that is a photo of the User","putDescription":"A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest","example":"","name":"Picture"},"Version":{"type":"integer","description":"Latest revision number","putDescription":"The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date","example":"1","name":"Version"},"Attributes":{"type":"object","description":"Reserved for future use","example":""},"CorrelationId":{"type":"string","description":"Reserved for internal use","example":""},"Profiles":{"type":"array","description":"This is a legacy property that should not be used","example":""}},"required":["FirstName","LastName","UserName","ParentEntityId"]}}}
+                            
+                        
+                    
+                
+            
+    
+
+/Entities({CompanyId})/Users/Search?terms={Terms}&$skip={Skip}&$top={Top}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        Terms:
+            displayName: terms
+            type: string
+            example: Sam+Smith
+            required: true
+            description: List of terms, multiple terms are separated by an encoded whitespace (+). User properties must contain/start with the term to be returned. Search terms are not case sensitive.
+        
+        Skip:
+            displayName: skip
+            type: integer
+            example: 1
+            required: false
+            description: Number of records to skip
+        
+        Top:
+            displayName: top
+            type: integer
+            example: 10
+            required: false
+            description: Number of records to take
+          
+      
+    get:
+        
+        displayName: Searching for Users
+                
+        
+        description: |            
+            This request will only return Users where `IsActive` is set to `true`.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"_links":{"prev":"null","self":"/v1/entities(14146)/users?$skip=0&$top=30","next":"null"},"_metadata":{"count":1,"skip":0,"top":30},"items":[{"Id":2576,"FirstName":"John","LastName":"Bates","UserName":"johnb@kentel.com","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"ClientUserId":"132","Email":"johnb@kentel.com","IsActive":true,"JobTitle":"Sales Clerk","ParentEntityId":1,"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}],"Picture":{},"Version":1}]}
+                            schema: |
+                                {"name":"SearchSchema","exclude":"true","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"_links":{"type":"object","putDescription":"Relative URL's used for Pagination","ref":"user-manager._links","name":"_links","properties":{"prev":{"type":"string","putDescription":"Refers to a resource containing the previous page of results, null if there is no previous page","example":"null","name":"prev"},"self":{"type":"string","putDescription":"The request that returned these results","example":"/v1/entities(14146)/users?$skip=0&$top=30","name":"self"},"next":{"type":"string","putDescription":"Refers to a resource containing the next page of results, null if this is the last page","example":"null","name":"next"}},"required":["self"]},"_metadata":{"type":"object","putDescription":"Data representing Pagination details","ref":"user-manager._metadata","name":"_metadata","properties":{"count":{"type":"integer","putDescription":"The total number of results returned from the request","example":"1","name":"count"},"skip":{"type":"integer","putDescription":"Value of skip in the request URI, if not specified the value will be 0","example":"0","name":"skip"},"top":{"type":"integer","putDescription":"Value of top in the request URI, if not specified the value will be 30","example":"30","name":"top"}}},"items":{"type":"array","arrayType":"object","ref":"user-manager.User","name":"items","properties":{"Id":{"type":"integer","description":"Identifier","example":"2576","generated":"true","name":"Id"},"FirstName":{"type":"string","description":"First name","example":"John","name":"FirstName"},"LastName":{"type":"string","description":"Last name","example":"Bates","name":"LastName"},"UserName":{"type":"string","description":"Name to be used to identify this User, must be unique","putDescription":"The name used to identify this User. Must be unique","example":"johnb@kentel.com","name":"UserName"},"Address":{"type":"object","description":"Address","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"ClientUserId":{"type":"string","description":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"Email":{"type":"string","description":"Email for the User. Must be unique. A notification will be sent to this address when a User is created.","putDescription":"The User's email address. Must be unique. No notification will be sent when this User is updated","example":"johnb@kentel.com","name":"Email"},"IsActive":{"type":"boolean","description":"Flag to indicate if the Users login is enabled, false if it is disabled","example":"true","generated":"true","name":"IsActive"},"JobTitle":{"type":"string","description":"Job title","example":"Sales Clerk","name":"JobTitle"},"ParentEntityId":{"type":"integer","description":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"PhoneNumbers":{"type":"array","arrayType":"object","description":"Phone numbers","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}},"Picture":{"type":"object","description":"A reference to an Asset that is a photo of the User","putDescription":"A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest","example":"","name":"Picture"},"Version":{"type":"integer","description":"Latest revision number","putDescription":"The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date","example":"1","name":"Version"},"Attributes":{"type":"object","description":"Reserved for future use","example":""},"CorrelationId":{"type":"string","description":"Reserved for internal use","example":""},"Profiles":{"type":"array","description":"This is a legacy property that should not be used","example":""}},"required":["FirstName","LastName","UserName","ParentEntityId"]}}}
+                            
+                        
+                    
+                
+            
+    
+
+/Users({UserId})/Locations({LocationId}):
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: integer
+            example: 2576
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: integer
+            example: 2
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+          
+      
+    put:
+        
+        displayName: Assigning a User to a Location
+                
+        
+        description: |            
+            {{note}}
+            Users can be assigned to multiple locations
+            {{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+      
+    delete:
+        
+        displayName: Unassigning a User from a Location
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    
+
+/Users({UserId})/Locations:
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: integer
+            example: 2576
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>
+          
+      
+    get:
+        
+        displayName: Getting Assigned Locations for a User
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"UserId":2576,"LocationIDs":[14202]}
+                            schema: |
+                                {"name":"AssignedLocations","exclude":"true","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"UserId":{"type":"integer","ref":"user-manager.User.Id","name":"UserId","example":"2576"},"LocationIDs":{"type":"array","arrayType":"integer","putDescription":"Location Ids for <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Locations</a> assigned to the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>","example":"14202","name":"LocationIDs"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/Entities({CompanyId})/Users?$filter=ClientUserId eq '{ClientUserId}'&$skip={Skip}&$top={Top}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        ClientUserId:
+            displayName: ClientUserId
+            type: string
+            example: 132
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a> in an external system
+        
+        Skip:
+            displayName: skip
+            type: integer
+            example: 1
+            required: false
+            description: Number of records to skip
+        
+        Top:
+            displayName: top
+            type: integer
+            example: 10
+            required: false
+            description: Number of records to take
+          
+      
+    get:
+        
+        displayName: Getting Users by ClientUserId
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":2576,"FirstName":"John","LastName":"Bates","UserName":"johnb@kentel.com","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"ClientUserId":"132","Email":"johnb@kentel.com","IsActive":true,"JobTitle":"Sales Clerk","ParentEntityId":1,"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}],"Picture":{},"Version":1}]
+                            schema: |
+                                {"name":"User","type":"array","$schema":"http://json-schema.org/draft-03/schema","description":"A User represents an account that can be used to perform actions on your data within iQmetrix APIs.","properties":{"Id":{"type":"integer","description":"Identifier","example":"2576","generated":"true","name":"Id"},"FirstName":{"type":"string","description":"First name","example":"John","name":"FirstName"},"LastName":{"type":"string","description":"Last name","example":"Bates","name":"LastName"},"UserName":{"type":"string","description":"Name to be used to identify this User, must be unique","putDescription":"The name used to identify this User. Must be unique","example":"johnb@kentel.com","name":"UserName"},"Address":{"type":"object","description":"Address","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"ClientUserId":{"type":"string","description":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"Email":{"type":"string","description":"Email for the User. Must be unique. A notification will be sent to this address when a User is created.","putDescription":"The User's email address. Must be unique. No notification will be sent when this User is updated","example":"johnb@kentel.com","name":"Email"},"IsActive":{"type":"boolean","description":"Flag to indicate if the Users login is enabled, false if it is disabled","example":"true","generated":"true","name":"IsActive"},"JobTitle":{"type":"string","description":"Job title","example":"Sales Clerk","name":"JobTitle"},"ParentEntityId":{"type":"integer","description":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"PhoneNumbers":{"type":"array","arrayType":"object","description":"Phone numbers","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}},"Picture":{"type":"object","description":"A reference to an Asset that is a photo of the User","putDescription":"A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest","example":"","name":"Picture"},"Version":{"type":"integer","description":"Latest revision number","putDescription":"The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date","example":"1","name":"Version"},"Attributes":{"type":"object","description":"Reserved for future use","example":""},"CorrelationId":{"type":"string","description":"Reserved for internal use","example":""},"Profiles":{"type":"array","description":"This is a legacy property that should not be used","example":""}},"required":["FirstName","LastName","UserName","ParentEntityId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Users({UserId})/Lock:
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: integer
+            example: 2576
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>
+          
+      
+    post:
+        
+        displayName: Locking a User
+                
+        
+        description: |            
+            <ul>
+              <li>Users can be locked due to events such as exceeding the maximum failed login attempts</li>
+              <li>Once locked, a User will not be able to log in or obtain an access token until they are unlocked</li>
+              <li>To determine if a User is locked, see <a href="#getting-the-lock-status-of-a-user">Getting the Lock Status of a User</a></li>
+              <li>To unlock a User, see <a href="#unlocking-a-user">Unlocking a User</a></li>
+            </ul>
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |
+                    {
+                      "LockReasonId": 14
+                    }
+                    
+
+                
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    
+
+/Users({UserId})/Unlock:
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: integer
+            example: 2576
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>
+          
+      
+    get:
+        
+        displayName: Getting the Lock Status of a User
+                
+        
+        description: |            
+            This request will return `true` if the User is currently Locked, and `false` if the User is unlocked. 
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"CanUnlockUser":true,"LockReasonId":14}
+                            schema: |
+                                {"name":"Unlock","exclude":"true","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"CanUnlockUser":{"type":"boolean","example":"true","name":"CanUnlockUser"},"LockReasonId":{"type":"integer","putDescription":"Identifier for a <a href='http://developers.iqmetrix.com/api/user-manager/#lockreason'>LockReason</a>","ref":"user-manager.LockReason.Id","name":"LockReasonId","example":"14"}}}
+                            
+                        
+                    
+                
+            
+      
+    post:
+        
+        displayName: Unlocking a User
+                
+        
+        description: |            
+            <ul>
+              <li>A User can be unlocked if their account is locked and their parent Entity is not using third-party authentication</li>
+              <li>Once a User is unlocked, they will be allowed to log into the system with their old credentials, as well as obtain an access token</li>
+              <li>To determine if a User is locked, see <a href="#getting-the-lock-status-of-a-user">Getting the Lock Status of a User</a></li>
+              <li>To lock a User, see <a href="#locking-a-user">Locking a User</a></li>
+            </ul>
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    
+
+/Users({UserId})/Enable:
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: integer
+            example: 2576
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>
+          
+      
+    post:
+        
+        displayName: Enabling a User
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":2576,"FirstName":"John","LastName":"Bates","UserName":"johnb@kentel.com","Address":{"AddressLine1":"1432 Merry View Road","AddressLine2":"","City":"Big Windy","StateCode":"ON","CountryCode":"CA","Zip":"A1A2B2"},"ClientUserId":"132","Email":"johnb@kentel.com","IsActive":true,"JobTitle":"Sales Clerk","ParentEntityId":1,"PhoneNumbers":[{"Number":"6135550127","Extension":"5532","Type":"Work"}],"Picture":{},"Version":1}
+                            schema: |
+                                {"name":"User","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"A User represents an account that can be used to perform actions on your data within iQmetrix APIs.","properties":{"Id":{"type":"integer","description":"Identifier","example":"2576","generated":"true","name":"Id"},"FirstName":{"type":"string","description":"First name","example":"John","name":"FirstName"},"LastName":{"type":"string","description":"Last name","example":"Bates","name":"LastName"},"UserName":{"type":"string","description":"Name to be used to identify this User, must be unique","putDescription":"The name used to identify this User. Must be unique","example":"johnb@kentel.com","name":"UserName"},"Address":{"type":"object","description":"Address","ref":"user-manager.Address","name":"Address","properties":{"AddressLine1":{"type":"string","example":"1432 Merry View Road","name":"AddressLine1"},"AddressLine2":{"type":"string","example":"","name":"AddressLine2"},"City":{"type":"string","example":"Big Windy","name":"City"},"StateCode":{"type":"string","description":"Code for the State in which this address resides. Based off the ISO 3166-2 standard","putDescription":"Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"ON","name":"StateCode"},"CountryCode":{"type":"string","description":"Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","example":"CA","name":"CountryCode"},"Zip":{"type":"string","description":"Zip or Postal Code","example":"A1A2B2","name":"Zip"}}},"ClientUserId":{"type":"string","description":"Identifier for the User in an external system","example":"132","name":"ClientUserId"},"Email":{"type":"string","description":"Email for the User. Must be unique. A notification will be sent to this address when a User is created.","putDescription":"The User's email address. Must be unique. No notification will be sent when this User is updated","example":"johnb@kentel.com","name":"Email"},"IsActive":{"type":"boolean","description":"Flag to indicate if the Users login is enabled, false if it is disabled","example":"true","generated":"true","name":"IsActive"},"JobTitle":{"type":"string","description":"Job title","example":"Sales Clerk","name":"JobTitle"},"ParentEntityId":{"type":"integer","description":"Identifier for the Company to which this User belongs","example":"1","name":"ParentEntityId"},"PhoneNumbers":{"type":"array","arrayType":"object","description":"Phone numbers","ref":"user-manager.PhoneNumber","name":"PhoneNumbers","properties":{"Number":{"type":"string","description":"Must be at least 7 characters","putDescription":"Must be at least 7 characters","example":"6135550127","name":"Number"},"Extension":{"type":"string","description":"Extension","putDescription":"If provided, Number must also be provided","example":"5532","name":"Extension"},"Type":{"type":"string","description":"Type of phone number","putDescription":"Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>","example":"Work","name":"Type"}}},"Picture":{"type":"object","description":"A reference to an Asset that is a photo of the User","putDescription":"A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest","example":"","name":"Picture"},"Version":{"type":"integer","description":"Latest revision number","putDescription":"The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date","example":"1","name":"Version"},"Attributes":{"type":"object","description":"Reserved for future use","example":""},"CorrelationId":{"type":"string","description":"Reserved for internal use","example":""},"Profiles":{"type":"array","description":"This is a legacy property that should not be used","example":""}},"required":["FirstName","LastName","UserName","ParentEntityId"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Users({UserId})/TemporaryPassword:
+    
+    uriParameters:
+        
+        UserId:
+            displayName: UserId
+            type: integer
+            example: 2576
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/user-manager/#user'>User</a>
+          
+      
+    post:
+        
+        displayName: Setting a Temporary Password
+                
+        
+        description: |            
+            This request will set a User's password to the provided value and mark it as temporary, forcing the User to change it on first login. 
+            {{important}}The temporary password must be a <strong>non-empty</strong> string and <strong>at least 6 characters long</strong>{{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Password":"newpa55word"}
+                    
+                schema: |
+                    {"exclude":"true","name":"PasswordUpdate","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Password":{"type":"string","example":"newpa55word","name":"Password"}},"required":["Password"]}
+                
+            
+        responses:
+            
+            204:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    
+
+/Entities({CompanyId})/lockReasons:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+          
+      
+    get:
+        
+        displayName: Getting all Lock Reasons
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":14,"Name":"PaperworkNotDone","Description":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor."}]
+                            schema: |
+                                {"name":"LockReason","description":"A **LockReason** allows you to provide a reason when [Locking a User](/api/user-manager/#locking-a-user). Examples of reasons might include: \n\n* Incomplete paperwork on a sale \n * Equipment transfer Incomplete inventory count \n * Incomplete cash safe","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"14","generated":"true","name":"Id"},"Name":{"type":"string","description":"Lock reason name","putDescription":"Must be unique within the organization","example":"PaperworkNotDone","name":"Name"},"Description":{"type":"string","description":"Text that will appear to User when locked out","putDescription":"Human readable description","example":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor.","name":"Description"}},"required":["Name","Description"]}
+                            
+                        
+                    
+                
+            
+      
+    post:
+        
+        displayName: Creating a Lock Reason
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Name":"PaperworkNotDone","Description":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor."}
+                    
+                schema: |
+                    {"name":"LockReason","description":"A **LockReason** allows you to provide a reason when [Locking a User](/api/user-manager/#locking-a-user). Examples of reasons might include: \n\n* Incomplete paperwork on a sale \n * Equipment transfer Incomplete inventory count \n * Incomplete cash safe","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"14","generated":"true","name":"Id"},"Name":{"type":"string","description":"Lock reason name","putDescription":"Must be unique within the organization","example":"PaperworkNotDone","name":"Name"},"Description":{"type":"string","description":"Text that will appear to User when locked out","putDescription":"Human readable description","example":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor.","name":"Description"}},"required":["Name","Description"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":14,"Name":"PaperworkNotDone","Description":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor."}
+                            schema: |
+                                {"name":"LockReason","description":"A **LockReason** allows you to provide a reason when [Locking a User](/api/user-manager/#locking-a-user). Examples of reasons might include: \n\n* Incomplete paperwork on a sale \n * Equipment transfer Incomplete inventory count \n * Incomplete cash safe","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"14","generated":"true","name":"Id"},"Name":{"type":"string","description":"Lock reason name","putDescription":"Must be unique within the organization","example":"PaperworkNotDone","name":"Name"},"Description":{"type":"string","description":"Text that will appear to User when locked out","putDescription":"Human readable description","example":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor.","name":"Description"}},"required":["Name","Description"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Entities({CompanyId})/lockReasons({LockReasonId}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LockReasonId:
+            displayName: LockReasonId
+            type: integer
+            example: 1
+            required: true
+            description: Identifier of a <a href='http://developers.iqmetrix.com/api/user-manager/#lockreason'>LockReason</a>
+          
+      
+    get:
+        
+        displayName: Getting a Lock Reason
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":14,"Name":"PaperworkNotDone","Description":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor."}
+                            schema: |
+                                {"name":"LockReason","description":"A **LockReason** allows you to provide a reason when [Locking a User](/api/user-manager/#locking-a-user). Examples of reasons might include: \n\n* Incomplete paperwork on a sale \n * Equipment transfer Incomplete inventory count \n * Incomplete cash safe","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"14","generated":"true","name":"Id"},"Name":{"type":"string","description":"Lock reason name","putDescription":"Must be unique within the organization","example":"PaperworkNotDone","name":"Name"},"Description":{"type":"string","description":"Text that will appear to User when locked out","putDescription":"Human readable description","example":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor.","name":"Description"}},"required":["Name","Description"]}
+                            
+                        
+                    
+                
+            
+      
+    put:
+        
+        displayName: Updating a Lock Reason
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Id":14,"Name":"PaperworkNotDone","Description":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor."}
+                    
+                schema: |
+                    {"name":"LockReason","description":"A **LockReason** allows you to provide a reason when [Locking a User](/api/user-manager/#locking-a-user). Examples of reasons might include: \n\n* Incomplete paperwork on a sale \n * Equipment transfer Incomplete inventory count \n * Incomplete cash safe","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"14","generated":"true","name":"Id"},"Name":{"type":"string","description":"Lock reason name","putDescription":"Must be unique within the organization","example":"PaperworkNotDone","name":"Name"},"Description":{"type":"string","description":"Text that will appear to User when locked out","putDescription":"Human readable description","example":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor.","name":"Description"}},"required":["Name","Description"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":14,"Name":"PaperworkNotDone","Description":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor."}
+                            schema: |
+                                {"name":"LockReason","description":"A **LockReason** allows you to provide a reason when [Locking a User](/api/user-manager/#locking-a-user). Examples of reasons might include: \n\n* Incomplete paperwork on a sale \n * Equipment transfer Incomplete inventory count \n * Incomplete cash safe","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"14","generated":"true","name":"Id"},"Name":{"type":"string","description":"Lock reason name","putDescription":"Must be unique within the organization","example":"PaperworkNotDone","name":"Name"},"Description":{"type":"string","description":"Text that will appear to User when locked out","putDescription":"Human readable description","example":"Your account has been locked because the paperwork hasn't been done. Please contact your supervisor.","name":"Description"}},"required":["Name","Description"]}
+                            
+                        
+                    
+                
+            
+      
+    delete:
+        
+        displayName: Deleting a Lock Reason
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    

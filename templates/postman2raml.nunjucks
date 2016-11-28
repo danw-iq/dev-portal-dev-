@@ -1,0 +1,78 @@
+#%RAML 0.8
+title: {{title}}
+baseUri: {{baseUri}}
+baseUriParameters:{% for param in baseUriParameters %}{% for name, obj in param %}
+  {{name}}:
+    {% for name, description in obj %}{{name}}: {{description}}
+    {% endfor %}{% endfor %}{% endfor %}{% if 'rqdataconnect' in baseUri %}
+resourceTypes:
+  - collectionReadOnly:
+      get:
+        headers:
+          Authorization:
+            example: Bearer (Access Token)
+            required: false
+            description: Bearer token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+          Accept-Encoding:
+            example: gzip
+            required: false
+            description: Compression algorithm. For other methods of compression, see {{CompressionOptions}}
+        responses:
+          200:
+            body:
+              application/json:
+                schema: <<resource>>
+              application/JsonDataTable:
+                schema: <<resource>>
+              text/xml:
+                schema: <<resource>>
+              text/XmlDataTable:
+                schema: <<resource>>
+              text/csv:
+                schema: <<resource>>
+              application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                schema: <<resource>>{% endif %}
+schemas: {% for schema in schemas %}{% for name, schemaObj in schema %}
+  - {{name}}Data: |
+      {
+          {% for name, value in schemaObj %}{% if name != "properties" %}
+          "{{name}}": "{{value}}",{% else %}
+          "properties": { {% for propertyName, propertyValue in value %}
+            "{{propertyName}}": { {% for propAttr, propAttrVal in propertyValue %}"{{propAttr}}": "{{propAttrVal}}"{% if loop.index != loop.length %}, {% endif %}{% endfor %} }{% if loop.index != loop.length %}, {% endif %} {% endfor %} 
+          } {% endif %}{% endfor %} 
+        }{% endfor %}{% endfor %}
+{% for resource in resources %}{{resource.relativeUri}}:{% if resource.description %}
+  description: {{resource.description}}{% endif %}{% if resource.uriParameters %}
+  uriParameters:{% for parameter, objParameter in resource.uriParameters %}
+    {{parameter}}:
+      type: {{objParameter.type}}
+      example: {{objParameter.example | printIfDate() }}
+      required: {{objParameter.required}}
+      description: {{objParameter.description}}{% endfor %}
+  {% endif %}
+  {% if 'rqdataconnect' in baseUri %}type:
+    collectionReadOnly: 
+      resource: {{resource.methods[0].responses["200"].body["application/json"].schema}}Data
+  {% endif %}{% if 'rqdataconnect' in baseUri %}
+    get:
+      displayName: Getting the  
+      description: |
+        For more information see
+      {% else %}{% for method in resource.methods %}  
+  {{method.method}}:
+      displayName: {{method.displayName}}
+      description: |            
+          {{method.description}}{% if method.headers %}
+      headers:{% for header, headerObj in method.headers %}
+          {{header}}:
+              example: {{headerObj.example}}{% endfor %}{% endif %}{% if method.body %}
+      body:{% for bodyType, bodyObj in method.body %}
+          {{bodyType}}:
+              schema: {{bodyObj.schema}}{% endfor %}{% endif %}
+      responses:{% for code, responseObj in method.responses %}
+          {{code}}:{% for body, responseType in responseObj %}
+              {{body}}:{% for type, schemaObj in responseType %}
+                  {{type}}:  
+                      schema: {{schemaObj.schema}}{% endfor %}{% endfor %}{% endfor %}{% endfor %}
+{% endif %}{% endfor %}
+

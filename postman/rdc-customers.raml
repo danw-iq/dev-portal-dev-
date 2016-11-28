@@ -1,0 +1,214 @@
+#%RAML 0.8
+title: RQ Data Connect Customer Reports
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - CustomerListReportData: |
+        {
+          "name": "CustomerListReportData",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Address": {  "type": "string", "database": "VARCHAR(50)", "description": "Address - first line of the address", "example": "12 Hello St." },
+            "Address2": {  "type": "string", "database": "VARCHAR(50)", "description": "Address 2 - second line of the address, if necessary", "example": "n/a" },
+            "BillingAccountNumber": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "BAN -  if your company uses BAN you will enter it in the Customer profile and it will show here", "example": "" },
+            "City": {  "type": "string", "database": "VARCHAR(50)", "description": "City - customer's city", "example": "Fargo" },
+            "ContactNumber": {  "type": "string", "database": "VARCHAR(200)", "description": "Contact # - the number that is selected on the customer's profile, it can be any of the number options there", "example": "5555555555" },
+            "ContactTypeName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Contact Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile", "example": "" },
+            "Country": {  "type": "string", "database": "VARCHAR(50)", "description": "Country - customer's country", "example": "United States" },
+            "CustomerCompanyName": {  "type": "string", "database": "VARCHAR(50)", "description": "Company Name - may be blank depending on the kind of customer", "example": "KENTEL" },
+            "CustomerFirstName": {  "type": "string", "database": "VARCHAR(50)", "description": "First Name - may be blank depending on the kind of customer", "example": "Carrie" },
+            "CustomerID": {  "type": "integer", "database": "INT", "description": "Identifier for a Customer in RQ", "example": "2108754" },
+            "CustomerLastName": {  "type": "string", "database": "VARCHAR(50)", "description": "Last Name - may be blank depending on the kind of customer", "example": "Madison" },
+            "DateCreated": {  "type": "datetime", "database": "DATETIME", "description": "Created On - day and time the customer's profile was created", "example": "2016-01-26T20:55:53.227" },
+            "DeclineToProvideEmail": {  "type": "boolean", "database": "BIT", "description": "Decline Email - the option for customers to decline email", "example": "false" },
+            "Email": {  "type": "string", "database": "VARCHAR(200)", "description": "Email - may be blank, if so, the context menu will not have the Email Customer option", "example": "carry@test.iq" },
+            "EmployeeName": {  "type": "string", "database": "VARCHAR(51)", "description": "Created By - employee who created the profile", "example": "iQmetrix Employee" },
+            "EmployeeNameAssignedTo": {  "type": "string", "database": "VARCHAR(51)", "description": "Assigned To - may be blank if the customer has not been assigned to an employee", "example": "iQmetrix Employee" },
+            "IndustryTypeName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Industry Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile", "example": "" },
+            "MultiLevelPriceID": {  "type": "integer", "database": "INT", "description": "Pricing Group - as defined in Multi-Level Pricing - Setup and assigned in the Discount Level field in the More Information section on the customer's profile", "example": "1" },
+            "NumberOfActivations": {  "type": "integer", "database": "INT", "description": "# of Activations - number of Activations the customer has completed as recorded in RQ", "example": "0" },
+            "PositionTypeName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Position Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile", "example": "" },
+            "PostalCode": {  "type": "string", "database": "VARCHAR(15)", "description": "Zip/Postal Code - zip code (USA) or postal code (Canada)", "example": "90123" },
+            "Province": {  "type": "string", "database": "VARCHAR(50)", "description": "State/Province - customer's state or province", "example": "ND" },
+            "TracPointMemberNumber": {  "type": "string", "database": "VARCHAR(30)", "description": "Member # - this number is automatically generated when a new customer is created", "example": "C2981754hduw" },
+            "TypeOfCustomer": {  "type": "integer", "database": "INT", "description": "Type Of Customer - 0 for Company, or 3 for Individual", "example": "3" },
+            "VIPCustomer": {  "type": "byte", "database": "TINYINT", "description": "VIP Customer - will be checked if this is a VIP Customer ", "example": "0" }
+          }
+        }     
+        
+
+    
+
+
+/reports/customerlistreport?StartDate={StartDate}&StopDate={StopDate}&TypeOfCustomer={TypeOfCustomer}&FilterBy={FilterBy}&StoreIDLoggedIn={StoreIDLoggedIn}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        TypeOfCustomer:
+            displayName: TypeOfCustomer
+            type: integer
+            example: -1
+            required: true
+            description: Acceptable values include -1 for all types, 0 for Company, 1 for Division, 2 for Group and 3 for Individual
+        
+        FilterBy:
+            displayName: FilterBy
+            type: integer
+            example: 1
+            required: true
+            description: Acceptable values include 0 for All Customers, 1 for First Activation and 2 for Sales
+        
+        StoreIDLoggedIn:
+            displayName: StoreIDLoggedIn
+            type: integer
+            example: 1
+            required: true
+            description: Identifier for a store in RQ. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-a-list-of-stores-in-rq'>Getting A List of Stores in RQ</a>
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoIDs:
+            displayName: ForWhoIDs
+            type: integer
+            example: 6679
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Customer List Report
+                
+        
+        description: |            
+            For more information, see {{CustomerListReport}}.
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Address":"12 Hello St.","Address2":"n/a","BillingAccountNumber":"","City":"Fargo","ContactNumber":"5555555555","ContactTypeName":"","Country":"United States","CustomerCompanyName":"KENTEL","CustomerFirstName":"Carrie","CustomerID":2108754,"CustomerLastName":"Madison","DateCreated":"2016-01-26T20:55:53.227","DeclineToProvideEmail":false,"Email":"carry@test.iq","EmployeeName":"iQmetrix Employee","EmployeeNameAssignedTo":"iQmetrix Employee","IndustryTypeName":"","MultiLevelPriceID":1,"NumberOfActivations":0,"PositionTypeName":"","PostalCode":"90123","Province":"ND","TracPointMemberNumber":"C2981754hduw","TypeOfCustomer":3,"VIPCustomer":0}]
+                            schema: |
+                                {"name":"CustomerListReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Address":{"type":"string","database":"VARCHAR(50)","description":"Address - first line of the address","example":"12 Hello St."},"Address2":{"type":"string","database":"VARCHAR(50)","description":"Address 2 - second line of the address, if necessary","example":"n/a"},"BillingAccountNumber":{"type":"string","database":"NVARCHAR(MAX)","description":"BAN -  if your company uses BAN you will enter it in the Customer profile and it will show here","example":""},"City":{"type":"string","database":"VARCHAR(50)","description":"City - customer's city","example":"Fargo"},"ContactNumber":{"type":"string","database":"VARCHAR(200)","description":"Contact # - the number that is selected on the customer's profile, it can be any of the number options there","example":"5555555555"},"ContactTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Contact Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"Country":{"type":"string","database":"VARCHAR(50)","description":"Country - customer's country","example":"United States"},"CustomerCompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company Name - may be blank depending on the kind of customer","example":"KENTEL"},"CustomerFirstName":{"type":"string","database":"VARCHAR(50)","description":"First Name - may be blank depending on the kind of customer","example":"Carrie"},"CustomerID":{"type":"integer","database":"INT","description":"Identifier for a Customer in RQ","example":"2108754"},"CustomerLastName":{"type":"string","database":"VARCHAR(50)","description":"Last Name - may be blank depending on the kind of customer","example":"Madison"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created On - day and time the customer's profile was created","example":"2016-01-26T20:55:53.227"},"DeclineToProvideEmail":{"type":"boolean","database":"BIT","description":"Decline Email - the option for customers to decline email","example":"false"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Email - may be blank, if so, the context menu will not have the Email Customer option","example":"carry@test.iq"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Created By - employee who created the profile","example":"iQmetrix Employee"},"EmployeeNameAssignedTo":{"type":"string","database":"VARCHAR(51)","description":"Assigned To - may be blank if the customer has not been assigned to an employee","example":"iQmetrix Employee"},"IndustryTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Industry Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"MultiLevelPriceID":{"type":"integer","database":"INT","description":"Pricing Group - as defined in Multi-Level Pricing - Setup and assigned in the Discount Level field in the More Information section on the customer's profile","example":"1"},"NumberOfActivations":{"type":"integer","database":"INT","description":"# of Activations - number of Activations the customer has completed as recorded in RQ","example":"0"},"PositionTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Position Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"PostalCode":{"type":"string","database":"VARCHAR(15)","description":"Zip/Postal Code - zip code (USA) or postal code (Canada)","example":"90123"},"Province":{"type":"string","database":"VARCHAR(50)","description":"State/Province - customer's state or province","example":"ND"},"TracPointMemberNumber":{"type":"string","database":"VARCHAR(30)","description":"Member # - this number is automatically generated when a new customer is created","example":"C2981754hduw"},"TypeOfCustomer":{"type":"integer","database":"INT","description":"Type Of Customer - 0 for Company, or 3 for Individual","example":"3"},"VIPCustomer":{"type":"byte","database":"TINYINT","description":"VIP Customer - will be checked if this is a VIP Customer ","example":"0"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Address":"12 Hello St.","Address2":"n/a","BillingAccountNumber":"","City":"Fargo","ContactNumber":"5555555555","ContactTypeName":"","Country":"United States","CustomerCompanyName":"KENTEL","CustomerFirstName":"Carrie","CustomerID":2108754,"CustomerLastName":"Madison","DateCreated":"2016-01-26T20:55:53.227","DeclineToProvideEmail":false,"Email":"carry@test.iq","EmployeeName":"iQmetrix Employee","EmployeeNameAssignedTo":"iQmetrix Employee","IndustryTypeName":"","MultiLevelPriceID":1,"NumberOfActivations":0,"PositionTypeName":"","PostalCode":"90123","Province":"ND","TracPointMemberNumber":"C2981754hduw","TypeOfCustomer":3,"VIPCustomer":0}]
+                            schema: |
+                                {"name":"CustomerListReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Address":{"type":"string","database":"VARCHAR(50)","description":"Address - first line of the address","example":"12 Hello St."},"Address2":{"type":"string","database":"VARCHAR(50)","description":"Address 2 - second line of the address, if necessary","example":"n/a"},"BillingAccountNumber":{"type":"string","database":"NVARCHAR(MAX)","description":"BAN -  if your company uses BAN you will enter it in the Customer profile and it will show here","example":""},"City":{"type":"string","database":"VARCHAR(50)","description":"City - customer's city","example":"Fargo"},"ContactNumber":{"type":"string","database":"VARCHAR(200)","description":"Contact # - the number that is selected on the customer's profile, it can be any of the number options there","example":"5555555555"},"ContactTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Contact Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"Country":{"type":"string","database":"VARCHAR(50)","description":"Country - customer's country","example":"United States"},"CustomerCompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company Name - may be blank depending on the kind of customer","example":"KENTEL"},"CustomerFirstName":{"type":"string","database":"VARCHAR(50)","description":"First Name - may be blank depending on the kind of customer","example":"Carrie"},"CustomerID":{"type":"integer","database":"INT","description":"Identifier for a Customer in RQ","example":"2108754"},"CustomerLastName":{"type":"string","database":"VARCHAR(50)","description":"Last Name - may be blank depending on the kind of customer","example":"Madison"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created On - day and time the customer's profile was created","example":"2016-01-26T20:55:53.227"},"DeclineToProvideEmail":{"type":"boolean","database":"BIT","description":"Decline Email - the option for customers to decline email","example":"false"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Email - may be blank, if so, the context menu will not have the Email Customer option","example":"carry@test.iq"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Created By - employee who created the profile","example":"iQmetrix Employee"},"EmployeeNameAssignedTo":{"type":"string","database":"VARCHAR(51)","description":"Assigned To - may be blank if the customer has not been assigned to an employee","example":"iQmetrix Employee"},"IndustryTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Industry Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"MultiLevelPriceID":{"type":"integer","database":"INT","description":"Pricing Group - as defined in Multi-Level Pricing - Setup and assigned in the Discount Level field in the More Information section on the customer's profile","example":"1"},"NumberOfActivations":{"type":"integer","database":"INT","description":"# of Activations - number of Activations the customer has completed as recorded in RQ","example":"0"},"PositionTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Position Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"PostalCode":{"type":"string","database":"VARCHAR(15)","description":"Zip/Postal Code - zip code (USA) or postal code (Canada)","example":"90123"},"Province":{"type":"string","database":"VARCHAR(50)","description":"State/Province - customer's state or province","example":"ND"},"TracPointMemberNumber":{"type":"string","database":"VARCHAR(30)","description":"Member # - this number is automatically generated when a new customer is created","example":"C2981754hduw"},"TypeOfCustomer":{"type":"integer","database":"INT","description":"Type Of Customer - 0 for Company, or 3 for Individual","example":"3"},"VIPCustomer":{"type":"byte","database":"TINYINT","description":"VIP Customer - will be checked if this is a VIP Customer ","example":"0"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Address":"12 Hello St.","Address2":"n/a","BillingAccountNumber":"","City":"Fargo","ContactNumber":"5555555555","ContactTypeName":"","Country":"United States","CustomerCompanyName":"KENTEL","CustomerFirstName":"Carrie","CustomerID":2108754,"CustomerLastName":"Madison","DateCreated":"2016-01-26T20:55:53.227","DeclineToProvideEmail":false,"Email":"carry@test.iq","EmployeeName":"iQmetrix Employee","EmployeeNameAssignedTo":"iQmetrix Employee","IndustryTypeName":"","MultiLevelPriceID":1,"NumberOfActivations":0,"PositionTypeName":"","PostalCode":"90123","Province":"ND","TracPointMemberNumber":"C2981754hduw","TypeOfCustomer":3,"VIPCustomer":0}]
+                            schema: |
+                                {"name":"CustomerListReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Address":{"type":"string","database":"VARCHAR(50)","description":"Address - first line of the address","example":"12 Hello St."},"Address2":{"type":"string","database":"VARCHAR(50)","description":"Address 2 - second line of the address, if necessary","example":"n/a"},"BillingAccountNumber":{"type":"string","database":"NVARCHAR(MAX)","description":"BAN -  if your company uses BAN you will enter it in the Customer profile and it will show here","example":""},"City":{"type":"string","database":"VARCHAR(50)","description":"City - customer's city","example":"Fargo"},"ContactNumber":{"type":"string","database":"VARCHAR(200)","description":"Contact # - the number that is selected on the customer's profile, it can be any of the number options there","example":"5555555555"},"ContactTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Contact Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"Country":{"type":"string","database":"VARCHAR(50)","description":"Country - customer's country","example":"United States"},"CustomerCompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company Name - may be blank depending on the kind of customer","example":"KENTEL"},"CustomerFirstName":{"type":"string","database":"VARCHAR(50)","description":"First Name - may be blank depending on the kind of customer","example":"Carrie"},"CustomerID":{"type":"integer","database":"INT","description":"Identifier for a Customer in RQ","example":"2108754"},"CustomerLastName":{"type":"string","database":"VARCHAR(50)","description":"Last Name - may be blank depending on the kind of customer","example":"Madison"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created On - day and time the customer's profile was created","example":"2016-01-26T20:55:53.227"},"DeclineToProvideEmail":{"type":"boolean","database":"BIT","description":"Decline Email - the option for customers to decline email","example":"false"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Email - may be blank, if so, the context menu will not have the Email Customer option","example":"carry@test.iq"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Created By - employee who created the profile","example":"iQmetrix Employee"},"EmployeeNameAssignedTo":{"type":"string","database":"VARCHAR(51)","description":"Assigned To - may be blank if the customer has not been assigned to an employee","example":"iQmetrix Employee"},"IndustryTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Industry Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"MultiLevelPriceID":{"type":"integer","database":"INT","description":"Pricing Group - as defined in Multi-Level Pricing - Setup and assigned in the Discount Level field in the More Information section on the customer's profile","example":"1"},"NumberOfActivations":{"type":"integer","database":"INT","description":"# of Activations - number of Activations the customer has completed as recorded in RQ","example":"0"},"PositionTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Position Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"PostalCode":{"type":"string","database":"VARCHAR(15)","description":"Zip/Postal Code - zip code (USA) or postal code (Canada)","example":"90123"},"Province":{"type":"string","database":"VARCHAR(50)","description":"State/Province - customer's state or province","example":"ND"},"TracPointMemberNumber":{"type":"string","database":"VARCHAR(30)","description":"Member # - this number is automatically generated when a new customer is created","example":"C2981754hduw"},"TypeOfCustomer":{"type":"integer","database":"INT","description":"Type Of Customer - 0 for Company, or 3 for Individual","example":"3"},"VIPCustomer":{"type":"byte","database":"TINYINT","description":"VIP Customer - will be checked if this is a VIP Customer ","example":"0"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Address":"12 Hello St.","Address2":"n/a","BillingAccountNumber":"","City":"Fargo","ContactNumber":"5555555555","ContactTypeName":"","Country":"United States","CustomerCompanyName":"KENTEL","CustomerFirstName":"Carrie","CustomerID":2108754,"CustomerLastName":"Madison","DateCreated":"2016-01-26T20:55:53.227","DeclineToProvideEmail":false,"Email":"carry@test.iq","EmployeeName":"iQmetrix Employee","EmployeeNameAssignedTo":"iQmetrix Employee","IndustryTypeName":"","MultiLevelPriceID":1,"NumberOfActivations":0,"PositionTypeName":"","PostalCode":"90123","Province":"ND","TracPointMemberNumber":"C2981754hduw","TypeOfCustomer":3,"VIPCustomer":0}]
+                            schema: |
+                                {"name":"CustomerListReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Address":{"type":"string","database":"VARCHAR(50)","description":"Address - first line of the address","example":"12 Hello St."},"Address2":{"type":"string","database":"VARCHAR(50)","description":"Address 2 - second line of the address, if necessary","example":"n/a"},"BillingAccountNumber":{"type":"string","database":"NVARCHAR(MAX)","description":"BAN -  if your company uses BAN you will enter it in the Customer profile and it will show here","example":""},"City":{"type":"string","database":"VARCHAR(50)","description":"City - customer's city","example":"Fargo"},"ContactNumber":{"type":"string","database":"VARCHAR(200)","description":"Contact # - the number that is selected on the customer's profile, it can be any of the number options there","example":"5555555555"},"ContactTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Contact Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"Country":{"type":"string","database":"VARCHAR(50)","description":"Country - customer's country","example":"United States"},"CustomerCompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company Name - may be blank depending on the kind of customer","example":"KENTEL"},"CustomerFirstName":{"type":"string","database":"VARCHAR(50)","description":"First Name - may be blank depending on the kind of customer","example":"Carrie"},"CustomerID":{"type":"integer","database":"INT","description":"Identifier for a Customer in RQ","example":"2108754"},"CustomerLastName":{"type":"string","database":"VARCHAR(50)","description":"Last Name - may be blank depending on the kind of customer","example":"Madison"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created On - day and time the customer's profile was created","example":"2016-01-26T20:55:53.227"},"DeclineToProvideEmail":{"type":"boolean","database":"BIT","description":"Decline Email - the option for customers to decline email","example":"false"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Email - may be blank, if so, the context menu will not have the Email Customer option","example":"carry@test.iq"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Created By - employee who created the profile","example":"iQmetrix Employee"},"EmployeeNameAssignedTo":{"type":"string","database":"VARCHAR(51)","description":"Assigned To - may be blank if the customer has not been assigned to an employee","example":"iQmetrix Employee"},"IndustryTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Industry Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"MultiLevelPriceID":{"type":"integer","database":"INT","description":"Pricing Group - as defined in Multi-Level Pricing - Setup and assigned in the Discount Level field in the More Information section on the customer's profile","example":"1"},"NumberOfActivations":{"type":"integer","database":"INT","description":"# of Activations - number of Activations the customer has completed as recorded in RQ","example":"0"},"PositionTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Position Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"PostalCode":{"type":"string","database":"VARCHAR(15)","description":"Zip/Postal Code - zip code (USA) or postal code (Canada)","example":"90123"},"Province":{"type":"string","database":"VARCHAR(50)","description":"State/Province - customer's state or province","example":"ND"},"TracPointMemberNumber":{"type":"string","database":"VARCHAR(30)","description":"Member # - this number is automatically generated when a new customer is created","example":"C2981754hduw"},"TypeOfCustomer":{"type":"integer","database":"INT","description":"Type Of Customer - 0 for Company, or 3 for Individual","example":"3"},"VIPCustomer":{"type":"byte","database":"TINYINT","description":"VIP Customer - will be checked if this is a VIP Customer ","example":"0"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Address":"12 Hello St.","Address2":"n/a","BillingAccountNumber":"","City":"Fargo","ContactNumber":"5555555555","ContactTypeName":"","Country":"United States","CustomerCompanyName":"KENTEL","CustomerFirstName":"Carrie","CustomerID":2108754,"CustomerLastName":"Madison","DateCreated":"2016-01-26T20:55:53.227","DeclineToProvideEmail":false,"Email":"carry@test.iq","EmployeeName":"iQmetrix Employee","EmployeeNameAssignedTo":"iQmetrix Employee","IndustryTypeName":"","MultiLevelPriceID":1,"NumberOfActivations":0,"PositionTypeName":"","PostalCode":"90123","Province":"ND","TracPointMemberNumber":"C2981754hduw","TypeOfCustomer":3,"VIPCustomer":0}]
+                            schema: |
+                                {"name":"CustomerListReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Address":{"type":"string","database":"VARCHAR(50)","description":"Address - first line of the address","example":"12 Hello St."},"Address2":{"type":"string","database":"VARCHAR(50)","description":"Address 2 - second line of the address, if necessary","example":"n/a"},"BillingAccountNumber":{"type":"string","database":"NVARCHAR(MAX)","description":"BAN -  if your company uses BAN you will enter it in the Customer profile and it will show here","example":""},"City":{"type":"string","database":"VARCHAR(50)","description":"City - customer's city","example":"Fargo"},"ContactNumber":{"type":"string","database":"VARCHAR(200)","description":"Contact # - the number that is selected on the customer's profile, it can be any of the number options there","example":"5555555555"},"ContactTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Contact Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"Country":{"type":"string","database":"VARCHAR(50)","description":"Country - customer's country","example":"United States"},"CustomerCompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company Name - may be blank depending on the kind of customer","example":"KENTEL"},"CustomerFirstName":{"type":"string","database":"VARCHAR(50)","description":"First Name - may be blank depending on the kind of customer","example":"Carrie"},"CustomerID":{"type":"integer","database":"INT","description":"Identifier for a Customer in RQ","example":"2108754"},"CustomerLastName":{"type":"string","database":"VARCHAR(50)","description":"Last Name - may be blank depending on the kind of customer","example":"Madison"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created On - day and time the customer's profile was created","example":"2016-01-26T20:55:53.227"},"DeclineToProvideEmail":{"type":"boolean","database":"BIT","description":"Decline Email - the option for customers to decline email","example":"false"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Email - may be blank, if so, the context menu will not have the Email Customer option","example":"carry@test.iq"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Created By - employee who created the profile","example":"iQmetrix Employee"},"EmployeeNameAssignedTo":{"type":"string","database":"VARCHAR(51)","description":"Assigned To - may be blank if the customer has not been assigned to an employee","example":"iQmetrix Employee"},"IndustryTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Industry Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"MultiLevelPriceID":{"type":"integer","database":"INT","description":"Pricing Group - as defined in Multi-Level Pricing - Setup and assigned in the Discount Level field in the More Information section on the customer's profile","example":"1"},"NumberOfActivations":{"type":"integer","database":"INT","description":"# of Activations - number of Activations the customer has completed as recorded in RQ","example":"0"},"PositionTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Position Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"PostalCode":{"type":"string","database":"VARCHAR(15)","description":"Zip/Postal Code - zip code (USA) or postal code (Canada)","example":"90123"},"Province":{"type":"string","database":"VARCHAR(50)","description":"State/Province - customer's state or province","example":"ND"},"TracPointMemberNumber":{"type":"string","database":"VARCHAR(30)","description":"Member # - this number is automatically generated when a new customer is created","example":"C2981754hduw"},"TypeOfCustomer":{"type":"integer","database":"INT","description":"Type Of Customer - 0 for Company, or 3 for Individual","example":"3"},"VIPCustomer":{"type":"byte","database":"TINYINT","description":"VIP Customer - will be checked if this is a VIP Customer ","example":"0"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Address":"12 Hello St.","Address2":"n/a","BillingAccountNumber":"","City":"Fargo","ContactNumber":"5555555555","ContactTypeName":"","Country":"United States","CustomerCompanyName":"KENTEL","CustomerFirstName":"Carrie","CustomerID":2108754,"CustomerLastName":"Madison","DateCreated":"2016-01-26T20:55:53.227","DeclineToProvideEmail":false,"Email":"carry@test.iq","EmployeeName":"iQmetrix Employee","EmployeeNameAssignedTo":"iQmetrix Employee","IndustryTypeName":"","MultiLevelPriceID":1,"NumberOfActivations":0,"PositionTypeName":"","PostalCode":"90123","Province":"ND","TracPointMemberNumber":"C2981754hduw","TypeOfCustomer":3,"VIPCustomer":0}]
+                            schema: |
+                                {"name":"CustomerListReportData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Address":{"type":"string","database":"VARCHAR(50)","description":"Address - first line of the address","example":"12 Hello St."},"Address2":{"type":"string","database":"VARCHAR(50)","description":"Address 2 - second line of the address, if necessary","example":"n/a"},"BillingAccountNumber":{"type":"string","database":"NVARCHAR(MAX)","description":"BAN -  if your company uses BAN you will enter it in the Customer profile and it will show here","example":""},"City":{"type":"string","database":"VARCHAR(50)","description":"City - customer's city","example":"Fargo"},"ContactNumber":{"type":"string","database":"VARCHAR(200)","description":"Contact # - the number that is selected on the customer's profile, it can be any of the number options there","example":"5555555555"},"ContactTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Contact Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"Country":{"type":"string","database":"VARCHAR(50)","description":"Country - customer's country","example":"United States"},"CustomerCompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company Name - may be blank depending on the kind of customer","example":"KENTEL"},"CustomerFirstName":{"type":"string","database":"VARCHAR(50)","description":"First Name - may be blank depending on the kind of customer","example":"Carrie"},"CustomerID":{"type":"integer","database":"INT","description":"Identifier for a Customer in RQ","example":"2108754"},"CustomerLastName":{"type":"string","database":"VARCHAR(50)","description":"Last Name - may be blank depending on the kind of customer","example":"Madison"},"DateCreated":{"type":"datetime","database":"DATETIME","description":"Created On - day and time the customer's profile was created","example":"2016-01-26T20:55:53.227"},"DeclineToProvideEmail":{"type":"boolean","database":"BIT","description":"Decline Email - the option for customers to decline email","example":"false"},"Email":{"type":"string","database":"VARCHAR(200)","description":"Email - may be blank, if so, the context menu will not have the Email Customer option","example":"carry@test.iq"},"EmployeeName":{"type":"string","database":"VARCHAR(51)","description":"Created By - employee who created the profile","example":"iQmetrix Employee"},"EmployeeNameAssignedTo":{"type":"string","database":"VARCHAR(51)","description":"Assigned To - may be blank if the customer has not been assigned to an employee","example":"iQmetrix Employee"},"IndustryTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Industry Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"MultiLevelPriceID":{"type":"integer","database":"INT","description":"Pricing Group - as defined in Multi-Level Pricing - Setup and assigned in the Discount Level field in the More Information section on the customer's profile","example":"1"},"NumberOfActivations":{"type":"integer","database":"INT","description":"# of Activations - number of Activations the customer has completed as recorded in RQ","example":"0"},"PositionTypeName":{"type":"string","database":"NVARCHAR(MAX)","description":"Position Type - as defined in General Customer Setup and assigned in the Custom Fields section on the customer's profile","example":""},"PostalCode":{"type":"string","database":"VARCHAR(15)","description":"Zip/Postal Code - zip code (USA) or postal code (Canada)","example":"90123"},"Province":{"type":"string","database":"VARCHAR(50)","description":"State/Province - customer's state or province","example":"ND"},"TracPointMemberNumber":{"type":"string","database":"VARCHAR(30)","description":"Member # - this number is automatically generated when a new customer is created","example":"C2981754hduw"},"TypeOfCustomer":{"type":"integer","database":"INT","description":"Type Of Customer - 0 for Company, or 3 for Individual","example":"3"},"VIPCustomer":{"type":"byte","database":"TINYINT","description":"VIP Customer - will be checked if this is a VIP Customer ","example":"0"}}}
+                            
+                        
+                    
+                
+            
+    

@@ -1,0 +1,100 @@
+#%RAML 0.8
+title: cost-feed
+baseUri: https://dropshipdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - Cost: |
+        {
+          "name": "Cost",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "GUID", "description": "Unique identifer", "example": "2e18496c-8f73-4298-8c96-a07816926734", "generated": "true" }, 
+            "Products": { "type":"array", "arrayType": "object", "ref":"cost-feed.Product", "isNested": "true", "description": "List of products for which the cost is being updated" }
+          },
+          "required": [ "Products" ]
+        }
+        
+
+    
+
+    
+    - Product: |
+        {
+          "exclude": "true",
+          "name": "Product",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Sku": { "type": "string", "description": "Vendor product SKU", "example": "1115884" }, 
+            "Cost": { "type": "decimal", "description": "Vendor product cost applied to the associated companies", "example": "12.99" }, 
+            "CompanyIds": { "type": "array", "arrayType": "integer", "description": "List of [Company](/api/company-tree#company) identifiers to receive Vendor product cost", "example": "14146" }
+          },
+          "required": [ "Sku", "Cost", "CompanyIds" ]
+        }
+        
+
+    
+
+
+/Suppliers({SupplierId})/Cost:
+    
+    uriParameters:
+        
+        SupplierId:
+            displayName: SupplierId
+            type: string
+            example: 14107
+            required: true
+            description: Identifier of the Supplier
+          
+      
+    post:
+        
+        displayName: Adding a Product to Cost Feed
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Products":[{"Sku":"1115884","Cost":12.99,"CompanyIds":[14146]}]}
+                    
+                schema: |
+                    {"name":"Cost","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifer","example":"2e18496c-8f73-4298-8c96-a07816926734","generated":"true"},"Products":{"type":"array","arrayType":"object","ref":"cost-feed.Product","isNested":"true","description":"List of products for which the cost is being updated","properties":{"Sku":{"type":"string","description":"Vendor product SKU","example":"1115884","name":"Sku"},"Cost":{"type":"decimal","description":"Vendor product cost applied to the associated companies","example":"12.99","name":"Cost"},"CompanyIds":{"type":"array","arrayType":"integer","description":"List of [Company](/api/company-tree#company) identifiers to receive Vendor product cost","example":"14146","name":"CompanyIds"}},"required":["Sku","Cost","CompanyIds"]}},"required":["Products"]}
+                
+            
+        responses:
+            
+            202:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":"2e18496c-8f73-4298-8c96-a07816926734","Products":[{"Sku":"1115884","Cost":12.99,"CompanyIds":[14146]}]}
+                            schema: |
+                                {"name":"Cost","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"GUID","description":"Unique identifer","example":"2e18496c-8f73-4298-8c96-a07816926734","generated":"true"},"Products":{"type":"array","arrayType":"object","ref":"cost-feed.Product","isNested":"true","description":"List of products for which the cost is being updated","properties":{"Sku":{"type":"string","description":"Vendor product SKU","example":"1115884","name":"Sku"},"Cost":{"type":"decimal","description":"Vendor product cost applied to the associated companies","example":"12.99","name":"Cost"},"CompanyIds":{"type":"array","arrayType":"integer","description":"List of [Company](/api/company-tree#company) identifiers to receive Vendor product cost","example":"14146","name":"CompanyIds"}},"required":["Sku","Cost","CompanyIds"]}},"required":["Products"]}
+                            
+                        
+                    
+                
+            
+    

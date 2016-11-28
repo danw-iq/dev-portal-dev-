@@ -1,0 +1,92 @@
+---
+title: {{ title | fixTitle }}
+permalink: /api/{{title | replace(" ", "-") }}/
+tags: []
+keywords: 
+audience:
+last_updated: {{title | insertDate }}
+summary:
+rouge: false
+---
+
+%7B% include linkrefs.html %%7D
+
+<link rel="stylesheet" type="text/css" href="../../css/prism.css">
+
+<script src="../../js/prism.js"></script>
+
+{% for item in documentation %}{% if item.title == "overview" %}
+## Overview
+
+{{item.content}}{% endif %}{% endfor %}
+
+## Endpoints
+
+{% if title == "vmi" %}* Sandbox: <a href="{{ baseUri | replace("{UrlSuffix}", "rc") }}">{{ baseUri | replace("{UrlSuffix}", "rc") }}</a>{% else %}* Sandbox: <a href="{{ baseUri | replace("{UrlSuffix}", "demo") }}">{{ baseUri | replace("{UrlSuffix}", "demo") }}{% endif %}
+* Production (Denver): <a href="{{ baseUri | replace("{UrlSuffix}", "1") }}">{{ baseUri | replace("{UrlSuffix}", "1") }}</a>
+* Production (Toronto): <a href="{{ baseUri | replace("{UrlSuffix}", "3") }}">{{ baseUri | replace("{UrlSuffix}", "3") }}</a>
+* Production (Philadelphia): <a href="{{ baseUri | replace("{UrlSuffix}", "10") }}">{{ baseUri | replace("{UrlSuffix}", "10") }}</a>
+
+{% for item in documentation %}{% if item.title == "endpointNote" %}{{item.content}}{% endif %}{% endfor %}
+
+## Resources
+
+{% if schemas %}{% for schema in schemas %}{% for name, obj in schema %}
+
+{{ obj | printResourceTable(name, title) }}{% endfor %}{% endfor %}{% endif %}
+
+## Requests
+
+{% for resource in resources %}{% for method in resource.methods %}
+<h3 id='{{method.displayName | replace(" ", "-") | lower }}' class='clickable-header top-level-header'>{{method.displayName}}</h3>
+
+{{method.description}}
+
+#### Request
+
+<pre>
+{{method.method | upper }} {{resource.relativeUri}}
+</pre>
+
+#### Headers
+
+* `Content-Type: text/xml`
+
+{% if method.body["text/xml"].schema %}
+#### Request Parameters
+
+{{ method.body["text/xml"].schema | printRequestParameters(title, method.method) }}{% endif %}
+
+###### Example
+
+{% if method.body["text/xml"].example %}
+<pre><code class="language-xml"><script>{{method.body["text/xml"].example}}</script></code></pre>
+{% else %}
+<pre><code class="language-xml"><script>{{method.body["text/xml"].schema | printExampleSoap(title, true, null) }}</script></code></pre>
+{% endif %}
+
+###### Code Example
+
+<pre><code class="language-java"><script>{{ documentation | printCode(resource.relativeUri) }}</script></code></pre>
+
+#### Response
+
+{% for code, body in method.responses %}{% for body, schema in body %}{% for scheme, schemeProperties in schema %}
+
+###### Example
+
+<pre><code class="language-json">HTTP {{code}} Content-Type: {{scheme}}</code></pre>
+
+{% if schemeProperties.example %}
+<pre><code class="language-xml"><script>{{schemeProperties.example}}</script></code></pre>
+{% else %}
+<pre><code class="language-xml"><script>{{schemeProperties.schema| printExampleSoap(title, false, method.body["text/xml"].schema) }}</script></code></pre>
+{% endif %}
+
+{% endfor %}{% endfor %}{% endfor %}{% endfor %}{% endfor %}
+
+{% for item in documentation %}{% if item.title == "errors" %}
+
+<h2 id="errors" class="clickable-header top-level-header">Errors</h2>
+
+{{item.content}}{% endif %}{% endfor %}

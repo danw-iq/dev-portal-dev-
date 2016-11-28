@@ -1,0 +1,798 @@
+#%RAML 0.8
+title: pricing
+baseUri: https://pricingdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - Pricing: |
+        {
+          "name": "Pricing",
+          "description": "{{callout_info}}<b>RQ Connection</b> The following fields are not currently synced to RQ: IsDiscountable and FloorPrice{{end}}",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "16446", "generated": "true", "putGenerate": "true" },
+            "CatalogItemId": { "type": "GUID", "description": "[CatalogItem](/api/catalog/#catalogitem) identifier", "ref": "catalog.CatalogItem.CatalogItemId" },
+            "CompanyId": { "type": "integer", "description": "Identifier for the Company associated with this Pricing", "ref": "company tree.Company.Id" },
+            "EntityId": { "type": "integer", "description": "[CompanyTreeNode](/api/company-tree/#companytreenode) identifier at which the price is set", "ref": "company tree.Location.Id"  },
+            "FloorPrice": { "type": "decimal", "description": "The minimum amount the CatalogItem should be sold for", "example": "3.99" },
+            "IsDiscountable": { "type": "boolean", "description": "A flag to indicate if this Pricing allows discounting. This is not enforced by the API", "putDescription":"Defaults to false", "example": "false" },
+            "OriginalPrice": { "type": "decimal", "description": "Value used to explicitly show the original price of an item, should it need to be displayed with the regular and sale/override prices", "example": "4.99" },
+            "OverridePrice": { "type": "decimal", "description": "This value is retrieved from the `SalePrice` of the current or default [SaleOverridePrice](#SaleOverridePrice)", "generated": "true", "ref": "pricing.SaleOverridePrice.SalePrice" },
+            "OverridePriceId": { "type": "integer", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/pricing/#saleoverrideprice'>SaleOverridePrice</a>", "ref": "pricing.SaleOverridePrice.Id", "generated": "true" },
+            "PricingTermId": { "type": "integer", "description": "[PricingTerm](#pricingterm) identifier", "ref": "pricing.PricingTerm.Id" },
+            "RegularPrice": { "type": "decimal", "description": "The regular price, must be greater than or equal to 0", "example": "10.0" },
+            "PricingTierId": { "type": "string", "description": "Reserved for internal use", "example": "null" }
+          },
+          "required": [ "CatalogItemId", "EntityId", "RegularPrice"]
+        }
+        
+
+    
+
+    
+    - SaleOverridePrice: |
+        {
+          "name": "SaleOverridePrice",
+          "description": "<p>SaleOverridePrice is used to set a sale pricing for a specific date. OverridePrice is set using the <strong>active</strong> SaleOverridePrice SalePrice property, determined using the following rules:</p><ul><li>If there is a SaleOverridePrice defined for the current date, it is used</li><li>Otherwise, if there is a Default (IsDefault set to true) SaleOverridePrice, it is used </li><li>Otherwise, null is returned</li></ul>{{callout_info}}<b>RQ Connection</b> Future SaveOverridePrice values are not currently synced to RQ, this feature is coming soon.{{end}}",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "1177", "generated": "true", "putGenerate": "true" },
+            "CompanyId": { "type": "integer", "description": "Identifier for the Company associated with this Pricing", "generated": "true", "ref": "company tree.Company.Id" },
+            "IsDefault": { "type": "boolean", "description": "A flag to indicate that this is the default SaleOverridePrice", "putDescription": "There can only be one default SaleOverridePrice for a Pricing. If StartDate and StopDate are provided, this must be false", "example": "true" },
+            "PricingInformationId": { "type" : "integer", "description": "Identifier for a [Pricing](#pricing)", "generated": "true", "ref": "pricing.Pricing.Id" },
+            "SalePrice": { "type": "decimal", "description": "Sale price", "putDescription": "Must be greater than or equal to 0, defaults to 0", "example": "3.99" },
+            "StartDateUTC": { "type": "DateTime", "description": "Date and time the sale pricing begins, in UTC", "putDescription": "If provided, StopDate must be provided, StartDate must be before StopDate and IsDefault must be false", "example": "2015-12-02T00:00:00" },
+            "StopDateUTC": { "type": "DateTime", "description": "Date and time the sale pricing ends, in UTC", "putDescription": "If provided, StartDate must be provided, StartDate must be before StopDate and IsDefault must be false", "example": "2015-12-31T00:00:00" }
+          },
+          "required": [ "IsDefault", "StartDate", "StopDate" ]
+        }
+        
+
+    
+
+    
+    - PricingArray: |
+        {
+          "exclude": "true",
+          "name": "Pricing",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }
+        
+
+    
+
+    
+    - SaleOverridePriceArray: |
+        {
+          "exclude": "true",
+          "name": "SaleOverridePrice",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }
+        
+
+    
+
+    
+    - PricingTerm: |
+        {
+          "name": "PricingTerm",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Identifier", "example": "78" },
+            "Active": { "type": "boolean", "description": "A flag to indicate of this PricingTerm is active. When set to false, this PricingTerm can still be used, but does not appear in the responses to the Getting All Active Pricing Terms request", "example": "true" },
+            "CanFinance": { "type": "boolean", "description": "A flag to indicate if this PricingTerm can be financed", "example": "true" },
+            "CarrierEntityId": { "type": "integer", "description": "Identifier of a [Carrier](/api/entities/#Carrier)", "ref": "entity-store.Carrier.Id" },
+            "DisplayName": { "type": "string", "description": "Localized string", "example": "2 Year Plan" },
+            "EntityId": { "type": "integer", "description": "Identifier for the [Company](/api/company-tree/#company)", "ref": "company tree.Company.Id" },
+            "Name": { "type": "string", "size": "255", "description": "Name", "example": "2 Year Plan" },
+            "NumberOfPayments": { "type": "integer", "description": "If `CanFinance` is true, the number of payments for financing, otherwise this value is `null`", "example": "1" },
+            "TermLengthInYears": { "type": "integer", "description": "Length of the PricingTerm in years", "example": "3" }
+          }
+        }
+        
+
+    
+
+    
+    - PricingTermArray: |
+        {
+          "exclude": "true",
+          "name": "PricingTerm",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }
+        
+
+    
+
+    
+    - PricingTierArray: |
+        {
+          "exclude": "true",
+          "name": "PricingTier",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+    
+    - PricingTier: |
+        {
+            "exclude": "true",
+            "type": "object",
+            "name": "PricingTier",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "Id": { "type": "integer","description": "Identifier","example": "1", "generated": "true" },
+              "CompanyId": { "type": "integer","description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","ref": "company tree.Company.Id" },
+              "TierName": { "type": "string","description": "Tier name","example": "Tier 1" },
+              "QuantityLowerBound": { "type": "integer","description": "Minimum quantity, defaults to null","example": "3" }
+              },
+              "required": [ "CompanyId", "TierName" ]
+            }
+        
+
+    
+
+    
+    - QuantityCalculation: |
+        {
+            "exclude": "true",
+            "type": "object",
+            "name": "QuantityCalculation",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "Id": { "type": "integer","description": "Identifier","example": "46203" },
+              "PricingTierId": { "type": "string","description": "Identifier for a {{PricingTier}}","ref": "pricing.PricingTier.Id" },
+              "PricePerUnit": { "type": "integer","description": "Price per unit","example": "5" },
+              "Quantity": { "type": "integer","description": "Quantity","example": "5" },
+              "CompanyId": { "type": "integer","description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","ref": "company tree.Company.Id" },
+              "EntityId": { "type": "integer","description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>","ref": "company tree.Location.Id" },
+              "CatalogItemId": { "type": "guid","description": "Identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>","ref": "catalog.CatalogItem.CatalogItemId" }
+              }
+            }
+        
+
+    
+
+    
+    - QuantityCalculationBody: |
+        {
+          "type": "object",
+          "exclude": "true",
+          "name": "QuantityCalculationBody",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Quantity": { "type": "integer","putDescription": "Quantity","example": "5" }
+            },
+            "required": [ "Quantity" ]
+          }
+        
+
+    
+
+
+/Companies({CompanyId})/Pricing:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+          
+      
+    post:
+        
+        displayName: Creating or Updating Product Pricing at Company Level
+                
+        
+        description: |            
+            {{note}}
+              When Product Pricing is set at the Company level, all Locations within the Company will use this Product Pricing by default unless <b>overridden</b> by a Location level Pricing.
+              For more information, see <a href="http://developers.iqmetrix.com/concepts/company-tree/#inheritance">Company Tree Inheritance</a>.
+            {{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"CatalogItemId":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"FloorPrice":3.99,"IsDiscountable":false,"OriginalPrice":4.99,"PricingTermId":78,"RegularPrice":10}
+                    
+                schema: |
+                    {"name":"Pricing","description":"{{callout_info}}<b>RQ Connection</b> The following fields are not currently synced to RQ: IsDiscountable and FloorPrice{{end}}","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"16446","generated":"true","putGenerate":"true"},"CatalogItemId":{"type":"GUID","description":"[CatalogItem](/api/catalog/#catalogitem) identifier","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"CompanyId":{"type":"integer","description":"Identifier for the Company associated with this Pricing","ref":"company tree.Company.Id","example":"14146"},"EntityId":{"type":"integer","description":"[CompanyTreeNode](/api/company-tree/#companytreenode) identifier at which the price is set","ref":"company tree.Location.Id","example":"14202"},"FloorPrice":{"type":"decimal","description":"The minimum amount the CatalogItem should be sold for","example":"3.99"},"IsDiscountable":{"type":"boolean","description":"A flag to indicate if this Pricing allows discounting. This is not enforced by the API","putDescription":"Defaults to false","example":"false"},"OriginalPrice":{"type":"decimal","description":"Value used to explicitly show the original price of an item, should it need to be displayed with the regular and sale/override prices","example":"4.99"},"OverridePrice":{"type":"decimal","description":"This value is retrieved from the `SalePrice` of the current or default [SaleOverridePrice](#SaleOverridePrice)","generated":"true","ref":"pricing.SaleOverridePrice.SalePrice","example":"3.99"},"OverridePriceId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/pricing/#saleoverrideprice'>SaleOverridePrice</a>","ref":"pricing.SaleOverridePrice.Id","generated":"true","example":"1177"},"PricingTermId":{"type":"integer","description":"[PricingTerm](#pricingterm) identifier","ref":"pricing.PricingTerm.Id","example":"78"},"RegularPrice":{"type":"decimal","description":"The regular price, must be greater than or equal to 0","example":"10.0"},"PricingTierId":{"type":"string","description":"Reserved for internal use","example":"null"}},"required":["CatalogItemId","EntityId","RegularPrice"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":16446,"CatalogItemId":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"FloorPrice":3.99,"IsDiscountable":false,"OriginalPrice":4.99,"OverridePrice":3.99,"OverridePriceId":1177,"PricingTermId":78,"RegularPrice":10}
+                            schema: |
+                                {"name":"Pricing","description":"{{callout_info}}<b>RQ Connection</b> The following fields are not currently synced to RQ: IsDiscountable and FloorPrice{{end}}","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"16446","generated":"true","putGenerate":"true"},"CatalogItemId":{"type":"GUID","description":"[CatalogItem](/api/catalog/#catalogitem) identifier","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"CompanyId":{"type":"integer","description":"Identifier for the Company associated with this Pricing","ref":"company tree.Company.Id","example":"14146"},"EntityId":{"type":"integer","description":"[CompanyTreeNode](/api/company-tree/#companytreenode) identifier at which the price is set","ref":"company tree.Location.Id","example":"14202"},"FloorPrice":{"type":"decimal","description":"The minimum amount the CatalogItem should be sold for","example":"3.99"},"IsDiscountable":{"type":"boolean","description":"A flag to indicate if this Pricing allows discounting. This is not enforced by the API","putDescription":"Defaults to false","example":"false"},"OriginalPrice":{"type":"decimal","description":"Value used to explicitly show the original price of an item, should it need to be displayed with the regular and sale/override prices","example":"4.99"},"OverridePrice":{"type":"decimal","description":"This value is retrieved from the `SalePrice` of the current or default [SaleOverridePrice](#SaleOverridePrice)","generated":"true","ref":"pricing.SaleOverridePrice.SalePrice","example":"3.99"},"OverridePriceId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/pricing/#saleoverrideprice'>SaleOverridePrice</a>","ref":"pricing.SaleOverridePrice.Id","generated":"true","example":"1177"},"PricingTermId":{"type":"integer","description":"[PricingTerm](#pricingterm) identifier","ref":"pricing.PricingTerm.Id","example":"78"},"RegularPrice":{"type":"decimal","description":"The regular price, must be greater than or equal to 0","example":"10.0"},"PricingTierId":{"type":"string","description":"Reserved for internal use","example":"null"}},"required":["CatalogItemId","EntityId","RegularPrice"]}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Entities({LocationId})/CatalogItems({CatalogItemId})/Pricing:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        LocationId:
+            displayName: LocationId
+            type: string
+            example: 14202
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+        
+        CatalogItemId:
+            displayName: CatalogItemId
+            type: string
+            example: a183f1a9-c58f-426a-930a-9a6357db52ed
+            required: true
+            description: Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
+          
+      
+    post:
+        
+        displayName: Creating or Updating Product Pricing at Location Level
+                
+        
+        description: |            
+            {{note}}This request can be used to set Product Pricing for a specific Location. Location level Pricing <b>overrides</b> any Product Pricing set at the Company level. For more information, see <a href="http://developers.iqmetrix.com/concepts/company-tree/#inheritance">Company Tree Inheritance</a>.{{end}}
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"CatalogItemId":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"FloorPrice":3.99,"IsDiscountable":false,"OriginalPrice":4.99,"PricingTermId":78,"RegularPrice":10}
+                    
+                schema: |
+                    {"name":"Pricing","description":"{{callout_info}}<b>RQ Connection</b> The following fields are not currently synced to RQ: IsDiscountable and FloorPrice{{end}}","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"16446","generated":"true","putGenerate":"true"},"CatalogItemId":{"type":"GUID","description":"[CatalogItem](/api/catalog/#catalogitem) identifier","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"CompanyId":{"type":"integer","description":"Identifier for the Company associated with this Pricing","ref":"company tree.Company.Id","example":"14146"},"EntityId":{"type":"integer","description":"[CompanyTreeNode](/api/company-tree/#companytreenode) identifier at which the price is set","ref":"company tree.Location.Id","example":"14202"},"FloorPrice":{"type":"decimal","description":"The minimum amount the CatalogItem should be sold for","example":"3.99"},"IsDiscountable":{"type":"boolean","description":"A flag to indicate if this Pricing allows discounting. This is not enforced by the API","putDescription":"Defaults to false","example":"false"},"OriginalPrice":{"type":"decimal","description":"Value used to explicitly show the original price of an item, should it need to be displayed with the regular and sale/override prices","example":"4.99"},"OverridePrice":{"type":"decimal","description":"This value is retrieved from the `SalePrice` of the current or default [SaleOverridePrice](#SaleOverridePrice)","generated":"true","ref":"pricing.SaleOverridePrice.SalePrice","example":"3.99"},"OverridePriceId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/pricing/#saleoverrideprice'>SaleOverridePrice</a>","ref":"pricing.SaleOverridePrice.Id","generated":"true","example":"1177"},"PricingTermId":{"type":"integer","description":"[PricingTerm](#pricingterm) identifier","ref":"pricing.PricingTerm.Id","example":"78"},"RegularPrice":{"type":"decimal","description":"The regular price, must be greater than or equal to 0","example":"10.0"},"PricingTierId":{"type":"string","description":"Reserved for internal use","example":"null"}},"required":["CatalogItemId","EntityId","RegularPrice"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":16446,"CatalogItemId":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"FloorPrice":3.99,"IsDiscountable":false,"OriginalPrice":4.99,"OverridePrice":3.99,"OverridePriceId":1177,"PricingTermId":78,"RegularPrice":10}
+                            schema: |
+                                {"name":"Pricing","description":"{{callout_info}}<b>RQ Connection</b> The following fields are not currently synced to RQ: IsDiscountable and FloorPrice{{end}}","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"16446","generated":"true","putGenerate":"true"},"CatalogItemId":{"type":"GUID","description":"[CatalogItem](/api/catalog/#catalogitem) identifier","ref":"catalog.CatalogItem.CatalogItemId","example":"a183f1a9-c58f-426a-930a-9a6357db52ed"},"CompanyId":{"type":"integer","description":"Identifier for the Company associated with this Pricing","ref":"company tree.Company.Id","example":"14146"},"EntityId":{"type":"integer","description":"[CompanyTreeNode](/api/company-tree/#companytreenode) identifier at which the price is set","ref":"company tree.Location.Id","example":"14202"},"FloorPrice":{"type":"decimal","description":"The minimum amount the CatalogItem should be sold for","example":"3.99"},"IsDiscountable":{"type":"boolean","description":"A flag to indicate if this Pricing allows discounting. This is not enforced by the API","putDescription":"Defaults to false","example":"false"},"OriginalPrice":{"type":"decimal","description":"Value used to explicitly show the original price of an item, should it need to be displayed with the regular and sale/override prices","example":"4.99"},"OverridePrice":{"type":"decimal","description":"This value is retrieved from the `SalePrice` of the current or default [SaleOverridePrice](#SaleOverridePrice)","generated":"true","ref":"pricing.SaleOverridePrice.SalePrice","example":"3.99"},"OverridePriceId":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/pricing/#saleoverrideprice'>SaleOverridePrice</a>","ref":"pricing.SaleOverridePrice.Id","generated":"true","example":"1177"},"PricingTermId":{"type":"integer","description":"[PricingTerm](#pricingterm) identifier","ref":"pricing.PricingTerm.Id","example":"78"},"RegularPrice":{"type":"decimal","description":"The regular price, must be greater than or equal to 0","example":"10.0"},"PricingTierId":{"type":"string","description":"Reserved for internal use","example":"null"}},"required":["CatalogItemId","EntityId","RegularPrice"]}
+                            
+                        
+                    
+                
+            
+      
+    get:
+        
+        displayName: Getting Product Pricing for a Retail Location
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":16446,"CatalogItemId":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"FloorPrice":3.99,"IsDiscountable":false,"OriginalPrice":4.99,"OverridePrice":3.99,"OverridePriceId":1177,"PricingTermId":78,"RegularPrice":10}]
+                            schema: |
+                                {"exclude":"true","name":"Pricing","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/CatalogItems({CatalogItemId})/Pricing:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        CatalogItemId:
+            displayName: CatalogItemId
+            type: string
+            example: a183f1a9-c58f-426a-930a-9a6357db52ed
+            required: true
+            description: Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
+          
+      
+    get:
+        
+        displayName: Getting Product Pricing at Company Level
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":16446,"CatalogItemId":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"FloorPrice":3.99,"IsDiscountable":false,"OriginalPrice":4.99,"OverridePrice":3.99,"OverridePriceId":1177,"PricingTermId":78,"RegularPrice":10}]
+                            schema: |
+                                {"exclude":"true","name":"Pricing","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/PricingTerms:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+          
+      
+    get:
+        
+        displayName: Getting all Active Pricing Terms
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Accept-Language:
+                example: en-US
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":78,"Active":true,"CanFinance":true,"CarrierEntityId":9,"DisplayName":"2 Year Plan","EntityId":14146,"Name":"2 Year Plan","NumberOfPayments":1,"TermLengthInYears":3}]
+                            schema: |
+                                {"exclude":"true","name":"PricingTerm","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/PricingTerms({PricingTermId}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        PricingTermId:
+            displayName: PricingTermId
+            type: string
+            example: 78
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/pricing/#pricingterm'>PricingTerm</a>
+          
+      
+    get:
+        
+        displayName: Getting a Pricing Term
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Accept-Language:
+                example: en-US
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":78,"Active":true,"CanFinance":true,"CarrierEntityId":9,"DisplayName":"2 Year Plan","EntityId":14146,"Name":"2 Year Plan","NumberOfPayments":1,"TermLengthInYears":3}
+                            schema: |
+                                {"name":"PricingTerm","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"78"},"Active":{"type":"boolean","description":"A flag to indicate of this PricingTerm is active. When set to false, this PricingTerm can still be used, but does not appear in the responses to the Getting All Active Pricing Terms request","example":"true"},"CanFinance":{"type":"boolean","description":"A flag to indicate if this PricingTerm can be financed","example":"true"},"CarrierEntityId":{"type":"integer","description":"Identifier of a [Carrier](/api/entities/#Carrier)","ref":"entity-store.Carrier.Id","example":"9"},"DisplayName":{"type":"string","description":"Localized string","example":"2 Year Plan"},"EntityId":{"type":"integer","description":"Identifier for the [Company](/api/company-tree/#company)","ref":"company tree.Company.Id","example":"14146"},"Name":{"type":"string","size":"255","description":"Name","example":"2 Year Plan"},"NumberOfPayments":{"type":"integer","description":"If `CanFinance` is true, the number of payments for financing, otherwise this value is `null`","example":"1"},"TermLengthInYears":{"type":"integer","description":"Length of the PricingTerm in years","example":"3"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Pricing({PricingId})/SaleOverridePrices:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        PricingId:
+            displayName: PricingId
+            type: integer
+            example: 16446
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/pricing/#pricing'>Pricing</a>
+          
+      
+    post:
+        
+        displayName: Creating a Sale Price
+                
+        
+        description: |            
+            When creating a SaleOverridePrice, the following rules are enforced:
+            <ul>
+              <li>If StartDate or StopDate are supplied, they must both be provided, StartDate must be before StopDate and IsDefault must be false</li>
+              <li>If StartDate and StopDate are null, IsDefault must be true</li>
+              <li>For each Pricing resource, there can only be one SaleOverridePrice where IsDefault is true (this is the "Default" Sale price)</li>
+              <li>SalePrice must be greater than or equal to 0</li>
+              <li>Multiple date ranges can be defined (multiple sales), but date ranges cannot overlap</li>
+            </ul>
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"IsDefault":true,"SalePrice":3.99,"StartDateUTC":"2015-12-02T00:00:00","StopDateUTC":"2015-12-31T00:00:00"}
+                    
+                schema: |
+                    {"name":"SaleOverridePrice","description":"<p>SaleOverridePrice is used to set a sale pricing for a specific date. OverridePrice is set using the <strong>active</strong> SaleOverridePrice SalePrice property, determined using the following rules:</p><ul><li>If there is a SaleOverridePrice defined for the current date, it is used</li><li>Otherwise, if there is a Default (IsDefault set to true) SaleOverridePrice, it is used </li><li>Otherwise, null is returned</li></ul>{{callout_info}}<b>RQ Connection</b> Future SaveOverridePrice values are not currently synced to RQ, this feature is coming soon.{{end}}","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"1177","generated":"true","putGenerate":"true"},"CompanyId":{"type":"integer","description":"Identifier for the Company associated with this Pricing","generated":"true","ref":"company tree.Company.Id","example":"14146"},"IsDefault":{"type":"boolean","description":"A flag to indicate that this is the default SaleOverridePrice","putDescription":"There can only be one default SaleOverridePrice for a Pricing. If StartDate and StopDate are provided, this must be false","example":"true"},"PricingInformationId":{"type":"integer","description":"Identifier for a [Pricing](#pricing)","generated":"true","ref":"pricing.Pricing.Id","example":"16446"},"SalePrice":{"type":"decimal","description":"Sale price","putDescription":"Must be greater than or equal to 0, defaults to 0","example":"3.99"},"StartDateUTC":{"type":"DateTime","description":"Date and time the sale pricing begins, in UTC","putDescription":"If provided, StopDate must be provided, StartDate must be before StopDate and IsDefault must be false","example":"2015-12-02T00:00:00"},"StopDateUTC":{"type":"DateTime","description":"Date and time the sale pricing ends, in UTC","putDescription":"If provided, StartDate must be provided, StartDate must be before StopDate and IsDefault must be false","example":"2015-12-31T00:00:00"}},"required":["IsDefault","StartDate","StopDate"]}
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":1177,"CompanyId":14146,"IsDefault":true,"PricingInformationId":16446,"SalePrice":3.99,"StartDateUTC":"2015-12-02T00:00:00","StopDateUTC":"2015-12-31T00:00:00"}
+                            schema: |
+                                {"name":"SaleOverridePrice","description":"<p>SaleOverridePrice is used to set a sale pricing for a specific date. OverridePrice is set using the <strong>active</strong> SaleOverridePrice SalePrice property, determined using the following rules:</p><ul><li>If there is a SaleOverridePrice defined for the current date, it is used</li><li>Otherwise, if there is a Default (IsDefault set to true) SaleOverridePrice, it is used </li><li>Otherwise, null is returned</li></ul>{{callout_info}}<b>RQ Connection</b> Future SaveOverridePrice values are not currently synced to RQ, this feature is coming soon.{{end}}","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"1177","generated":"true","putGenerate":"true"},"CompanyId":{"type":"integer","description":"Identifier for the Company associated with this Pricing","generated":"true","ref":"company tree.Company.Id","example":"14146"},"IsDefault":{"type":"boolean","description":"A flag to indicate that this is the default SaleOverridePrice","putDescription":"There can only be one default SaleOverridePrice for a Pricing. If StartDate and StopDate are provided, this must be false","example":"true"},"PricingInformationId":{"type":"integer","description":"Identifier for a [Pricing](#pricing)","generated":"true","ref":"pricing.Pricing.Id","example":"16446"},"SalePrice":{"type":"decimal","description":"Sale price","putDescription":"Must be greater than or equal to 0, defaults to 0","example":"3.99"},"StartDateUTC":{"type":"DateTime","description":"Date and time the sale pricing begins, in UTC","putDescription":"If provided, StopDate must be provided, StartDate must be before StopDate and IsDefault must be false","example":"2015-12-02T00:00:00"},"StopDateUTC":{"type":"DateTime","description":"Date and time the sale pricing ends, in UTC","putDescription":"If provided, StartDate must be provided, StartDate must be before StopDate and IsDefault must be false","example":"2015-12-31T00:00:00"}},"required":["IsDefault","StartDate","StopDate"]}
+                            
+                        
+                    
+                
+            
+      
+    get:
+        
+        displayName: Getting All Sale Pricing
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":1177,"CompanyId":14146,"IsDefault":true,"PricingInformationId":16446,"SalePrice":3.99,"StartDateUTC":"2015-12-02T00:00:00","StopDateUTC":"2015-12-31T00:00:00"}]
+                            schema: |
+                                {"exclude":"true","name":"SaleOverridePrice","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/Pricing({PricingId})/SaleOverridePrices({SaleOverridePriceId}):
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        PricingId:
+            displayName: PricingId
+            type: integer
+            example: 16446
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/pricing/#pricing'>Pricing</a>
+        
+        SaleOverridePriceId:
+            displayName: SaleOverridePriceId
+            type: integer
+            example: 2802
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/pricing/#saleoverrideprice'>SaleOverridePrice</a>
+          
+      
+    put:
+        
+        displayName: Updating a Sale Pricing
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: application/json
+            
+        body:
+            
+            application/json:
+                
+                
+                example: |  
+                    
+                    {"Id":1177,"CompanyId":14146,"IsDefault":true,"PricingInformationId":16446,"SalePrice":3.99,"StartDateUTC":"2015-12-02T00:00:00","StopDateUTC":"2015-12-31T00:00:00"}
+                    
+                schema: |
+                    {"name":"SaleOverridePrice","description":"<p>SaleOverridePrice is used to set a sale pricing for a specific date. OverridePrice is set using the <strong>active</strong> SaleOverridePrice SalePrice property, determined using the following rules:</p><ul><li>If there is a SaleOverridePrice defined for the current date, it is used</li><li>Otherwise, if there is a Default (IsDefault set to true) SaleOverridePrice, it is used </li><li>Otherwise, null is returned</li></ul>{{callout_info}}<b>RQ Connection</b> Future SaveOverridePrice values are not currently synced to RQ, this feature is coming soon.{{end}}","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"1177","generated":"true","putGenerate":"true"},"CompanyId":{"type":"integer","description":"Identifier for the Company associated with this Pricing","generated":"true","ref":"company tree.Company.Id","example":"14146"},"IsDefault":{"type":"boolean","description":"A flag to indicate that this is the default SaleOverridePrice","putDescription":"There can only be one default SaleOverridePrice for a Pricing. If StartDate and StopDate are provided, this must be false","example":"true"},"PricingInformationId":{"type":"integer","description":"Identifier for a [Pricing](#pricing)","generated":"true","ref":"pricing.Pricing.Id","example":"16446"},"SalePrice":{"type":"decimal","description":"Sale price","putDescription":"Must be greater than or equal to 0, defaults to 0","example":"3.99"},"StartDateUTC":{"type":"DateTime","description":"Date and time the sale pricing begins, in UTC","putDescription":"If provided, StopDate must be provided, StartDate must be before StopDate and IsDefault must be false","example":"2015-12-02T00:00:00"},"StopDateUTC":{"type":"DateTime","description":"Date and time the sale pricing ends, in UTC","putDescription":"If provided, StartDate must be provided, StartDate must be before StopDate and IsDefault must be false","example":"2015-12-31T00:00:00"}},"required":["IsDefault","StartDate","StopDate"]}
+                
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":1177,"CompanyId":14146,"IsDefault":true,"PricingInformationId":16446,"SalePrice":3.99,"StartDateUTC":"2015-12-02T00:00:00","StopDateUTC":"2015-12-31T00:00:00"}
+                            schema: |
+                                {"name":"SaleOverridePrice","description":"<p>SaleOverridePrice is used to set a sale pricing for a specific date. OverridePrice is set using the <strong>active</strong> SaleOverridePrice SalePrice property, determined using the following rules:</p><ul><li>If there is a SaleOverridePrice defined for the current date, it is used</li><li>Otherwise, if there is a Default (IsDefault set to true) SaleOverridePrice, it is used </li><li>Otherwise, null is returned</li></ul>{{callout_info}}<b>RQ Connection</b> Future SaveOverridePrice values are not currently synced to RQ, this feature is coming soon.{{end}}","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Identifier","example":"1177","generated":"true","putGenerate":"true"},"CompanyId":{"type":"integer","description":"Identifier for the Company associated with this Pricing","generated":"true","ref":"company tree.Company.Id","example":"14146"},"IsDefault":{"type":"boolean","description":"A flag to indicate that this is the default SaleOverridePrice","putDescription":"There can only be one default SaleOverridePrice for a Pricing. If StartDate and StopDate are provided, this must be false","example":"true"},"PricingInformationId":{"type":"integer","description":"Identifier for a [Pricing](#pricing)","generated":"true","ref":"pricing.Pricing.Id","example":"16446"},"SalePrice":{"type":"decimal","description":"Sale price","putDescription":"Must be greater than or equal to 0, defaults to 0","example":"3.99"},"StartDateUTC":{"type":"DateTime","description":"Date and time the sale pricing begins, in UTC","putDescription":"If provided, StopDate must be provided, StartDate must be before StopDate and IsDefault must be false","example":"2015-12-02T00:00:00"},"StopDateUTC":{"type":"DateTime","description":"Date and time the sale pricing ends, in UTC","putDescription":"If provided, StartDate must be provided, StartDate must be before StopDate and IsDefault must be false","example":"2015-12-31T00:00:00"}},"required":["IsDefault","StartDate","StopDate"]}
+                            
+                        
+                    
+                
+            
+      
+    delete:
+        
+        displayName: Deleting a Sale Pricing
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                    
+                
+            
+    
+
+/Companies({CompanyId})/CatalogItems({CatalogItemId})/Pricing?$filter={PricingTermId}:
+    
+    uriParameters:
+        
+        CompanyId:
+            displayName: CompanyId
+            type: integer
+            example: 14146
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        CatalogItemId:
+            displayName: CatalogItemId
+            type: string
+            example: a183f1a9-c58f-426a-930a-9a6357db52ed
+            required: true
+            description: Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
+        
+        PricingTermId:
+            displayName: PricingTermId
+            type: string
+            example: 78
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/pricing/#pricingterm'>PricingTerm</a>
+          
+      
+    get:
+        
+        displayName: Getting Product Pricing by Pricing Term
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":16446,"CatalogItemId":"a183f1a9-c58f-426a-930a-9a6357db52ed","CompanyId":14146,"EntityId":14202,"FloorPrice":3.99,"IsDiscountable":false,"OriginalPrice":4.99,"OverridePrice":3.99,"OverridePriceId":1177,"PricingTermId":78,"RegularPrice":10}]
+                            schema: |
+                                {"exclude":"true","name":"Pricing","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    

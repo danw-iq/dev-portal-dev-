@@ -1,0 +1,431 @@
+#%RAML 0.8
+title: entity-store
+baseUri: https://entitymanagerdemo.iqmetrix.net/v1
+schemas: 
+
+    
+    - Carrier: |
+        {
+          "name": "Carrier",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Unique identifier", "example": "9" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "Helios" }, 
+            "Description": { "type": "string",  "description": "Description", "example": "" }, 
+            "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data", "example": "" }, 
+            "CreatedUTC": { "type": "DateTime", "description": "Created date, in UTC", "example": "2014-07-28T20:52:12.929Z" }, 
+            "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "Carrier_25" }, 
+            "LastModifiedUtc": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z" }, 
+            "Logo": { "type": "object", "description": "A reference to an [Asset](/api/assets/#asset)", "example": ""}, 
+            "Relationships": { "type": "array", "arrayType": "object", "description": "Relationships", "example": "" }, 
+            "Role": { "type": "string",  "description": "Role", "example": "Carrier" }, 
+            "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Carrier", "ref": "entity-store.CarrierRole", "isNested": "true" }, 
+            "SortName": { "type": "string",  "description": "A string used for sorting", "example": "helios" }, 
+            "Version": { "type": "integer", "description": "Latest revision number", "example": "1" }, 
+            "CorrelationId": { "type": "string", "description": "Reserved for internal use" },
+            "TypeId": { "type": "string",  "description": "Reserved for future use"  }
+          }
+        }
+        
+
+    
+
+    
+    - CarrierRole: |
+        {
+            "name": "CarrierRole",
+            "exclude": "true",
+            "type": "object",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "Name": { "type": "string", "example": "Carrier" }
+            }
+        }
+        
+
+    
+
+    
+    - CarrierArray: |
+        {
+          "name": "Carrier",
+          "exclude": "true",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }      
+        
+
+    
+
+    
+    - Manufacturer: |
+        {
+          "name": "Manufacturer",        
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Unique identifier", "example": "13149" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "OtterBox" }, 
+            "Description": { "type": "string",  "description": "Description", "example": "#1 Most Trusted Brand in Smartphone Protection" }, 
+            "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data", "example": "" }, 
+            "CreatedUtc": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-02-24T19:29:31.073Z" }, 
+            "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "Manufacturer_145" }, 
+            "LastModifiedUtc": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z" }, 
+            "Logo": { "type": "object", "description": "A reference to an [Asset](/api/assets/#asset)", "example": ""}, 
+            "Relationships": { "type": "array", "arrayType": "object", "description": "Relationships", "example": "" }, 
+            "Role": { "type": "string",  "description": "Role", "example": "Manufacturer" }, 
+            "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Manufacturer", "ref": "entity-store.ManufacturerRole", "isNested": "true" }, 
+            "SortName": { "type": "string",  "description": "A string used for sorting", "example": "otterbox" }, 
+            "Version": { "type": "integer", "description": "Latest revision number", "example": "1" }, 
+            "CorrelationId": { "type": "string",  "description": "Reserved for internal use" },
+            "TypeId": { "type": "string",  "description": "Reserved for future use"  }
+          }
+        }    
+        
+
+    
+
+    
+    - ManufacturerRole: |
+        {
+            "name": "ManufacturerRole",
+            "exclude": "true",
+            "type": "object",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "Name": { "type": "string", "example": "Manufacturer" }
+            }
+        }      
+        
+
+    
+
+    
+    - ManufacturerArray: |
+        {
+          "name": "Manufacturer",        
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "exclude": "true"
+        }        
+        
+
+    
+
+    
+    - Supplier: |
+        {
+          "name": "Supplier",        
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer", "description": "Unique identifier", "example": "14107" }, 
+            "Name": { "type": "string",  "description": "Name", "example": "NOZAMA Inc." }, 
+            "Description": { "type": "string",  "description": "Description", "example": "Provides supplies for KENTEL Corp." }, 
+            "Attributes": { "type": "object", "description": "Set of key-value pairs that contain extra data", "example": "" }, 
+            "CreatedUtc": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-11-05T18:15:26.558Z" }, 
+            "ClientEntityId": { "type": "string",  "description": "Identifier in an external system", "example": "Supplier_151" }, 
+            "LastModifiedUtc": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-20T23:06:29.7700813Z" }, 
+            "Logo": { "type": "object", "description": "A reference to an [Asset](/api/assets/#asset)", "example": ""}, 
+            "Relationships": { "type": "array", "arrayType": "object", "description": "Relationships", "example": "" }, 
+            "Role": { "type": "string",  "description": "Role", "example": "Vendor" }, 
+            "Roles": { "type": "array", "arrayType": "object", "description": "The value must be Vendor", "ref": "entity-store.SupplierRole", "isNested": "true" }, 
+            "SortName": { "type": "string",  "description": "A string used for sorting", "example": "nozama inc." }, 
+            "Version": { "type": "integer", "description": "Latest revision number", "example": "1" }, 
+            "CorrelationId": { "type": "string",  "description": "Reserved for internal use" },
+            "TypeId": { "type": "string",  "description": "Reserved for future use"  }
+          }
+        }
+        
+
+    
+
+    
+    - SupplierArray: |
+        {
+          "name": "Supplier",        
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "exclude": "true"
+        }
+        
+
+    
+
+    
+    - SupplierRole: |
+        {
+            "name": "SupplierRole",
+            "exclude": "true",
+            "type": "object",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "Name": { "type": "string", "example": "Vendor" }
+            }
+        }            
+        
+
+    
+
+
+/Carriers:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting All Carriers
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":9,"Name":"Helios","Description":"","Attributes":{},"CreatedUTC":"2014-07-28T20:52:12.929Z","ClientEntityId":"Carrier_25","LastModifiedUtc":"2015-05-20T23:06:29.7700813Z","Logo":{},"Relationships":[],"Role":"Carrier","Roles":[{"Name":"Carrier"}],"SortName":"helios","Version":1}]
+                            schema: |
+                                {"name":"Carrier","exclude":"true","type":"array","$schema":"http://json-schema.org/draft-03/schema"}
+                            
+                        
+                    
+                
+            
+    
+
+/Carriers({CarrierId}):
+    
+    uriParameters:
+        
+        CarrierId:
+            displayName: CarrierId
+            type: string
+            example: 9
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
+          
+      
+    get:
+        
+        displayName: Getting a Carrier
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":9,"Name":"Helios","Description":"","Attributes":{},"CreatedUTC":"2014-07-28T20:52:12.929Z","ClientEntityId":"Carrier_25","LastModifiedUtc":"2015-05-20T23:06:29.7700813Z","Logo":{},"Relationships":[],"Role":"Carrier","Roles":[{"Name":"Carrier"}],"SortName":"helios","Version":1}
+                            schema: |
+                                {"name":"Carrier","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Unique identifier","example":"9"},"Name":{"type":"string","description":"Name","example":"Helios"},"Description":{"type":"string","description":"Description","example":""},"Attributes":{"type":"object","description":"Set of key-value pairs that contain extra data","example":""},"CreatedUTC":{"type":"DateTime","description":"Created date, in UTC","example":"2014-07-28T20:52:12.929Z"},"ClientEntityId":{"type":"string","description":"Identifier in an external system","example":"Carrier_25"},"LastModifiedUtc":{"type":"DateTime","description":"Last modified date in UTC","example":"2015-05-20T23:06:29.7700813Z"},"Logo":{"type":"object","description":"A reference to an [Asset](/api/assets/#asset)","example":""},"Relationships":{"type":"array","arrayType":"object","description":"Relationships","example":""},"Role":{"type":"string","description":"Role","example":"Carrier"},"Roles":{"type":"array","arrayType":"object","description":"The value must be Carrier","ref":"entity-store.CarrierRole","isNested":"true","properties":{"Name":{"type":"string","example":"Carrier","name":"Name"}}},"SortName":{"type":"string","description":"A string used for sorting","example":"helios"},"Version":{"type":"integer","description":"Latest revision number","example":"1"},"CorrelationId":{"type":"string","description":"Reserved for internal use"},"TypeId":{"type":"string","description":"Reserved for future use"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/Manufacturers:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting All Manufacturers
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":13149,"Name":"OtterBox","Description":"#1 Most Trusted Brand in Smartphone Protection","Attributes":{},"CreatedUtc":"2015-02-24T19:29:31.073Z","ClientEntityId":"Manufacturer_145","LastModifiedUtc":"2015-05-20T23:06:29.7700813Z","Logo":{},"Relationships":[],"Role":"Manufacturer","Roles":[{"Name":"Manufacturer"}],"SortName":"otterbox","Version":1}]
+                            schema: |
+                                {"name":"Manufacturer","type":"array","$schema":"http://json-schema.org/draft-03/schema","exclude":"true"}
+                            
+                        
+                    
+                
+            
+    
+
+/Manufacturers({ManufacturerId}):
+    
+    uriParameters:
+        
+        ManufacturerId:
+            displayName: Manufacturer Id
+            type: string
+            example: 13149
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturer</a>
+          
+      
+    get:
+        
+        displayName: Getting a Manufacturer
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":13149,"Name":"OtterBox","Description":"#1 Most Trusted Brand in Smartphone Protection","Attributes":{},"CreatedUtc":"2015-02-24T19:29:31.073Z","ClientEntityId":"Manufacturer_145","LastModifiedUtc":"2015-05-20T23:06:29.7700813Z","Logo":{},"Relationships":[],"Role":"Manufacturer","Roles":[{"Name":"Manufacturer"}],"SortName":"otterbox","Version":1}
+                            schema: |
+                                {"name":"Manufacturer","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Unique identifier","example":"13149"},"Name":{"type":"string","description":"Name","example":"OtterBox"},"Description":{"type":"string","description":"Description","example":"#1 Most Trusted Brand in Smartphone Protection"},"Attributes":{"type":"object","description":"Set of key-value pairs that contain extra data","example":""},"CreatedUtc":{"type":"DateTime","description":"Created date in UTC","example":"2015-02-24T19:29:31.073Z"},"ClientEntityId":{"type":"string","description":"Identifier in an external system","example":"Manufacturer_145"},"LastModifiedUtc":{"type":"DateTime","description":"Last modified date in UTC","example":"2015-05-20T23:06:29.7700813Z"},"Logo":{"type":"object","description":"A reference to an [Asset](/api/assets/#asset)","example":""},"Relationships":{"type":"array","arrayType":"object","description":"Relationships","example":""},"Role":{"type":"string","description":"Role","example":"Manufacturer"},"Roles":{"type":"array","arrayType":"object","description":"The value must be Manufacturer","ref":"entity-store.ManufacturerRole","isNested":"true","properties":{"Name":{"type":"string","example":"Manufacturer","name":"Name"}}},"SortName":{"type":"string","description":"A string used for sorting","example":"otterbox"},"Version":{"type":"integer","description":"Latest revision number","example":"1"},"CorrelationId":{"type":"string","description":"Reserved for internal use"},"TypeId":{"type":"string","description":"Reserved for future use"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/Suppliers:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting all Suppliers
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Id":14107,"Name":"NOZAMA Inc.","Description":"Provides supplies for KENTEL Corp.","Attributes":{},"CreatedUtc":"2015-11-05T18:15:26.558Z","ClientEntityId":"Supplier_151","LastModifiedUtc":"2015-05-20T23:06:29.7700813Z","Logo":{},"Relationships":[],"Role":"Vendor","Roles":[{"Name":"Vendor"}],"SortName":"nozama inc.","Version":1}]
+                            schema: |
+                                {"name":"Supplier","type":"array","$schema":"http://json-schema.org/draft-03/schema","exclude":"true"}
+                            
+                        
+                    
+                
+            
+    
+
+/Suppliers({SupplierId}):
+    
+    uriParameters:
+        
+        SupplierId:
+            displayName: Supplier Id
+            type: string
+            example: 14107
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#supplier'>Supplier</a>
+          
+      
+    get:
+        
+        displayName: Getting a Supplier
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"Id":14107,"Name":"NOZAMA Inc.","Description":"Provides supplies for KENTEL Corp.","Attributes":{},"CreatedUtc":"2015-11-05T18:15:26.558Z","ClientEntityId":"Supplier_151","LastModifiedUtc":"2015-05-20T23:06:29.7700813Z","Logo":{},"Relationships":[],"Role":"Vendor","Roles":[{"Name":"Vendor"}],"SortName":"nozama inc.","Version":1}
+                            schema: |
+                                {"name":"Supplier","type":"object","$schema":"http://json-schema.org/draft-03/schema","properties":{"Id":{"type":"integer","description":"Unique identifier","example":"14107"},"Name":{"type":"string","description":"Name","example":"NOZAMA Inc."},"Description":{"type":"string","description":"Description","example":"Provides supplies for KENTEL Corp."},"Attributes":{"type":"object","description":"Set of key-value pairs that contain extra data","example":""},"CreatedUtc":{"type":"DateTime","description":"Created date in UTC","example":"2015-11-05T18:15:26.558Z"},"ClientEntityId":{"type":"string","description":"Identifier in an external system","example":"Supplier_151"},"LastModifiedUtc":{"type":"DateTime","description":"Last modified date in UTC","example":"2015-05-20T23:06:29.7700813Z"},"Logo":{"type":"object","description":"A reference to an [Asset](/api/assets/#asset)","example":""},"Relationships":{"type":"array","arrayType":"object","description":"Relationships","example":""},"Role":{"type":"string","description":"Role","example":"Vendor"},"Roles":{"type":"array","arrayType":"object","description":"The value must be Vendor","ref":"entity-store.SupplierRole","isNested":"true","properties":{"Name":{"type":"string","example":"Vendor","name":"Name"}}},"SortName":{"type":"string","description":"A string used for sorting","example":"nozama inc."},"Version":{"type":"integer","description":"Latest revision number","example":"1"},"CorrelationId":{"type":"string","description":"Reserved for internal use"},"TypeId":{"type":"string","description":"Reserved for future use"}}}
+                            
+                        
+                    
+                
+            
+    

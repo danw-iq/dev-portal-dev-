@@ -1,0 +1,46 @@
+## Endpoints
+
+* Sandbox: <a href="{{ baseUri | replace("{UrlSuffix}", "demo") }}">{{ baseUri | replace("{UrlSuffix}", "demo") }}</a>
+* Production: <a href="{{ baseUri | replace("{UrlSuffix}", "") }}">{{ baseUri | replace("{UrlSuffix}", "") }}</a>
+
+## Resources
+
+{% for schema in schemas %}
+    {% for name, obj in schema %}{{ obj | printResourceTable(name, title) }}{% endfor %}
+{% endfor %}
+
+## Requests
+
+{% for resource in resources %}{% for method in resource.methods %}
+### {{method.displayName}}
+
+{{method.description}}
+
+#### Request
+
+    {{method.method | upper }} {{resource.relativeUri}}
+
+{% if method.headers %}
+#### Headers
+
+{% for header, headerObj in method.headers %}
+* {{header}}: {{headerObj.example}}{% if headerObj.description %} - {{headerObj.description}}{% endif %}{% endfor %}{% endif %}
+
+{% if resource.uriParameters %}
+#### URI Parameters
+
+{% for parameter, objParameter in resource.uriParameters %}
+* {{parameter}} ({% if objParameter.required %}**Required**{% else %}Optional{% endif %}) {% if objParameter.description %} - {{objParameter.description}}{% endif %}{% endfor %}
+{% endif %}
+
+#### Response
+
+{% for code, body in method.responses %}{% if body %}{% for body, schema in body %}{% for scheme, schemeProperties in schema %}
+{% if schemeProperties.schema %}{{ schemeProperties.schema | printResponseSchema(title) }}
+{% endif %}
+
+##### Example
+
+HTTP {{code}} Content-Type: {{scheme}}
+
+{{ schemeProperties.schema | printExample(title, null) }}{% endfor %}{% endfor %}{% endif %}{% endfor %}{% endfor %}{% endfor %}

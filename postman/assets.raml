@@ -1,0 +1,172 @@
+#%RAML 0.8
+title: assets
+baseUri: https://amsdemo.iqmetrix.net
+schemas: 
+
+    
+    - Asset: |
+        {
+          "name": "Asset",
+          "type": "object",
+          "description": "An **Asset** is an image or video associated with a Product.",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "id": { "type": "GUID", "description": "Unique identifier", "example": "09fe1ee4-42b1-43a6-bd80-cd2bda21e90a" }, 
+            "name": { "type": "string",  "description": "File name", "example": "49ebd282-4161-4a9d-9b40-a5a20d144b6f.png" }, 
+            "height": { "type": "integer", "description": "Height in pixels", "example": "1024" }, 
+            "href": { "type": "string",  "description": "URL that points to an actual file where the digital asset is stored", "example": "https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png" }, 
+            "md5Checksum": { "type": "string",  "description": "String that can be used for upload integrity checks or comparing two assets", "example": "1f88a2813737aa0019a63069586055ed" }, 
+            "mimeType": { "type": "string",  "description": "The mime type", "example": "image/png" }, 
+            "width": { "type": "integer", "description": "Width in pixels", "example": "502" },
+            "success": { "type": "boolean", "description": "A flag to indicate that the Asset was uploaded. This only appears when asset is first uploaded", "example": "true", "generated": "true"}          
+          }
+        }      
+        
+
+    
+
+
+/assets:
+    
+    uriParameters:
+          
+      
+    post:
+        
+        displayName: Creating an Asset
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept:
+                example: application/json
+            
+            Content-Type:
+                example: multipart/form-data
+            
+        body:
+            
+            multipart/form-data:
+                
+                formParameters:
+                    
+                    Filename:
+                        displayName: Filename
+                        description: |
+                            File to be uploaded
+                        required: true
+                        type: file
+                        example: image.jpg
+                    
+                
+                
+            
+        responses:
+            
+            201:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"id":"09fe1ee4-42b1-43a6-bd80-cd2bda21e90a","name":"49ebd282-4161-4a9d-9b40-a5a20d144b6f.png","height":1024,"href":"https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png","md5Checksum":"1f88a2813737aa0019a63069586055ed","mimeType":"image/png","width":502,"success":true}
+                            schema: |
+                                {"name":"Asset","type":"object","description":"An **Asset** is an image or video associated with a Product.","$schema":"http://json-schema.org/draft-03/schema","properties":{"id":{"type":"GUID","description":"Unique identifier","example":"09fe1ee4-42b1-43a6-bd80-cd2bda21e90a"},"name":{"type":"string","description":"File name","example":"49ebd282-4161-4a9d-9b40-a5a20d144b6f.png"},"height":{"type":"integer","description":"Height in pixels","example":"1024"},"href":{"type":"string","description":"URL that points to an actual file where the digital asset is stored","example":"https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png"},"md5Checksum":{"type":"string","description":"String that can be used for upload integrity checks or comparing two assets","example":"1f88a2813737aa0019a63069586055ed"},"mimeType":{"type":"string","description":"The mime type","example":"image/png"},"width":{"type":"integer","description":"Width in pixels","example":"502"},"success":{"type":"boolean","description":"A flag to indicate that the Asset was uploaded. This only appears when asset is first uploaded","example":"true","generated":"true"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/assets/{AssetId}:
+    
+    uriParameters:
+        
+        AssetId:
+            displayName: AssetId
+            type: string
+            example: 09fe1ee4-42b1-43a6-bd80-cd2bda21e90a
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/assets/#asset'>Asset</a>
+          
+      
+    get:
+        
+        displayName: Getting an Asset
+                
+        
+        headers:
+            
+            Accept:
+                example: application/json
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                {"id":"09fe1ee4-42b1-43a6-bd80-cd2bda21e90a","name":"49ebd282-4161-4a9d-9b40-a5a20d144b6f.png","height":1024,"href":"https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png","md5Checksum":"1f88a2813737aa0019a63069586055ed","mimeType":"image/png","width":502,"success":true}
+                            schema: |
+                                {"name":"Asset","type":"object","description":"An **Asset** is an image or video associated with a Product.","$schema":"http://json-schema.org/draft-03/schema","properties":{"id":{"type":"GUID","description":"Unique identifier","example":"09fe1ee4-42b1-43a6-bd80-cd2bda21e90a"},"name":{"type":"string","description":"File name","example":"49ebd282-4161-4a9d-9b40-a5a20d144b6f.png"},"height":{"type":"integer","description":"Height in pixels","example":"1024"},"href":{"type":"string","description":"URL that points to an actual file where the digital asset is stored","example":"https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png"},"md5Checksum":{"type":"string","description":"String that can be used for upload integrity checks or comparing two assets","example":"1f88a2813737aa0019a63069586055ed"},"mimeType":{"type":"string","description":"The mime type","example":"image/png"},"width":{"type":"integer","description":"Width in pixels","example":"502"},"success":{"type":"boolean","description":"A flag to indicate that the Asset was uploaded. This only appears when asset is first uploaded","example":"true","generated":"true"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/images/{AssetId}:
+    
+    uriParameters:
+        
+        AssetId:
+            displayName: AssetId
+            type: string
+            example: 09fe1ee4-42b1-43a6-bd80-cd2bda21e90a
+            required: true
+            description: Identifier for the <a href='http://developers.iqmetrix.com/api/assets/#asset'>Asset</a>
+          
+      
+    get:
+        
+        displayName: Redirecting to an Image Asset
+                
+        
+        description: |            
+            A successful response to this request is a `HTTP 303` redirect with a `Location` header pointing to the actual file where the digital asset is stored
+
+        
+        headers:
+            
+        body:
+            
+        responses:
+            
+            303:
+                
+                body:
+                    
+                    application/text:
+                        
+                            example: |
+                                Location: https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png
+                                
+                        
+                        
+                    
+                
+            
+    

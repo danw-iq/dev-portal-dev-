@@ -1,0 +1,278 @@
+#%RAML 0.8
+title: Facebook Offline Conversions Reports
+baseUri: https://rqdataconnectdemo.iqmetrix.net
+schemas: 
+
+    
+    - Relationship: |
+        {
+          "name": "Relationship",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CompanyID": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>", "example": "14682" },
+            "CompanyName": {  "type": "string", "database": "VARCHAR(50)", "description": "Company name", "example": "KENTEL" }
+          }
+        }
+        
+
+    
+
+    
+    - MarketingReportData: |
+        {
+            "type": "array",
+            "name": "MarketingReportData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": { 
+              "Email": { "type": "string", "database": "VARCHAR(200)", "example": "johntest@kentel.com", "description": "Email" },  
+              "Phone": { "type": "string", "database": "VARCHAR(200)", "example": "5555555555", "description": "Phone number" },  
+              "FirstName": { "type": "string", "database": "VARCHAR(50)", "example": "John", "description": "First name" },  
+              "LastName": { "type": "string", "database": "VARCHAR(50)", "example": "Test", "description": "Last name" },  
+              "City": { "type": "string", "database": "VARCHAR(50)", "example": "Regina", "description": "City" },  
+              "Province": { "type": "string", "database": "VARCHAR(50)", "example": "SK", "description": "Province/State" },  
+              "PostalCode": { "type": "string", "database": "VARCHAR(15)", "example": "H0H0H0", "description": "Postal/Zip code" },  
+              "Country": { "type": "string", "database": "VARCHAR(50)", "example": "Canada", "description": "Country" },  
+              "Category": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Activations,Smart Phones", "description": "Category in RQ" },  
+              "ProductLibraryID": { "type": "string", "database": "VARCHAR(50)", "example": "M5592-E12435", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#product'>Product</a> in Product Library" },  
+              "UnitPrice": { "type": "decimal", "database": "MONEY", "example": "250", "description": "Unit price" },  
+              "ListPrice": { "type": "decimal", "database": "MONEY", "example": "299.99", "description": "List price" },  
+              "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },  
+              "ProductLibraryName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Galaxy Gear Watch - Black", "description": "Name of the Product in Product Library" },  
+              "ProductLibraryCanonicalName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Smartphones", "description": "Name of the Product's Classification in Product Library" }  
+            }  
+          }
+        
+
+    
+
+
+/partner/relationships?Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting Partner Relationships
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CompanyID":14682,"CompanyName":"KENTEL"}]
+                            schema: |
+                                {"name":"Relationship","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"CompanyID":{"type":"integer","database":"INTEGER","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14682"},"CompanyName":{"type":"string","database":"VARCHAR(50)","description":"Company name","example":"KENTEL"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/partner/FacebookOfflineConversions/MarketingReport?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        CompanyID:
+            displayName: CompanyID
+            type: integer
+            example: 21090
+            required: true
+            description: Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2016-6-5
+            required: true
+            description: Date at which report will end
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Get Marketing Report
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"Email":"johntest@kentel.com","Phone":"5555555555","FirstName":"John","LastName":"Test","City":"Regina","Province":"SK","PostalCode":"H0H0H0","Country":"Canada","Category":"Activations,Smart Phones","ProductLibraryID":"M5592-E12435","UnitPrice":250,"ListPrice":299.99,"Quantity":1,"ProductLibraryName":"Galaxy Gear Watch - Black","ProductLibraryCanonicalName":"Smartphones"}]
+                            schema: |
+                                {"type":"array","name":"MarketingReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"Email":{"type":"string","database":"VARCHAR(200)","example":"johntest@kentel.com","description":"Email"},"Phone":{"type":"string","database":"VARCHAR(200)","example":"5555555555","description":"Phone number"},"FirstName":{"type":"string","database":"VARCHAR(50)","example":"John","description":"First name"},"LastName":{"type":"string","database":"VARCHAR(50)","example":"Test","description":"Last name"},"City":{"type":"string","database":"VARCHAR(50)","example":"Regina","description":"City"},"Province":{"type":"string","database":"VARCHAR(50)","example":"SK","description":"Province/State"},"PostalCode":{"type":"string","database":"VARCHAR(15)","example":"H0H0H0","description":"Postal/Zip code"},"Country":{"type":"string","database":"VARCHAR(50)","example":"Canada","description":"Country"},"Category":{"type":"string","database":"NVARCHAR(MAX)","example":"Activations,Smart Phones","description":"Category in RQ"},"ProductLibraryID":{"type":"string","database":"VARCHAR(50)","example":"M5592-E12435","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#product'>Product</a> in Product Library"},"UnitPrice":{"type":"decimal","database":"MONEY","example":"250","description":"Unit price"},"ListPrice":{"type":"decimal","database":"MONEY","example":"299.99","description":"List price"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"ProductLibraryName":{"type":"string","database":"NVARCHAR(MAX)","example":"Galaxy Gear Watch - Black","description":"Name of the Product in Product Library"},"ProductLibraryCanonicalName":{"type":"string","database":"NVARCHAR(MAX)","example":"Smartphones","description":"Name of the Product's Classification in Product Library"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"Email":"johntest@kentel.com","Phone":"5555555555","FirstName":"John","LastName":"Test","City":"Regina","Province":"SK","PostalCode":"H0H0H0","Country":"Canada","Category":"Activations,Smart Phones","ProductLibraryID":"M5592-E12435","UnitPrice":250,"ListPrice":299.99,"Quantity":1,"ProductLibraryName":"Galaxy Gear Watch - Black","ProductLibraryCanonicalName":"Smartphones"}]
+                            schema: |
+                                {"type":"array","name":"MarketingReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"Email":{"type":"string","database":"VARCHAR(200)","example":"johntest@kentel.com","description":"Email"},"Phone":{"type":"string","database":"VARCHAR(200)","example":"5555555555","description":"Phone number"},"FirstName":{"type":"string","database":"VARCHAR(50)","example":"John","description":"First name"},"LastName":{"type":"string","database":"VARCHAR(50)","example":"Test","description":"Last name"},"City":{"type":"string","database":"VARCHAR(50)","example":"Regina","description":"City"},"Province":{"type":"string","database":"VARCHAR(50)","example":"SK","description":"Province/State"},"PostalCode":{"type":"string","database":"VARCHAR(15)","example":"H0H0H0","description":"Postal/Zip code"},"Country":{"type":"string","database":"VARCHAR(50)","example":"Canada","description":"Country"},"Category":{"type":"string","database":"NVARCHAR(MAX)","example":"Activations,Smart Phones","description":"Category in RQ"},"ProductLibraryID":{"type":"string","database":"VARCHAR(50)","example":"M5592-E12435","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#product'>Product</a> in Product Library"},"UnitPrice":{"type":"decimal","database":"MONEY","example":"250","description":"Unit price"},"ListPrice":{"type":"decimal","database":"MONEY","example":"299.99","description":"List price"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"ProductLibraryName":{"type":"string","database":"NVARCHAR(MAX)","example":"Galaxy Gear Watch - Black","description":"Name of the Product in Product Library"},"ProductLibraryCanonicalName":{"type":"string","database":"NVARCHAR(MAX)","example":"Smartphones","description":"Name of the Product's Classification in Product Library"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"Email":"johntest@kentel.com","Phone":"5555555555","FirstName":"John","LastName":"Test","City":"Regina","Province":"SK","PostalCode":"H0H0H0","Country":"Canada","Category":"Activations,Smart Phones","ProductLibraryID":"M5592-E12435","UnitPrice":250,"ListPrice":299.99,"Quantity":1,"ProductLibraryName":"Galaxy Gear Watch - Black","ProductLibraryCanonicalName":"Smartphones"}]
+                            schema: |
+                                {"type":"array","name":"MarketingReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"Email":{"type":"string","database":"VARCHAR(200)","example":"johntest@kentel.com","description":"Email"},"Phone":{"type":"string","database":"VARCHAR(200)","example":"5555555555","description":"Phone number"},"FirstName":{"type":"string","database":"VARCHAR(50)","example":"John","description":"First name"},"LastName":{"type":"string","database":"VARCHAR(50)","example":"Test","description":"Last name"},"City":{"type":"string","database":"VARCHAR(50)","example":"Regina","description":"City"},"Province":{"type":"string","database":"VARCHAR(50)","example":"SK","description":"Province/State"},"PostalCode":{"type":"string","database":"VARCHAR(15)","example":"H0H0H0","description":"Postal/Zip code"},"Country":{"type":"string","database":"VARCHAR(50)","example":"Canada","description":"Country"},"Category":{"type":"string","database":"NVARCHAR(MAX)","example":"Activations,Smart Phones","description":"Category in RQ"},"ProductLibraryID":{"type":"string","database":"VARCHAR(50)","example":"M5592-E12435","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#product'>Product</a> in Product Library"},"UnitPrice":{"type":"decimal","database":"MONEY","example":"250","description":"Unit price"},"ListPrice":{"type":"decimal","database":"MONEY","example":"299.99","description":"List price"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"ProductLibraryName":{"type":"string","database":"NVARCHAR(MAX)","example":"Galaxy Gear Watch - Black","description":"Name of the Product in Product Library"},"ProductLibraryCanonicalName":{"type":"string","database":"NVARCHAR(MAX)","example":"Smartphones","description":"Name of the Product's Classification in Product Library"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"Email":"johntest@kentel.com","Phone":"5555555555","FirstName":"John","LastName":"Test","City":"Regina","Province":"SK","PostalCode":"H0H0H0","Country":"Canada","Category":"Activations,Smart Phones","ProductLibraryID":"M5592-E12435","UnitPrice":250,"ListPrice":299.99,"Quantity":1,"ProductLibraryName":"Galaxy Gear Watch - Black","ProductLibraryCanonicalName":"Smartphones"}]
+                            schema: |
+                                {"type":"array","name":"MarketingReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"Email":{"type":"string","database":"VARCHAR(200)","example":"johntest@kentel.com","description":"Email"},"Phone":{"type":"string","database":"VARCHAR(200)","example":"5555555555","description":"Phone number"},"FirstName":{"type":"string","database":"VARCHAR(50)","example":"John","description":"First name"},"LastName":{"type":"string","database":"VARCHAR(50)","example":"Test","description":"Last name"},"City":{"type":"string","database":"VARCHAR(50)","example":"Regina","description":"City"},"Province":{"type":"string","database":"VARCHAR(50)","example":"SK","description":"Province/State"},"PostalCode":{"type":"string","database":"VARCHAR(15)","example":"H0H0H0","description":"Postal/Zip code"},"Country":{"type":"string","database":"VARCHAR(50)","example":"Canada","description":"Country"},"Category":{"type":"string","database":"NVARCHAR(MAX)","example":"Activations,Smart Phones","description":"Category in RQ"},"ProductLibraryID":{"type":"string","database":"VARCHAR(50)","example":"M5592-E12435","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#product'>Product</a> in Product Library"},"UnitPrice":{"type":"decimal","database":"MONEY","example":"250","description":"Unit price"},"ListPrice":{"type":"decimal","database":"MONEY","example":"299.99","description":"List price"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"ProductLibraryName":{"type":"string","database":"NVARCHAR(MAX)","example":"Galaxy Gear Watch - Black","description":"Name of the Product in Product Library"},"ProductLibraryCanonicalName":{"type":"string","database":"NVARCHAR(MAX)","example":"Smartphones","description":"Name of the Product's Classification in Product Library"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"Email":"johntest@kentel.com","Phone":"5555555555","FirstName":"John","LastName":"Test","City":"Regina","Province":"SK","PostalCode":"H0H0H0","Country":"Canada","Category":"Activations,Smart Phones","ProductLibraryID":"M5592-E12435","UnitPrice":250,"ListPrice":299.99,"Quantity":1,"ProductLibraryName":"Galaxy Gear Watch - Black","ProductLibraryCanonicalName":"Smartphones"}]
+                            schema: |
+                                {"type":"array","name":"MarketingReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"Email":{"type":"string","database":"VARCHAR(200)","example":"johntest@kentel.com","description":"Email"},"Phone":{"type":"string","database":"VARCHAR(200)","example":"5555555555","description":"Phone number"},"FirstName":{"type":"string","database":"VARCHAR(50)","example":"John","description":"First name"},"LastName":{"type":"string","database":"VARCHAR(50)","example":"Test","description":"Last name"},"City":{"type":"string","database":"VARCHAR(50)","example":"Regina","description":"City"},"Province":{"type":"string","database":"VARCHAR(50)","example":"SK","description":"Province/State"},"PostalCode":{"type":"string","database":"VARCHAR(15)","example":"H0H0H0","description":"Postal/Zip code"},"Country":{"type":"string","database":"VARCHAR(50)","example":"Canada","description":"Country"},"Category":{"type":"string","database":"NVARCHAR(MAX)","example":"Activations,Smart Phones","description":"Category in RQ"},"ProductLibraryID":{"type":"string","database":"VARCHAR(50)","example":"M5592-E12435","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#product'>Product</a> in Product Library"},"UnitPrice":{"type":"decimal","database":"MONEY","example":"250","description":"Unit price"},"ListPrice":{"type":"decimal","database":"MONEY","example":"299.99","description":"List price"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"ProductLibraryName":{"type":"string","database":"NVARCHAR(MAX)","example":"Galaxy Gear Watch - Black","description":"Name of the Product in Product Library"},"ProductLibraryCanonicalName":{"type":"string","database":"NVARCHAR(MAX)","example":"Smartphones","description":"Name of the Product's Classification in Product Library"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"Email":"johntest@kentel.com","Phone":"5555555555","FirstName":"John","LastName":"Test","City":"Regina","Province":"SK","PostalCode":"H0H0H0","Country":"Canada","Category":"Activations,Smart Phones","ProductLibraryID":"M5592-E12435","UnitPrice":250,"ListPrice":299.99,"Quantity":1,"ProductLibraryName":"Galaxy Gear Watch - Black","ProductLibraryCanonicalName":"Smartphones"}]
+                            schema: |
+                                {"type":"array","name":"MarketingReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"Email":{"type":"string","database":"VARCHAR(200)","example":"johntest@kentel.com","description":"Email"},"Phone":{"type":"string","database":"VARCHAR(200)","example":"5555555555","description":"Phone number"},"FirstName":{"type":"string","database":"VARCHAR(50)","example":"John","description":"First name"},"LastName":{"type":"string","database":"VARCHAR(50)","example":"Test","description":"Last name"},"City":{"type":"string","database":"VARCHAR(50)","example":"Regina","description":"City"},"Province":{"type":"string","database":"VARCHAR(50)","example":"SK","description":"Province/State"},"PostalCode":{"type":"string","database":"VARCHAR(15)","example":"H0H0H0","description":"Postal/Zip code"},"Country":{"type":"string","database":"VARCHAR(50)","example":"Canada","description":"Country"},"Category":{"type":"string","database":"NVARCHAR(MAX)","example":"Activations,Smart Phones","description":"Category in RQ"},"ProductLibraryID":{"type":"string","database":"VARCHAR(50)","example":"M5592-E12435","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/catalog/#product'>Product</a> in Product Library"},"UnitPrice":{"type":"decimal","database":"MONEY","example":"250","description":"Unit price"},"ListPrice":{"type":"decimal","database":"MONEY","example":"299.99","description":"List price"},"Quantity":{"type":"integer","database":"INT","example":"1","description":"Quantity"},"ProductLibraryName":{"type":"string","database":"NVARCHAR(MAX)","example":"Galaxy Gear Watch - Black","description":"Name of the Product in Product Library"},"ProductLibraryCanonicalName":{"type":"string","database":"NVARCHAR(MAX)","example":"Smartphones","description":"Name of the Product's Classification in Product Library"}}}
+                            
+                        
+                    
+                
+            
+    
