@@ -12,7 +12,7 @@ language_tabs:
 search: true
 ---
 
-{% include linkrefs.html %}
+
 
 
 
@@ -111,7 +111,7 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 
 
 
-## Getting All Carriers
+## <span class='get'>GET</span> All Carriers
 
 
 
@@ -227,7 +227,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting a Carrier
+## <span class='get'>GET</span> a Carrier
 
 
 
@@ -348,7 +348,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting All Manufacturers
+## <span class='get'>GET</span> All Manufacturers
 
 
 
@@ -464,7 +464,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting a Manufacturer
+## <span class='get'>GET</span> a Manufacturer
 
 
 
@@ -585,7 +585,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting all Suppliers
+## <span class='get'>GET</span> all Suppliers
 
 
 
@@ -701,7 +701,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting a Supplier
+## <span class='get'>GET</span> a Supplier
 
 
 

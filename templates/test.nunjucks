@@ -12,7 +12,7 @@ language_tabs:
 search: true
 ---
 
-%7B% include linkrefs.html %%7D
+{# {% extends linkrefs.html %} #}
 
 {{ title | printVersions }}
 
@@ -44,7 +44,8 @@ search: true
 
 {% for resource in resources %}{% for method in resource.methods %}
 
-## {{method.displayName}}
+## {{method.displayName | replace("Getting", "<span class='get'>GET</span>") | replace("Adding", "<span class='post'>POST</span>") | replace("Removing", "<span class='delete'>DELETE</span>")
+ | replace("Updating", "<span class='put'>PUT</span>")}}
 
 {{method.description}}
 

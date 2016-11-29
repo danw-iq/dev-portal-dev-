@@ -12,7 +12,7 @@ language_tabs:
 search: true
 ---
 
-{% include linkrefs.html %}
+
 
 
 
@@ -84,7 +84,7 @@ To represent a Currency symbol in unicode, use the format <code>&#(Code);</code>
 
 
 
-## Getting All Countries
+## <span class='get'>GET</span> All Countries
 
 
 
@@ -189,7 +189,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting All Time Zones
+## <span class='get'>GET</span> All Time Zones
 
 
 
@@ -287,7 +287,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting All Currencies
+## <span class='get'>GET</span> All Currencies
 
 Currency resources are returned in ascending alphabetical order by Code.
 

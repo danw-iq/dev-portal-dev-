@@ -12,7 +12,7 @@ language_tabs:
 search: true
 ---
 
-{% include linkrefs.html %}
+
 
 
 
@@ -98,7 +98,7 @@ There is a limit to 20 levels of depth for Categories.
 
 
 
-## Getting a Classification Tree
+## <span class='get'>GET</span> a Classification Tree
 
 
 

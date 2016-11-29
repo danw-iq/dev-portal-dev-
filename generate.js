@@ -284,27 +284,14 @@ function readFiles() {
             }
         }
 
-        writeResourceLinks();   //Write generated_linkrefs
+        //console.log("We are here");
+        //writeResourceLinks();   //Write generated_linkrefs
         processFiles();         //Write RAML to markdown
         writeSidebar();         //Write generated sidebar
 
 
     });
 }
-
-/*
-function writeSidebar() {
-
-    var config = raml2md.getDefaultConfig(SIDEBAR_TEMPLATE);
-    var result = raml2md.renderSimple(config, SIDEBAR_ENTRIES);
-
-    try {
-        fs.writeFileSync(SIDEBAR_LOCATION, result);
-    } catch(e) {
-        console.log("Error writing sidebar!" + e);
-    }
-}
-*/
 
 //This function will create the generated_linkrefs file, a series of generated entries for each NON HIDDEN resource, including a plural copy.
 function writeResourceLinks() {
@@ -350,6 +337,8 @@ function writeResourceLinks() {
 
 //Read each RAML file to be generated
 function processFiles() {
+
+
 
     for (var i = 0; i < filePaths.length; i++) {
 
@@ -431,8 +420,10 @@ function writeFile(fileName, template, versions) {
     var readFile = FOLDER_DIR + fileName + ".raml";
     //var writeFile = SAVE_LOCATION + fileName + ".md";
 
+
+
     var writeFile = SAVE_LOCATION + fileName + ".html.md";
-    //console.log(writeFile);
+    
 
     var config = raml2md.getDefaultConfig(template);
     

@@ -12,7 +12,7 @@ language_tabs:
 search: true
 ---
 
-{% include linkrefs.html %}
+
 
 
 
@@ -318,7 +318,7 @@ A ColorDefinition allows you to define the available Colors for a Product
 
 
 
-## Getting All Catalog Items
+## <span class='get'>GET</span> All Catalog Items
 
 
 
@@ -437,7 +437,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Adding a Catalog Item from Product Library
+## <span class='post'>POST</span> a Catalog Item from Product Library
 
 
 
@@ -567,7 +567,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Catalog Items By Subscription List
+## <span class='get'>GET</span> Catalog Items By Subscription List
 
 
 
@@ -692,7 +692,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Extended Attributes for a Catalog Item
+## <span class='get'>GET</span> Extended Attributes for a Catalog Item
 
 Extended attributes are unvalidated extra properties that can be put on a CatalogItem. They consist of a unique string key and a string value with a max-length of 250 characters.
 
@@ -805,7 +805,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Adding or Updating Extended Attributes for a Catalog Item
+## <span class='post'>POST</span> or <span class='put'>PUT</span> Extended Attributes for a Catalog Item
 
 This request returns <strong>all</strong> Attributes for a Catalog Item, not just ones that were added or updated.
 
@@ -937,7 +937,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Removing Extended Attributes from a Catalog Item
+## <span class='delete'>DELETE</span> Extended Attributes from a Catalog Item
 
 This request allows you to remove extended attributes from a Catalog Item. The request body is an array of strings, where each string is the name of an attribute to be removed.
 
@@ -1047,7 +1047,7 @@ puts response
 
 
 
-## Getting Product Details
+## <span class='get'>GET</span> Product Details
 
 
 
@@ -1294,7 +1294,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Many Product Details At Once
+## <span class='get'>GET</span> Many Product Details At Once
 
 This request returns a dictionary of CatalogItemIds and Product Details for the CatalogItem.
 
@@ -1539,7 +1539,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Compatible Products for a Catalog Item
+## <span class='get'>GET</span> Compatible Products for a Catalog Item
 
 
 
@@ -1700,7 +1700,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Variations for a Catalog Item
+## <span class='get'>GET</span> Variations for a Catalog Item
 
 For more information about Variations, see <a href='/concepts/product-structure/#variations'>Variations</a>
 
@@ -1823,7 +1823,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Products by Vendor SKU
+## <span class='get'>GET</span> Products by Vendor SKU
 
 
 
@@ -1954,7 +1954,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Products by Category or Classification
+## <span class='get'>GET</span> Products by Category or Classification
 
 
 
@@ -2154,7 +2154,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Products by Manufacturer
+## <span class='get'>GET</span> Products by Manufacturer
 
 
 
@@ -2354,7 +2354,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Products by Supplier
+## <span class='get'>GET</span> Products by Supplier
 
 
 
@@ -2554,7 +2554,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting Products Available for Shipping
+## <span class='get'>GET</span> Products Available for Shipping
 
 
 

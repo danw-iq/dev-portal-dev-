@@ -12,7 +12,7 @@ language_tabs:
 search: true
 ---
 
-{% include linkrefs.html %}
+
 
 
 
@@ -298,7 +298,7 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 
 
 
-## Getting a Company
+## <span class='get'>GET</span> a Company
 
 
 
@@ -434,7 +434,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting a Company Tree
+## <span class='get'>GET</span> a Company Tree
 
 
 
@@ -922,7 +922,7 @@ HTTP 201 Content-Type: application/json
 
 
 
-## Updating a Location
+## <span class='put'>PUT</span> a Location
 
 There are <strong>two</strong> different ways to update a location. 
 
@@ -1311,7 +1311,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting a Location for a Company
+## <span class='get'>GET</span> a Location for a Company
 
 
 
@@ -1548,7 +1548,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting All Locations for a Company
+## <span class='get'>GET</span> All Locations for a Company
 
 
 

@@ -12,7 +12,7 @@ language_tabs:
 search: true
 ---
 
-{% include linkrefs.html %}
+
 
 
 
@@ -62,7 +62,7 @@ Ensure each company ID has only <strong>one</strong> cost per product.
 
 
 
-## Adding a Product to Cost Feed
+## <span class='post'>POST</span> a Product to Cost Feed
 
 
 

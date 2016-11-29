@@ -55,8 +55,8 @@ schemas:
           "$schema": "http://json-schema.org/draft-03/schema",
           "properties": {
             "Id": { "type": "integer", "description": "Identifier for the relationship", "example": "6267", "generated": "true" }, 
-            "Source": { "type": "integer", "description": "Identifier for a {{Vendor}}, <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a> or {{Partner}} or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>", "example": "14146" },
-            "Destination": { "type": "integer", "description": "Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a> or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>", "example": "14147" },
+            "Source": { "type": "integer", "description": "Identifier for a {{Vendor}}, {{Carrier}} or {{Partner}} or {{Company}}", "example": "14146" },
+            "Destination": { "type": "integer", "description": "Identifier for a {{Group}}, {{Location}}, {{Division}} or {{Company}}", "example": "14147" },
             "CreatedUtc": { "type": "DateTime", "description": "Date the relationship was formed, in UTC", "example": "2015-11-20T18:22:10.931Z", "generated": "true" }, 
             "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true" },
             "Definition": { "type": "integer", "description": "Reserved for internal use", "example": "2" }
@@ -111,7 +111,7 @@ schemas:
           "name": "CompanyTreeNode",
           "type": "object",
           "$schema": "http://json-schema.org/draft-03/schema",
-          "description": "CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can represent a <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> or device.",
+          "description": "CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can represent a {{Group}}, {{Division}}, {{Location}} or device.",
           "properties": {
             "Id": { "type": "integer", "description": "Identifier", "ref": "company tree.Division.Id", "generated": "true", "putGenerate": "true" }, 
             "Name": { "type": "string", "size": "250", "description": "Name", "ref": "company tree.Division.Name" }, 
@@ -482,7 +482,7 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
           
       
     get:
@@ -512,7 +512,7 @@ schemas:
                             example: |
                                 {"Id":14146,"Name":"Kentel Corp","Description":"Wireless accessories provider with store locations all across the globe.","Roles":[{"Name":"Company"}],"ClientEntityId":"123","CreatedUtc":"2015-05-20T23:06:29.7700813Z","LastModifiedUtc":"2015-05-20T23:06:29.7700813Z","Attributes":{},"Logo":{"Id":"d22291d9-db1d-45e2-ab60-32ac9c145323","Name":"globe-rocket.jpg","Height":341,"Href":"https://amsdemostorage.blob.core.windows.net/assets/d22291d9-db1d-45e2-ab60-32ac9c145323.jpg","Md5Checksum":"d2d0b491ad3eecd9d8c3dabb0610197d","MimeType":"image/jpeg","Width":450},"Relationships":[{"Id":6267,"Source":14146,"Destination":14147,"CreatedUtc":"2015-11-20T18:22:10.931Z","Version":1}],"SortName":"kentel corp","Version":1}
                             schema: |
-                                {"name":"Company","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"Id":{"type":"integer","description":"Unique identifier","example":"14146","generated":"true","putGenerate":"true"},"Name":{"type":"string","size":"250","description":"Name","example":"Kentel Corp"},"Description":{"type":"string","size":"255","description":"Description","example":"Wireless accessories provider with store locations all across the globe."},"Roles":{"type":"array","arrayType":"object","description":"The value must be Company","ref":"company tree.CompanyRole","isNested":"true","properties":{"Name":{"type":"string","description":"Name","example":"Company","name":"Name"}}},"ClientEntityId":{"type":"string","description":"Identifier in an external system","example":"123"},"CreatedUtc":{"type":"DateTime","description":"Created date in UTC","example":"2015-05-20T23:06:29.7700813Z"},"LastModifiedUtc":{"type":"DateTime","description":"Last modified date in UTC","example":"2015-05-20T23:06:29.7700813Z"},"Attributes":{"type":"object","description":"Set of key-value pairs that contain extra data","example":""},"Logo":{"type":"object","description":"A reference to an [Asset](/api/assets/#asset)","ref":"company tree.Asset","properties":{"Id":{"type":"guid","description":"Unique identifier","example":"d22291d9-db1d-45e2-ab60-32ac9c145323","generated":"true","putGenerate":"true","name":"Id"},"Name":{"type":"string","description":"File name","example":"globe-rocket.jpg","generated":"true","name":"Name"},"Height":{"type":"integer","description":"Height in pixels","example":"341","generated":"true","name":"Height"},"Href":{"type":"string","description":"URL that points to an actual file where the digital asset is stored","example":"https://amsdemostorage.blob.core.windows.net/assets/d22291d9-db1d-45e2-ab60-32ac9c145323.jpg","generated":"true","name":"Href"},"Md5Checksum":{"type":"string","description":"String that can be used for upload integrity checks or comparing two assets","example":"d2d0b491ad3eecd9d8c3dabb0610197d","generated":"true","name":"Md5Checksum"},"MimeType":{"type":"string","description":"Mime type","example":"image/jpeg","generated":"true","name":"MimeType"},"Width":{"type":"integer","description":"Width in pixels","example":"450","generated":"true","name":"Width"}}},"Relationships":{"type":"array","arrayType":"object","description":"See [Company Relationships](#company-relationships)","ref":"company tree.Relationship","generated":"true","properties":{"Id":{"type":"integer","description":"Identifier for the relationship","example":"6267","generated":"true","name":"Id"},"Source":{"type":"integer","description":"Identifier for a {{Vendor}}, <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a> or {{Partner}} or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14146","name":"Source"},"Destination":{"type":"integer","description":"Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a> or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>","example":"14147","name":"Destination"},"CreatedUtc":{"type":"datetime","description":"Date the relationship was formed, in UTC","example":"2015-11-20T18:22:10.931Z","generated":"true","name":"CreatedUtc"},"Version":{"type":"integer","description":"Latest revision number","example":"1","generated":"true","name":"Version"},"Definition":{"type":"integer","description":"Reserved for internal use","example":"2"}}},"SortName":{"type":"string","description":"A string used for sorting","example":"kentel corp"},"Version":{"type":"integer","description":"Latest revision number","example":"1"},"CorrelationId":{"type":"string","description":"Reserved for internal use"},"Role":{"type":"string","description":"Reserved for internal use"},"TypeId":{"type":"integer","description":"Reserved for future use"}}}
+                                {"name":"Company","type":"object","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"Id":{"type":"integer","description":"Unique identifier","example":"14146","generated":"true","putGenerate":"true"},"Name":{"type":"string","size":"250","description":"Name","example":"Kentel Corp"},"Description":{"type":"string","size":"255","description":"Description","example":"Wireless accessories provider with store locations all across the globe."},"Roles":{"type":"array","arrayType":"object","description":"The value must be Company","ref":"company tree.CompanyRole","isNested":"true","properties":{"Name":{"type":"string","description":"Name","example":"Company","name":"Name"}}},"ClientEntityId":{"type":"string","description":"Identifier in an external system","example":"123"},"CreatedUtc":{"type":"DateTime","description":"Created date in UTC","example":"2015-05-20T23:06:29.7700813Z"},"LastModifiedUtc":{"type":"DateTime","description":"Last modified date in UTC","example":"2015-05-20T23:06:29.7700813Z"},"Attributes":{"type":"object","description":"Set of key-value pairs that contain extra data","example":""},"Logo":{"type":"object","description":"A reference to an [Asset](/api/assets/#asset)","ref":"company tree.Asset","properties":{"Id":{"type":"guid","description":"Unique identifier","example":"d22291d9-db1d-45e2-ab60-32ac9c145323","generated":"true","putGenerate":"true","name":"Id"},"Name":{"type":"string","description":"File name","example":"globe-rocket.jpg","generated":"true","name":"Name"},"Height":{"type":"integer","description":"Height in pixels","example":"341","generated":"true","name":"Height"},"Href":{"type":"string","description":"URL that points to an actual file where the digital asset is stored","example":"https://amsdemostorage.blob.core.windows.net/assets/d22291d9-db1d-45e2-ab60-32ac9c145323.jpg","generated":"true","name":"Href"},"Md5Checksum":{"type":"string","description":"String that can be used for upload integrity checks or comparing two assets","example":"d2d0b491ad3eecd9d8c3dabb0610197d","generated":"true","name":"Md5Checksum"},"MimeType":{"type":"string","description":"Mime type","example":"image/jpeg","generated":"true","name":"MimeType"},"Width":{"type":"integer","description":"Width in pixels","example":"450","generated":"true","name":"Width"}}},"Relationships":{"type":"array","arrayType":"object","description":"See [Company Relationships](#company-relationships)","ref":"company tree.Relationship","generated":"true","properties":{"Id":{"type":"integer","description":"Identifier for the relationship","example":"6267","generated":"true","name":"Id"},"Source":{"type":"integer","description":"Identifier for a {{Vendor}}, {{Carrier}} or {{Partner}} or {{Company}}","example":"14146","name":"Source"},"Destination":{"type":"integer","description":"Identifier for a {{Group}}, {{Location}}, {{Division}} or {{Company}}","example":"14147","name":"Destination"},"CreatedUtc":{"type":"datetime","description":"Date the relationship was formed, in UTC","example":"2015-11-20T18:22:10.931Z","generated":"true","name":"CreatedUtc"},"Version":{"type":"integer","description":"Latest revision number","example":"1","generated":"true","name":"Version"},"Definition":{"type":"integer","description":"Reserved for internal use","example":"2"}}},"SortName":{"type":"string","description":"A string used for sorting","example":"kentel corp"},"Version":{"type":"integer","description":"Latest revision number","example":"1"},"CorrelationId":{"type":"string","description":"Reserved for internal use"},"Role":{"type":"string","description":"Reserved for internal use"},"TypeId":{"type":"integer","description":"Reserved for future use"}}}
                             
                         
                     
@@ -529,7 +529,7 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
           
       
     get:
@@ -576,14 +576,14 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
         
         NodeId:
             displayName: NodeId
             type: integer
             example: 14159
             required: true
-            description: Identifier of the parent for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+            description: Identifier of the parent for the {{Location}}
           
       
     post:
@@ -644,21 +644,21 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
         
         NodeId:
             displayName: NodeId
             type: integer
             example: 14159
             required: true
-            description: Identifier of the parent for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+            description: Identifier of the parent for the {{Location}}
         
         LocationId:
             displayName: LocationId
             type: string
             example: 14202
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+            description: Identifier for the {{Location}}
           
       
     put:
@@ -674,7 +674,7 @@ schemas:
               <li>Option 2 - <code>PUT /Companies({CompanyId})/Locations({LocationId})</code></li>
             </ul>
             
-            Option 1 requires knowing the <code>NodeId</code> of the parent of the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>, but has <strong>stronger</strong> validation.
+            Option 1 requires knowing the <code>NodeId</code> of the parent of the {{Location}}, but has <strong>stronger</strong> validation.
             
 
         
@@ -731,14 +731,14 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
         
         LocationId:
             displayName: LocationId
             type: string
             example: 14202
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
+            description: Identifier for the {{Location}}
           
       
     get:
@@ -785,7 +785,7 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
           
       
     get:
@@ -832,7 +832,7 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
         
         NodeId:
             displayName: NodeId
@@ -909,7 +909,7 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
         
         NodeId:
             displayName: NodeId
@@ -986,7 +986,7 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
         
         NodeId:
             displayName: NodeId
@@ -1043,7 +1043,7 @@ schemas:
             type: integer
             example: 14146
             required: true
-            description: Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
+            description: Identifier for the {{Company}}
         
         ClientEntityId:
             displayName: ClientEntityId
@@ -1063,7 +1063,7 @@ schemas:
             
             This request returns an array of objects that summarize Entities matching the search criteria. 
             
-            The following resource types are considered 'Entities': <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>, device
+            The following resource types are considered 'Entities': {{Company}}, {{Division}}, {{Group}}, {{Location}}, device
 
         
         headers:

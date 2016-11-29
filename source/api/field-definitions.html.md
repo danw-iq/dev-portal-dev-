@@ -12,7 +12,7 @@ language_tabs:
 search: true
 ---
 
-{% include linkrefs.html %}
+
 
 
 
@@ -115,7 +115,7 @@ The result displayed on the page, with some styling, is shown below
 
 
 
-## Getting All Field Definitions
+## <span class='get'>GET</span> All Field Definitions
 
 
 
@@ -222,7 +222,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Getting a Field Definition
+## <span class='get'>GET</span> a Field Definition
 
 
 
