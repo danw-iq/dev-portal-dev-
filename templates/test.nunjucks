@@ -14,8 +14,6 @@ search: true
 
 {# {% extends linkrefs.html %} #}
 
-{{ title | printVersions }}
-
 {% for item in documentation %}{% if item.title == "overview" %}
 # Overview
 

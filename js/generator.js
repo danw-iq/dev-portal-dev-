@@ -25,14 +25,14 @@ exports = module.exports = {
  templatesPath: a folder containing the templates (optional, by default it's relative to your working directory)
  processOutput: function that takes data, return a promise (optional)
  */
-function render(source, config, versions, resources) {
+function render(source, config, resources) {
   config = config || {};
 
   var env = nunjucks.configure(config.templatesPath, {watch: false});
 
   RESOURCES = resources;
 
-  addFilters(env, versions);
+  addFilters(env);
 
   return raml2obj.parse(source).then(function(ramlObj) {
     ramlObj.config = config;
@@ -127,8 +127,7 @@ function getDefaultConfig(mainTemplate, templatesPath) {
   };
 }
 
-function addFilters(env, versions) {
-
+function addFilters(env) {
 
     //CMI Connect specific
     env.addFilter('printExampleSoap', function(obj, title, hideGenerated, reqSchema) {
@@ -305,37 +304,6 @@ function addFilters(env, versions) {
       return toTitleCase(name).replace(/ /g, "");
     });
 
-    //Only used for versioning
-    env.addFilter('printVersions', function(name) {
-
-      if(versions) {
-
-        var block = "{{tip}}This API reference has the following versions:<br/><ul>";
-
-          for(var i = 0; i < versions.length; i++) {
-
-            //Strip the "v" from the name, if this is an older version
-            if(name.indexOf("-v") > -1) {
-              name = name.substring(0, name.lastIndexOf("-"));
-            }
-
-            var linkTitle = toTitleCase(name.replace("-", " ")) + " " + versions[i].toUpperCase();
-
-            var url = "/api/" + name;
-
-            if(i != (versions.length - 1)) {
-              url += "-" + versions[i];
-            }
-          
-            block += "<li><a href='" + url + "'>" + linkTitle + "</a></li>";
-          }
-
-        block += "</ul>{{end}}";
-
-        return block;
-      }
-    });
-
     //Used for printing code samples in CMI and VMI pages, in documentation section
     env.addFilter('printCode', function(codeSamples, requestName) {
 
@@ -502,11 +470,6 @@ function addFilters(env, versions) {
       return response;
     });
 
-
-/** -------------------
- This function creates the resource table 
-------------------- **/
-
     //obj = schema
     //name = API name
     //title = schema name
@@ -520,15 +483,14 @@ function addFilters(env, versions) {
       if(!isExcluded) {
 
         //Print name of table
-        table += "## " + name + "\n\n";
+        table += "### " + name + "\n\n";
 
         if(schema.description)
         {
           table += schema.description + "\n\n";
         }
 
-        //table += "| Name | Data Type | Description | Example |\n|:-----|:----------|:------------|:--------|\n";
-        table += "| Name | Description |\n|:-----|:------------|\n";
+        table += "| Name | Data Type | Description | Example |\n|:-----|:----------|:------------|:--------|\n";
 
         var properties = getPropertyNames(schema, "printResourceTableProperties"); //[ "Id", "CustomerTypeId" ... ]
 
@@ -1363,8 +1325,7 @@ function printResourceTableProperties(schema, properties, prefix) {
               dataType = property.type;
             }
 
-            //table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
-             table += "| " + prefix + name + " (`" + dataType + "`)" + " | " + description +" | \n";
+            table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
 
             alreadyPrinted = true;
 
@@ -1434,12 +1395,10 @@ function printResourceTableProperties(schema, properties, prefix) {
       //Make sure we don't double-print
       if(!alreadyPrinted) {
         if(isLegacy) {
-          //table += "| *" + prefix + name + "* | *" + dataType +"* | *" + description +"* | |\n";
-          table += "| *" + prefix + name + " (`" + dataType + "`)" + "* | *" + description +"* | |\n";
+          table += "| *" + prefix + name + "* | *" + dataType +"* | *" + description +"* | |\n";
         }
         else {
-          //table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
-          table += "| " + prefix + name + " (`" + dataType + "`)" + " | " + description +" | \n";
+          table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
         }    
       }      
     }

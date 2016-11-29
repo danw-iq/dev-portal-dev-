@@ -10,11 +10,29 @@
     "url": "https://github.com/iQmetrix/api-documentation/issues"
   },
   "dependencies": {
+    "async": "*",
+    "chai": "^3.5.0",
+    "cheerio": "*",
+    "commander": "*",
+    "foreachasync": "*",
+    "guid": "0.0.12",
+    "http-status-codes": "*",
+    "jade": "*",
+    "json-schema-compatibility": "*",
+    "jsonpath": "*",
+    "lodash": "*",
     "nunjucks": "*",
     "pluralize": "*",
     "pretty-data": "^0.40.0",
+    "q": "*",
     "raml2obj": "*",
-    "walk": "*"
+    "request": "^2.74.0",
+    "supermarked": "*",
+    "underscore": "^1.8.3",
+    "urijs": "*",
+    "walk": "*",
+    "when": "*",
+    "xml2json": "^0.10.0"
   },
   "homepage": "https://github.com/iQmetrix/api-documentation",
   "keywords": [
