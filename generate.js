@@ -4,6 +4,7 @@
 // npm install 
 // node generate.js 
 
+var FORCE_GENERATE_ALL = false;                                     //Master switch to generate all RAML
 
 var fs = require('fs');                                             //For reading files
 var walk = require('walk');                                         // For reading all files in a folder
@@ -18,6 +19,7 @@ var FOLDER_DIR = "raml/";                                           //Location o
 var SAVE_LOCATION = "pages/api/";                                   //Location of where the MD files will be generated **THIS FOLDER MUST EXIST OR THE SCRIPT WILL FAIL SILENTLY***
 var TEMPLATES_LOCATION = "templates/";                              //Location of nunjucks templates
 var GENERATED_RAML_LOCATION = "postman/";                           //Location of generated RAML files
+var GENERATED_LINKS_LOCATION = "source/_includes/generated_linkrefs.html"; //Location of where the resource links will be generated
 /*var DEFAULT_TEMPLATE = "default.nunjucks";*/                          //Default nunjucks template
 var DEFAULT_TEMPLATE = "test.nunjucks";                          //Default nunjucks template
 var RAML_TEMPLATE = "templates/raml.nunjucks";                      //Used for generating postman-importable RAML in postman folder
@@ -64,12 +66,14 @@ walker.on('file', function(root, stat, next) {
     //Only generate files that have been changed 
     var modifiedTime = convertDateToUTC(stat.mtime); 
     var currentTime = convertDateToUTC(new Date()); 
-    var generateFile = true; //modifiedTime >= currentTime;
+    var generateFile = modifiedTime >= currentTime;
 
-    //We can technically support versioned files using name-vx.raml, but this is old, untested code
-    if(stat.name.indexOf("-v") > -1) {
+    //Force generate every file
+    if(FORCE_GENERATE_ALL) {
+        generateFile = true;
+    } 
 
-
+    filePaths.push({ "name": root + '/' + stat.name, "generate": generateFile });
 
     next();
 });
@@ -86,6 +90,7 @@ function readFiles() {
 
     //Create the list of files, including sub paths for edge cases
     for(var i = 0; i < filePaths.length; i++) {
+        readFileList.push(filePaths[i].name);
     }
 
     var promises = [];
@@ -112,6 +117,10 @@ function readFiles() {
                 var schemas = ramlObj.schemas;
                 var apiName = ramlObj.title;
 
+                //Build up API Object, used for cross referencing in RAML
+                var crossRefObj = {};
+                crossRefObj.name = apiName;
+                crossRefObj.resources = [];
 
                 //Loop through every Schema in the RAML ("resource" in API docs)
                 //This section creates generated_linkrefs file which allows us to do {{Customer}} in RAML instead of <a href="/api/customers#customer">Customer</a>
@@ -123,6 +132,7 @@ function readFiles() {
                     var resourceName = schemaString.substring(schemaString.indexOf("{") + 2, schemaString.indexOf(":") - 1).trim();
                     var schemaObj = JSON.parse(schema[resourceName]);
 
+                    crossRefObj.resources.push( { "name" : resourceName, "schema": schemaObj});
 
                     //List of resources needed for later generation
                     if(schemaObj.exclude != 'true') {
@@ -139,11 +149,15 @@ function readFiles() {
                     }
                 }
 
+                RESOURCES.push(crossRefObj);                
             }
+            else 
+            {
                 console.log("RAML file " + results[i].reason.problem_mark.name +  " failed validation");
             }
         }
 
+        writeResourceLinks();   //Write generated_linkrefs
         processFiles();         //Write RAML to markdown
     });
 }
@@ -164,8 +178,11 @@ function writeResourceLinks() {
 
         resourceName = resourceName.replace("!", "");
 
+        //Get the resource name and plural of it
         var resourceNameLowerCase = resourceName.toLowerCase();
         var resourceNamePlural = pluralize(resourceName);
+            
+        //Deal with namespace collissions
         if(collided) {
             captureName = apiName + "_" + resourceName;
             captureNamePlural = apiName + "_" + resourceNamePlural;
@@ -174,9 +191,17 @@ function writeResourceLinks() {
             captureNamePlural = resourceNamePlural;
         }
 
+        //Format actual HTML to be used
         captureUrl = "<a href='http://developers.iqmetrix.com/api/" + apiName + "/#" + resourceNameLowerCase + "'>" + resourceName + "</a>";
         fileContents += "{% capture " + captureName + " %}" + captureUrl + "{% endcapture %}\n";
         GENERATED_LINK_RESOURCES.push({ "name": captureName, "url": captureUrl });
+
+        //Dont add plural if they're identical
+        if(captureName != captureNamePlural) {
+            captureUrlPlural = "<a href='http://developers.iqmetrix.com/api/" + apiName + "/#" + resourceNameLowerCase + "'>" + resourceNamePlural + "</a>";            
+            fileContents += "{% capture " + captureNamePlural + " %}" + captureUrlPlural + "{% endcapture %}\n";
+            GENERATED_LINK_RESOURCES.push({ "name": captureNamePlural,  "url": captureUrlPlural });
+        }
     }
 
     fs.writeFileSync(GENERATED_LINKS_LOCATION, fileContents);
@@ -190,6 +215,13 @@ function processFiles() {
         //Generate it?
         if(filePaths[i].generate) {
 
+            //Pull out real file name and get template
+            var fileName = extractFileNameFromPath( filePaths[i].name);
+            var template = getTemplateForFile(fileName);
+            
+            //Write markdown and postman
+            writeFile(fileName, template);
+            writeGeneratedRaml(fileName, RAML_TEMPLATE);  
         }
     }
 }
@@ -209,7 +241,10 @@ function extractFileNameFromPath(filePath) {
     return filePath.substring(filePath.indexOf("//") + 2, filePath.indexOf("."));
 }
 
+//Replaces values in {{}} notation RAML with HTML as defined in constant linkrefs files
+function replaceConstants(result) {
 
+    result = result.toString()
 
     for(var i = 0; i < GENERATED_LINK_RESOURCES.length; i++) {
         var link = "{{" + GENERATED_LINK_RESOURCES[i].name + "}}";
@@ -220,14 +255,29 @@ function extractFileNameFromPath(filePath) {
         result = result.replace(regex, content);
     }
 
+    //Because nunjucks is stupid
+    result = result.replace("%7B","{");
+    result = result.replace("%7D","}");
+    result = result.replace("(%7B%7BAccessToken_Glossary%7D%7D)", "({{AccessToken_Glossary}})");
+    result = result.replace(/&lt;/g, "<");
+    result = result.replace(/&gt;/g, ">");
+    result = result.replace(/&#39;/g, "'");
+    result = result.replace(/&quot;/g, "\"");
+    result = result.replace(/&amp;/g, "&");
+    
     return result;
 }
 
+function writeFile(fileName, template) {
+
     //Determine file to read, write and template to use
     var readFile = FOLDER_DIR + fileName + ".raml";
+    var writeFile = SAVE_LOCATION + fileName + ".md";
     var config = raml2md.getDefaultConfig(template);
     
+    raml2md.render(readFile, config, RESOURCES).then(function(result) {
 
+        result = replaceConstants(result);        
         fs.writeFileSync(writeFile, unescape(result));
 
     }, function(error) {
@@ -241,7 +291,9 @@ function writeGeneratedRaml(fileName, template) {
     var writeFile = GENERATED_RAML_LOCATION + fileName + ".raml";
     var config = raml2md.getDefaultConfig(template);
      
+    raml2md.render(readFile, config, RESOURCES).then(function(result) {
 
+        result = replaceConstants(result);        
         fs.writeFileSync(writeFile, result); 
     }, 
     function(error) {
