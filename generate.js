@@ -8,8 +8,8 @@ var fs = require('fs'); //For reading files
 var nunjucks = require('nunjucks'); //For using nunjucks files
 var walk = require('walk'); // For reading all files in a folder
 var raml2obj = require('raml2obj'); //For reading in RAML
-var raml2swagger = require('./source/javascripts/lib/raml2swagger.js'); //Unused, for raml->Swagger
-var raml2md = require('./source/javascripts/lib/generator.js'); //Custom class used to inject helpers (functions) into the nunjucks files
+var raml2swagger = require('./js/raml2swagger.js'); //Unused, for raml->Swagger
+var raml2md = require('./js/generator.js'); //Custom class used to inject helpers (functions) into the nunjucks files
 var async = require('async'); //Used to force sync methods to be async
 var path = require('path'); //Used to read files
 var _ = require('lodash'); 
@@ -422,7 +422,7 @@ function writeFile(fileName, template, versions) {
 
 
 
-    var writeFile = SAVE_LOCATION + fileName + ".html.md";
+    var writeFile = SAVE_LOCATION + fileName + "/" + "index.html.md";
     
 
     var config = raml2md.getDefaultConfig(template);
