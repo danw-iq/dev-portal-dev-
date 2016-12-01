@@ -1263,6 +1263,156 @@ function printResponseBullets(schema, title, method) {
   return responseParameters;
 }
 
+//Print resource table json example
+function printResourceTableExample(schema, properties, prefix) {
+
+  var table = "";
+
+  for(var i = 0; i < properties.length; i++) {
+    var name = properties[i];
+    var dataType = "";
+    var description = "";
+    var example = "";
+    var property = schema.properties[name];
+    var alreadyPrinted = false;
+
+    if(prefix != "" && !schema.exclude) {
+      prefix = "";
+    }
+
+    if(!property) {
+      console.log("Error in printResourceTableProperties " + properties)
+    }
+
+    //Override case, do not show if set or if the name has a "." (legacy case)
+    var hideFromTable = property.hideFromTable || name.indexOf(".") > -1;
+
+    if(!hideFromTable) {
+
+      //Database type overrides data type
+      if(property.database) {
+        dataType = property.database;
+      }
+      else if (property.type) {
+        dataType = property.type;
+      }
+
+      if(property.description)
+      {
+        description = property.description;
+      }
+
+      if(property.ref) {
+        
+        //If this is a simple replace (apiname.resourcename.propertyname) + not Obj/Array, just replace the example
+        if(property.ref && dataType != "object" && dataType != "array") {
+            property.example = getValueFromAPI(property.ref);
+        } 
+        else {
+
+          var tokens = property.ref.split(".");
+          var value = tokens[tokens.length - 1];
+
+          //Special case - Nesting allows us to nest the table.
+          //STOP NEST is used if we want to have a semi-nested object - one level of nesting, one level of split-resource, to designate where to stop
+          if(property.isNested && !property.stopNest) {
+
+            //First print the header
+            if(property.arrayType) {
+              //case 1: Nested array, print array of object/string/etc
+              dataType = util.format("Array[%s]", property.arrayType);
+            } 
+            else {
+              //case 2: Nested object, print object
+              dataType = property.type;
+            }
+
+            //table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
+            table += "| " + prefix + name + " (`" + dataType + "`)" + " | " + description +" | \n";
+
+            alreadyPrinted = true;
+
+            var apiName = tokens[0];
+            var schemaName = tokens[1];
+            var innerSchema = extractResource(apiName, schemaName);
+
+            //Recurse!
+            var innerProperties = getPropertyNames(innerSchema, "printResourceTableProperties"); //[ "Id", "CustomerTypeId" ... ]
+
+            //Store old prefix for when recursion is complete
+            var oldPrefix = prefix;
+            prefix = prefix + name + ".";
+
+            //Recurse!
+            table += printResourceTableProperties(innerSchema, innerProperties, prefix);
+
+            //Restore old prefix
+            prefix = oldPrefix;
+          }
+          else {
+
+            var linkValue = value;
+
+            //Manually override the link - used only for SOAP APIs
+            if(property.fixlink) {
+              linkValue = property.fixlink;
+            } 
+
+            if(property.arrayType) {
+              //case 3: Regular table, print array of link to object
+              dataType = util.format("Array[%s]", linkWrap(linkValue, property.ref));
+            }
+            else {
+              dataType = linkWrap(linkValue, property.ref);
+            }
+          }
+        }
+      } //Print an array
+      else if (property.type == "array" && property.arrayType) {
+        dataType = "Array[" + property.arrayType + "]";
+      }
+
+      //Include size in data type if provided
+      if(property.size) {
+        dataType += "("+ property.size +")";
+      }
+
+      //Place example in back ticks if provided
+      if(property.example) {
+        example = "`" + property.example + "`";
+      }
+
+      //Replace guid with GUID
+      if(dataType.match(/guid/i) && dataType.match(/guid/i).length > 0) {
+        dataType = "GUID";
+      } //Fix DateTime type
+      else if (dataType.match(/datetime/i) && dataType.match(/datetime/i).length > 0) {
+        dataType = "DateTime";
+      }
+      else if (dataType.indexOf("#") == -1 && !property.database) {
+        dataType = toTitleCase(dataType);
+      }
+
+      var isLegacy = doNotPrint(property.description);
+
+      //Make sure we don't double-print
+      if(!alreadyPrinted) {
+        if(isLegacy) {
+          //table += "| *" + prefix + name + "* | *" + dataType +"* | *" + description +"* | |\n";
+          table += "| *" + prefix + name + " (`" + dataType + "`)" + "* | *" + description +"* | |\n";
+        }
+        else {
+          //table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
+          table += "| " + prefix + name + " (`" + dataType + "`)" + " | " + description +" | \n";
+        }    
+      }      
+    }
+  }  
+  
+
+  return table;
+}
+
 //Print resource table properties
 function printResourceTableProperties(schema, properties, prefix) {
 
