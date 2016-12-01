@@ -1,190 +1,56 @@
 ---
 title: API Reference
 
-language_tabs:
-  - javascript
-  - shell: cURL
-  - csharp: c#
-  - java
-  - ruby
-
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 
-search: true
+search: false
 ---
 
-# Overview
+# APIs
 
-The cost feed provides iQmetrix with the wholesale cost (inclusive cost for the company) for each product.  
-The cost feed allows suppliers to input a list of products, where each product includes one cost and list of associated companies.
+This section provides in-depth documentation for all iQmetrix RQ APIs along with Platform APIs that are integrated with RQ.
 
-These costs will be provided for retailers (companies) to use for future transactions and will be reflected in RQ and BI reporting. 
-
-Products can be repeated in this feed with different costs. For example, the iPhone 6 could be priced differently depending on where it is sold. 
-
-<aside class="notice">Ensure each company ID has only *one* cost per product.</aside>
-
-
-# Endpoints
-
-
-* Sandbox: <a href="https://dropshipdemo.iqmetrix.net/v1">https://dropshipdemo.iqmetrix.net/v1</a>
-* Production: <a href="https://dropship.iqmetrix.net/v1">https://dropship.iqmetrix.net/v1</a>
-
-
-# Resources
-
-## Cost
-
-| Name | Data Type | Description | Example |
-|:-----|:----------|:------------|:--------|
-| Id | GUID | Unique identifer | `2e18496c-8f73-4298-8c96-a07816926734` |
-| Products | Array[object] | List of products for which the cost is being updated |  |
-| Products.Sku | String | Vendor product SKU | `1115884` |
-| Products.Cost | Decimal | Vendor product cost applied to the associated companies | `12.99` |
-| Products.CompanyIds | Array[integer] | List of [Company](/api/company-tree#company) identifiers to receive Vendor product cost | `14146` |
-
-
-# Requests
-
-### Adding a Product to Cost Feed
-
-
-```javascript
-POST /Suppliers({SupplierId})/Cost
-```
-
-
-### Headers
-
-* Authorization: Bearer (Access Token) - See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
-* Accept: application/json
-* Content-Type: application/json
-
-
-### URI Parameters
-
-* SupplierId (**Required**) - Identifier of the Supplier
-   
-
-### Request Parameters
-
-* Products (**Required**) 
- * Sku (**Required**) 
- * Cost (**Required**) 
- * CompanyIds (**Required**)
-
-
-```javascript
-POST /Suppliers(14107)/Cost
-Authorization: Bearer (Access Token)
-Accept: application/json
-Content-Type: application/json
-{
-    "Products": [
-        {
-            "Sku": "1115884",
-            "Cost": 12.99,
-            "CompanyIds": [
-                14146
-            ]
-        }
-    ]
-}
-```
-
-```shell
-curl -X POST "https://dropshipdemo.iqmetrix.net/v1/Suppliers(14107)/Cost" -H "Authorization: Bearer (Access Token)" -H "Accept: application/json" -H "Content-Type: application/json" -d '{
-    "Products": [
-        {
-            "Sku": "1115884",
-            "Cost": 12.99,
-            "CompanyIds": [
-                14146
-            ]
-        }
-    ]
-}
-```
-
-```csharp
-static IRestResponse AddingAProductToCostFeed()
-{
-    var client = new RestClient("https://dropshipdemo.iqmetrix.net/v1/Suppliers(14107)/Cost");
-    var request = new RestRequest(Method.POST);
      
-    request.AddHeader("Authorization", "Bearer (Access Token)"); 
-    request.AddHeader("Accept", "application/json"); 
-    request.AddHeader("Content-Type", "application/json"); 
+# Featured RQ APIs
+      
+* [Carrier Integration](/api/carrier-integration.html)
+* [Commissions](/api/commissions.html)
+* [Customer Managed Inventory](/api/cmi.html)
+* [Electronic Product Catalog](/api/epc.html)
+* [Punch Clock](/api/punch-clock.html)
+* [RQ Data Connect](/api/RQ-Data-Connect.html)
+* [RQ Data Connect Bridge](/api/RQ-Data-Connect-Bridge.html)
+* [Vendor Managed Inventory](/api/vmi.html)
 
-     request.AddParameter("application/json", "{\"Products\":[{\"Sku\":\"1115884\",\"Cost\":12.99,\"CompanyIds\":[14146]}]}", ParameterType.RequestBody);
+      
 
-    return client.Execute(request);
-}
-```
+# Other APIs
 
-```java
-import org.apache.http.entity.StringEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import java.io.IOException;
-
-public static CloseableHttpResponse AddingAProductToCostFeed() throws IOException {
-    CloseableHttpClient httpClient = HttpClients.createDefault();
-    HttpPost request = new HttpPost("https://dropshipdemo.iqmetrix.net/v1/Suppliers(14107)/Cost");
-     
-    request.addHeader("Authorization", "Bearer (Access Token)"); 
-    request.addHeader("Accept", "application/json"); 
-    request.addHeader("Content-Type", "application/json"); 
-    StringEntity body = new StringEntity("{\"Products\":[{\"Sku\":\"1115884\",\"Cost\":12.99,\"CompanyIds\":[14146]}]}");
-    request.setEntity(body);
-    
-    return httpClient.execute(request);
-}
-```
-
-```ruby
-# This code sample uses [rest-client](https://github.com/rest-client/rest-client), ensure you `gem install rest-client`.
-
-body = "{\"Products\":[{\"Sku\":\"1115884\",\"Cost\":12.99,\"CompanyIds\":[14146]}]}";
-
-response = RestClient.post 'https://dropshipdemo.iqmetrix.net/v1/Suppliers(14107)/Cost', body, {
-     :'Authorization' => 'Bearer (Access Token)',
-     :'Accept' => 'application/json',
-     :'Content-Type' => 'application/json',
-    } 
-
-puts response
-```
-
-### Response
-
-[Cost](#cost)
-
-
-```javascript
-HTTP 202 Content-Type: application/json
-{
-    "Id": "2e18496c-8f73-4298-8c96-a07816926734",
-    "Products": [
-        {
-            "Sku": "1115884",
-            "Cost": 12.99,
-            "CompanyIds": [
-                14146
-            ]
-        }
-    ]
-}
-```
-
-# Errors
-
-| HTTP Status Code | Description | How to Resolve |
-|:-----------------|:------------|:---------------|
-| `HTTP 400` | `Cannot find supplier identifier in the uri` | Occurs when entering an incorrect `SupplierId` in the uri |
+* [Authentication](/api/authentication.html)
+* [Catalog](/api/catalog.html)
+* [Classification Tree](/api/classification-tree.html)
+* [Company Tree](/api/company-tree.html)
+* [Cost Feed](/api/cost-feed.html)
+* [Customers](/api/crm.html)
+* [Entities](/api/entity-store.html)
+* [Field Definitions](/api/field-definitions.html)
+* [General Ledger](/api/general-ledger.html)
+* [Inventory Availability](/api/availability.html)
+* [Orders](/api/orders.html)
+* [Partner Relationships](/api/partner-relationships.html)
+* [Partner Reporting](/api/partner-reporting.html)
+* [Pricing](/api/pricing.html)
+* [Product Feed](/api/product-feed.html)
+* [Products](/api/product-library.html)
+* [Product Structure](/api/product-structure.html)
+* [Product Subscription](/api/product-subscription.html)
+* [Reference](/api/reference.html)
+* [Shipping Aggregator](/api/saccs.html)
+* [security-roles](/api/Security Roles.html)
+* [Shipping Options](/api/shipping-options.html)
+* [Supplier Availability](/api/supplier-availability.html)
+* [Supplier Orders](/api/supplier-orders.html)
+* [User Manager](/api/user-manager.html)

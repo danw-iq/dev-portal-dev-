@@ -75,6 +75,20 @@ The result displayed on the page, with some styling, is shown below
 
 {{note}} Use the <strong>StringId</strong> identifier instead of <strong>Id</strong>, as Id may change across Environments {{end}}
 
+```json
+{
+	"Id": "1",
+	"StringId": "Product Name",
+	"InputType": "TestSingleLine",
+	"IsRequired": "true",
+	"LanguageInvariantUnit": "mm",
+	"DisplayName": "Product Name",
+	"Options":
+		"Id": "1",
+	"Value": "Blue"
+}
+```
+
 | Name | Description |
 |:-----|:------------|
 | Id (`Integer`) | Identifier | 
@@ -87,9 +101,6 @@ The result displayed on the page, with some styling, is shown below
 | Options.Id (`Integer`) | Identifier | 
 | Options.Value (`String`) | Value | 
 | *LanguageInvariantName (`String`)* | *This is a legacy property that should not be used* | |
-
-
-
 
 
 ## Enumerations

@@ -58,6 +58,24 @@ See the table below for a list of legal relationships and where the identifier o
 
 ## Company
 
+```json
+{
+	"Id": "14146",
+	"Name": "Kentel Corp",
+	"Description": "Wireless accessories provider with store locations all across the globe.",
+	"Roles":
+		"Name": "Company",
+	"ClientEntityId": "123",
+	"CreatedUtc": "2015-05-20T23:06:29.7700813Z",
+	"LastModifiedUtc": "2015-05-20T23:06:29.7700813Z",
+	"Attributes": "",
+	"Logo": "undefined",
+	"Relationships": "undefined",
+	"SortName": "kentel corp",
+	"Version": "1"
+}
+```
+
 | Name | Description |
 |:-----|:------------|
 | Id (`Integer`) | Unique identifier | 
@@ -76,9 +94,17 @@ See the table below for a list of legal relationships and where the identifier o
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *Role (`String`)* | *Reserved for internal use* | |
 | *TypeId (`Integer`)* | *Reserved for future use* | |
-
-
 ## Relationship
+
+```json
+{
+	"Id": "6267",
+	"Source": "14146",
+	"Destination": "14147",
+	"CreatedUtc": "2015-11-20T18:22:10.931Z",
+	"Version": "1"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -88,8 +114,19 @@ See the table below for a list of legal relationships and where the identifier o
 | CreatedUtc (`DateTime`) | Date the relationship was formed, in UTC | 
 | Version (`Integer`) | Latest revision number | 
 | *Definition (`Integer`)* | *Reserved for internal use* | |
-
 ## Asset
+
+```json
+{
+	"Id": "d22291d9-db1d-45e2-ab60-32ac9c145323",
+	"Name": "globe-rocket.jpg",
+	"Height": "341",
+	"Href": "https://amsdemostorage.blob.core.windows.net/assets/d22291d9-db1d-45e2-ab60-32ac9c145323.jpg",
+	"Md5Checksum": "d2d0b491ad3eecd9d8c3dabb0610197d",
+	"MimeType": "image/jpeg",
+	"Width": "450"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -100,12 +137,21 @@ See the table below for a list of legal relationships and where the identifier o
 | Md5Checksum (`String`) | String that can be used for upload integrity checks or comparing two assets | 
 | MimeType (`String`) | Mime type | 
 | Width (`Integer`) | Width in pixels | 
-
 ## CompanyTree
 
 Your Company Tree is a hierarchial representation of how your Company is structured, including the root Company, Groups, Divisions and Locations.
 
 To learn more about Company Trees, see {{CompanyTree_Concept}}.
+
+```json
+{
+	"Id": "14146",
+	"Name": "Kentel Corp",
+	"Description": "Wireless accessories provider with store locations all across the globe.",
+	"Role": "Company",
+	"Nodes": "undefined"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -114,10 +160,19 @@ To learn more about Company Trees, see {{CompanyTree_Concept}}.
 | Description (`String(255)`) | Description | 
 | Role (`String`) | Role | 
 | Nodes (`Array[<a href='/api/company-tree/#companytreenode'>CompanyTreeNode</a>]`) | The Company Tree hierarchy made up of Nodes | 
-
 ## CompanyTreeNode
 
 CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can represent a <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> or device.
+
+```json
+{
+	"Id": "14159",
+	"Name": "T-hut Wireless",
+	"Description": "Division of Kiosks",
+	"Role": "Division",
+	"Nodes": ""
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -126,10 +181,40 @@ CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can r
 | Description (`String(255)`) | Description | 
 | Role (`String`) | Role, possible values include: Company, Group, Division and Location | 
 | Nodes (`Array[object]`) | Children | 
-
 ## Location
 
 A **Location** is a physical or virtual presence that may hold inventory or process transactions.
+
+```json
+{
+	"Id": "14202",
+	"Name": "Dufferin Mall",
+	"Description": "This Location is used to clear out discounted inventory",
+	"Roles":
+		"Name": "Location",
+	"CreatedUTC": "2015-02-26T00:03:01.372Z",
+	"LastModifiedUTC": "2015-02-27T00:03:06.392Z",
+	"Area": "undefined",
+	"Address": "undefined",
+	"Attributes": "undefined",
+	"ClientEntityId": "123",
+	"Contacts": "undefined",
+	"Geography":
+		"Longitude": "-104.612034",
+	"Latitude": "50.443559",
+	"Relationships": "",
+	"SortName": "dufferin mall",
+	"StoreHours": "undefined",
+	"StorePhoneNumbers":
+		"Description": "Main Line",
+	"Number": "5555555555",
+	"Extension": "1234",
+	"TimeZone":
+		"Id": "Alaskan Standard Time",
+	"DaylightSavingTimeEnabled": "true",
+	"Version": "13"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -165,14 +250,29 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | *Logo (`Object`)* | *Reserved for internal use* | |
 | *Role (`String`)* | *Reserved for internal use* | |
 | *TypeId (`Integer`)* | *Reserved for future use* | |
-
-
-
 ## Division
 
 Division, as well as Groups, serve as generic buckets clients can use to organize the company tree. Divisions could be used to represent sub-brand or sub-company of a main company.
 
 To learn more about Divisions, see {{Division_Concept}}.
+
+```json
+{
+	"Id": "14159",
+	"Name": "T-hut Wireless",
+	"Description": "Division of Kiosks",
+	"Roles":
+		"Name": "Division",
+	"ClientEntityId": "187",
+	"CreatedUTC": "2015-05-20T23:06:29.7700813Z",
+	"LastModifiedUTC": "2015-05-20T23:06:29.7700813Z",
+	"Attributes": "undefined",
+	"Logo": "undefined",
+	"Relationships": "",
+	"SortName": "t-hut wireless",
+	"Version": "1"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -192,13 +292,29 @@ To learn more about Divisions, see {{Division_Concept}}.
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *Role (`String`)* | *Reserved for internal use* | |
 | *TypeId (`Integer`)* | *Reserved for future use* | |
-
-
 ## Group
 
 Managerial or geographical groupings.
 
  To learn more about Groups, see {{Group_Concept}}.
+
+```json
+{
+	"Id": "14166",
+	"Name": "Toronto",
+	"Description": "Group within Ontario",
+	"Roles":
+		"Name": "Group",
+	"ClientEntityId": "187",
+	"CreatedUTC": "2015-05-20T23:06:29.7700813Z",
+	"LastModifiedUTC": "2015-05-20T23:06:29.7700813Z",
+	"Attributes": "undefined",
+	"Logo": "",
+	"Relationships": "",
+	"SortName": "toronto",
+	"Version": "1"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -218,13 +334,22 @@ Managerial or geographical groupings.
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *Role (`String`)* | *Reserved for internal use* | |
 | *TypeId (`Integer`)* | *Reserved for future use* | |
-
-
-
-
 ## Address
 
 A **Location** is a physical or virtual presence that may hold inventory or process transactions.
+
+```json
+{
+	"AddressLine1": "4970 Hillside Avenue",
+	"AddressLine2": "Apt 115",
+	"City": "Edmonton",
+	"StateCode": "ON",
+	"StateName": "Ontario",
+	"CountryCode": "CA",
+	"CountryName": "Canada",
+	"Zip": "P9H 9I4"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -236,23 +361,45 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | CountryCode (`String`) | Country Code. Uses the ISO 3166-1 alpha-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a> | 
 | CountryName (`String`) | Country | 
 | Zip (`String`) | Zip or Postal Code | 
-
 ## Area
+
+```json
+{
+	"Value": "1100",
+	"Unit": "SqFt"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
 | Value (`Integer`) | Value of the Area | 
 | Unit (`String`) | Unit used for the Value, acceptable values are SqFt and SqM | 
-
 ## TimeZone
+
+```json
+{
+	"Id": "Alaskan Standard Time",
+	"DaylightSavingTimeEnabled": "true"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
 | Id (`String`) | Identifier. For a list of acceptable values, see <a href='/api/reference/#getting-all-time-zones'>Getting All Time Zones</a> | 
 | DaylightSavingTimeEnabled (`Boolean`) | A flag to indicate if the Time Zone observes Daylight Savings Time | 
-
-
 ## StoreHours
+
+```json
+{
+	"Monday": "undefined",
+	"Tuesday": "undefined",
+	"Wednesday": "undefined",
+	"Thursday": "undefined",
+	"Friday": "undefined",
+	"Saturday": "undefined",
+	"Sunday": "undefined"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -263,8 +410,18 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | Friday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Monday | 
 | Saturday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Saturday | 
 | Sunday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Sunday | 
-
 ## WeekDay
+
+```json
+{
+	"Open":
+		"Hour": "10",
+	"Minute": "0",
+	"Close":
+		"Hour": "10",
+	"Minute": "0"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -274,9 +431,18 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | Close (`object`) | Close time | 
 | Close.Hour (`Integer`) |  | 
 | Close.Minute (`Integer`) |  | 
-
-
 ## Contact
+
+```json
+{
+	"Name": "John Smith",
+	"Description": "Store Manager",
+	"PhoneNumbers":
+		"Description": "Main Line",
+	"Number": "5555555555",
+	"Extension": "1234"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -286,8 +452,6 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | PhoneNumbers.Description (`String`) | Description | 
 | PhoneNumbers.Number (`String`) | Phone number | 
 | PhoneNumbers.Extension (`String`) | Extension | 
-
-
 
 
 

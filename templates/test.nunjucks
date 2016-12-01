@@ -33,8 +33,7 @@ search: true
 # Resources
 
 {# the schemas section in raml #}
-{% if schemas %}{% for schema in schemas %}{% for name, obj in schema %}{{ obj | printResourceTable(name, title) }}
-{% endfor %}{% endfor %}{% endif %}
+{% if schemas %}{% for schema in schemas %}{% for name, obj in schema %}{{ obj | printResourceTable(name, title) }}{% endfor %}{% endfor %}{% endif %}
 
 {% for item in documentation %}{% if item.title == "enumerations" %}{{item.content}}{% endif %}{% endfor %}
 

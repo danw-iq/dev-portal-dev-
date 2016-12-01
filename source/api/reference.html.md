@@ -34,6 +34,16 @@ The Reference API allows you to easily access a list of supported Countries, Sta
 
 ## Country
 
+```json
+{
+	"Id": "1",
+	"Code": "CA",
+	"Name": "Canada",
+	"Version": "1",
+	"States": "undefined"
+}
+```
+
 | Name | Description |
 |:-----|:------------|
 | Id (`Integer`) | Identifier | 
@@ -42,8 +52,14 @@ The Reference API allows you to easily access a list of supported Countries, Sta
 | Version (`Integer`) | Latest version number | 
 | States (`Array[<a href='/api/reference/#state'>State</a>]`) | States/Provinces | 
 | *Alpha3Code (`String`)* | *Reserved for future use* | |
-
 ## State
+
+```json
+{
+	"Name": "Alberta",
+	"Code": "AB"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -52,18 +68,34 @@ The Reference API allows you to easily access a list of supported Countries, Sta
 | *Id (`Integer`)* | *Reserved for future use* | |
 | *Alpha3Code (`String`)* | *Reserved for future use* | |
 | *CountryCode (`String`)* | *Reserved for future use* | |
-
 ## TimeZone
+
+```json
+{
+	"Id": "Alaskan Standard Time",
+	"Name": "(UTC-09:00) Alaska",
+	"SupportsDaylightSavingTime": "true"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
 | Id (`String`) | Identifier | 
 | Name (`String`) | Name | 
 | SupportsDaylightSavingTime (`Boolean`) | A flag to indicate if this TimeZone observes Daylight Savings Time | 
-
 ## Currency
 
 To represent a Currency symbol in unicode, use the format <code>&#(Code);</code>, for USD this would be <code>&#36;</code> which is displayed as &#36; 
+
+```json
+{
+	"Id": "106",
+	"Name": "United States Dollar",
+	"Code": "USD",
+	"Symbol": "36",
+	"Version": "1"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -73,7 +105,6 @@ To represent a Currency symbol in unicode, use the format <code>&#(Code);</code>
 | Symbol (`Array[integer]`) | Unicode decimal value for symbols associated with this currency | 
 | Version (`Integer`) | Latest version number | 
 | *LanguageNameMap (`String`)* | *Reserved for future use* | |
-
 
 
 

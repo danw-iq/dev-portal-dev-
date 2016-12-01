@@ -491,15 +491,34 @@ function addFilters(env) {
           table += schema.description + "\n\n";
         }
 
-        //table += "| Name | Data Type | Description | Example |\n|:-----|:----------|:------------|:--------|\n";
-        table += "| Name | Description |\n|:-----|:------------|\n";
+        /**** INSERT CODE EXAMPLE HERE ****/
 
         var properties = getPropertyNames(schema, "printResourceTableProperties"); //[ "Id", "CustomerTypeId" ... ]
 
         if(properties) {
+          table += "```json\n{\n";
+          table += printResourceTableExample(schema, properties, "");
+
+          //Remove the last , in the string
+          table = table.substring(0, table.length - 2) + "\n";
+          
+          table += "}\n```\n\n";
+
+          table += "| Name | Description |\n|:-----|:------------|\n";
+
           table += printResourceTableProperties(schema, properties, "");
-        }
-        else {
+        
+
+
+        //table += "| Name | Data Type | Description | Example |\n|:-----|:----------|:------------|:--------|\n";
+        //table += "| Name | Description |\n|:-----|:------------|\n";
+
+        //var properties = getPropertyNames(schema, "printResourceTableProperties"); //[ "Id", "CustomerTypeId" ... ]
+
+        /*if(properties) {
+          table += printResourceTableProperties(schema, properties, "");
+        }*/
+        }else {
           console.log("ERROR printResourceTable no properties to print!");
         }
 
@@ -1271,7 +1290,7 @@ function printResourceTableExample(schema, properties, prefix) {
   for(var i = 0; i < properties.length; i++) {
     var name = properties[i];
     var dataType = "";
-    var description = "";
+    //var description = "";
     var example = "";
     var property = schema.properties[name];
     var alreadyPrinted = false;
@@ -1295,11 +1314,6 @@ function printResourceTableExample(schema, properties, prefix) {
       }
       else if (property.type) {
         dataType = property.type;
-      }
-
-      if(property.description)
-      {
-        description = property.description;
       }
 
       if(property.ref) {
@@ -1327,8 +1341,7 @@ function printResourceTableExample(schema, properties, prefix) {
               dataType = property.type;
             }
 
-            //table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
-            table += "| " + prefix + name + " (`" + dataType + "`)" + " | " + description +" | \n";
+            table += "\t" + '"' + name + '":' + example + "\n";
 
             alreadyPrinted = true;
 
@@ -1337,14 +1350,14 @@ function printResourceTableExample(schema, properties, prefix) {
             var innerSchema = extractResource(apiName, schemaName);
 
             //Recurse!
-            var innerProperties = getPropertyNames(innerSchema, "printResourceTableProperties"); //[ "Id", "CustomerTypeId" ... ]
+            var innerProperties = getPropertyNames(innerSchema, "printResourceTableExample"); //[ "Id", "CustomerTypeId" ... ]
 
             //Store old prefix for when recursion is complete
             var oldPrefix = prefix;
             prefix = prefix + name + ".";
 
             //Recurse!
-            table += printResourceTableProperties(innerSchema, innerProperties, prefix);
+            table += "\t" + printResourceTableExample(innerSchema, innerProperties, prefix);
 
             //Restore old prefix
             prefix = oldPrefix;
@@ -1369,47 +1382,22 @@ function printResourceTableExample(schema, properties, prefix) {
         }
       } //Print an array
       else if (property.type == "array" && property.arrayType) {
-        dataType = "Array[" + property.arrayType + "]";
+       // dataType = "Array[" + property.arrayType + "]";
       }
-
-      //Include size in data type if provided
-      if(property.size) {
-        dataType += "("+ property.size +")";
-      }
-
-      //Place example in back ticks if provided
-      if(property.example) {
-        example = "`" + property.example + "`";
-      }
-
-      //Replace guid with GUID
-      if(dataType.match(/guid/i) && dataType.match(/guid/i).length > 0) {
-        dataType = "GUID";
-      } //Fix DateTime type
-      else if (dataType.match(/datetime/i) && dataType.match(/datetime/i).length > 0) {
-        dataType = "DateTime";
-      }
-      else if (dataType.indexOf("#") == -1 && !property.database) {
-        dataType = toTitleCase(dataType);
-      }
-
-      var isLegacy = doNotPrint(property.description);
 
       //Make sure we don't double-print
       if(!alreadyPrinted) {
         if(isLegacy) {
-          //table += "| *" + prefix + name + "* | *" + dataType +"* | *" + description +"* | |\n";
-          table += "| *" + prefix + name + " (`" + dataType + "`)" + "* | *" + description +"* | |\n";
+          // do nothing
         }
         else {
-          //table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
-          table += "| " + prefix + name + " (`" + dataType + "`)" + " | " + description +" | \n";
+          table += "\t" + '"' + name + '": "' + property.example + '",' + "\n";
         }    
       }      
     }
   }  
-  
 
+  
   return table;
 }
 

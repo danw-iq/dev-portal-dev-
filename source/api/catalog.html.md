@@ -64,6 +64,19 @@ Using the slug in the example above, we can determine the following:
 
 Archived CatalogItem resources can still be updated and retrieved individually, but are excluded from search results
 
+```json
+{
+	"CatalogItemId": "a183f1a9-c58f-426a-930a-9a6357db52ed",
+	"CatalogSku": "21Z8F4AQ",
+	"DateAddedUtc": "2016-08-09T20:12:05.987",
+	"DateUpdatedUtc": "2016-08-09T20:12:05.99",
+	"IsArchived": "false",
+	"RmsId": "1",
+	"Slug": "M1248-V1",
+	"ExtendedAttributes": "undefined"
+}
+```
+
 | Name | Description |
 |:-----|:------------|
 | CatalogItemId (`GUID`) | Unique identifier | 
@@ -77,21 +90,78 @@ Archived CatalogItem resources can still be updated and retrieved individually, 
 | *SourceIds (`GUID`)* | *Reserved for future use* | |
 | *BatchTracking (`Boolean`)* | *Reserved for future use* | |
 | *MeasurementType (`String`)* | *Reserved for future use* | |
-
-
 ## Attribute
 
 Extended attributes are unvalidated extra properties that can be put on a CatalogItem.
+
+```json
+{
+	"Name": "Country of Manufacture",
+	"Value": "China"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
 | Name (`String(250)`) | Attribute name | 
 | Value (`String(250)`) | Attribute value | 
-
-
 ## CatalogSearchResult
 
 A CatalogSearchResult resource is used to return information about Product resources that match a given criteria, defined in the request.
+
+```json
+{
+	"Items":
+		"Name": "Galaxy S6 edge+ 32GB - Black Sapphire",
+	"CanonicalClassification":
+		"Id": "4",
+	"Name": "Smartphones",
+	"ParentCategories":
+		"Id": "2",
+	"Name": "Devices",
+	"CatalogItemId": "a183f1a9-c58f-426a-930a-9a6357db52ed",
+	"CatalogSku": "21Z8F4AQ",
+	"ClassificationTreeId": "1",
+	"ColorDefinition":
+		"Id": "5c6e2779-79d1-4fbd-b6a8-36b81e851b15",
+	"Name": "Black Sapphire",
+	"ColorTags":
+		"Id": "1",
+	"Name": "Black",
+	"ColorCode": "#303232",
+	"Swatch": "undefined",
+	"CompanyId": "14146",
+	"DateAddedUtc": "2011-10-14T12:00:00.000",
+	"HeroShotId": "44f60963-5515-44bc-9509-71aef6463580",
+	"Identifiers": "undefined",
+	"IsLinkedToCuratedProduct": "true",
+	"IsDropShippable": "true",
+	"IsMasterProduct": "false",
+	"Manufacturer":
+		"Id": "13149",
+	"Name": "OtterBox",
+	"Msrp":
+		"Amount": "100",
+	"CurrencyCode": "USD",
+	"ProductVersion": "1",
+	"ShortDescription": "Next is Now",
+	"Slug": "M1248-V1",
+	"VariationId": "1",
+	"Vendors":
+		"Id": "14107",
+	"Name": "NOZAMA Inc.",
+	"Facets":
+		"ClassificationAndCategories":
+		"Count": "1",
+	"Item": "4",
+	"Manufacturers": "undefined",
+	"Vendors": "undefined",
+	"MetaData":
+		"Page": "1",
+	"PageSize": "20",
+	"TotalResults": "5"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -144,22 +214,55 @@ A CatalogSearchResult resource is used to return information about Product resou
 | MetaData.Page (`Integer`) | Page of Items to be included in the resource | 
 | MetaData.PageSize (`Integer`) | Number of Items included in the resource | 
 | MetaData.TotalResults (`Integer`) | Number of Items matching the search criteria | 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Product
+
+```json
+{
+	"Id": "M1248-V1",
+	"Name": "Galaxy S6 edge+ 32GB - Black Sapphire",
+	"Assets": "undefined",
+	"CanonicalClassification": "undefined",
+	"ColorDefinition": "undefined",
+	"DateAddedUtc": "2016-08-09T20:12:05.987",
+	"DateUpdatedUtc": "2016-08-09T20:12:05.99",
+	"Entity":
+		"Id": "14146",
+	"Name": "Kentel Corp",
+	"ExtendedAttributes": "undefined",
+	"HeroShotId": "44f60963-5515-44bc-9509-71aef6463580",
+	"HeroShotUri": "https://imagehost/images/44f60963-5515-44bc-9509-71aef6463580",
+	"IsArchived": "false",
+	"IsLinkedToCuratedProduct": "true",
+	"IsSaleable": "true",
+	"LongDescription": "The world’s first dual-edge display was born from a need to create something new...",
+	"Manufacturer":
+		"Id": "13149",
+	"Name": "OtterBox",
+	"ManufacturerSkus": "undefined",
+	"MasterProductId": "1248",
+	"MSRP":
+		"Amount": "100",
+	"CurrencyCode": "USD",
+	"Owner":
+		"Id": "14146",
+	"Name": "Kentel Corp",
+	"Region": "undefined",
+	"ReleaseDate": "2011-10-14T12:00:00.000",
+	"RmsId": "1",
+	"ShortDescription": "Next is Now",
+	"Specifications":
+		"Name": "Color",
+	"Fields": "undefined",
+	"UpcCodes":
+		"Value": "874688002478/16W",
+	"Description": "UPC",
+	"Entity": "2",
+	"VariationId": "1",
+	"VariationInfo": "undefined",
+	"VendorSkus": "undefined",
+	"Version": "1"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -206,8 +309,18 @@ A CatalogSearchResult resource is used to return information about Product resou
 | VariationInfo (`Array[<a href='/api/catalog/#variationinformation'>VariationInformation</a>]`) | [Variation](/concepts/product-structure/#variations) information for the Product | 
 | VendorSkus (`Array[<a href='/api/catalog/#sku'>Sku</a>]`) | Vendor SKUs | 
 | Version (`Integer`) | Latest revision number | 
-
 ## CanonicalClassification
+
+```json
+{
+	"Id": "4",
+	"Name": "Smartphones",
+	"ParentCategories":
+		"Id": "2",
+	"Name": "Devices",
+	"TreeId": "1"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -217,11 +330,22 @@ A CatalogSearchResult resource is used to return information about Product resou
 | ParentCategories.Id (`Integer`) | Identifier | 
 | ParentCategories.Name (`String`) | Name | 
 | TreeId (`Integer`) | Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a> | 
-
-
 ## ColorDefinition
 
 A ColorDefinition allows you to define the available Colors for a Product
+
+```json
+{
+	"Id": "5c6e2779-79d1-4fbd-b6a8-36b81e851b15",
+	"Name": "Black Sapphire",
+	"ColorTagIds": "1",
+	"ColorTags":
+		"Id": "1",
+	"Name": "Black",
+	"ColorCode": "#303232",
+	"Swatch": "undefined"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -233,18 +357,32 @@ A ColorDefinition allows you to define the available Colors for a Product
 | ColorTags.Name (`String`) | Name | 
 | ColorTags.ColorCode (`String`) | A valid Hex code representing this color | 
 | Swatch (`<a href='/api/catalog/#swatch'>Swatch</a>`) | An icon to display on a screen next to a color showing the actual color of the product. Can be provided as an image Asset or hex code | 
-
-
-
 ## Swatch
+
+```json
+{
+	"Type": "ColorCode",
+	"AssetId": "null",
+	"ColorCode": "#C0C8D0"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
 | Type (`String`) | Acceptable values are Asset, ColorCodes or Empty | 
 | AssetId (`GUID`) | If Type is Asset, an identifier for an Asset. Otherwise, this property is ignored | 
 | ColorCode (`String`) | If Type is ColorCode, a valid hex code for a color. Otherwise, this propety is ignored | 
-
 ## Asset
+
+```json
+{
+	"Id": "732130d2-b673-461c-812b-f2b614d6076e",
+	"Name": "iqmetrix.jpg",
+	"Uri": "https://amsdemostorage.blob.core.windows.net/assets/732130d2-b673-461c-812b-f2b614d6076e.jpg",
+	"Type": "Image",
+	"IsHidden": "true"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -253,8 +391,17 @@ A ColorDefinition allows you to define the available Colors for a Product
 | Uri (`String`) | URL that points to an actual file where the digital asset is stored | 
 | Type (`String`) | Type of asset | 
 | IsHidden (`Boolean`) | A flag to indicate that this Asset exists on the product but should not be seen on a UI | 
-
 ## Sku
+
+```json
+{
+	"Value": "JBLPULSEBLKAM",
+	"Description": "",
+	"Entity":
+		"Id": "14146",
+	"Name": "Kentel Corp"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -263,8 +410,16 @@ A ColorDefinition allows you to define the available Colors for a Product
 | Entity (`object`) | Identifier for an Entity this SKU is associated with | 
 | Entity.Id (`Integer`) | Identifier of an Entity used for Entity Revisions. See [Carrier Revisions](/concepts/product-structure/#carrier-revisions) for more information | 
 | Entity.Name (`String`) | Entity name | 
-
 ## Region
+
+```json
+{
+	"CountryCode": "CA",
+	"CountryName": "Canada",
+	"StateCode": "AB",
+	"StateName": "British Columbia"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -272,9 +427,18 @@ A ColorDefinition allows you to define the available Colors for a Product
 | CountryName (`String`) | Country name | 
 | StateCode (`String`) | Code for the State in which this address resides. Based off the ISO 3166-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a> | 
 | StateName (`String`) | State name | 
-
-
 ## VariationInformation
+
+```json
+{
+	"VariationId": "1",
+	"Slug": "M1248-V1",
+	"Fields":
+		"FieldId": "1",
+	"Name": "Product Name",
+	"Value": "true"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -284,9 +448,18 @@ A ColorDefinition allows you to define the available Colors for a Product
 | Fields.FieldId (`Integer`) | Identifier for a [FieldDefinition](/api/field-definitions/#fielddefinition) | 
 | Fields.Name (`String`) | Name | 
 | Fields.Value (`String`) | Value to be used for this Field | 
-
-
 ## Identifier
+
+```json
+{
+	"Sku": "EM-JE040-RA",
+	"SkuType": "ManufacturerSku",
+	"Entity":
+		"Id": "14146",
+	"Name": "Kentel Corp",
+	"Description": "Manufacturer SKU"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -296,18 +469,6 @@ A ColorDefinition allows you to define the available Colors for a Product
 | Entity.Id (`Integer`) | Identifier of an Entity used for Entity Revisions. See [Carrier Revisions](/concepts/product-structure/#carrier-revisions) for more information | 
 | Entity.Name (`String`) | Entity name | 
 | Description (`String`) | Description | 
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

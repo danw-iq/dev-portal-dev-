@@ -34,6 +34,25 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 
 ## Carrier
 
+```json
+{
+	"Id": "9",
+	"Name": "Helios",
+	"Description": "",
+	"Attributes": "",
+	"CreatedUTC": "2014-07-28T20:52:12.929Z",
+	"ClientEntityId": "Carrier_25",
+	"LastModifiedUtc": "2015-05-20T23:06:29.7700813Z",
+	"Logo": "",
+	"Relationships": "",
+	"Role": "Carrier",
+	"Roles":
+		"Name": "Carrier",
+	"SortName": "helios",
+	"Version": "1"
+}
+```
+
 | Name | Description |
 |:-----|:------------|
 | Id (`Integer`) | Unique identifier | 
@@ -52,10 +71,26 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *TypeId (`String`)* | *Reserved for future use* | |
-
-
-
 ## Manufacturer
+
+```json
+{
+	"Id": "13149",
+	"Name": "OtterBox",
+	"Description": "#1 Most Trusted Brand in Smartphone Protection",
+	"Attributes": "",
+	"CreatedUtc": "2015-02-24T19:29:31.073Z",
+	"ClientEntityId": "Manufacturer_145",
+	"LastModifiedUtc": "2015-05-20T23:06:29.7700813Z",
+	"Logo": "",
+	"Relationships": "",
+	"Role": "Manufacturer",
+	"Roles":
+		"Name": "Manufacturer",
+	"SortName": "otterbox",
+	"Version": "1"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -75,10 +110,26 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *TypeId (`String`)* | *Reserved for future use* | |
-
-
-
 ## Supplier
+
+```json
+{
+	"Id": "14107",
+	"Name": "NOZAMA Inc.",
+	"Description": "Provides supplies for KENTEL Corp.",
+	"Attributes": "",
+	"CreatedUtc": "2015-11-05T18:15:26.558Z",
+	"ClientEntityId": "Supplier_151",
+	"LastModifiedUtc": "2015-05-20T23:06:29.7700813Z",
+	"Logo": "",
+	"Relationships": "",
+	"Role": "Vendor",
+	"Roles":
+		"Name": "Vendor",
+	"SortName": "nozama inc.",
+	"Version": "1"
+}
+```
 
 | Name | Description |
 |:-----|:------------|
@@ -98,9 +149,6 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *TypeId (`String`)* | *Reserved for future use* | |
-
-
-
 
 
 

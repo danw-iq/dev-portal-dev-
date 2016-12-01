@@ -23,6 +23,19 @@ rouge: false
 
 An **Asset** is an image or video associated with a Product.
 
+```json
+{
+	"id": "09fe1ee4-42b1-43a6-bd80-cd2bda21e90a",
+	"name": "49ebd282-4161-4a9d-9b40-a5a20d144b6f.png",
+	"height": "1024",
+	"href": "https://amsdemo.iqmetrix.net/images/09fe1ee4-42b1-43a6-bd80-cd2bda21e90a.png",
+	"md5Checksum": "1f88a2813737aa0019a63069586055ed",
+	"mimeType": "image/png",
+	"width": "502",
+	"success": "true"
+}
+```
+
 | Name | Description |
 |:-----|:------------|
 | id (`GUID`) | Unique identifier | 
