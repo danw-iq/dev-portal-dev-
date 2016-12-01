@@ -54,7 +54,8 @@ For example, a Samsung Galaxy S6 Edge, HTC One M9 and iPhone 5C might all have a
 | Id (`Integer`) | Identifier | 
 | Name (`String`) | Name | 
 | Order (`Integer`) | Sorting order | 
-| ProductTemplate (`<a href='/api/classification-tree/#producttemplate'>ProductTemplate</a>`) |  | 
+| ProductTemplate (`[classification-tree](/api/producttemplate/#ProductTemplate)`) |  | 
+
 ## ProductTemplate
 
 ```json
@@ -68,6 +69,7 @@ For example, a Samsung Galaxy S6 Edge, HTC One M9 and iPhone 5C might all have a
 |:-----|:------------|
 | Id (`Integer`) | Identifier | 
 | Name (`String`) | Name | 
+
 ## Category
 
 A Category is a node in a Classification Tree that represents a logical grouping of related Classifications.
@@ -91,6 +93,7 @@ There is a limit to 20 levels of depth for Categories.
 | Categories (`Array[object]`) | Child Categories | 
 | Classifications (`Array[object]`) | Child Classifications | 
 | Order (`Integer`) | Sorting order | 
+
 ## ClassificationTree
 
 ```json
@@ -110,11 +113,12 @@ There is a limit to 20 levels of depth for Categories.
 | Id (`Integer`) | Identifier | 
 | Name (`String`) | Name | 
 | Description (`String`) | Description | 
-| Categories (`Array[<a href='/api/classification-tree/#category'>Category</a>]`) | Categories in the Tree | 
-| Classifications (`Array[<a href='/api/classification-tree/#classification'>Classification</a>]`) | Classifications for the Tree | 
-| Owner (`<a href='/api/classification-tree/#owner'>Owner</a>`) | Information about the [Company](/api/company-tree/#company) that owns this Tree | 
+| Categories (`Array[[classification-tree](/api/category/#Category)]`) | Categories in the Tree | 
+| Classifications (`Array[[classification-tree](/api/classification/#Classification)]`) | Classifications for the Tree | 
+| Owner (`[classification-tree](/api/owner/#Owner)`) | Information about the [Company](/api/company-tree/#company) that owns this Tree | 
 | Version (`Integer`) | Latest revision number | 
 | *IsCanonical (`Boolean`)* | *Reserved for internal use* | |
+
 ## Owner
 
 ```json
@@ -128,6 +132,7 @@ There is a limit to 20 levels of depth for Categories.
 |:-----|:------------|
 | Id (`Integer`) | [Company](/api/company-tree/#company) Identifier | 
 | Name (`String`) | [Company](/api/company-tree/#company) Name | 
+
 
 
 
@@ -264,7 +269,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#classificationtree'>ClassificationTree</a>
+ [classificationtree](#ClassificationTree)
 
 
 

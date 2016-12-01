@@ -46,7 +46,8 @@ Ensure each company ID has only <strong>one</strong> cost per product.
 ```json
 {
 	"Id": "2e18496c-8f73-4298-8c96-a07816926734",
-	"Products":
+	"Products": [
+		{
 		"Sku": "1115884",
 	"Cost": "12.99",
 	"CompanyIds": "14146"
@@ -60,6 +61,7 @@ Ensure each company ID has only <strong>one</strong> cost per product.
 | Products.Sku (`String`) | Vendor product SKU | 
 | Products.Cost (`Decimal`) | Vendor product cost applied to the associated companies | 
 | Products.CompanyIds (`Array[integer]`) | List of [Company](/api/company-tree#company) identifiers to receive Vendor product cost | 
+
 
 
 
@@ -198,7 +200,7 @@ HTTP 202 Content-Type: application/json
 
 
 
- <a href='#cost'>Cost</a>
+ [cost](#Cost)
 
 
 

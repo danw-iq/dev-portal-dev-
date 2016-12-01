@@ -46,7 +46,8 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 	"Logo": "",
 	"Relationships": "",
 	"Role": "Carrier",
-	"Roles":
+	"Roles": [
+		{
 		"Name": "Carrier",
 	"SortName": "helios",
 	"Version": "1"
@@ -71,6 +72,7 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *TypeId (`String`)* | *Reserved for future use* | |
+
 ## Manufacturer
 
 ```json
@@ -85,7 +87,8 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 	"Logo": "",
 	"Relationships": "",
 	"Role": "Manufacturer",
-	"Roles":
+	"Roles": [
+		{
 		"Name": "Manufacturer",
 	"SortName": "otterbox",
 	"Version": "1"
@@ -110,6 +113,7 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *TypeId (`String`)* | *Reserved for future use* | |
+
 ## Supplier
 
 ```json
@@ -124,7 +128,8 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 	"Logo": "",
 	"Relationships": "",
 	"Role": "Vendor",
-	"Roles":
+	"Roles": [
+		{
 		"Name": "Vendor",
 	"SortName": "nozama inc.",
 	"Version": "1"
@@ -149,6 +154,7 @@ The Entity Store helps manage your Company structure. It also manages relationsh
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *TypeId (`String`)* | *Reserved for future use* | |
+
 
 
 
@@ -269,7 +275,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- Array[<a href='#carrier'>Carrier</a>]
+ Array[[carrier](#Carrier)]
 
 
 
@@ -390,7 +396,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#carrier'>Carrier</a>
+ [carrier](#Carrier)
 
 
 
@@ -506,7 +512,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- Array[<a href='#manufacturer'>Manufacturer</a>]
+ Array[[manufacturer](#Manufacturer)]
 
 
 
@@ -627,7 +633,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#manufacturer'>Manufacturer</a>
+ [manufacturer](#Manufacturer)
 
 
 
@@ -743,7 +749,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- Array[<a href='#supplier'>Supplier</a>]
+ Array[[supplier](#Supplier)]
 
 
 
@@ -864,6 +870,6 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#supplier'>Supplier</a>
+ [supplier](#Supplier)
 
 

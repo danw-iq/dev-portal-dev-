@@ -63,7 +63,8 @@ See the table below for a list of legal relationships and where the identifier o
 	"Id": "14146",
 	"Name": "Kentel Corp",
 	"Description": "Wireless accessories provider with store locations all across the globe.",
-	"Roles":
+	"Roles": [
+		{
 		"Name": "Company",
 	"ClientEntityId": "123",
 	"CreatedUtc": "2015-05-20T23:06:29.7700813Z",
@@ -87,13 +88,14 @@ See the table below for a list of legal relationships and where the identifier o
 | CreatedUtc (`DateTime`) | Created date in UTC | 
 | LastModifiedUtc (`DateTime`) | Last modified date in UTC | 
 | Attributes (`Object`) | Set of key-value pairs that contain extra data | 
-| Logo (`<a href='/api/company-tree/#asset'>Asset</a>`) | A reference to an [Asset](/api/assets/#asset) | 
-| Relationships (`Array[<a href='/api/company-tree/#relationship'>Relationship</a>]`) | See [Company Relationships](#company-relationships) | 
+| Logo (`[company-tree](/api/asset/#Asset)`) | A reference to an [Asset](/api/assets/#asset) | 
+| Relationships (`Array[[company-tree](/api/relationship/#Relationship)]`) | See [Company Relationships](#company-relationships) | 
 | SortName (`String`) | A string used for sorting | 
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *Role (`String`)* | *Reserved for internal use* | |
 | *TypeId (`Integer`)* | *Reserved for future use* | |
+
 ## Relationship
 
 ```json
@@ -114,6 +116,7 @@ See the table below for a list of legal relationships and where the identifier o
 | CreatedUtc (`DateTime`) | Date the relationship was formed, in UTC | 
 | Version (`Integer`) | Latest revision number | 
 | *Definition (`Integer`)* | *Reserved for internal use* | |
+
 ## Asset
 
 ```json
@@ -137,6 +140,7 @@ See the table below for a list of legal relationships and where the identifier o
 | Md5Checksum (`String`) | String that can be used for upload integrity checks or comparing two assets | 
 | MimeType (`String`) | Mime type | 
 | Width (`Integer`) | Width in pixels | 
+
 ## CompanyTree
 
 Your Company Tree is a hierarchial representation of how your Company is structured, including the root Company, Groups, Divisions and Locations.
@@ -159,7 +163,8 @@ To learn more about Company Trees, see {{CompanyTree_Concept}}.
 | Name (`String(250)`) | Company name | 
 | Description (`String(255)`) | Description | 
 | Role (`String`) | Role | 
-| Nodes (`Array[<a href='/api/company-tree/#companytreenode'>CompanyTreeNode</a>]`) | The Company Tree hierarchy made up of Nodes | 
+| Nodes (`Array[[company-tree](/api/companytreenode/#CompanyTreeNode)]`) | The Company Tree hierarchy made up of Nodes | 
+
 ## CompanyTreeNode
 
 CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can represent a <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> or device.
@@ -181,6 +186,7 @@ CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can r
 | Description (`String(255)`) | Description | 
 | Role (`String`) | Role, possible values include: Company, Group, Division and Location | 
 | Nodes (`Array[object]`) | Children | 
+
 ## Location
 
 A **Location** is a physical or virtual presence that may hold inventory or process transactions.
@@ -190,7 +196,8 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 	"Id": "14202",
 	"Name": "Dufferin Mall",
 	"Description": "This Location is used to clear out discounted inventory",
-	"Roles":
+	"Roles": [
+		{
 		"Name": "Location",
 	"CreatedUTC": "2015-02-26T00:03:01.372Z",
 	"LastModifiedUTC": "2015-02-27T00:03:06.392Z",
@@ -199,17 +206,20 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 	"Attributes": "undefined",
 	"ClientEntityId": "123",
 	"Contacts": "undefined",
-	"Geography":
+	"Geography": [
+		{
 		"Longitude": "-104.612034",
 	"Latitude": "50.443559",
 	"Relationships": "",
 	"SortName": "dufferin mall",
 	"StoreHours": "undefined",
-	"StorePhoneNumbers":
+	"StorePhoneNumbers": [
+		{
 		"Description": "Main Line",
 	"Number": "5555555555",
 	"Extension": "1234",
-	"TimeZone":
+	"TimeZone": [
+		{
 		"Id": "Alaskan Standard Time",
 	"DaylightSavingTimeEnabled": "true",
 	"Version": "13"
@@ -225,17 +235,17 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | Roles.Name (`String`) | Name | 
 | CreatedUTC (`DateTime`) | Created date in UTC | 
 | LastModifiedUTC (`DateTime`) | Last modified date in UTC | 
-| Area (`<a href='/api/company-tree/#area'>Area</a>`) | Measurement of floor space | 
-| Address (`<a href='/api/company-tree/#address'>Address</a>`) | Address | 
+| Area (`[company-tree](/api/area/#Area)`) | Measurement of floor space | 
+| Address (`[company-tree](/api/address/#Address)`) | Address | 
 | Attributes (`Object`) | Set of key-value pairs that contain extra data | 
 | ClientEntityId (`String`) | Identifier in an external system | 
-| Contacts (`Array[<a href='/api/company-tree/#contact'>Contact</a>]`) | Contact information | 
+| Contacts (`Array[[company-tree](/api/contact/#Contact)]`) | Contact information | 
 | Geography (`object`) | Geographic coordinates of this Location | 
 | Geography.Longitude (`Decimal`) | Longitude, must be between -180 and 180 | 
 | Geography.Latitude (`Decimal`) | Latitude, must be between -90 and 90 | 
 | Relationships (`Array[object]`) | Relationship information, such as the parent node in the Company Tree | 
 | SortName (`String`) | A string used for sorting | 
-| StoreHours (`<a href='/api/company-tree/#storehours'>StoreHours</a>`) | Store hours for this Location | 
+| StoreHours (`[company-tree](/api/storehours/#StoreHours)`) | Store hours for this Location | 
 | StorePhoneNumbers (`Array[object]`) | Phone numbers | 
 | StorePhoneNumbers.Description (`String`) | Description | 
 | StorePhoneNumbers.Number (`String`) | Phone number | 
@@ -250,6 +260,7 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | *Logo (`Object`)* | *Reserved for internal use* | |
 | *Role (`String`)* | *Reserved for internal use* | |
 | *TypeId (`Integer`)* | *Reserved for future use* | |
+
 ## Division
 
 Division, as well as Groups, serve as generic buckets clients can use to organize the company tree. Divisions could be used to represent sub-brand or sub-company of a main company.
@@ -261,7 +272,8 @@ To learn more about Divisions, see {{Division_Concept}}.
 	"Id": "14159",
 	"Name": "T-hut Wireless",
 	"Description": "Division of Kiosks",
-	"Roles":
+	"Roles": [
+		{
 		"Name": "Division",
 	"ClientEntityId": "187",
 	"CreatedUTC": "2015-05-20T23:06:29.7700813Z",
@@ -285,13 +297,14 @@ To learn more about Divisions, see {{Division_Concept}}.
 | CreatedUTC (`DateTime`) | Created date in UTC | 
 | LastModifiedUTC (`DateTime`) | Last modified date in UTC | 
 | Attributes (`Object`) | Set of key-value pairs that contain extra data | 
-| Logo (`<a href='/api/company-tree/#asset'>Asset</a>`) | A reference to an Asset | 
+| Logo (`[company-tree](/api/asset/#Asset)`) | A reference to an Asset | 
 | Relationships (`Array[object]`) | Relationship information, such child Locations, Suppliers and Carriers | 
 | SortName (`String`) | A string used for sorting | 
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *Role (`String`)* | *Reserved for internal use* | |
 | *TypeId (`Integer`)* | *Reserved for future use* | |
+
 ## Group
 
 Managerial or geographical groupings.
@@ -303,7 +316,8 @@ Managerial or geographical groupings.
 	"Id": "14166",
 	"Name": "Toronto",
 	"Description": "Group within Ontario",
-	"Roles":
+	"Roles": [
+		{
 		"Name": "Group",
 	"ClientEntityId": "187",
 	"CreatedUTC": "2015-05-20T23:06:29.7700813Z",
@@ -327,13 +341,14 @@ Managerial or geographical groupings.
 | CreatedUTC (`DateTime`) | Created date in UTC | 
 | LastModifiedUTC (`DateTime`) | Last modified date in UTC | 
 | Attributes (`Object`) | Set of key-value pairs that contain extra data | 
-| Logo (`<a href='/api/assets/#asset'>Asset</a>`) | A reference to an Asset | 
+| Logo (`[assets](/api/asset/#Asset)`) | A reference to an Asset | 
 | Relationships (`Array[object]`) | Relationship information, such child Locations, Suppliers and Carriers | 
 | SortName (`String`) | A string used for sorting | 
 | Version (`Integer`) | Latest revision number | 
 | *CorrelationId (`String`)* | *Reserved for internal use* | |
 | *Role (`String`)* | *Reserved for internal use* | |
 | *TypeId (`Integer`)* | *Reserved for future use* | |
+
 ## Address
 
 A **Location** is a physical or virtual presence that may hold inventory or process transactions.
@@ -361,6 +376,7 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | CountryCode (`String`) | Country Code. Uses the ISO 3166-1 alpha-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a> | 
 | CountryName (`String`) | Country | 
 | Zip (`String`) | Zip or Postal Code | 
+
 ## Area
 
 ```json
@@ -374,6 +390,7 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 |:-----|:------------|
 | Value (`Integer`) | Value of the Area | 
 | Unit (`String`) | Unit used for the Value, acceptable values are SqFt and SqM | 
+
 ## TimeZone
 
 ```json
@@ -387,6 +404,7 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 |:-----|:------------|
 | Id (`String`) | Identifier. For a list of acceptable values, see <a href='/api/reference/#getting-all-time-zones'>Getting All Time Zones</a> | 
 | DaylightSavingTimeEnabled (`Boolean`) | A flag to indicate if the Time Zone observes Daylight Savings Time | 
+
 ## StoreHours
 
 ```json
@@ -403,21 +421,24 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 
 | Name | Description |
 |:-----|:------------|
-| Monday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Monday | 
-| Tuesday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Tuesday | 
-| Wednesday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Wednesday | 
-| Thursday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Thursday | 
-| Friday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Monday | 
-| Saturday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Saturday | 
-| Sunday (`<a href='/api/company-tree/#weekday'>WeekDay</a>`) | Hours on Sunday | 
+| Monday (`[company-tree](/api/weekday/#WeekDay)`) | Hours on Monday | 
+| Tuesday (`[company-tree](/api/weekday/#WeekDay)`) | Hours on Tuesday | 
+| Wednesday (`[company-tree](/api/weekday/#WeekDay)`) | Hours on Wednesday | 
+| Thursday (`[company-tree](/api/weekday/#WeekDay)`) | Hours on Thursday | 
+| Friday (`[company-tree](/api/weekday/#WeekDay)`) | Hours on Monday | 
+| Saturday (`[company-tree](/api/weekday/#WeekDay)`) | Hours on Saturday | 
+| Sunday (`[company-tree](/api/weekday/#WeekDay)`) | Hours on Sunday | 
+
 ## WeekDay
 
 ```json
 {
-	"Open":
+	"Open": [
+		{
 		"Hour": "10",
 	"Minute": "0",
-	"Close":
+	"Close": [
+		{
 		"Hour": "10",
 	"Minute": "0"
 }
@@ -431,13 +452,15 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | Close (`object`) | Close time | 
 | Close.Hour (`Integer`) |  | 
 | Close.Minute (`Integer`) |  | 
+
 ## Contact
 
 ```json
 {
 	"Name": "John Smith",
 	"Description": "Store Manager",
-	"PhoneNumbers":
+	"PhoneNumbers": [
+		{
 		"Description": "Main Line",
 	"Number": "5555555555",
 	"Extension": "1234"
@@ -452,6 +475,7 @@ A **Location** is a physical or virtual presence that may hold inventory or proc
 | PhoneNumbers.Description (`String`) | Description | 
 | PhoneNumbers.Number (`String`) | Phone number | 
 | PhoneNumbers.Extension (`String`) | Extension | 
+
 
 
 
@@ -592,7 +616,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#company'>Company</a>
+ [company](#Company)
 
 
 
@@ -709,7 +733,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#companytree'>CompanyTree</a>
+ [companytree](#CompanyTree)
 
 
 
@@ -1080,7 +1104,7 @@ HTTP 201 Content-Type: application/json
 
 
 
- <a href='#location'>Location</a>
+ [location](#Location)
 
 
 
@@ -1469,7 +1493,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#location'>Location</a>
+ [location](#Location)
 
 
 
@@ -1706,7 +1730,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#location'>Location</a>
+ [location](#Location)
 
 
 
@@ -1941,7 +1965,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- Array[<a href='#location'>Location</a>]
+ Array[[location](#Location)]
 
 
 
@@ -2093,7 +2117,7 @@ HTTP 201 Content-Type: application/json
 
 
 
- <a href='#division'>Division</a>
+ [division](#Division)
 
 
 
@@ -2246,7 +2270,7 @@ HTTP 201 Content-Type: application/json
 
 
 
- <a href='#group'>Group</a>
+ [group](#Group)
 
 
 

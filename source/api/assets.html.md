@@ -52,6 +52,7 @@ An **Asset** is an image or video associated with a Product.
 
 
 
+
 <h2 id='creating-an-asset' class='clickable-header top-level-header'>Creating an Asset</h2>
 
 
@@ -89,7 +90,7 @@ Content-Type: multipart/form-data
 <h4>Response</h4>
 
 
- <a href='#asset'>Asset</a>
+ [asset](#Asset)
 
 <h5>Example</h5>
 
@@ -143,7 +144,7 @@ Accept: application/json
 <h4>Response</h4>
 
 
- <a href='#asset'>Asset</a>
+ [asset](#Asset)
 
 <h5>Example</h5>
 

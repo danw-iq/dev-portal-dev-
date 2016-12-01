@@ -497,7 +497,7 @@ function addFilters(env) {
 
         if(properties) {
           table += "```json\n{\n";
-          table += printResourceTableExample(schema, properties, "");
+          table += printResourceTableExample(schema, properties);
 
           //Remove the last , in the string
           table = table.substring(0, table.length - 2) + "\n";
@@ -507,6 +507,8 @@ function addFilters(env) {
           table += "| Name | Description |\n|:-----|:------------|\n";
 
           table += printResourceTableProperties(schema, properties, "");
+
+          table += "\n";
         
 
 
@@ -1204,10 +1206,13 @@ function linkWrap(value, externalSource) {
 
     externalSource = externalSource.substring(0, externalSource.indexOf("."));
 
-    return util.format("<a href='/api/%s/#%s'>%s</a>", externalSource.replace(/ /g, "-"), value.toLowerCase(), value);
+    //[Swatch](/api/catalog/#swatch)
+    //return util.format("<a href='/api/%s/#%s'>%s</a>", externalSource.replace(/ /g, "-"), value.toLowerCase(), value);
+    return util.format("[%s](/api/%s/#%s)", externalSource.replace(/ /g, "-"), value.toLowerCase(), value);
   }
   else {
-    return util.format("<a href='#%s'>%s</a>", value.toLowerCase(), value);
+    //return util.format("<a href='#%s'>%s</a>", value.toLowerCase(), value);
+    return util.format("[%s](#%s)", value.toLowerCase(), value);
   }
 }
 
@@ -1283,7 +1288,7 @@ function printResponseBullets(schema, title, method) {
 }
 
 //Print resource table json example
-function printResourceTableExample(schema, properties, prefix) {
+function printResourceTableExample(schema, properties) {
 
   var table = "";
 
@@ -1294,10 +1299,6 @@ function printResourceTableExample(schema, properties, prefix) {
     var example = "";
     var property = schema.properties[name];
     var alreadyPrinted = false;
-
-    if(prefix != "" && !schema.exclude) {
-      prefix = "";
-    }
 
     if(!property) {
       console.log("Error in printResourceTableProperties " + properties)
@@ -1341,7 +1342,7 @@ function printResourceTableExample(schema, properties, prefix) {
               dataType = property.type;
             }
 
-            table += "\t" + '"' + name + '":' + example + "\n";
+            table += "\t" + '"' + name + '": [\n' + "\t\t{\n" ;
 
             alreadyPrinted = true;
 
@@ -1352,15 +1353,8 @@ function printResourceTableExample(schema, properties, prefix) {
             //Recurse!
             var innerProperties = getPropertyNames(innerSchema, "printResourceTableExample"); //[ "Id", "CustomerTypeId" ... ]
 
-            //Store old prefix for when recursion is complete
-            var oldPrefix = prefix;
-            prefix = prefix + name + ".";
-
             //Recurse!
-            table += "\t" + printResourceTableExample(innerSchema, innerProperties, prefix);
-
-            //Restore old prefix
-            prefix = oldPrefix;
+            table += "\t" + printResourceTableExample(innerSchema, innerProperties);
           }
           else {
 
@@ -1384,6 +1378,8 @@ function printResourceTableExample(schema, properties, prefix) {
       else if (property.type == "array" && property.arrayType) {
        // dataType = "Array[" + property.arrayType + "]";
       }
+
+      var isLegacy = doNotPrint(property.description);
 
       //Make sure we don't double-print
       if(!alreadyPrinted) {

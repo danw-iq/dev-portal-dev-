@@ -50,8 +50,9 @@ The Reference API allows you to easily access a list of supported Countries, Sta
 | Code (`String`) | Country Code. Uses the ISO 3166-1 alpha-2 standard | 
 | Name (`String`) | Country name | 
 | Version (`Integer`) | Latest version number | 
-| States (`Array[<a href='/api/reference/#state'>State</a>]`) | States/Provinces | 
+| States (`Array[[reference](/api/state/#State)]`) | States/Provinces | 
 | *Alpha3Code (`String`)* | *Reserved for future use* | |
+
 ## State
 
 ```json
@@ -68,6 +69,7 @@ The Reference API allows you to easily access a list of supported Countries, Sta
 | *Id (`Integer`)* | *Reserved for future use* | |
 | *Alpha3Code (`String`)* | *Reserved for future use* | |
 | *CountryCode (`String`)* | *Reserved for future use* | |
+
 ## TimeZone
 
 ```json
@@ -83,6 +85,7 @@ The Reference API allows you to easily access a list of supported Countries, Sta
 | Id (`String`) | Identifier | 
 | Name (`String`) | Name | 
 | SupportsDaylightSavingTime (`Boolean`) | A flag to indicate if this TimeZone observes Daylight Savings Time | 
+
 ## Currency
 
 To represent a Currency symbol in unicode, use the format <code>&#(Code);</code>, for USD this would be <code>&#36;</code> which is displayed as &#36; 
@@ -105,6 +108,7 @@ To represent a Currency symbol in unicode, use the format <code>&#(Code);</code>
 | Symbol (`Array[integer]`) | Unicode decimal value for symbols associated with this currency | 
 | Version (`Integer`) | Latest version number | 
 | *LanguageNameMap (`String`)* | *Reserved for future use* | |
+
 
 
 
@@ -214,7 +218,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- Array[<a href='#country'>Country</a>]
+ Array[[country](#Country)]
 
 
 
@@ -312,7 +316,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- Array[<a href='#timezone'>TimeZone</a>]
+ Array[[timezone](#TimeZone)]
 
 
 
@@ -414,6 +418,6 @@ HTTP 200 Content-Type: application/json
 
 
 
- Array[<a href='#currency'>Currency</a>]
+ Array[[currency](#Currency)]
 
 

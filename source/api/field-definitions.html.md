@@ -83,7 +83,8 @@ The result displayed on the page, with some styling, is shown below
 	"IsRequired": "true",
 	"LanguageInvariantUnit": "mm",
 	"DisplayName": "Product Name",
-	"Options":
+	"Options": [
+		{
 		"Id": "1",
 	"Value": "Blue"
 }
@@ -101,6 +102,7 @@ The result displayed on the page, with some styling, is shown below
 | Options.Id (`Integer`) | Identifier | 
 | Options.Value (`String`) | Value | 
 | *LanguageInvariantName (`String`)* | *This is a legacy property that should not be used* | |
+
 
 
 ## Enumerations
@@ -227,7 +229,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- Array[<a href='#fielddefinition'>FieldDefinition</a>]
+ Array[[fielddefinition](#FieldDefinition)]
 
 
 
@@ -339,7 +341,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <a href='#fielddefinition'>FieldDefinition</a>
+ [fielddefinition](#FieldDefinition)
 
 
 
