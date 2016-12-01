@@ -483,14 +483,16 @@ function addFilters(env) {
       if(!isExcluded) {
 
         //Print name of table
-        table += "### " + name + "\n\n";
+        //table += "### " + name + "\n\n";
+        table += "## " + name + "\n\n";
 
         if(schema.description)
         {
           table += schema.description + "\n\n";
         }
 
-        table += "| Name | Data Type | Description | Example |\n|:-----|:----------|:------------|:--------|\n";
+        //table += "| Name | Data Type | Description | Example |\n|:-----|:----------|:------------|:--------|\n";
+        table += "| Name | Description |\n|:-----|:------------|\n";
 
         var properties = getPropertyNames(schema, "printResourceTableProperties"); //[ "Id", "CustomerTypeId" ... ]
 
@@ -1325,7 +1327,8 @@ function printResourceTableProperties(schema, properties, prefix) {
               dataType = property.type;
             }
 
-            table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
+            //table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
+            table += "| " + prefix + name + " (`" + dataType + "`)" + " | " + description +" | \n";
 
             alreadyPrinted = true;
 
@@ -1395,10 +1398,12 @@ function printResourceTableProperties(schema, properties, prefix) {
       //Make sure we don't double-print
       if(!alreadyPrinted) {
         if(isLegacy) {
-          table += "| *" + prefix + name + "* | *" + dataType +"* | *" + description +"* | |\n";
+          //table += "| *" + prefix + name + "* | *" + dataType +"* | *" + description +"* | |\n";
+          table += "| *" + prefix + name + " (`" + dataType + "`)" + "* | *" + description +"* | |\n";
         }
         else {
-          table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
+          //table += "| " + prefix + name + " | " + dataType +" | " + description +" | " + example + " |\n";
+          table += "| " + prefix + name + " (`" + dataType + "`)" + " | " + description +" | \n";
         }    
       }      
     }

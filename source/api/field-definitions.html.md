@@ -15,11 +15,9 @@ search: true
 
 
 
-
-
 # Overview
 
-A **Field Definition** defines both how {{Product}} specification details are displayed on a screen, such as a website, and how it is stored in the Product Library.
+A **Field Definition** defines both how <a href='http://developers.iqmetrix.com/api/catalog/#product'>Product</a> specification details are displayed on a screen, such as a website, and how it is stored in the Product Library.
 
 As an example, the following Field Definition describes how battery capacity for a product might be displayed.
 
@@ -298,7 +296,7 @@ puts response
 <ul>
     
     <li>
-        <code>FieldDefinitionId</code> (<strong>Required</strong>)  - Identifier for the {{FieldDefinition}}
+        <code>FieldDefinitionId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/field-definitions/#fielddefinition'>FieldDefinition</a>
     </li>
     </ul>
 

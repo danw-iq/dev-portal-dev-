@@ -27,3 +27,4 @@ node_modules/*
 config.json
 generated.raml
 postman.json
+output.txt

@@ -4,7 +4,7 @@ permalink: /api/assets/
 tags: []
 keywords: 
 audience: 
-last_updated: 29-11-2016
+last_updated: 1-12-2016
 summary: 
 rouge: false
 ---
@@ -113,7 +113,7 @@ GET /assets/{AssetId}
 <ul>
     
     <li>
-        <code>AssetId</code> (<strong>Required</strong>)  - Identifier for the {{Asset}}
+        <code>AssetId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/assets/#asset'>Asset</a>
     </li>
     </ul>
 
@@ -164,7 +164,7 @@ GET /images/{AssetId}
 <ul>
     
     <li>
-        <code>AssetId</code> (<strong>Required</strong>)  - Identifier for the {{Asset}}
+        <code>AssetId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/assets/#asset'>Asset</a>
     </li>
     </ul>
 

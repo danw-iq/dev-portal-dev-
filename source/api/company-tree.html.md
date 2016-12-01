@@ -15,8 +15,6 @@ search: true
 
 
 
-
-
 # Overview
 
 A Company Tree is a representation of how a Company is structured and is used to: 
@@ -30,7 +28,7 @@ To learn more about Company Trees, see {{CompanyTree_Concept}}.
 
 ### Company Relationships
 
-A Company {{Relationship}} describes the interaction between a {{Company}} and a Manufacturer, Supplier, Partner, Company Tree Node, etc.
+A Company <a href='http://developers.iqmetrix.com/api/company-tree/#relationship'>Relationship</a> describes the interaction between a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> and a Manufacturer, Supplier, Partner, Company Tree Node, etc.
 
 Depending on the type of Relationship, the identifier for each Entity may appear in the `Source` or `Destination` field.
 
@@ -85,8 +83,8 @@ See the table below for a list of legal relationships and where the identifier o
 | Name | Description |
 |:-----|:------------|
 | Id (`Integer`) | Identifier for the relationship | 
-| Source (`Integer`) | Identifier for a {{Vendor}}, {{Carrier}} or {{Partner}} or {{Company}} | 
-| Destination (`Integer`) | Identifier for a {{Group}}, {{Location}}, {{Division}} or {{Company}} | 
+| Source (`Integer`) | Identifier for a {{Vendor}}, <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a> or {{Partner}} or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> | 
+| Destination (`Integer`) | Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a> or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> | 
 | CreatedUtc (`DateTime`) | Date the relationship was formed, in UTC | 
 | Version (`Integer`) | Latest revision number | 
 | *Definition (`Integer`)* | *Reserved for internal use* | |
@@ -119,7 +117,7 @@ To learn more about Company Trees, see {{CompanyTree_Concept}}.
 
 ## CompanyTreeNode
 
-CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can represent a {{Group}}, {{Division}}, {{Location}} or device.
+CompanyTreeNodes are used to represent hierarchy in a Company Tree. A Node can represent a <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a> or device.
 
 | Name | Description |
 |:-----|:------------|
@@ -374,7 +372,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     </ul>
 
@@ -510,7 +508,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     </ul>
 
@@ -757,11 +755,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of the parent for the {{Location}}
+        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of the parent for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
     </li>
     </ul>
 
@@ -931,7 +929,7 @@ There are <strong>two</strong> different ways to update a location.
   <li>Option 2 - <code>PUT /Companies({CompanyId})/Locations({LocationId})</code></li>
 </ul>
 
-Option 1 requires knowing the <code>NodeId</code> of the parent of the {{Location}}, but has <strong>stronger</strong> validation.
+Option 1 requires knowing the <code>NodeId</code> of the parent of the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>, but has <strong>stronger</strong> validation.
 
 
 > Definition
@@ -1142,15 +1140,15 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of the parent for the {{Location}}
+        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of the parent for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
     </li>
     
     <li>
-        <code>LocationId</code> (<strong>Required</strong>)  - Identifier for the {{Location}}
+        <code>LocationId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
     </li>
     </ul>
 
@@ -1387,11 +1385,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>LocationId</code> (<strong>Required</strong>)  - Identifier for the {{Location}}
+        <code>LocationId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
     </li>
     </ul>
 
@@ -1624,7 +1622,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     </ul>
 
@@ -1875,7 +1873,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -2027,7 +2025,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -2169,7 +2167,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -2201,7 +2199,7 @@ This request allows you to search your Company Tree using the `ClientEntityId` f
 
 This request returns an array of objects that summarize Entities matching the search criteria. 
 
-The following resource types are considered 'Entities': {{Company}}, {{Division}}, {{Group}}, {{Location}}, device
+The following resource types are considered 'Entities': <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>, device
 
 > Definition
 
@@ -2275,7 +2273,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>

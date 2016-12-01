@@ -15,8 +15,6 @@ search: true
 
 
 
-
-
 # Overview
 
 Retailers can select products from the {{ProductLibrary_Concept}} to create a **Retailer Catalog**, a collection of products that can be sold.
@@ -31,7 +29,7 @@ M{ProductDocumentId}-V{VariationId}-E{EntityId}-R{Region}
 
 * ProductDocumentId - Identifier for a {{ProductDocument}}
 * VariationId - Identifier for a {{Variation}}
-* EntityId - Identifier for a {{Company}} or {{Carrier}} associated with a Revision, as described in [Creating a Revision](/api/product-structure/#creating-a-revision)
+* EntityId - Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> or <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a> associated with a Revision, as described in [Creating a Revision](/api/product-structure/#creating-a-revision)
 * Region - Must contain 2 or 4 characters, either a Country Code, or Country Code plus a State Code, as described in [Creating a Revision](/api/product-structure/#creating-a-revision)
 
 ### Example
@@ -218,7 +216,7 @@ A CatalogSearchResult resource is used to return information about Product resou
 | ParentCategories (`Array[object]`) | List of Parent Categories | 
 | ParentCategories.Id (`Integer`) | Identifier | 
 | ParentCategories.Name (`String`) | Name | 
-| TreeId (`Integer`) | Identifier for the {{ClassificationTree}} | 
+| TreeId (`Integer`) | Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a> | 
 
 
 ## ColorDefinition
@@ -394,7 +392,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     </ul>
 
@@ -522,7 +520,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     </ul>
 
@@ -643,7 +641,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -769,11 +767,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the {{CatalogItem}}
+        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
     </li>
     </ul>
 
@@ -897,11 +895,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the {{CatalogItem}}
+        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
     </li>
     </ul>
 
@@ -1025,11 +1023,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the {{CatalogItem}}
+        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
     </li>
     </ul>
 
@@ -1123,11 +1121,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the {{CatalogItem}}
+        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
     </li>
     </ul>
 
@@ -1387,7 +1385,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     </ul>
 
@@ -1395,7 +1393,7 @@ puts response
 
 #### Request Parameters
 
-<ul><li><code>CatalogItemIds</code> (<strong>Required</strong>) - Array of {{CatalogItem}} identifiers</li></ul>
+<ul><li><code>CatalogItemIds</code> (<strong>Required</strong>) - Array of <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a> identifiers</li></ul>
 
 
 
@@ -1615,11 +1613,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the {{CatalogItem}}
+        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
     </li>
     </ul>
 
@@ -1696,7 +1694,7 @@ HTTP 200 Content-Type: application/json
 
 
 
- <ul><li><code>Items</code> (Array) </li><ul><li><code>Name</code> (String) </li><li><code>Slug</code> (String) </li><li><code>CatalogItemId</code> (Guid) </li><li><code>CatalogSku</code> (String) </li><li><code>HeroShotId</code> (Guid) </li><li><code>Manufacturer</code> (Object) </li><ul><li><code>Id</code> (Integer) - Identifier for a {{Manufacturer}}</li><li><code>Name</code> (String) </li></ul><li><code>ShortDescription</code> (String) </li><li><code>CanonicalClassification</code> (<a href='/api/catalog/#canonicalclassification'>CanonicalClassification</a>) </li><ul><li><code>Id</code> (Integer) </li><li><code>Name</code> (String) </li><li><code>ParentCategories</code> (Array) </li><ul><li><code>Id</code> (Integer) </li><li><code>Name</code> (String) </li></ul><li><code>TreeId</code> (Integer) </li></ul></ul><li><code>Facets</code> (Array) </li><ul><li><code>ClassificationAndCategories</code> (Array) </li><ul><li><code>Count</code> (Integer) </li><li><code>Item</code> (Integer) </li></ul><li><code>Manufacturers</code> (Array) </li><ul><li><code>Count</code> (Integer) </li><li><code>Item</code> (Object) </li><ul><li><code>Id</code> (Integer) - Identifier for a {{Manufacturer}}</li><li><code>Name</code> (String) </li></ul></ul><li><code>Vendors</code> (Array) </li><ul><li><code>Count</code> (Integer) </li><li><code>Item</code> (Object) </li><ul><li><code>Id</code> (Integer) - Identifier for a {{Manufacturer}}</li><li><code>Name</code> (String) </li></ul></ul></ul></ul>
+ <ul><li><code>Items</code> (Array) </li><ul><li><code>Name</code> (String) </li><li><code>Slug</code> (String) </li><li><code>CatalogItemId</code> (Guid) </li><li><code>CatalogSku</code> (String) </li><li><code>HeroShotId</code> (Guid) </li><li><code>Manufacturer</code> (Object) </li><ul><li><code>Id</code> (Integer) - Identifier for a <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturer</a></li><li><code>Name</code> (String) </li></ul><li><code>ShortDescription</code> (String) </li><li><code>CanonicalClassification</code> (<a href='/api/catalog/#canonicalclassification'>CanonicalClassification</a>) </li><ul><li><code>Id</code> (Integer) </li><li><code>Name</code> (String) </li><li><code>ParentCategories</code> (Array) </li><ul><li><code>Id</code> (Integer) </li><li><code>Name</code> (String) </li></ul><li><code>TreeId</code> (Integer) </li></ul></ul><li><code>Facets</code> (Array) </li><ul><li><code>ClassificationAndCategories</code> (Array) </li><ul><li><code>Count</code> (Integer) </li><li><code>Item</code> (Integer) </li></ul><li><code>Manufacturers</code> (Array) </li><ul><li><code>Count</code> (Integer) </li><li><code>Item</code> (Object) </li><ul><li><code>Id</code> (Integer) - Identifier for a <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturer</a></li><li><code>Name</code> (String) </li></ul></ul><li><code>Vendors</code> (Array) </li><ul><li><code>Count</code> (Integer) </li><li><code>Item</code> (Object) </li><ul><li><code>Id</code> (Integer) - Identifier for a <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturer</a></li><li><code>Name</code> (String) </li></ul></ul></ul></ul>
 
 
 
@@ -1777,11 +1775,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the {{CatalogItem}}
+        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
     </li>
     </ul>
 
@@ -1899,7 +1897,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -2030,11 +2028,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>CategoryOrClassificationId</code> (Optional)  - Identifier for the {{Category}} or {{Classification}}
+        <code>CategoryOrClassificationId</code> (Optional)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#category'>Category</a> or <a href='http://developers.iqmetrix.com/api/classification-tree/#classification'>Classification</a>
     </li>
     
     <li>
@@ -2230,11 +2228,11 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
-        <code>ManufacturerIds</code> (Optional)  - Array of integers representing identifiers for {{Manufacturers}}
+        <code>ManufacturerIds</code> (Optional)  - Array of integers representing identifiers for <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturers</a>
     </li>
     
     <li>
@@ -2430,7 +2428,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -2630,7 +2628,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -2833,7 +2831,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -3041,7 +3039,7 @@ puts response
 <ul>
     
     <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the {{Company}}
+        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
     </li>
     
     <li>
@@ -3049,7 +3047,7 @@ puts response
     </li>
     
     <li>
-        <code>ManufacturerIds</code> (Optional)  - Array of integers representing identifiers for {{Manufacturers}}
+        <code>ManufacturerIds</code> (Optional)  - Array of integers representing identifiers for <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturers</a>
     </li>
     
     <li>
@@ -3057,11 +3055,11 @@ puts response
     </li>
     
     <li>
-        <code>CategoryOrClassificationId</code> (Optional)  - Identifier for the {{Category}} or {{Classification}}
+        <code>CategoryOrClassificationId</code> (Optional)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#category'>Category</a> or <a href='http://developers.iqmetrix.com/api/classification-tree/#classification'>Classification</a>
     </li>
     
     <li>
-        <code>ClassificationTreeId</code> (Optional)  - Identifier for a {{ClassificationTree}} to search within. If CategoryOrClassificationId is provided, this value is ignored
+        <code>ClassificationTreeId</code> (Optional)  - Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a> to search within. If CategoryOrClassificationId is provided, this value is ignored
     </li>
     
     <li>

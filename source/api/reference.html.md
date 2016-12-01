@@ -15,8 +15,6 @@ search: true
 
 
 
-
-
 # Overview
 
 The Reference API allows you to easily access a list of supported Countries, States, TimeZones and Currencies.

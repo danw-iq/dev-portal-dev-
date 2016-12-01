@@ -15,8 +15,6 @@ search: true
 
 
 
-
-
 # Overview
 
 The cost feed provides iQmetrix with the wholesale cost (inclusive cost for the company) for each product.  

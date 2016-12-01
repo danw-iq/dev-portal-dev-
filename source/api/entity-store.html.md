@@ -15,8 +15,6 @@ search: true
 
 
 
-
-
 # Overview
 
 The Entity Store helps manage your Company structure. It also manages relationships your Company has with Suppliers, Manufacturers and Carriers. 
@@ -303,7 +301,7 @@ puts response
 <ul>
     
     <li>
-        <code>CarrierId</code> (<strong>Required</strong>)  - Identifier for the {{Carrier}}
+        <code>CarrierId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
     </li>
     </ul>
 
@@ -540,7 +538,7 @@ puts response
 <ul>
     
     <li>
-        <code>ManufacturerId</code> (<strong>Required</strong>)  - Identifier for the {{Manufacturer}}
+        <code>ManufacturerId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturer</a>
     </li>
     </ul>
 
@@ -777,7 +775,7 @@ puts response
 <ul>
     
     <li>
-        <code>SupplierId</code> (<strong>Required</strong>)  - Identifier for the {{Supplier}}
+        <code>SupplierId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#supplier'>Supplier</a>
     </li>
     </ul>
 

@@ -15,11 +15,9 @@ search: true
 
 
 
-
-
 # Overview
 
-A **Classification Tree** is a hierarchical structure describing a taxonomy of {{Products}}. 
+A **Classification Tree** is a hierarchical structure describing a taxonomy of <a href='http://developers.iqmetrix.com/api/catalog/#product'>Products</a>. 
 
 To learn more about Classification Trees, see {{ClassificationTree_Concept}}.
 
@@ -174,7 +172,7 @@ puts response
 <ul>
     
     <li>
-        <code>ClassificationTreeId</code> (<strong>Required</strong>)  - Identifier for the {{ClassificationTree}}
+        <code>ClassificationTreeId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>
     </li>
     </ul>
 

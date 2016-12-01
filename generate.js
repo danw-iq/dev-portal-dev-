@@ -4,7 +4,7 @@
 // npm install 
 // node generate.js 
 
-var FORCE_GENERATE_ALL = false;                                     //Master switch to generate all RAML
+var FORCE_GENERATE_ALL = true;                                     //Master switch to generate all RAML
 
 var fs = require('fs');                                             //For reading files
 var walk = require('walk');                                         // For reading all files in a folder
@@ -16,7 +16,7 @@ var qPromise = require('q');                                        //Promise ma
 var POSTMAN_FOLDER = "postman//";                                   //Used to set the folder RAML will be read from
 var PACKAGE_FILE = "package.json";                                  //Location of package file
 var FOLDER_DIR = "raml/";                                           //Location of the RAML files, should always be raml/
-var SAVE_LOCATION = "pages/api/";                                   //Location of where the MD files will be generated **THIS FOLDER MUST EXIST OR THE SCRIPT WILL FAIL SILENTLY***
+var SAVE_LOCATION = "source/api/"; /*"pages/api/";*/                //Location of where the MD files will be generated **THIS FOLDER MUST EXIST OR THE SCRIPT WILL FAIL SILENTLY***
 var TEMPLATES_LOCATION = "templates/";                              //Location of nunjucks templates
 var GENERATED_RAML_LOCATION = "postman/";                           //Location of generated RAML files
 var GENERATED_LINKS_LOCATION = "source/_includes/generated_linkrefs.html"; //Location of where the resource links will be generated
@@ -210,6 +210,7 @@ function writeResourceLinks() {
 //Read each RAML file to be generated
 function processFiles() {
 
+
     for (var i = 0; i < filePaths.length; i++) {
 
         //Generate it?
@@ -272,7 +273,8 @@ function writeFile(fileName, template) {
 
     //Determine file to read, write and template to use
     var readFile = FOLDER_DIR + fileName + ".raml";
-    var writeFile = SAVE_LOCATION + fileName + ".md";
+    //var writeFile = SAVE_LOCATION + fileName + ".md";
+    var writeFile = SAVE_LOCATION + fileName + ".html.md";
     var config = raml2md.getDefaultConfig(template);
     
     raml2md.render(readFile, config, RESOURCES).then(function(result) {
