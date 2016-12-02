@@ -3,11 +3,17 @@ title:  RQ Data Connect Inventory Reports
 permalink: /api/RQ-Data-Connect-Inventory-Reports/
 
 language_tabs:
-  - javascript
+  - d: javascript
   - shell: cURL
   - csharp: c#
   - java
   - ruby
+  - python: JSON
+  - json-doc: JsonDataTable
+  - xml: XML
+  - html: XmlDataTable
+  - coffeescript: CSV
+  - c: Excel
 
 search: true
 
@@ -1363,9 +1369,9 @@ For a complete list of reports in RQ Data Connect, see [Report List](/rq-data-co
 
 
 
-## Enumerations
+# Enumerations
 
-### BinStatus
+## BinStatus
 
 | Id | Name |
 |:---|:-----|
@@ -1399,10 +1405,11 @@ GET /reports/adjustmenthistoryinvoicedetailreport?ReasonCode={ReasonCode}&StartD
 
 > Example Request
 
-```javascript
+```d
 GET /reports/adjustmenthistoryinvoicedetailreport?ReasonCode=-1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&SerialNumber=990003427999221&ProductIdentifier=ASCLMO000001&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -1460,7 +1467,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>ReasonCode</code> (<strong>Required</strong>)  - Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#reasoncode'>ReasonCode</a>. Use -1 to specify All Reason Codes. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-reason-codes">Getting Reason Codes</a></li>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
@@ -1478,43 +1511,190 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[adjustmenthistoryinvoicedetailreportdata](#AdjustmentHistoryInvoiceDetailReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[adjustmenthistoryinvoicedetailreportdata](#AdjustmentHistoryInvoiceDetailReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/adjustmenthistoryinvoicedetailreport?ReasonCode=-1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&SerialNumber=990003427999221&ProductIdentifier=ASCLMO000001&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "AdjustmentType": 1,
+        "Comments": "Comment",
+        "CountSheetID": 1,
+        "CountSheetIDByStore": "1",
+        "DateCreated": "2015-12-16T07:39:39.49",
+        "EmployeeName": "iQmetrix User",
+        "IsReceiving": false,
+        "StoreName": "100: My Network LLC - Anchorage",
+        "TotalInvoice": 0,
+        "TransactionID": 19240,
+        "TransactionIDByStore": "84WEAIA1187"
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "AdjustmentType": 1,
+            "Comments": "Comment",
+            "CountSheetID": 1,
+            "CountSheetIDByStore": "1",
+            "DateCreated": "2015-12-16T07:39:39.49",
+            "EmployeeName": "iQmetrix User",
+            "IsReceiving": false,
+            "StoreName": "100: My Network LLC - Anchorage",
+            "TotalInvoice": 0,
+            "TransactionID": 19240,
+            "TransactionIDByStore": "84WEAIA1187"
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <AdjustmentType>1</AdjustmentType>
+    <Comments>Comment</Comments>
+    <CountSheetID>1</CountSheetID>
+    <CountSheetIDByStore>1</CountSheetIDByStore>
+    <DateCreated>2015-12-16T07:39:39.49</DateCreated>
+    <EmployeeName>iQmetrix User</EmployeeName>
+    <IsReceiving>false</IsReceiving>
+    <StoreName>100: My Network LLC - Anchorage</StoreName>
+    <TotalInvoice>0</TotalInvoice>
+    <TransactionID>19240</TransactionID>
+    <TransactionIDByStore>84WEAIA1187</TransactionIDByStore>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <AdjustmentType>1</AdjustmentType>
+    <Comments>Comment</Comments>
+    <CountSheetID>1</CountSheetID>
+    <CountSheetIDByStore>1</CountSheetIDByStore>
+    <DateCreated>2015-12-16T07:39:39.49</DateCreated>
+    <EmployeeName>iQmetrix User</EmployeeName>
+    <IsReceiving>false</IsReceiving>
+    <StoreName>100: My Network LLC - Anchorage</StoreName>
+    <TotalInvoice>0</TotalInvoice>
+    <TransactionID>19240</TransactionID>
+    <TransactionIDByStore>84WEAIA1187</TransactionIDByStore>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+AdjustmentType,Comments,CountSheetID,CountSheetIDByStore,DateCreated,EmployeeName,IsReceiving,StoreName,TotalInvoice,TransactionID,TransactionIDByStore
+1,Comment,1,1,2015-12-16T07:39:39.49,iQmetrix User,false,100: My Network LLC - Anchorage,0,19240,84WEAIA1187
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -1532,10 +1712,11 @@ GET /reports/adjustmenthistoryproductdetailreport?ReasonCode={ReasonCode}&StartD
 
 > Example Request
 
-```javascript
+```d
 GET /reports/adjustmenthistoryproductdetailreport?ReasonCode=-1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us&ProductIdentifier=ASCLMO000001
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -1593,7 +1774,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>ReasonCode</code> (<strong>Required</strong>)  - Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#reasoncode'>ReasonCode</a>. Use -1 to specify All Reason Codes. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-reason-codes">Getting Reason Codes</a></li>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
@@ -1610,43 +1817,218 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[adjustmenthistoryproductdetailreportdata](#AdjustmentHistoryProductDetailReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[adjustmenthistoryproductdetailreportdata](#AdjustmentHistoryProductDetailReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/adjustmenthistoryproductdetailreport?ReasonCode=-1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us&ProductIdentifier=ASCLMO000001
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "Comments": "Comment",
+        "CountSheetID": 0,
+        "CountSheetIDByStore": "",
+        "DateCreated": "2015-12-16T07:39:39.49",
+        "EmployeeName": "iQmetrix User",
+        "IsReceiving": false,
+        "ProductIdentifier": "ASMAAP000017",
+        "ProductName": "Samsung Galaxy S4",
+        "Quantity": 5,
+        "ReasonCode": "Unexplained Shrinkage",
+        "SerialNumber": "123000000000000",
+        "StoreName": "100: My Network LLC - Anchorage",
+        "TotalCost": 0,
+        "TransactionID": 19240,
+        "TransactionIDByStore": "84WEAIA1187",
+        "UnitCost": 0,
+        "VendorName": "",
+        "VendorSKU": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "Comments": "Comment",
+            "CountSheetID": 0,
+            "CountSheetIDByStore": "",
+            "DateCreated": "2015-12-16T07:39:39.49",
+            "EmployeeName": "iQmetrix User",
+            "IsReceiving": false,
+            "ProductIdentifier": "ASMAAP000017",
+            "ProductName": "Samsung Galaxy S4",
+            "Quantity": 5,
+            "ReasonCode": "Unexplained Shrinkage",
+            "SerialNumber": "123000000000000",
+            "StoreName": "100: My Network LLC - Anchorage",
+            "TotalCost": 0,
+            "TransactionID": 19240,
+            "TransactionIDByStore": "84WEAIA1187",
+            "UnitCost": 0,
+            "VendorName": "",
+            "VendorSKU": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <Comments>Comment</Comments>
+    <CountSheetID>0</CountSheetID>
+    <CountSheetIDByStore></CountSheetIDByStore>
+    <DateCreated>2015-12-16T07:39:39.49</DateCreated>
+    <EmployeeName>iQmetrix User</EmployeeName>
+    <IsReceiving>false</IsReceiving>
+    <ProductIdentifier>ASMAAP000017</ProductIdentifier>
+    <ProductName>Samsung Galaxy S4</ProductName>
+    <Quantity>5</Quantity>
+    <ReasonCode>Unexplained Shrinkage</ReasonCode>
+    <SerialNumber>123000000000000</SerialNumber>
+    <StoreName>100: My Network LLC - Anchorage</StoreName>
+    <TotalCost>0</TotalCost>
+    <TransactionID>19240</TransactionID>
+    <TransactionIDByStore>84WEAIA1187</TransactionIDByStore>
+    <UnitCost>0</UnitCost>
+    <VendorName></VendorName>
+    <VendorSKU></VendorSKU>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <Comments>Comment</Comments>
+    <CountSheetID>0</CountSheetID>
+    <CountSheetIDByStore></CountSheetIDByStore>
+    <DateCreated>2015-12-16T07:39:39.49</DateCreated>
+    <EmployeeName>iQmetrix User</EmployeeName>
+    <IsReceiving>false</IsReceiving>
+    <ProductIdentifier>ASMAAP000017</ProductIdentifier>
+    <ProductName>Samsung Galaxy S4</ProductName>
+    <Quantity>5</Quantity>
+    <ReasonCode>Unexplained Shrinkage</ReasonCode>
+    <SerialNumber>123000000000000</SerialNumber>
+    <StoreName>100: My Network LLC - Anchorage</StoreName>
+    <TotalCost>0</TotalCost>
+    <TransactionID>19240</TransactionID>
+    <TransactionIDByStore>84WEAIA1187</TransactionIDByStore>
+    <UnitCost>0</UnitCost>
+    <VendorName></VendorName>
+    <VendorSKU></VendorSKU>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+Comments,CountSheetID,CountSheetIDByStore,DateCreated,EmployeeName,IsReceiving,ProductIdentifier,ProductName,Quantity,ReasonCode,SerialNumber,StoreName,TotalCost,TransactionID,TransactionIDByStore,UnitCost,VendorName,VendorSKU
+Comment,0,,2015-12-16T07:39:39.49,iQmetrix User,false,ASMAAP000017,Samsung Galaxy S4,5,Unexplained Shrinkage,123000000000000,100: My Network LLC - Anchorage,0,19240,84WEAIA1187,0,,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -1664,10 +2046,11 @@ GET /reports/AgedSeralizedInventoryReport?SearchMethod={SearchMethod}&SearchCrit
 
 > Example Request
 
-```javascript
+```d
 GET /reports/AgedSeralizedInventoryReport?SearchMethod=3&SearchCriteria2=-1&StoreIDLoggedIn=1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -1725,7 +2108,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>SearchMethod</code> (<strong>Required</strong>)  - Acceptable values include 1 (Location), 2 (Vendor), 3 (Location and Vendor), 4 (Location and Product SKU) or 5 (Location and Category)</li>
     <li><code>SearchCriteria2</code> (<strong>Required</strong>)  - Identifier for a Location (SearchMethod 1), Vendor (SearchMethod 2 or 3), Product SKU (SearchMethod 4) or Category (SearchMethod 5)</li>
@@ -1741,43 +2150,230 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[agedseralizedinventoryreportdata](#AgedSeralizedInventoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[agedseralizedinventoryreportdata](#AgedSeralizedInventoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/AgedSeralizedInventoryReport?SearchMethod=3&SearchCriteria2=-1&StoreIDLoggedIn=1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "StoreID": 1,
+        "StoreTypeName": "Retail Store",
+        "StoreName": "84 West",
+        "DistrictName": "Valley Area District",
+        "RegionName": "Region A",
+        "ChannelName": "Regina Channel",
+        "GlobalProductID": 781,
+        "ProductIdentifier": "ACPHRI000170",
+        "ProductName": "Blackberry 9650 Bold  VZW",
+        "SerialNumber": "123000000000000",
+        "SerializedCOS": 11919371.73,
+        "DateReceived": "2016-07-27T14:08:17.643",
+        "DateReceivedAtStore": "2016-07-27T14:08:17.643",
+        "DaysUntilStockBalance": 0,
+        "NonSellable": false,
+        "InTransfer": false,
+        "CommittedOnOrderEntry": false,
+        "InStock": true,
+        "IsUsed": false,
+        "VendorName": "Brightpoint",
+        "VendorPartNumber": "DANKIT"
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "StoreID": 1,
+            "StoreTypeName": "Retail Store",
+            "StoreName": "84 West",
+            "DistrictName": "Valley Area District",
+            "RegionName": "Region A",
+            "ChannelName": "Regina Channel",
+            "GlobalProductID": 781,
+            "ProductIdentifier": "ACPHRI000170",
+            "ProductName": "Blackberry 9650 Bold  VZW",
+            "SerialNumber": "123000000000000",
+            "SerializedCOS": 11919371.73,
+            "DateReceived": "2016-07-27T14:08:17.643",
+            "DateReceivedAtStore": "2016-07-27T14:08:17.643",
+            "DaysUntilStockBalance": 0,
+            "NonSellable": false,
+            "InTransfer": false,
+            "CommittedOnOrderEntry": false,
+            "InStock": true,
+            "IsUsed": false,
+            "VendorName": "Brightpoint",
+            "VendorPartNumber": "DANKIT"
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <StoreID>1</StoreID>
+    <StoreTypeName>Retail Store</StoreTypeName>
+    <StoreName>84 West</StoreName>
+    <DistrictName>Valley Area District</DistrictName>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <GlobalProductID>781</GlobalProductID>
+    <ProductIdentifier>ACPHRI000170</ProductIdentifier>
+    <ProductName>Blackberry 9650 Bold  VZW</ProductName>
+    <SerialNumber>123000000000000</SerialNumber>
+    <SerializedCOS>11919371.73</SerializedCOS>
+    <DateReceived>2016-07-27T14:08:17.643</DateReceived>
+    <DateReceivedAtStore>2016-07-27T14:08:17.643</DateReceivedAtStore>
+    <DaysUntilStockBalance>0</DaysUntilStockBalance>
+    <NonSellable>false</NonSellable>
+    <InTransfer>false</InTransfer>
+    <CommittedOnOrderEntry>false</CommittedOnOrderEntry>
+    <InStock>true</InStock>
+    <IsUsed>false</IsUsed>
+    <VendorName>Brightpoint</VendorName>
+    <VendorPartNumber>DANKIT</VendorPartNumber>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <StoreID>1</StoreID>
+    <StoreTypeName>Retail Store</StoreTypeName>
+    <StoreName>84 West</StoreName>
+    <DistrictName>Valley Area District</DistrictName>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <GlobalProductID>781</GlobalProductID>
+    <ProductIdentifier>ACPHRI000170</ProductIdentifier>
+    <ProductName>Blackberry 9650 Bold  VZW</ProductName>
+    <SerialNumber>123000000000000</SerialNumber>
+    <SerializedCOS>11919371.73</SerializedCOS>
+    <DateReceived>2016-07-27T14:08:17.643</DateReceived>
+    <DateReceivedAtStore>2016-07-27T14:08:17.643</DateReceivedAtStore>
+    <DaysUntilStockBalance>0</DaysUntilStockBalance>
+    <NonSellable>false</NonSellable>
+    <InTransfer>false</InTransfer>
+    <CommittedOnOrderEntry>false</CommittedOnOrderEntry>
+    <InStock>true</InStock>
+    <IsUsed>false</IsUsed>
+    <VendorName>Brightpoint</VendorName>
+    <VendorPartNumber>DANKIT</VendorPartNumber>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+StoreID,StoreTypeName,StoreName,DistrictName,RegionName,ChannelName,GlobalProductID,ProductIdentifier,ProductName,SerialNumber,SerializedCOS,DateReceived,DateReceivedAtStore,DaysUntilStockBalance,NonSellable,InTransfer,CommittedOnOrderEntry,InStock,IsUsed,VendorName,VendorPartNumber
+1,Retail Store,84 West,Valley Area District,Region A,Regina Channel,781,ACPHRI000170,Blackberry 9650 Bold  VZW,123000000000000,11919371.73,2016-07-27T14:08:17.643,2016-07-27T14:08:17.643,0,false,false,false,true,false,Brightpoint,DANKIT
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -1795,10 +2391,11 @@ GET /reports/AutoOrderingReport?Search={Search}&OrderBy={OrderBy}&VendorID={Vend
 
 > Example Request
 
-```javascript
+```d
 GET /reports/AutoOrderingReport?Search=ByCategory&OrderBy=Priority&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&ProductsToShow=1&StoreTypeID=-1&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -1856,7 +2453,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>Search</code> (<strong>Required</strong>)  - Acceptable valus include ByCategory (use CategoryNumber) or ByProductSKU</li>
     <li><code>OrderBy</code> (<strong>Required</strong>)  - Acceptable values include Priority or LowestCost</li>
@@ -1875,43 +2498,270 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[autoorderingreportdata](#AutoOrderingReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[autoorderingreportdata](#AutoOrderingReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/AutoOrderingReport?Search=ByCategory&OrderBy=Priority&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&ProductsToShow=1&StoreTypeID=-1&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "GlobalProductID": 9918,
+        "ProductIdentifier": "AAATAP000093",
+        "CategoryNumber": "1010271011",
+        "StoreTypeName": "Retail Store",
+        "CategoryPath": "Activations",
+        "CategoryName": "Equipment",
+        "ProductName": "Apple iPhone 6 Plus 16GB Space Gray - AT&T",
+        "StoreID": 1,
+        "StoreName": "84 West",
+        "DistrictName": "Valley Area District",
+        "RegionName": "Region A",
+        "ChannelName": "Regina Channel",
+        "Cost": 629,
+        "VendorID": 21,
+        "VendorPartNumber": "",
+        "VendorName": "Offwire",
+        "Priority": 1,
+        "VendorNumber": "",
+        "MinQty": 1,
+        "MaxQty": 10,
+        "QtyInStock": 1,
+        "NonSellableQuantity": 1,
+        "QtyTransferIn": 2,
+        "QtyTransferOut": 3,
+        "QtyOnRMA": 4,
+        "QtyOnLoan": 1,
+        "QtyCommittedOnOrderEntry": 2,
+        "QtyOnOrder": 0,
+        "QtyOnBackOrder": 1,
+        "IsUsedQty": 5,
+        "DoNotOrder": 1
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "GlobalProductID": 9918,
+            "ProductIdentifier": "AAATAP000093",
+            "CategoryNumber": "1010271011",
+            "StoreTypeName": "Retail Store",
+            "CategoryPath": "Activations",
+            "CategoryName": "Equipment",
+            "ProductName": "Apple iPhone 6 Plus 16GB Space Gray - AT&T",
+            "StoreID": 1,
+            "StoreName": "84 West",
+            "DistrictName": "Valley Area District",
+            "RegionName": "Region A",
+            "ChannelName": "Regina Channel",
+            "Cost": 629,
+            "VendorID": 21,
+            "VendorPartNumber": "",
+            "VendorName": "Offwire",
+            "Priority": 1,
+            "VendorNumber": "",
+            "MinQty": 1,
+            "MaxQty": 10,
+            "QtyInStock": 1,
+            "NonSellableQuantity": 1,
+            "QtyTransferIn": 2,
+            "QtyTransferOut": 3,
+            "QtyOnRMA": 4,
+            "QtyOnLoan": 1,
+            "QtyCommittedOnOrderEntry": 2,
+            "QtyOnOrder": 0,
+            "QtyOnBackOrder": 1,
+            "IsUsedQty": 5,
+            "DoNotOrder": 1
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <GlobalProductID>9918</GlobalProductID>
+    <ProductIdentifier>AAATAP000093</ProductIdentifier>
+    <CategoryNumber>1010271011</CategoryNumber>
+    <StoreTypeName>Retail Store</StoreTypeName>
+    <CategoryPath>Activations</CategoryPath>
+    <CategoryName>Equipment</CategoryName>
+    <ProductName>Apple iPhone 6 Plus 16GB Space Gray - AT&T</ProductName>
+    <StoreID>1</StoreID>
+    <StoreName>84 West</StoreName>
+    <DistrictName>Valley Area District</DistrictName>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <Cost>629</Cost>
+    <VendorID>21</VendorID>
+    <VendorPartNumber></VendorPartNumber>
+    <VendorName>Offwire</VendorName>
+    <Priority>1</Priority>
+    <VendorNumber></VendorNumber>
+    <MinQty>1</MinQty>
+    <MaxQty>10</MaxQty>
+    <QtyInStock>1</QtyInStock>
+    <NonSellableQuantity>1</NonSellableQuantity>
+    <QtyTransferIn>2</QtyTransferIn>
+    <QtyTransferOut>3</QtyTransferOut>
+    <QtyOnRMA>4</QtyOnRMA>
+    <QtyOnLoan>1</QtyOnLoan>
+    <QtyCommittedOnOrderEntry>2</QtyCommittedOnOrderEntry>
+    <QtyOnOrder>0</QtyOnOrder>
+    <QtyOnBackOrder>1</QtyOnBackOrder>
+    <IsUsedQty>5</IsUsedQty>
+    <DoNotOrder>1</DoNotOrder>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <GlobalProductID>9918</GlobalProductID>
+    <ProductIdentifier>AAATAP000093</ProductIdentifier>
+    <CategoryNumber>1010271011</CategoryNumber>
+    <StoreTypeName>Retail Store</StoreTypeName>
+    <CategoryPath>Activations</CategoryPath>
+    <CategoryName>Equipment</CategoryName>
+    <ProductName>Apple iPhone 6 Plus 16GB Space Gray - AT&T</ProductName>
+    <StoreID>1</StoreID>
+    <StoreName>84 West</StoreName>
+    <DistrictName>Valley Area District</DistrictName>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <Cost>629</Cost>
+    <VendorID>21</VendorID>
+    <VendorPartNumber></VendorPartNumber>
+    <VendorName>Offwire</VendorName>
+    <Priority>1</Priority>
+    <VendorNumber></VendorNumber>
+    <MinQty>1</MinQty>
+    <MaxQty>10</MaxQty>
+    <QtyInStock>1</QtyInStock>
+    <NonSellableQuantity>1</NonSellableQuantity>
+    <QtyTransferIn>2</QtyTransferIn>
+    <QtyTransferOut>3</QtyTransferOut>
+    <QtyOnRMA>4</QtyOnRMA>
+    <QtyOnLoan>1</QtyOnLoan>
+    <QtyCommittedOnOrderEntry>2</QtyCommittedOnOrderEntry>
+    <QtyOnOrder>0</QtyOnOrder>
+    <QtyOnBackOrder>1</QtyOnBackOrder>
+    <IsUsedQty>5</IsUsedQty>
+    <DoNotOrder>1</DoNotOrder>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+GlobalProductID,ProductIdentifier,CategoryNumber,StoreTypeName,CategoryPath,CategoryName,ProductName,StoreID,StoreName,DistrictName,RegionName,ChannelName,Cost,VendorID,VendorPartNumber,VendorName,Priority,VendorNumber,MinQty,MaxQty,QtyInStock,NonSellableQuantity,QtyTransferIn,QtyTransferOut,QtyOnRMA,QtyOnLoan,QtyCommittedOnOrderEntry,QtyOnOrder,QtyOnBackOrder,IsUsedQty,DoNotOrder
+9918,AAATAP000093,1010271011,Retail Store,Activations,Equipment,Apple iPhone 6 Plus 16GB Space Gray - AT&T,1,84 West,Valley Area District,Region A,Regina Channel,629,21,,Offwire,1,,1,10,1,1,2,3,4,1,2,0,1,5,1
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -1929,10 +2779,11 @@ GET /reports/backorderlistingreport?StartDate={StartDate}&StopDate={StopDate}&Fo
 
 > Example Request
 
-```javascript
+```d
 GET /reports/backorderlistingreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&VendorID=-1&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -1990,7 +2841,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -2006,43 +2883,210 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[backorderlistingreportdata](#BackOrderListingReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[backorderlistingreportdata](#BackOrderListingReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/backorderlistingreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&VendorID=-1&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "PurchaseOrderID": 17386,
+        "PurchaseOrderIDByStore": "84WEAPO1059",
+        "GlobalProductID": 2815,
+        "ProductIdentifier": "KLERNO000015",
+        "QtyOrdered": 28,
+        "QtyReceived": 0,
+        "ReferenceNumber": "",
+        "QtyOnBackOrder": 28,
+        "DateCommitted": "2015-07-16T09:08:39.11",
+        "EstimatedArrivalDate": "2015-07-06T00:00:00",
+        "ProductName": "Red Bell Case",
+        "StoreName": "84 West",
+        "EmployeeName": "iQmetrix Employee",
+        "VendorName": "Offwire",
+        "VendorPartNumber": "HFW5123",
+        "VendorNumber": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "PurchaseOrderID": 17386,
+            "PurchaseOrderIDByStore": "84WEAPO1059",
+            "GlobalProductID": 2815,
+            "ProductIdentifier": "KLERNO000015",
+            "QtyOrdered": 28,
+            "QtyReceived": 0,
+            "ReferenceNumber": "",
+            "QtyOnBackOrder": 28,
+            "DateCommitted": "2015-07-16T09:08:39.11",
+            "EstimatedArrivalDate": "2015-07-06T00:00:00",
+            "ProductName": "Red Bell Case",
+            "StoreName": "84 West",
+            "EmployeeName": "iQmetrix Employee",
+            "VendorName": "Offwire",
+            "VendorPartNumber": "HFW5123",
+            "VendorNumber": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <PurchaseOrderID>17386</PurchaseOrderID>
+    <PurchaseOrderIDByStore>84WEAPO1059</PurchaseOrderIDByStore>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>KLERNO000015</ProductIdentifier>
+    <QtyOrdered>28</QtyOrdered>
+    <QtyReceived>0</QtyReceived>
+    <ReferenceNumber></ReferenceNumber>
+    <QtyOnBackOrder>28</QtyOnBackOrder>
+    <DateCommitted>2015-07-16T09:08:39.11</DateCommitted>
+    <EstimatedArrivalDate>2015-07-06T00:00:00</EstimatedArrivalDate>
+    <ProductName>Red Bell Case</ProductName>
+    <StoreName>84 West</StoreName>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+    <VendorName>Offwire</VendorName>
+    <VendorPartNumber>HFW5123</VendorPartNumber>
+    <VendorNumber></VendorNumber>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <PurchaseOrderID>17386</PurchaseOrderID>
+    <PurchaseOrderIDByStore>84WEAPO1059</PurchaseOrderIDByStore>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>KLERNO000015</ProductIdentifier>
+    <QtyOrdered>28</QtyOrdered>
+    <QtyReceived>0</QtyReceived>
+    <ReferenceNumber></ReferenceNumber>
+    <QtyOnBackOrder>28</QtyOnBackOrder>
+    <DateCommitted>2015-07-16T09:08:39.11</DateCommitted>
+    <EstimatedArrivalDate>2015-07-06T00:00:00</EstimatedArrivalDate>
+    <ProductName>Red Bell Case</ProductName>
+    <StoreName>84 West</StoreName>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+    <VendorName>Offwire</VendorName>
+    <VendorPartNumber>HFW5123</VendorPartNumber>
+    <VendorNumber></VendorNumber>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+PurchaseOrderID,PurchaseOrderIDByStore,GlobalProductID,ProductIdentifier,QtyOrdered,QtyReceived,ReferenceNumber,QtyOnBackOrder,DateCommitted,EstimatedArrivalDate,ProductName,StoreName,EmployeeName,VendorName,VendorPartNumber,VendorNumber
+17386,84WEAPO1059,2815,KLERNO000015,28,0,,28,2015-07-16T09:08:39.11,2015-07-06T00:00:00,Red Bell Case,84 West,iQmetrix Employee,Offwire,HFW5123,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -2060,10 +3104,11 @@ GET /reports/countsheethistoryreport?StartDate={StartDate}&StopDate={StopDate}&F
 
 > Example Request
 
-```javascript
+```d
 GET /reports/countsheethistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&ProductIdentifier=ASCLMO000001&SerialNumber=866988333292854&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -2121,7 +3166,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -2138,43 +3209,214 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[countsheethistoryreportdata](#CountSheetHistoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[countsheethistoryreportdata](#CountSheetHistoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/countsheethistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&ProductIdentifier=ASCLMO000001&SerialNumber=866988333292854&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "CountSheetID": 675,
+        "CountSheetIDByStore": "84WEACS100",
+        "DateCreated": "2015-07-21T09:17:43.13",
+        "CategoryPath": "Wrapsol",
+        "EmployeeName1": "iQmetrix Employee",
+        "EmployeeName2": "iQmetrix Employee",
+        "StoreName": "84 West",
+        "DistrictName": "Valley Area District",
+        "RegionName": "Region A",
+        "ChannelName": "Regina Channel",
+        "OriginalCountSheetID": -1,
+        "OriginalCountSheetIDByStore": "",
+        "DateStarted": "2015-07-21T09:17:00",
+        "DateCommitted": "2015-07-21T09:26:40.45",
+        "DateCompleted": "2015-07-22T011:30:40.36",
+        "DateModified": "2015-07-21T09:17:43.147",
+        "Comments": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "CountSheetID": 675,
+            "CountSheetIDByStore": "84WEACS100",
+            "DateCreated": "2015-07-21T09:17:43.13",
+            "CategoryPath": "Wrapsol",
+            "EmployeeName1": "iQmetrix Employee",
+            "EmployeeName2": "iQmetrix Employee",
+            "StoreName": "84 West",
+            "DistrictName": "Valley Area District",
+            "RegionName": "Region A",
+            "ChannelName": "Regina Channel",
+            "OriginalCountSheetID": -1,
+            "OriginalCountSheetIDByStore": "",
+            "DateStarted": "2015-07-21T09:17:00",
+            "DateCommitted": "2015-07-21T09:26:40.45",
+            "DateCompleted": "2015-07-22T011:30:40.36",
+            "DateModified": "2015-07-21T09:17:43.147",
+            "Comments": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <CountSheetID>675</CountSheetID>
+    <CountSheetIDByStore>84WEACS100</CountSheetIDByStore>
+    <DateCreated>2015-07-21T09:17:43.13</DateCreated>
+    <CategoryPath>Wrapsol</CategoryPath>
+    <EmployeeName1>iQmetrix Employee</EmployeeName1>
+    <EmployeeName2>iQmetrix Employee</EmployeeName2>
+    <StoreName>84 West</StoreName>
+    <DistrictName>Valley Area District</DistrictName>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <OriginalCountSheetID>-1</OriginalCountSheetID>
+    <OriginalCountSheetIDByStore></OriginalCountSheetIDByStore>
+    <DateStarted>2015-07-21T09:17:00</DateStarted>
+    <DateCommitted>2015-07-21T09:26:40.45</DateCommitted>
+    <DateCompleted>2015-07-22T011:30:40.36</DateCompleted>
+    <DateModified>2015-07-21T09:17:43.147</DateModified>
+    <Comments></Comments>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <CountSheetID>675</CountSheetID>
+    <CountSheetIDByStore>84WEACS100</CountSheetIDByStore>
+    <DateCreated>2015-07-21T09:17:43.13</DateCreated>
+    <CategoryPath>Wrapsol</CategoryPath>
+    <EmployeeName1>iQmetrix Employee</EmployeeName1>
+    <EmployeeName2>iQmetrix Employee</EmployeeName2>
+    <StoreName>84 West</StoreName>
+    <DistrictName>Valley Area District</DistrictName>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <OriginalCountSheetID>-1</OriginalCountSheetID>
+    <OriginalCountSheetIDByStore></OriginalCountSheetIDByStore>
+    <DateStarted>2015-07-21T09:17:00</DateStarted>
+    <DateCommitted>2015-07-21T09:26:40.45</DateCommitted>
+    <DateCompleted>2015-07-22T011:30:40.36</DateCompleted>
+    <DateModified>2015-07-21T09:17:43.147</DateModified>
+    <Comments></Comments>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+CountSheetID,CountSheetIDByStore,DateCreated,CategoryPath,EmployeeName1,EmployeeName2,StoreName,DistrictName,RegionName,ChannelName,OriginalCountSheetID,OriginalCountSheetIDByStore,DateStarted,DateCommitted,DateCompleted,DateModified,Comments
+675,84WEACS100,2015-07-21T09:17:43.13,Wrapsol,iQmetrix Employee,iQmetrix Employee,84 West,Valley Area District,Region A,Regina Channel,-1,,2015-07-21T09:17:00,2015-07-21T09:26:40.45,2015-07-22T011:30:40.36,2015-07-21T09:17:43.147,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -2200,10 +3442,11 @@ GET /reports/CompletedRMAsReport?ReportType={ReportType}&StockBalanceID={StockBa
 
 > Example Request
 
-```javascript
+```d
 GET /reports/CompletedRMAsReport?ReportType=RMAs&StockBalanceID=78&SearchMethod=3&SearchCriteria=-1&StoreIDs=1&SBState=4&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -2261,7 +3504,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>ReportType</code> (<strong>Required</strong>)  - Acceptable values include RMAs (CompletedRMAsReportData), RMADetail (CompletedRMAsReportRMADetailData) or Products (CompletedRMAsProductReportData)</li>
     <li><code>StockBalanceID</code> (Optional)  - Only used, and required, if ReportType is RMADetail or Products. Identifier for a RMA in RQ</li>
@@ -2276,43 +3545,178 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[completedrmasreportdata](#CompletedRMAsReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[completedrmasreportdata](#CompletedRMAsReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/CompletedRMAsReport?ReportType=RMAs&StockBalanceID=78&SearchMethod=3&SearchCriteria=-1&StoreIDs=1&SBState=4&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "StockBalanceID": 1,
+        "StockBalanceIDByStore": "84WEASB1",
+        "RMANumber": "112482",
+        "StoreName": "84 West",
+        "VendorName": "Reliance",
+        "DateCommitted": "2011-03-02T17:10:11.78",
+        "CustomerName": "N/A",
+        "TotalOnRMA": 460
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "StockBalanceID": 1,
+            "StockBalanceIDByStore": "84WEASB1",
+            "RMANumber": "112482",
+            "StoreName": "84 West",
+            "VendorName": "Reliance",
+            "DateCommitted": "2011-03-02T17:10:11.78",
+            "CustomerName": "N/A",
+            "TotalOnRMA": 460
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <StockBalanceID>1</StockBalanceID>
+    <StockBalanceIDByStore>84WEASB1</StockBalanceIDByStore>
+    <RMANumber>112482</RMANumber>
+    <StoreName>84 West</StoreName>
+    <VendorName>Reliance</VendorName>
+    <DateCommitted>2011-03-02T17:10:11.78</DateCommitted>
+    <CustomerName>N/A</CustomerName>
+    <TotalOnRMA>460</TotalOnRMA>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <StockBalanceID>1</StockBalanceID>
+    <StockBalanceIDByStore>84WEASB1</StockBalanceIDByStore>
+    <RMANumber>112482</RMANumber>
+    <StoreName>84 West</StoreName>
+    <VendorName>Reliance</VendorName>
+    <DateCommitted>2011-03-02T17:10:11.78</DateCommitted>
+    <CustomerName>N/A</CustomerName>
+    <TotalOnRMA>460</TotalOnRMA>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+StockBalanceID,StockBalanceIDByStore,RMANumber,StoreName,VendorName,DateCommitted,CustomerName,TotalOnRMA
+1,84WEASB1,112482,84 West,Reliance,2011-03-02T17:10:11.78,N/A,460
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -2330,10 +3734,11 @@ GET /reports/consignmenthistoryreport?StartDate={StartDate}&StopDate={StopDate}&
 
 > Example Request
 
-```javascript
+```d
 GET /reports/consignmenthistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -2391,7 +3796,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -2406,43 +3837,210 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[consignmenthistoryreportdata](#ConsignmentHistoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[consignmenthistoryreportdata](#ConsignmentHistoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/consignmenthistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "LoanInvoiceID": 18,
+        "LoanInvoiceIDByStore": "84WEALI1",
+        "LoanType": 1,
+        "StoreName": "84 West",
+        "EmployeeName": "iQmetrix Employee",
+        "Comments": "",
+        "BorrowerName": "John Lacquey Pinestraw Inc",
+        "DateCommitted": "2015-07-15T08:39:36.18",
+        "LoanCompleted": true,
+        "DateCompleted": "2015-07-15T11:00:04.86",
+        "CompletedEmployeeName": "iQmetrix Employee",
+        "DateCreated": "2015-07-15T08:39:36.18",
+        "TotalOnLoan": 0,
+        "RegionName": "Region A",
+        "ChannelName": "Regina Channel",
+        "DistrictName": "Valley Area District"
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "LoanInvoiceID": 18,
+            "LoanInvoiceIDByStore": "84WEALI1",
+            "LoanType": 1,
+            "StoreName": "84 West",
+            "EmployeeName": "iQmetrix Employee",
+            "Comments": "",
+            "BorrowerName": "John Lacquey Pinestraw Inc",
+            "DateCommitted": "2015-07-15T08:39:36.18",
+            "LoanCompleted": true,
+            "DateCompleted": "2015-07-15T11:00:04.86",
+            "CompletedEmployeeName": "iQmetrix Employee",
+            "DateCreated": "2015-07-15T08:39:36.18",
+            "TotalOnLoan": 0,
+            "RegionName": "Region A",
+            "ChannelName": "Regina Channel",
+            "DistrictName": "Valley Area District"
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <LoanInvoiceID>18</LoanInvoiceID>
+    <LoanInvoiceIDByStore>84WEALI1</LoanInvoiceIDByStore>
+    <LoanType>1</LoanType>
+    <StoreName>84 West</StoreName>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+    <Comments></Comments>
+    <BorrowerName>John Lacquey Pinestraw Inc</BorrowerName>
+    <DateCommitted>2015-07-15T08:39:36.18</DateCommitted>
+    <LoanCompleted>true</LoanCompleted>
+    <DateCompleted>2015-07-15T11:00:04.86</DateCompleted>
+    <CompletedEmployeeName>iQmetrix Employee</CompletedEmployeeName>
+    <DateCreated>2015-07-15T08:39:36.18</DateCreated>
+    <TotalOnLoan>0</TotalOnLoan>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <DistrictName>Valley Area District</DistrictName>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <LoanInvoiceID>18</LoanInvoiceID>
+    <LoanInvoiceIDByStore>84WEALI1</LoanInvoiceIDByStore>
+    <LoanType>1</LoanType>
+    <StoreName>84 West</StoreName>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+    <Comments></Comments>
+    <BorrowerName>John Lacquey Pinestraw Inc</BorrowerName>
+    <DateCommitted>2015-07-15T08:39:36.18</DateCommitted>
+    <LoanCompleted>true</LoanCompleted>
+    <DateCompleted>2015-07-15T11:00:04.86</DateCompleted>
+    <CompletedEmployeeName>iQmetrix Employee</CompletedEmployeeName>
+    <DateCreated>2015-07-15T08:39:36.18</DateCreated>
+    <TotalOnLoan>0</TotalOnLoan>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <DistrictName>Valley Area District</DistrictName>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+LoanInvoiceID,LoanInvoiceIDByStore,LoanType,StoreName,EmployeeName,Comments,BorrowerName,DateCommitted,LoanCompleted,DateCompleted,CompletedEmployeeName,DateCreated,TotalOnLoan,RegionName,ChannelName,DistrictName
+18,84WEALI1,1,84 West,iQmetrix Employee,,John Lacquey Pinestraw Inc,2015-07-15T08:39:36.18,true,2015-07-15T11:00:04.86,iQmetrix Employee,2015-07-15T08:39:36.18,0,Region A,Regina Channel,Valley Area District
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -2460,10 +4058,11 @@ GET /reports/discontinuedinventoryreport?CategoryNumber={CategoryNumber}&ForWho=
 
 > Example Request
 
-```javascript
+```d
 GET /reports/discontinuedinventoryreport?CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -2521,7 +4120,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>CategoryNumber</code> (<strong>Required</strong>)  - Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#categorynumber'>CategoryNumber</a>. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a></li>
     <li><code>ForWho</code> (Optional)  - Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored</li>
@@ -2535,43 +4160,210 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[discontinuedinventoryreportdata](#DiscontinuedInventoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[discontinuedinventoryreportdata](#DiscontinuedInventoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/discontinuedinventoryreport?CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "GlobalProductID": 2815,
+        "ProductIdentifier": "ASCLMO000001",
+        "SpecialProductID": 0,
+        "ProductName": "iPhone 5s 32GB - Gold",
+        "EmployeeID": 2384,
+        "DiscontinuedDate": "2014-02-13T00:00:00",
+        "DiscontinuedEmployeeID": 250,
+        "InStock": 12,
+        "QuantityInNonSellable": 1,
+        "QuantityInTransfer": 2,
+        "QuantityOnRMA": 1,
+        "QuantityOnOrder": 0,
+        "QuantityOnBackOrder": 1,
+        "QuantityOnLoan": 3,
+        "QuantityCommitted": 2,
+        "DiscontinuedEmployeeName": "iQmetrix Employee"
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "GlobalProductID": 2815,
+            "ProductIdentifier": "ASCLMO000001",
+            "SpecialProductID": 0,
+            "ProductName": "iPhone 5s 32GB - Gold",
+            "EmployeeID": 2384,
+            "DiscontinuedDate": "2014-02-13T00:00:00",
+            "DiscontinuedEmployeeID": 250,
+            "InStock": 12,
+            "QuantityInNonSellable": 1,
+            "QuantityInTransfer": 2,
+            "QuantityOnRMA": 1,
+            "QuantityOnOrder": 0,
+            "QuantityOnBackOrder": 1,
+            "QuantityOnLoan": 3,
+            "QuantityCommitted": 2,
+            "DiscontinuedEmployeeName": "iQmetrix Employee"
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>ASCLMO000001</ProductIdentifier>
+    <SpecialProductID>0</SpecialProductID>
+    <ProductName>iPhone 5s 32GB - Gold</ProductName>
+    <EmployeeID>2384</EmployeeID>
+    <DiscontinuedDate>2014-02-13T00:00:00</DiscontinuedDate>
+    <DiscontinuedEmployeeID>250</DiscontinuedEmployeeID>
+    <InStock>12</InStock>
+    <QuantityInNonSellable>1</QuantityInNonSellable>
+    <QuantityInTransfer>2</QuantityInTransfer>
+    <QuantityOnRMA>1</QuantityOnRMA>
+    <QuantityOnOrder>0</QuantityOnOrder>
+    <QuantityOnBackOrder>1</QuantityOnBackOrder>
+    <QuantityOnLoan>3</QuantityOnLoan>
+    <QuantityCommitted>2</QuantityCommitted>
+    <DiscontinuedEmployeeName>iQmetrix Employee</DiscontinuedEmployeeName>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>ASCLMO000001</ProductIdentifier>
+    <SpecialProductID>0</SpecialProductID>
+    <ProductName>iPhone 5s 32GB - Gold</ProductName>
+    <EmployeeID>2384</EmployeeID>
+    <DiscontinuedDate>2014-02-13T00:00:00</DiscontinuedDate>
+    <DiscontinuedEmployeeID>250</DiscontinuedEmployeeID>
+    <InStock>12</InStock>
+    <QuantityInNonSellable>1</QuantityInNonSellable>
+    <QuantityInTransfer>2</QuantityInTransfer>
+    <QuantityOnRMA>1</QuantityOnRMA>
+    <QuantityOnOrder>0</QuantityOnOrder>
+    <QuantityOnBackOrder>1</QuantityOnBackOrder>
+    <QuantityOnLoan>3</QuantityOnLoan>
+    <QuantityCommitted>2</QuantityCommitted>
+    <DiscontinuedEmployeeName>iQmetrix Employee</DiscontinuedEmployeeName>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+GlobalProductID,ProductIdentifier,SpecialProductID,ProductName,EmployeeID,DiscontinuedDate,DiscontinuedEmployeeID,InStock,QuantityInNonSellable,QuantityInTransfer,QuantityOnRMA,QuantityOnOrder,QuantityOnBackOrder,QuantityOnLoan,QuantityCommitted,DiscontinuedEmployeeName
+2815,ASCLMO000001,0,iPhone 5s 32GB - Gold,2384,2014-02-13T00:00:00,250,12,1,2,1,0,1,3,2,iQmetrix Employee
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -2589,10 +4381,11 @@ GET /reports/inventoryavailabilitysummaryreport?ForWho={ForWho}&ForWhoIDs={ForWh
 
 > Example Request
 
-```javascript
+```d
 GET /reports/inventoryavailabilitysummaryreport?ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&SearchType=1&ProductIdentifier=ASCLMO000001&CategoryNumber=10&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -2650,7 +4443,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>ForWho</code> (Optional)  - Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored</li>
     <li><code>ForWhoIDs</code> (Optional)  - A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1</li>
@@ -2666,43 +4485,250 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[inventoryavailabilitysummaryreportdata](#InventoryAvailabilitySummaryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[inventoryavailabilitysummaryreportdata](#InventoryAvailabilitySummaryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/inventoryavailabilitysummaryreport?ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&SearchType=1&ProductIdentifier=ASCLMO000001&CategoryNumber=10&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "ChannelID": "3a5ab3b9-df8b-412b-fffa-6b59bcaaaa94",
+        "ChannelName": "English Channel",
+        "RegionID": 4,
+        "RegionName": "London",
+        "DistrictID": 72,
+        "DistrictName": "Westminster",
+        "StoreID": 6679,
+        "StoreName": "100: My Network LLC - Anchorage",
+        "GlobalProductID": 2815,
+        "ProductIdentifier": "AAATAP000093",
+        "ProductName": "Apple iPhone 6 Plus 16GB Space Gray",
+        "QtyInStock": 59,
+        "QtyOnOrder": 1,
+        "QtyOnBackOrder": 2,
+        "QtyInNonSellable": 0,
+        "QtyTransferIn": 2,
+        "QtyTransferOut": 1,
+        "QtyOnRMA": 3,
+        "QtyOnLoan": 2,
+        "QtyCommittedOnOrderEntry": 1,
+        "UnitCost": 699,
+        "NoSale": false,
+        "DoNotOrder": false,
+        "SpecialOrder": false,
+        "DateEOL": "",
+        "WriteOff": false
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "ChannelID": "3a5ab3b9-df8b-412b-fffa-6b59bcaaaa94",
+            "ChannelName": "English Channel",
+            "RegionID": 4,
+            "RegionName": "London",
+            "DistrictID": 72,
+            "DistrictName": "Westminster",
+            "StoreID": 6679,
+            "StoreName": "100: My Network LLC - Anchorage",
+            "GlobalProductID": 2815,
+            "ProductIdentifier": "AAATAP000093",
+            "ProductName": "Apple iPhone 6 Plus 16GB Space Gray",
+            "QtyInStock": 59,
+            "QtyOnOrder": 1,
+            "QtyOnBackOrder": 2,
+            "QtyInNonSellable": 0,
+            "QtyTransferIn": 2,
+            "QtyTransferOut": 1,
+            "QtyOnRMA": 3,
+            "QtyOnLoan": 2,
+            "QtyCommittedOnOrderEntry": 1,
+            "UnitCost": 699,
+            "NoSale": false,
+            "DoNotOrder": false,
+            "SpecialOrder": false,
+            "DateEOL": "",
+            "WriteOff": false
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <ChannelID>3a5ab3b9-df8b-412b-fffa-6b59bcaaaa94</ChannelID>
+    <ChannelName>English Channel</ChannelName>
+    <RegionID>4</RegionID>
+    <RegionName>London</RegionName>
+    <DistrictID>72</DistrictID>
+    <DistrictName>Westminster</DistrictName>
+    <StoreID>6679</StoreID>
+    <StoreName>100: My Network LLC - Anchorage</StoreName>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>AAATAP000093</ProductIdentifier>
+    <ProductName>Apple iPhone 6 Plus 16GB Space Gray</ProductName>
+    <QtyInStock>59</QtyInStock>
+    <QtyOnOrder>1</QtyOnOrder>
+    <QtyOnBackOrder>2</QtyOnBackOrder>
+    <QtyInNonSellable>0</QtyInNonSellable>
+    <QtyTransferIn>2</QtyTransferIn>
+    <QtyTransferOut>1</QtyTransferOut>
+    <QtyOnRMA>3</QtyOnRMA>
+    <QtyOnLoan>2</QtyOnLoan>
+    <QtyCommittedOnOrderEntry>1</QtyCommittedOnOrderEntry>
+    <UnitCost>699</UnitCost>
+    <NoSale>false</NoSale>
+    <DoNotOrder>false</DoNotOrder>
+    <SpecialOrder>false</SpecialOrder>
+    <DateEOL></DateEOL>
+    <WriteOff>false</WriteOff>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <ChannelID>3a5ab3b9-df8b-412b-fffa-6b59bcaaaa94</ChannelID>
+    <ChannelName>English Channel</ChannelName>
+    <RegionID>4</RegionID>
+    <RegionName>London</RegionName>
+    <DistrictID>72</DistrictID>
+    <DistrictName>Westminster</DistrictName>
+    <StoreID>6679</StoreID>
+    <StoreName>100: My Network LLC - Anchorage</StoreName>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>AAATAP000093</ProductIdentifier>
+    <ProductName>Apple iPhone 6 Plus 16GB Space Gray</ProductName>
+    <QtyInStock>59</QtyInStock>
+    <QtyOnOrder>1</QtyOnOrder>
+    <QtyOnBackOrder>2</QtyOnBackOrder>
+    <QtyInNonSellable>0</QtyInNonSellable>
+    <QtyTransferIn>2</QtyTransferIn>
+    <QtyTransferOut>1</QtyTransferOut>
+    <QtyOnRMA>3</QtyOnRMA>
+    <QtyOnLoan>2</QtyOnLoan>
+    <QtyCommittedOnOrderEntry>1</QtyCommittedOnOrderEntry>
+    <UnitCost>699</UnitCost>
+    <NoSale>false</NoSale>
+    <DoNotOrder>false</DoNotOrder>
+    <SpecialOrder>false</SpecialOrder>
+    <DateEOL></DateEOL>
+    <WriteOff>false</WriteOff>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+ChannelID,ChannelName,RegionID,RegionName,DistrictID,DistrictName,StoreID,StoreName,GlobalProductID,ProductIdentifier,ProductName,QtyInStock,QtyOnOrder,QtyOnBackOrder,QtyInNonSellable,QtyTransferIn,QtyTransferOut,QtyOnRMA,QtyOnLoan,QtyCommittedOnOrderEntry,UnitCost,NoSale,DoNotOrder,SpecialOrder,DateEOL,WriteOff
+3a5ab3b9-df8b-412b-fffa-6b59bcaaaa94,English Channel,4,London,72,Westminster,6679,100: My Network LLC - Anchorage,2815,AAATAP000093,Apple iPhone 6 Plus 16GB Space Gray,59,1,2,0,2,1,3,2,1,699,false,false,false,,false
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -2720,10 +4746,11 @@ GET /reports/inventorylistingreport?CategoryNumber={CategoryNumber}&BinStatus={B
 
 > Example Request
 
-```javascript
+```d
 GET /reports/inventorylistingreport?CategoryNumber=10&BinStatus=1&QtyStatus=4&BlindInventory=0&DateAsOf=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -2781,7 +4808,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>CategoryNumber</code> (<strong>Required</strong>)  - Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#categorynumber'>CategoryNumber</a>. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a></li>
     <li><code>BinStatus</code> (<strong>Required</strong>)  - See <a href="#binstatus">BinStatus</a> for a list of acceptable values</li>
@@ -2799,43 +4852,250 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[inventorylistingreportdata](#InventoryListingReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[inventorylistingreportdata](#InventoryListingReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/inventorylistingreport?CategoryNumber=10&BinStatus=1&QtyStatus=4&BlindInventory=0&DateAsOf=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "BarCode": "",
+        "BinStatus": "String_InStock",
+        "CategoryPath": "Equipment",
+        "ChannelName": "English Channel",
+        "DateEOL": "null",
+        "DiscontinuedDate": "null",
+        "DistrictName": "Westminster",
+        "DoNotOrder": false,
+        "IsUsed": false,
+        "ManufacturerPartNumber": "",
+        "NoSale": false,
+        "ProductIdentifier": "AAATAP000093",
+        "ProductName": "Apple iPhone 6 Plus 16GB Space Gray - AT&T",
+        "Quantity": 1,
+        "RefundPeriodLength": null,
+        "RegionName": "London",
+        "SerialNumber": "2342342341",
+        "SpecialOrder": false,
+        "StoreName": "100: My Network LLC - Anchorage",
+        "StoreTypeName": "Costco",
+        "TotalCost": 699,
+        "UnitCost": 699,
+        "VendorName": "Offwire",
+        "VendorPartNumber": "",
+        "WarehouseLocation": "",
+        "WriteOff": false
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "BarCode": "",
+            "BinStatus": "String_InStock",
+            "CategoryPath": "Equipment",
+            "ChannelName": "English Channel",
+            "DateEOL": "null",
+            "DiscontinuedDate": "null",
+            "DistrictName": "Westminster",
+            "DoNotOrder": false,
+            "IsUsed": false,
+            "ManufacturerPartNumber": "",
+            "NoSale": false,
+            "ProductIdentifier": "AAATAP000093",
+            "ProductName": "Apple iPhone 6 Plus 16GB Space Gray - AT&T",
+            "Quantity": 1,
+            "RefundPeriodLength": null,
+            "RegionName": "London",
+            "SerialNumber": "2342342341",
+            "SpecialOrder": false,
+            "StoreName": "100: My Network LLC - Anchorage",
+            "StoreTypeName": "Costco",
+            "TotalCost": 699,
+            "UnitCost": 699,
+            "VendorName": "Offwire",
+            "VendorPartNumber": "",
+            "WarehouseLocation": "",
+            "WriteOff": false
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <BarCode></BarCode>
+    <BinStatus>String_InStock</BinStatus>
+    <CategoryPath>Equipment</CategoryPath>
+    <ChannelName>English Channel</ChannelName>
+    <DateEOL>null</DateEOL>
+    <DiscontinuedDate>null</DiscontinuedDate>
+    <DistrictName>Westminster</DistrictName>
+    <DoNotOrder>false</DoNotOrder>
+    <IsUsed>false</IsUsed>
+    <ManufacturerPartNumber></ManufacturerPartNumber>
+    <NoSale>false</NoSale>
+    <ProductIdentifier>AAATAP000093</ProductIdentifier>
+    <ProductName>Apple iPhone 6 Plus 16GB Space Gray - AT&T</ProductName>
+    <Quantity>1</Quantity>
+    <RefundPeriodLength>null</RefundPeriodLength>
+    <RegionName>London</RegionName>
+    <SerialNumber>2342342341</SerialNumber>
+    <SpecialOrder>false</SpecialOrder>
+    <StoreName>100: My Network LLC - Anchorage</StoreName>
+    <StoreTypeName>Costco</StoreTypeName>
+    <TotalCost>699</TotalCost>
+    <UnitCost>699</UnitCost>
+    <VendorName>Offwire</VendorName>
+    <VendorPartNumber></VendorPartNumber>
+    <WarehouseLocation></WarehouseLocation>
+    <WriteOff>false</WriteOff>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <BarCode></BarCode>
+    <BinStatus>String_InStock</BinStatus>
+    <CategoryPath>Equipment</CategoryPath>
+    <ChannelName>English Channel</ChannelName>
+    <DateEOL>null</DateEOL>
+    <DiscontinuedDate>null</DiscontinuedDate>
+    <DistrictName>Westminster</DistrictName>
+    <DoNotOrder>false</DoNotOrder>
+    <IsUsed>false</IsUsed>
+    <ManufacturerPartNumber></ManufacturerPartNumber>
+    <NoSale>false</NoSale>
+    <ProductIdentifier>AAATAP000093</ProductIdentifier>
+    <ProductName>Apple iPhone 6 Plus 16GB Space Gray - AT&T</ProductName>
+    <Quantity>1</Quantity>
+    <RefundPeriodLength>null</RefundPeriodLength>
+    <RegionName>London</RegionName>
+    <SerialNumber>2342342341</SerialNumber>
+    <SpecialOrder>false</SpecialOrder>
+    <StoreName>100: My Network LLC - Anchorage</StoreName>
+    <StoreTypeName>Costco</StoreTypeName>
+    <TotalCost>699</TotalCost>
+    <UnitCost>699</UnitCost>
+    <VendorName>Offwire</VendorName>
+    <VendorPartNumber></VendorPartNumber>
+    <WarehouseLocation></WarehouseLocation>
+    <WriteOff>false</WriteOff>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+BarCode,BinStatus,CategoryPath,ChannelName,DateEOL,DiscontinuedDate,DistrictName,DoNotOrder,IsUsed,ManufacturerPartNumber,NoSale,ProductIdentifier,ProductName,Quantity,RefundPeriodLength,RegionName,SerialNumber,SpecialOrder,StoreName,StoreTypeName,TotalCost,UnitCost,VendorName,VendorPartNumber,WarehouseLocation,WriteOff
+,String_InStock,Equipment,English Channel,null,null,Westminster,false,false,,false,AAATAP000093,Apple iPhone 6 Plus 16GB Space Gray - AT&T,1,null,London,2342342341,false,100: My Network LLC - Anchorage,Costco,699,699,Offwire,,,false
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -2853,10 +5113,11 @@ GET /reports/inventoryremovalhistoryreport?StoreID={StoreID}&SearchMethod={Searc
 
 > Example Request
 
-```javascript
+```d
 GET /reports/inventoryremovalhistoryreport?StoreID=1&SearchMethod=1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -2914,7 +5175,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StoreID</code> (<strong>Required</strong>)  - Identifier for a store in RQ</li>
     <li><code>SearchMethod</code> (<strong>Required</strong>)  - Acceptable values include 1 for All Products, 2 for Regular Products, 3 for Vendor Rebate Products, 4 for Non-Stocked Products or 7 for Gift Cards</li>
@@ -2926,43 +5213,170 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[inventoryremovalhistoryreportdata](#InventoryRemovalHistoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[inventoryremovalhistoryreportdata](#InventoryRemovalHistoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/inventoryremovalhistoryreport?StoreID=1&SearchMethod=1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "GlobalProductID": 2815,
+        "ProductType": 4,
+        "ProductIdentifier": "ACVZAP000574",
+        "ProductName": "iPhone 5s 32GB - Gold",
+        "DateDeleted": "2015-01-05T12:03:20.03",
+        "Employee_Name": "iQmetrix Employee"
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "GlobalProductID": 2815,
+            "ProductType": 4,
+            "ProductIdentifier": "ACVZAP000574",
+            "ProductName": "iPhone 5s 32GB - Gold",
+            "DateDeleted": "2015-01-05T12:03:20.03",
+            "Employee_Name": "iQmetrix Employee"
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductType>4</ProductType>
+    <ProductIdentifier>ACVZAP000574</ProductIdentifier>
+    <ProductName>iPhone 5s 32GB - Gold</ProductName>
+    <DateDeleted>2015-01-05T12:03:20.03</DateDeleted>
+    <Employee_Name>iQmetrix Employee</Employee_Name>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductType>4</ProductType>
+    <ProductIdentifier>ACVZAP000574</ProductIdentifier>
+    <ProductName>iPhone 5s 32GB - Gold</ProductName>
+    <DateDeleted>2015-01-05T12:03:20.03</DateDeleted>
+    <Employee_Name>iQmetrix Employee</Employee_Name>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+GlobalProductID,ProductType,ProductIdentifier,ProductName,DateDeleted,Employee_Name
+2815,4,ACVZAP000574,iPhone 5s 32GB - Gold,2015-01-05T12:03:20.03,iQmetrix Employee
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -2980,10 +5394,11 @@ GET /reports/inventorytotalsbylocationreport?StoreTypeID={StoreTypeID}&CategoryN
 
 > Example Request
 
-```javascript
+```d
 GET /reports/inventorytotalsbylocationreport?StoreTypeID=-1&CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -3041,7 +5456,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StoreTypeID</code> (<strong>Required</strong>)  - Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#storetype'>StoreType</a>. Use -1 to specify All Types. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-store-types'>Getting Store Types</a></li>
     <li><code>CategoryNumber</code> (<strong>Required</strong>)  - Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#categorynumber'>CategoryNumber</a>. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a></li>
@@ -3056,43 +5497,190 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[inventorytotalsbylocationreportdata](#InventoryTotalsByLocationReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[inventorytotalsbylocationreportdata](#InventoryTotalsByLocationReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/inventorytotalsbylocationreport?StoreTypeID=-1&CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "StoreID": 1,
+        "StoreName": "84 West",
+        "StoreTypeName": "Retail Store",
+        "Enabled": 1,
+        "InStock": 7,
+        "OnRMA": 5,
+        "TransferIn": 6,
+        "TransferOut": 4,
+        "OnLoan": 1,
+        "InNonSellable": 2,
+        "Total": 25
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "StoreID": 1,
+            "StoreName": "84 West",
+            "StoreTypeName": "Retail Store",
+            "Enabled": 1,
+            "InStock": 7,
+            "OnRMA": 5,
+            "TransferIn": 6,
+            "TransferOut": 4,
+            "OnLoan": 1,
+            "InNonSellable": 2,
+            "Total": 25
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <StoreID>1</StoreID>
+    <StoreName>84 West</StoreName>
+    <StoreTypeName>Retail Store</StoreTypeName>
+    <Enabled>1</Enabled>
+    <InStock>7</InStock>
+    <OnRMA>5</OnRMA>
+    <TransferIn>6</TransferIn>
+    <TransferOut>4</TransferOut>
+    <OnLoan>1</OnLoan>
+    <InNonSellable>2</InNonSellable>
+    <Total>25</Total>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <StoreID>1</StoreID>
+    <StoreName>84 West</StoreName>
+    <StoreTypeName>Retail Store</StoreTypeName>
+    <Enabled>1</Enabled>
+    <InStock>7</InStock>
+    <OnRMA>5</OnRMA>
+    <TransferIn>6</TransferIn>
+    <TransferOut>4</TransferOut>
+    <OnLoan>1</OnLoan>
+    <InNonSellable>2</InNonSellable>
+    <Total>25</Total>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+StoreID,StoreName,StoreTypeName,Enabled,InStock,OnRMA,TransferIn,TransferOut,OnLoan,InNonSellable,Total
+1,84 West,Retail Store,1,7,5,6,4,1,2,25
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -3110,10 +5698,11 @@ GET /reports/nonsellablehistoryreport?StartDate={StartDate}&StopDate={StopDate}&
 
 > Example Request
 
-```javascript
+```d
 GET /reports/nonsellablehistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&ProductIdentifier=ASCLMO000001&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -3171,7 +5760,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -3188,43 +5803,234 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[nonsellablehistoryreportdata](#NonSellableHistoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[nonsellablehistoryreportdata](#NonSellableHistoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/nonsellablehistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&ProductIdentifier=ASCLMO000001&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "DateCreated": "2016-01-04T13:40:43.267",
+        "StoreID": 1,
+        "StoreName": "84 West",
+        "SaleInvoiceID": 512,
+        "NonSellableAdjustmentID": "68a397e9-18e7-070d-9c70-da103de98c1c",
+        "StockBalanceID": 0,
+        "InvoiceIDByStore": "84WEANA5",
+        "GlobalProductID": 2815,
+        "ProductIdentifier": "ACVZCB000363",
+        "ProductName": "Casio Ravine 2",
+        "SerialNumber": "355256020008965",
+        "Quantity": 1,
+        "EmployeeID1": 253,
+        "First_Name": "iQmetrix",
+        "Last_Name": "Employee",
+        "Employee_Name": "iQmetrix Employee",
+        "ToInStock": "0",
+        "ToNonSellable": "2016-01-04T13:40:43.267",
+        "ToUsed": 0,
+        "NonSellableComments": "",
+        "NonSellableReasonCode": "ed10636b-3b32-36d6-243d-4f4ce4a01290",
+        "TransactionType": 2
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "DateCreated": "2016-01-04T13:40:43.267",
+            "StoreID": 1,
+            "StoreName": "84 West",
+            "SaleInvoiceID": 512,
+            "NonSellableAdjustmentID": "68a397e9-18e7-070d-9c70-da103de98c1c",
+            "StockBalanceID": 0,
+            "InvoiceIDByStore": "84WEANA5",
+            "GlobalProductID": 2815,
+            "ProductIdentifier": "ACVZCB000363",
+            "ProductName": "Casio Ravine 2",
+            "SerialNumber": "355256020008965",
+            "Quantity": 1,
+            "EmployeeID1": 253,
+            "First_Name": "iQmetrix",
+            "Last_Name": "Employee",
+            "Employee_Name": "iQmetrix Employee",
+            "ToInStock": "0",
+            "ToNonSellable": "2016-01-04T13:40:43.267",
+            "ToUsed": 0,
+            "NonSellableComments": "",
+            "NonSellableReasonCode": "ed10636b-3b32-36d6-243d-4f4ce4a01290",
+            "TransactionType": 2
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <DateCreated>2016-01-04T13:40:43.267</DateCreated>
+    <StoreID>1</StoreID>
+    <StoreName>84 West</StoreName>
+    <SaleInvoiceID>512</SaleInvoiceID>
+    <NonSellableAdjustmentID>68a397e9-18e7-070d-9c70-da103de98c1c</NonSellableAdjustmentID>
+    <StockBalanceID>0</StockBalanceID>
+    <InvoiceIDByStore>84WEANA5</InvoiceIDByStore>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>ACVZCB000363</ProductIdentifier>
+    <ProductName>Casio Ravine 2</ProductName>
+    <SerialNumber>355256020008965</SerialNumber>
+    <Quantity>1</Quantity>
+    <EmployeeID1>253</EmployeeID1>
+    <First_Name>iQmetrix</First_Name>
+    <Last_Name>Employee</Last_Name>
+    <Employee_Name>iQmetrix Employee</Employee_Name>
+    <ToInStock>0</ToInStock>
+    <ToNonSellable>2016-01-04T13:40:43.267</ToNonSellable>
+    <ToUsed>0</ToUsed>
+    <NonSellableComments></NonSellableComments>
+    <NonSellableReasonCode>ed10636b-3b32-36d6-243d-4f4ce4a01290</NonSellableReasonCode>
+    <TransactionType>2</TransactionType>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <DateCreated>2016-01-04T13:40:43.267</DateCreated>
+    <StoreID>1</StoreID>
+    <StoreName>84 West</StoreName>
+    <SaleInvoiceID>512</SaleInvoiceID>
+    <NonSellableAdjustmentID>68a397e9-18e7-070d-9c70-da103de98c1c</NonSellableAdjustmentID>
+    <StockBalanceID>0</StockBalanceID>
+    <InvoiceIDByStore>84WEANA5</InvoiceIDByStore>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>ACVZCB000363</ProductIdentifier>
+    <ProductName>Casio Ravine 2</ProductName>
+    <SerialNumber>355256020008965</SerialNumber>
+    <Quantity>1</Quantity>
+    <EmployeeID1>253</EmployeeID1>
+    <First_Name>iQmetrix</First_Name>
+    <Last_Name>Employee</Last_Name>
+    <Employee_Name>iQmetrix Employee</Employee_Name>
+    <ToInStock>0</ToInStock>
+    <ToNonSellable>2016-01-04T13:40:43.267</ToNonSellable>
+    <ToUsed>0</ToUsed>
+    <NonSellableComments></NonSellableComments>
+    <NonSellableReasonCode>ed10636b-3b32-36d6-243d-4f4ce4a01290</NonSellableReasonCode>
+    <TransactionType>2</TransactionType>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+DateCreated,StoreID,StoreName,SaleInvoiceID,NonSellableAdjustmentID,StockBalanceID,InvoiceIDByStore,GlobalProductID,ProductIdentifier,ProductName,SerialNumber,Quantity,EmployeeID1,First_Name,Last_Name,Employee_Name,ToInStock,ToNonSellable,ToUsed,NonSellableComments,NonSellableReasonCode,TransactionType
+2016-01-04T13:40:43.267,1,84 West,512,68a397e9-18e7-070d-9c70-da103de98c1c,0,84WEANA5,2815,ACVZCB000363,Casio Ravine 2,355256020008965,1,253,iQmetrix,Employee,iQmetrix Employee,0,2016-01-04T13:40:43.267,0,,ed10636b-3b32-36d6-243d-4f4ce4a01290,2
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -3242,10 +6048,11 @@ GET /reports/overreceivinginventoryreport?StartDate={StartDate}StopDate={StopDat
 
 > Example Request
 
-```javascript
+```d
 GET /reports/overreceivinginventoryreport?StartDate=1970-01-01T08:00:00.000ZStopDate=2016-01-01T08:00:00.000Z&PurchaseOrderID=-1&PurchaseOrderIDByStore=84WEAPO1151&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -3303,7 +6110,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -3320,43 +6153,194 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[overreceivinginventoryreportdata](#OverReceivingInventoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[overreceivinginventoryreportdata](#OverReceivingInventoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/overreceivinginventoryreport?StartDate=1970-01-01T08:00:00.000ZStopDate=2016-01-01T08:00:00.000Z&PurchaseOrderID=-1&PurchaseOrderIDByStore=84WEAPO1151&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "StoreName": "84 West",
+        "PurchaseOrderID": 18378,
+        "PurchaseOrderIDByStore": "84WEAPO1151",
+        "GlobalProductID": 6364,
+        "ProductSKU": "KLDSVC000077",
+        "ProductName": "Nokia 3285/5100/6100 Belt Clip - OEM",
+        "QtyOrdered": 1,
+        "QtyReceived": 12,
+        "QtyVariance": 11,
+        "UnitCost": 0,
+        "Value": 0,
+        "EmployeeName": "iQmetrix Employee"
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "StoreName": "84 West",
+            "PurchaseOrderID": 18378,
+            "PurchaseOrderIDByStore": "84WEAPO1151",
+            "GlobalProductID": 6364,
+            "ProductSKU": "KLDSVC000077",
+            "ProductName": "Nokia 3285/5100/6100 Belt Clip - OEM",
+            "QtyOrdered": 1,
+            "QtyReceived": 12,
+            "QtyVariance": 11,
+            "UnitCost": 0,
+            "Value": 0,
+            "EmployeeName": "iQmetrix Employee"
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <StoreName>84 West</StoreName>
+    <PurchaseOrderID>18378</PurchaseOrderID>
+    <PurchaseOrderIDByStore>84WEAPO1151</PurchaseOrderIDByStore>
+    <GlobalProductID>6364</GlobalProductID>
+    <ProductSKU>KLDSVC000077</ProductSKU>
+    <ProductName>Nokia 3285/5100/6100 Belt Clip - OEM</ProductName>
+    <QtyOrdered>1</QtyOrdered>
+    <QtyReceived>12</QtyReceived>
+    <QtyVariance>11</QtyVariance>
+    <UnitCost>0</UnitCost>
+    <Value>0</Value>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <StoreName>84 West</StoreName>
+    <PurchaseOrderID>18378</PurchaseOrderID>
+    <PurchaseOrderIDByStore>84WEAPO1151</PurchaseOrderIDByStore>
+    <GlobalProductID>6364</GlobalProductID>
+    <ProductSKU>KLDSVC000077</ProductSKU>
+    <ProductName>Nokia 3285/5100/6100 Belt Clip - OEM</ProductName>
+    <QtyOrdered>1</QtyOrdered>
+    <QtyReceived>12</QtyReceived>
+    <QtyVariance>11</QtyVariance>
+    <UnitCost>0</UnitCost>
+    <Value>0</Value>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+StoreName,PurchaseOrderID,PurchaseOrderIDByStore,GlobalProductID,ProductSKU,ProductName,QtyOrdered,QtyReceived,QtyVariance,UnitCost,Value,EmployeeName
+84 West,18378,84WEAPO1151,6364,KLDSVC000077,Nokia 3285/5100/6100 Belt Clip - OEM,1,12,11,0,0,iQmetrix Employee
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -3374,10 +6358,11 @@ GET /reports/productsonconsignmentreport?StartDate={StartDate}&StopDate={StopDat
 
 > Example Request
 
-```javascript
+```d
 GET /reports/productsonconsignmentreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&StoreID=1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&PurchaseOrderIDByStore=84WEAPO1151&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -3435,7 +6420,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -3452,43 +6463,206 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[productsonconsignmentreportdata](#ProductsOnConsignmentReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[productsonconsignmentreportdata](#ProductsOnConsignmentReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/productsonconsignmentreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&StoreID=1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&PurchaseOrderIDByStore=84WEAPO1151&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "LoanInvoiceID": 49,
+        "LoanInvoiceIDByStore": "84WEALI12",
+        "LoanType": 3,
+        "BorrowerName": "84 West",
+        "ProductIdentifier": "ACVZAP000422",
+        "ProductName": "iPad 3 16 GB White",
+        "SerialNumber": "333331234567891",
+        "Quantity": 1,
+        "DateCommitted": "2016-05-12T13:18:01.013",
+        "DateDue": "",
+        "DaysOverDue": 0,
+        "UnitCost": 595,
+        "ExtendedUnitCost": 595,
+        "VendorName": "Dymaxx",
+        "VendorSKU": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "LoanInvoiceID": 49,
+            "LoanInvoiceIDByStore": "84WEALI12",
+            "LoanType": 3,
+            "BorrowerName": "84 West",
+            "ProductIdentifier": "ACVZAP000422",
+            "ProductName": "iPad 3 16 GB White",
+            "SerialNumber": "333331234567891",
+            "Quantity": 1,
+            "DateCommitted": "2016-05-12T13:18:01.013",
+            "DateDue": "",
+            "DaysOverDue": 0,
+            "UnitCost": 595,
+            "ExtendedUnitCost": 595,
+            "VendorName": "Dymaxx",
+            "VendorSKU": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <LoanInvoiceID>49</LoanInvoiceID>
+    <LoanInvoiceIDByStore>84WEALI12</LoanInvoiceIDByStore>
+    <LoanType>3</LoanType>
+    <BorrowerName>84 West</BorrowerName>
+    <ProductIdentifier>ACVZAP000422</ProductIdentifier>
+    <ProductName>iPad 3 16 GB White</ProductName>
+    <SerialNumber>333331234567891</SerialNumber>
+    <Quantity>1</Quantity>
+    <DateCommitted>2016-05-12T13:18:01.013</DateCommitted>
+    <DateDue></DateDue>
+    <DaysOverDue>0</DaysOverDue>
+    <UnitCost>595</UnitCost>
+    <ExtendedUnitCost>595</ExtendedUnitCost>
+    <VendorName>Dymaxx</VendorName>
+    <VendorSKU></VendorSKU>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <LoanInvoiceID>49</LoanInvoiceID>
+    <LoanInvoiceIDByStore>84WEALI12</LoanInvoiceIDByStore>
+    <LoanType>3</LoanType>
+    <BorrowerName>84 West</BorrowerName>
+    <ProductIdentifier>ACVZAP000422</ProductIdentifier>
+    <ProductName>iPad 3 16 GB White</ProductName>
+    <SerialNumber>333331234567891</SerialNumber>
+    <Quantity>1</Quantity>
+    <DateCommitted>2016-05-12T13:18:01.013</DateCommitted>
+    <DateDue></DateDue>
+    <DaysOverDue>0</DaysOverDue>
+    <UnitCost>595</UnitCost>
+    <ExtendedUnitCost>595</ExtendedUnitCost>
+    <VendorName>Dymaxx</VendorName>
+    <VendorSKU></VendorSKU>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+LoanInvoiceID,LoanInvoiceIDByStore,LoanType,BorrowerName,ProductIdentifier,ProductName,SerialNumber,Quantity,DateCommitted,DateDue,DaysOverDue,UnitCost,ExtendedUnitCost,VendorName,VendorSKU
+49,84WEALI12,3,84 West,ACVZAP000422,iPad 3 16 GB White,333331234567891,1,2016-05-12T13:18:01.013,,0,595,595,Dymaxx,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -3506,10 +6680,11 @@ GET /reports/purchasehistoryreport?StartDate={StartDate}&StopDate={StopDate}&Sea
 
 > Example Request
 
-```javascript
+```d
 GET /reports/purchasehistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&SearchMethod=1&Filter=1&CategoryNumber=10&ProductIdentifier=ASCLMO000001&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -3567,7 +6742,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -3587,43 +6788,170 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[purchasehistoryreportdata](#PurchaseHistoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[purchasehistoryreportdata](#PurchaseHistoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/purchasehistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&SearchMethod=1&Filter=1&CategoryNumber=10&ProductIdentifier=ASCLMO000001&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "GlobalProductID": 2815,
+        "ProductIdentifier": "ASLCUN000002",
+        "ProductName": "Universal Leather Pouch",
+        "Ordered": 4,
+        "Received": 0,
+        "UnitCost": 1.19
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "GlobalProductID": 2815,
+            "ProductIdentifier": "ASLCUN000002",
+            "ProductName": "Universal Leather Pouch",
+            "Ordered": 4,
+            "Received": 0,
+            "UnitCost": 1.19
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>ASLCUN000002</ProductIdentifier>
+    <ProductName>Universal Leather Pouch</ProductName>
+    <Ordered>4</Ordered>
+    <Received>0</Received>
+    <UnitCost>1.19</UnitCost>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <GlobalProductID>2815</GlobalProductID>
+    <ProductIdentifier>ASLCUN000002</ProductIdentifier>
+    <ProductName>Universal Leather Pouch</ProductName>
+    <Ordered>4</Ordered>
+    <Received>0</Received>
+    <UnitCost>1.19</UnitCost>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+GlobalProductID,ProductIdentifier,ProductName,Ordered,Received,UnitCost
+2815,ASLCUN000002,Universal Leather Pouch,4,0,1.19
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -3641,10 +6969,11 @@ GET /reports/PurchaseOrderAmendmentReport?StartDate={StartDate}&StopDate={StopDa
 
 > Example Request
 
-```javascript
+```d
 GET /reports/PurchaseOrderAmendmentReport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&PONumber=WETM2PO325&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -3702,7 +7031,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -3718,43 +7073,210 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[purchaseorderamendmentreportdata](#PurchaseOrderAmendmentReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[purchaseorderamendmentreportdata](#PurchaseOrderAmendmentReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/PurchaseOrderAmendmentReport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&PONumber=WETM2PO325&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "AmendmentID": 1,
+        "PurchaseOrderID": 8035,
+        "PurchaseOrderIDByStore": "WETM2PO325",
+        "Location": "Corporate Office",
+        "ReceiveAt": "Cornwall",
+        "DateEdited": "2011-12-29T17:09:00",
+        "EmployeeID": 4,
+        "EmployeeName": "iQmetrix Employee",
+        "ProductIdentifier": "ACVZSA000297",
+        "ProductName": "Samsung U660 Convoy 2",
+        "ActionType": 0,
+        "QtyVariance": 1,
+        "CostVariance": 0,
+        "OrderingComments": "285647",
+        "ReceivingComments": "",
+        "VendorNumber": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "AmendmentID": 1,
+            "PurchaseOrderID": 8035,
+            "PurchaseOrderIDByStore": "WETM2PO325",
+            "Location": "Corporate Office",
+            "ReceiveAt": "Cornwall",
+            "DateEdited": "2011-12-29T17:09:00",
+            "EmployeeID": 4,
+            "EmployeeName": "iQmetrix Employee",
+            "ProductIdentifier": "ACVZSA000297",
+            "ProductName": "Samsung U660 Convoy 2",
+            "ActionType": 0,
+            "QtyVariance": 1,
+            "CostVariance": 0,
+            "OrderingComments": "285647",
+            "ReceivingComments": "",
+            "VendorNumber": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <AmendmentID>1</AmendmentID>
+    <PurchaseOrderID>8035</PurchaseOrderID>
+    <PurchaseOrderIDByStore>WETM2PO325</PurchaseOrderIDByStore>
+    <Location>Corporate Office</Location>
+    <ReceiveAt>Cornwall</ReceiveAt>
+    <DateEdited>2011-12-29T17:09:00</DateEdited>
+    <EmployeeID>4</EmployeeID>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+    <ProductIdentifier>ACVZSA000297</ProductIdentifier>
+    <ProductName>Samsung U660 Convoy 2</ProductName>
+    <ActionType>0</ActionType>
+    <QtyVariance>1</QtyVariance>
+    <CostVariance>0</CostVariance>
+    <OrderingComments>285647</OrderingComments>
+    <ReceivingComments></ReceivingComments>
+    <VendorNumber></VendorNumber>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <AmendmentID>1</AmendmentID>
+    <PurchaseOrderID>8035</PurchaseOrderID>
+    <PurchaseOrderIDByStore>WETM2PO325</PurchaseOrderIDByStore>
+    <Location>Corporate Office</Location>
+    <ReceiveAt>Cornwall</ReceiveAt>
+    <DateEdited>2011-12-29T17:09:00</DateEdited>
+    <EmployeeID>4</EmployeeID>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+    <ProductIdentifier>ACVZSA000297</ProductIdentifier>
+    <ProductName>Samsung U660 Convoy 2</ProductName>
+    <ActionType>0</ActionType>
+    <QtyVariance>1</QtyVariance>
+    <CostVariance>0</CostVariance>
+    <OrderingComments>285647</OrderingComments>
+    <ReceivingComments></ReceivingComments>
+    <VendorNumber></VendorNumber>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+AmendmentID,PurchaseOrderID,PurchaseOrderIDByStore,Location,ReceiveAt,DateEdited,EmployeeID,EmployeeName,ProductIdentifier,ProductName,ActionType,QtyVariance,CostVariance,OrderingComments,ReceivingComments,VendorNumber
+1,8035,WETM2PO325,Corporate Office,Cornwall,2011-12-29T17:09:00,4,iQmetrix Employee,ACVZSA000297,Samsung U660 Convoy 2,0,1,0,285647,,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -3772,10 +7294,11 @@ GET /reports/ReceivingInvoiceHistoryReport_ByProduct?StartDate={StartDate}&StopD
 
 > Example Request
 
-```javascript
+```d
 GET /reports/ReceivingInvoiceHistoryReport_ByProduct?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -3833,7 +7356,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -3850,43 +7399,226 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[receivinginvoicehistoryreportbyproductdata](#ReceivingInvoiceHistoryReportByProductData)]
 
 
-    
-        
 
 
-    
-<p>Array[[receivinginvoicehistoryreportbyproductdata](#ReceivingInvoiceHistoryReportByProductData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/ReceivingInvoiceHistoryReport_ByProduct?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "ReceivingID": 16912,
+        "ReceivingIDByStore": "84WEARE1044",
+        "PurchaseOrderID": 18339,
+        "PurchaseOrderIDByStore": "84WEAPO1141",
+        "ReferenceNumber": "",
+        "DateReceived": "2016-01-19T08:54:52.26",
+        "ProductIdentifier": "ASMIMO000026",
+        "VendorSKU": "Mot A956 Droid 2 Global",
+        "ProductName": "Mot Blue Droid 2 Global",
+        "SerialNumber": "43211234567890",
+        "Quantity": 1,
+        "UnitCost": 300,
+        "TotalCost": 300,
+        "Reconciled": false,
+        "ReconciledDate": "",
+        "Correction": false,
+        "ReasonCode": "",
+        "VendorName": "Dymaxx",
+        "OrderingComments": "",
+        "ReceivingComments": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "ReceivingID": 16912,
+            "ReceivingIDByStore": "84WEARE1044",
+            "PurchaseOrderID": 18339,
+            "PurchaseOrderIDByStore": "84WEAPO1141",
+            "ReferenceNumber": "",
+            "DateReceived": "2016-01-19T08:54:52.26",
+            "ProductIdentifier": "ASMIMO000026",
+            "VendorSKU": "Mot A956 Droid 2 Global",
+            "ProductName": "Mot Blue Droid 2 Global",
+            "SerialNumber": "43211234567890",
+            "Quantity": 1,
+            "UnitCost": 300,
+            "TotalCost": 300,
+            "Reconciled": false,
+            "ReconciledDate": "",
+            "Correction": false,
+            "ReasonCode": "",
+            "VendorName": "Dymaxx",
+            "OrderingComments": "",
+            "ReceivingComments": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <ReceivingID>16912</ReceivingID>
+    <ReceivingIDByStore>84WEARE1044</ReceivingIDByStore>
+    <PurchaseOrderID>18339</PurchaseOrderID>
+    <PurchaseOrderIDByStore>84WEAPO1141</PurchaseOrderIDByStore>
+    <ReferenceNumber></ReferenceNumber>
+    <DateReceived>2016-01-19T08:54:52.26</DateReceived>
+    <ProductIdentifier>ASMIMO000026</ProductIdentifier>
+    <VendorSKU>Mot A956 Droid 2 Global</VendorSKU>
+    <ProductName>Mot Blue Droid 2 Global</ProductName>
+    <SerialNumber>43211234567890</SerialNumber>
+    <Quantity>1</Quantity>
+    <UnitCost>300</UnitCost>
+    <TotalCost>300</TotalCost>
+    <Reconciled>false</Reconciled>
+    <ReconciledDate></ReconciledDate>
+    <Correction>false</Correction>
+    <ReasonCode></ReasonCode>
+    <VendorName>Dymaxx</VendorName>
+    <OrderingComments></OrderingComments>
+    <ReceivingComments></ReceivingComments>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <ReceivingID>16912</ReceivingID>
+    <ReceivingIDByStore>84WEARE1044</ReceivingIDByStore>
+    <PurchaseOrderID>18339</PurchaseOrderID>
+    <PurchaseOrderIDByStore>84WEAPO1141</PurchaseOrderIDByStore>
+    <ReferenceNumber></ReferenceNumber>
+    <DateReceived>2016-01-19T08:54:52.26</DateReceived>
+    <ProductIdentifier>ASMIMO000026</ProductIdentifier>
+    <VendorSKU>Mot A956 Droid 2 Global</VendorSKU>
+    <ProductName>Mot Blue Droid 2 Global</ProductName>
+    <SerialNumber>43211234567890</SerialNumber>
+    <Quantity>1</Quantity>
+    <UnitCost>300</UnitCost>
+    <TotalCost>300</TotalCost>
+    <Reconciled>false</Reconciled>
+    <ReconciledDate></ReconciledDate>
+    <Correction>false</Correction>
+    <ReasonCode></ReasonCode>
+    <VendorName>Dymaxx</VendorName>
+    <OrderingComments></OrderingComments>
+    <ReceivingComments></ReceivingComments>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+ReceivingID,ReceivingIDByStore,PurchaseOrderID,PurchaseOrderIDByStore,ReferenceNumber,DateReceived,ProductIdentifier,VendorSKU,ProductName,SerialNumber,Quantity,UnitCost,TotalCost,Reconciled,ReconciledDate,Correction,ReasonCode,VendorName,OrderingComments,ReceivingComments
+16912,84WEARE1044,18339,84WEAPO1141,,2016-01-19T08:54:52.26,ASMIMO000026,Mot A956 Droid 2 Global,Mot Blue Droid 2 Global,43211234567890,1,300,300,false,,false,,Dymaxx,,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -3904,10 +7636,11 @@ GET /reports/ReceivingInvoiceHistoryReport_ByInvoice?StartDate={StartDate}&StopD
 
 > Example Request
 
-```javascript
+```d
 GET /reports/ReceivingInvoiceHistoryReport_ByInvoice?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -3965,7 +7698,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -3982,43 +7741,250 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[receivinginvoicehistoryreportbyinvoicedata](#ReceivingInvoiceHistoryReportByInvoiceData)]
 
 
-    
-        
 
 
-    
-<p>Array[[receivinginvoicehistoryreportbyinvoicedata](#ReceivingInvoiceHistoryReportByInvoiceData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/ReceivingInvoiceHistoryReport_ByInvoice?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "ReceivingID": 16912,
+        "ReceivingIDByStore": "84WEARE1044",
+        "PurchaseOrderID": 18339,
+        "PurchaseOrderIDByStore": "84WEAPO1141",
+        "ReferenceNumber": "",
+        "DateReceived": "2016-01-19T08:54:52.26",
+        "ReconciliationComments": "",
+        "StoreName": "84 West",
+        "DistrictName": "Valley Area District",
+        "RegionName": "Region A",
+        "ChannelName": "Regina Channel",
+        "EmployeeName": "iQmetrix Employee",
+        "VendorName": "Dymaxx",
+        "VendorInvoiceNumber": "1231564",
+        "Posted": false,
+        "Paid": false,
+        "Flagged": false,
+        "ProductTotal": 300,
+        "Tax1Name": "",
+        "Tax1Amount": 0,
+        "Tax2Name": "",
+        "Tax2Amount": 0,
+        "Shipping": 0,
+        "TotalInvoice": 300,
+        "OrderingComments": "",
+        "ReceivingComments": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "ReceivingID": 16912,
+            "ReceivingIDByStore": "84WEARE1044",
+            "PurchaseOrderID": 18339,
+            "PurchaseOrderIDByStore": "84WEAPO1141",
+            "ReferenceNumber": "",
+            "DateReceived": "2016-01-19T08:54:52.26",
+            "ReconciliationComments": "",
+            "StoreName": "84 West",
+            "DistrictName": "Valley Area District",
+            "RegionName": "Region A",
+            "ChannelName": "Regina Channel",
+            "EmployeeName": "iQmetrix Employee",
+            "VendorName": "Dymaxx",
+            "VendorInvoiceNumber": "1231564",
+            "Posted": false,
+            "Paid": false,
+            "Flagged": false,
+            "ProductTotal": 300,
+            "Tax1Name": "",
+            "Tax1Amount": 0,
+            "Tax2Name": "",
+            "Tax2Amount": 0,
+            "Shipping": 0,
+            "TotalInvoice": 300,
+            "OrderingComments": "",
+            "ReceivingComments": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <ReceivingID>16912</ReceivingID>
+    <ReceivingIDByStore>84WEARE1044</ReceivingIDByStore>
+    <PurchaseOrderID>18339</PurchaseOrderID>
+    <PurchaseOrderIDByStore>84WEAPO1141</PurchaseOrderIDByStore>
+    <ReferenceNumber></ReferenceNumber>
+    <DateReceived>2016-01-19T08:54:52.26</DateReceived>
+    <ReconciliationComments></ReconciliationComments>
+    <StoreName>84 West</StoreName>
+    <DistrictName>Valley Area District</DistrictName>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+    <VendorName>Dymaxx</VendorName>
+    <VendorInvoiceNumber>1231564</VendorInvoiceNumber>
+    <Posted>false</Posted>
+    <Paid>false</Paid>
+    <Flagged>false</Flagged>
+    <ProductTotal>300</ProductTotal>
+    <Tax1Name></Tax1Name>
+    <Tax1Amount>0</Tax1Amount>
+    <Tax2Name></Tax2Name>
+    <Tax2Amount>0</Tax2Amount>
+    <Shipping>0</Shipping>
+    <TotalInvoice>300</TotalInvoice>
+    <OrderingComments></OrderingComments>
+    <ReceivingComments></ReceivingComments>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <ReceivingID>16912</ReceivingID>
+    <ReceivingIDByStore>84WEARE1044</ReceivingIDByStore>
+    <PurchaseOrderID>18339</PurchaseOrderID>
+    <PurchaseOrderIDByStore>84WEAPO1141</PurchaseOrderIDByStore>
+    <ReferenceNumber></ReferenceNumber>
+    <DateReceived>2016-01-19T08:54:52.26</DateReceived>
+    <ReconciliationComments></ReconciliationComments>
+    <StoreName>84 West</StoreName>
+    <DistrictName>Valley Area District</DistrictName>
+    <RegionName>Region A</RegionName>
+    <ChannelName>Regina Channel</ChannelName>
+    <EmployeeName>iQmetrix Employee</EmployeeName>
+    <VendorName>Dymaxx</VendorName>
+    <VendorInvoiceNumber>1231564</VendorInvoiceNumber>
+    <Posted>false</Posted>
+    <Paid>false</Paid>
+    <Flagged>false</Flagged>
+    <ProductTotal>300</ProductTotal>
+    <Tax1Name></Tax1Name>
+    <Tax1Amount>0</Tax1Amount>
+    <Tax2Name></Tax2Name>
+    <Tax2Amount>0</Tax2Amount>
+    <Shipping>0</Shipping>
+    <TotalInvoice>300</TotalInvoice>
+    <OrderingComments></OrderingComments>
+    <ReceivingComments></ReceivingComments>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+ReceivingID,ReceivingIDByStore,PurchaseOrderID,PurchaseOrderIDByStore,ReferenceNumber,DateReceived,ReconciliationComments,StoreName,DistrictName,RegionName,ChannelName,EmployeeName,VendorName,VendorInvoiceNumber,Posted,Paid,Flagged,ProductTotal,Tax1Name,Tax1Amount,Tax2Name,Tax2Amount,Shipping,TotalInvoice,OrderingComments,ReceivingComments
+16912,84WEARE1044,18339,84WEAPO1141,,2016-01-19T08:54:52.26,,84 West,Valley Area District,Region A,Regina Channel,iQmetrix Employee,Dymaxx,1231564,false,false,false,300,,0,,0,0,300,,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -4036,10 +8002,11 @@ GET /reports/rmahistoryinvoicereport?StartDate={StartDate}&StopDate={StopDate}&V
 
 > Example Request
 
-```javascript
+```d
 GET /reports/rmahistoryinvoicereport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -4097,7 +8064,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -4112,43 +8105,242 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[rmahistoryinvoicereportdata](#RMAHistoryInvoiceReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[rmahistoryinvoicereportdata](#RMAHistoryInvoiceReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/rmahistoryinvoicereport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "ChannelName": "English Channel",
+        "Comments": "Phone missing from package delivered on invoice #87742",
+        "Committed": true,
+        "Completed": true,
+        "CreditInvoiceNumber": "",
+        "CustomerID": -1,
+        "CustomerName": "",
+        "DateCommitted": "2011-03-02T17:10:11.78",
+        "DateCreated": "2011-03-02T17:10:11.78",
+        "DistrictName": "Valley Area District",
+        "EmployeeName": "iQmetrix User",
+        "ReceivingComments": "Received Credit on 2/22/11.",
+        "RegionName": "Region A",
+        "RMANumber": "112482",
+        "ShippedAway": true,
+        "ShippingCost": 8.5,
+        "ShippingMethod": "Regular",
+        "StockBalanceID": 1,
+        "StockBalanceIDByStore": "84WEASB1",
+        "StoreName": "84 West",
+        "TotalCost": 460,
+        "TotalCostCredited": 459,
+        "VendorName": "Reliance",
+        "WaybillNumber": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "ChannelName": "English Channel",
+            "Comments": "Phone missing from package delivered on invoice #87742",
+            "Committed": true,
+            "Completed": true,
+            "CreditInvoiceNumber": "",
+            "CustomerID": -1,
+            "CustomerName": "",
+            "DateCommitted": "2011-03-02T17:10:11.78",
+            "DateCreated": "2011-03-02T17:10:11.78",
+            "DistrictName": "Valley Area District",
+            "EmployeeName": "iQmetrix User",
+            "ReceivingComments": "Received Credit on 2/22/11.",
+            "RegionName": "Region A",
+            "RMANumber": "112482",
+            "ShippedAway": true,
+            "ShippingCost": 8.5,
+            "ShippingMethod": "Regular",
+            "StockBalanceID": 1,
+            "StockBalanceIDByStore": "84WEASB1",
+            "StoreName": "84 West",
+            "TotalCost": 460,
+            "TotalCostCredited": 459,
+            "VendorName": "Reliance",
+            "WaybillNumber": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <ChannelName>English Channel</ChannelName>
+    <Comments>Phone missing from package delivered on invoice #87742</Comments>
+    <Committed>true</Committed>
+    <Completed>true</Completed>
+    <CreditInvoiceNumber></CreditInvoiceNumber>
+    <CustomerID>-1</CustomerID>
+    <CustomerName></CustomerName>
+    <DateCommitted>2011-03-02T17:10:11.78</DateCommitted>
+    <DateCreated>2011-03-02T17:10:11.78</DateCreated>
+    <DistrictName>Valley Area District</DistrictName>
+    <EmployeeName>iQmetrix User</EmployeeName>
+    <ReceivingComments>Received Credit on 2/22/11.</ReceivingComments>
+    <RegionName>Region A</RegionName>
+    <RMANumber>112482</RMANumber>
+    <ShippedAway>true</ShippedAway>
+    <ShippingCost>8.5</ShippingCost>
+    <ShippingMethod>Regular</ShippingMethod>
+    <StockBalanceID>1</StockBalanceID>
+    <StockBalanceIDByStore>84WEASB1</StockBalanceIDByStore>
+    <StoreName>84 West</StoreName>
+    <TotalCost>460</TotalCost>
+    <TotalCostCredited>459</TotalCostCredited>
+    <VendorName>Reliance</VendorName>
+    <WaybillNumber></WaybillNumber>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <ChannelName>English Channel</ChannelName>
+    <Comments>Phone missing from package delivered on invoice #87742</Comments>
+    <Committed>true</Committed>
+    <Completed>true</Completed>
+    <CreditInvoiceNumber></CreditInvoiceNumber>
+    <CustomerID>-1</CustomerID>
+    <CustomerName></CustomerName>
+    <DateCommitted>2011-03-02T17:10:11.78</DateCommitted>
+    <DateCreated>2011-03-02T17:10:11.78</DateCreated>
+    <DistrictName>Valley Area District</DistrictName>
+    <EmployeeName>iQmetrix User</EmployeeName>
+    <ReceivingComments>Received Credit on 2/22/11.</ReceivingComments>
+    <RegionName>Region A</RegionName>
+    <RMANumber>112482</RMANumber>
+    <ShippedAway>true</ShippedAway>
+    <ShippingCost>8.5</ShippingCost>
+    <ShippingMethod>Regular</ShippingMethod>
+    <StockBalanceID>1</StockBalanceID>
+    <StockBalanceIDByStore>84WEASB1</StockBalanceIDByStore>
+    <StoreName>84 West</StoreName>
+    <TotalCost>460</TotalCost>
+    <TotalCostCredited>459</TotalCostCredited>
+    <VendorName>Reliance</VendorName>
+    <WaybillNumber></WaybillNumber>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+ChannelName,Comments,Committed,Completed,CreditInvoiceNumber,CustomerID,CustomerName,DateCommitted,DateCreated,DistrictName,EmployeeName,ReceivingComments,RegionName,RMANumber,ShippedAway,ShippingCost,ShippingMethod,StockBalanceID,StockBalanceIDByStore,StoreName,TotalCost,TotalCostCredited,VendorName,WaybillNumber
+English Channel,Phone missing from package delivered on invoice #87742,true,true,,-1,,2011-03-02T17:10:11.78,2011-03-02T17:10:11.78,Valley Area District,iQmetrix User,Received Credit on 2/22/11.,Region A,112482,true,8.5,Regular,1,84WEASB1,84 West,460,459,Reliance,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -4166,10 +8358,11 @@ GET /reports/rmahistoryproductreport?StartDate={StartDate}&StopDate={StopDate}&V
 
 > Example Request
 
-```javascript
+```d
 GET /reports/rmahistoryproductreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -4227,7 +8420,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -4242,43 +8461,246 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[rmahistoryproductreportdata](#RMAHistoryProductReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[rmahistoryproductreportdata](#RMAHistoryProductReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/rmahistoryproductreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "ActionTaken": 1,
+        "ChannelName": "English Channel",
+        "DateCreated": "2011-03-02T17:10:11.78",
+        "DateReceived": "2011-03-02T17:18:44.913",
+        "DateShipped": "2011-03-02T17:10:12.17",
+        "DistrictName": "Valley Area District",
+        "EmployeeName1": "iQmetrix User",
+        "EmployeeName2": "iQmetrix User",
+        "ProductIdentifier": "ACPHUT000163",
+        "ProductName": "HTC Droid Incredible",
+        "Quantity": 1,
+        "RegionName": "Region A",
+        "RMANumber": "112482",
+        "SerialNumberAdded": "",
+        "SerialNumberRemoved": "A1000017AB0E93",
+        "StockBalanceID": 1,
+        "StockBalanceIDByStore": "84WEASB1",
+        "StoreName": "84 West",
+        "TotalCost": 460,
+        "TotalCostCredited": 459,
+        "UnitCost": 460,
+        "UnitCostCredited": 459,
+        "VendorInvoiceNumber": "",
+        "VendorName": "Reliance",
+        "VendorPartNumber": ""
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "ActionTaken": 1,
+            "ChannelName": "English Channel",
+            "DateCreated": "2011-03-02T17:10:11.78",
+            "DateReceived": "2011-03-02T17:18:44.913",
+            "DateShipped": "2011-03-02T17:10:12.17",
+            "DistrictName": "Valley Area District",
+            "EmployeeName1": "iQmetrix User",
+            "EmployeeName2": "iQmetrix User",
+            "ProductIdentifier": "ACPHUT000163",
+            "ProductName": "HTC Droid Incredible",
+            "Quantity": 1,
+            "RegionName": "Region A",
+            "RMANumber": "112482",
+            "SerialNumberAdded": "",
+            "SerialNumberRemoved": "A1000017AB0E93",
+            "StockBalanceID": 1,
+            "StockBalanceIDByStore": "84WEASB1",
+            "StoreName": "84 West",
+            "TotalCost": 460,
+            "TotalCostCredited": 459,
+            "UnitCost": 460,
+            "UnitCostCredited": 459,
+            "VendorInvoiceNumber": "",
+            "VendorName": "Reliance",
+            "VendorPartNumber": ""
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <ActionTaken>1</ActionTaken>
+    <ChannelName>English Channel</ChannelName>
+    <DateCreated>2011-03-02T17:10:11.78</DateCreated>
+    <DateReceived>2011-03-02T17:18:44.913</DateReceived>
+    <DateShipped>2011-03-02T17:10:12.17</DateShipped>
+    <DistrictName>Valley Area District</DistrictName>
+    <EmployeeName1>iQmetrix User</EmployeeName1>
+    <EmployeeName2>iQmetrix User</EmployeeName2>
+    <ProductIdentifier>ACPHUT000163</ProductIdentifier>
+    <ProductName>HTC Droid Incredible</ProductName>
+    <Quantity>1</Quantity>
+    <RegionName>Region A</RegionName>
+    <RMANumber>112482</RMANumber>
+    <SerialNumberAdded></SerialNumberAdded>
+    <SerialNumberRemoved>A1000017AB0E93</SerialNumberRemoved>
+    <StockBalanceID>1</StockBalanceID>
+    <StockBalanceIDByStore>84WEASB1</StockBalanceIDByStore>
+    <StoreName>84 West</StoreName>
+    <TotalCost>460</TotalCost>
+    <TotalCostCredited>459</TotalCostCredited>
+    <UnitCost>460</UnitCost>
+    <UnitCostCredited>459</UnitCostCredited>
+    <VendorInvoiceNumber></VendorInvoiceNumber>
+    <VendorName>Reliance</VendorName>
+    <VendorPartNumber></VendorPartNumber>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <ActionTaken>1</ActionTaken>
+    <ChannelName>English Channel</ChannelName>
+    <DateCreated>2011-03-02T17:10:11.78</DateCreated>
+    <DateReceived>2011-03-02T17:18:44.913</DateReceived>
+    <DateShipped>2011-03-02T17:10:12.17</DateShipped>
+    <DistrictName>Valley Area District</DistrictName>
+    <EmployeeName1>iQmetrix User</EmployeeName1>
+    <EmployeeName2>iQmetrix User</EmployeeName2>
+    <ProductIdentifier>ACPHUT000163</ProductIdentifier>
+    <ProductName>HTC Droid Incredible</ProductName>
+    <Quantity>1</Quantity>
+    <RegionName>Region A</RegionName>
+    <RMANumber>112482</RMANumber>
+    <SerialNumberAdded></SerialNumberAdded>
+    <SerialNumberRemoved>A1000017AB0E93</SerialNumberRemoved>
+    <StockBalanceID>1</StockBalanceID>
+    <StockBalanceIDByStore>84WEASB1</StockBalanceIDByStore>
+    <StoreName>84 West</StoreName>
+    <TotalCost>460</TotalCost>
+    <TotalCostCredited>459</TotalCostCredited>
+    <UnitCost>460</UnitCost>
+    <UnitCostCredited>459</UnitCostCredited>
+    <VendorInvoiceNumber></VendorInvoiceNumber>
+    <VendorName>Reliance</VendorName>
+    <VendorPartNumber></VendorPartNumber>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+ActionTaken,ChannelName,DateCreated,DateReceived,DateShipped,DistrictName,EmployeeName1,EmployeeName2,ProductIdentifier,ProductName,Quantity,RegionName,RMANumber,SerialNumberAdded,SerialNumberRemoved,StockBalanceID,StockBalanceIDByStore,StoreName,TotalCost,TotalCostCredited,UnitCost,UnitCostCredited,VendorInvoiceNumber,VendorName,VendorPartNumber
+1,English Channel,2011-03-02T17:10:11.78,2011-03-02T17:18:44.913,2011-03-02T17:10:12.17,Valley Area District,iQmetrix User,iQmetrix User,ACPHUT000163,HTC Droid Incredible,1,Region A,112482,,A1000017AB0E93,1,84WEASB1,84 West,460,459,460,459,,Reliance,
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -4296,10 +8718,11 @@ GET /reports/StaleInventoryReport?StartDate={StartDate}&StopDate={StopDate}&QtyT
 
 > Example Request
 
-```javascript
+```d
 GET /reports/StaleInventoryReport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&QtyThreshold=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -4357,7 +8780,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -4374,43 +8823,210 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[staleinventoryreportdata](#StaleInventoryReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[staleinventoryreportdata](#StaleInventoryReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/StaleInventoryReport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&QtyThreshold=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "GlobalProductID": 9647,
+        "SpecialProductID": 0,
+        "ProductSKU": "KLERAP000191",
+        "ProductName": "Products",
+        "QtySold": 403,
+        "DailyAvg": 1.1,
+        "StockOut": -367,
+        "QtyInStock": -403,
+        "QtyOnOrder": 1,
+        "QtyOnBackOrder": 2,
+        "QtyInNonSellable": 0,
+        "QtyTransferIn": 1,
+        "QtyTransferOut": 3,
+        "QtyOnRMA": 2,
+        "QtyOnLoan": 2,
+        "QtyCommittedOnOrderEntry": 0
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "GlobalProductID": 9647,
+            "SpecialProductID": 0,
+            "ProductSKU": "KLERAP000191",
+            "ProductName": "Products",
+            "QtySold": 403,
+            "DailyAvg": 1.1,
+            "StockOut": -367,
+            "QtyInStock": -403,
+            "QtyOnOrder": 1,
+            "QtyOnBackOrder": 2,
+            "QtyInNonSellable": 0,
+            "QtyTransferIn": 1,
+            "QtyTransferOut": 3,
+            "QtyOnRMA": 2,
+            "QtyOnLoan": 2,
+            "QtyCommittedOnOrderEntry": 0
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <GlobalProductID>9647</GlobalProductID>
+    <SpecialProductID>0</SpecialProductID>
+    <ProductSKU>KLERAP000191</ProductSKU>
+    <ProductName>Products</ProductName>
+    <QtySold>403</QtySold>
+    <DailyAvg>1.1</DailyAvg>
+    <StockOut>-367</StockOut>
+    <QtyInStock>-403</QtyInStock>
+    <QtyOnOrder>1</QtyOnOrder>
+    <QtyOnBackOrder>2</QtyOnBackOrder>
+    <QtyInNonSellable>0</QtyInNonSellable>
+    <QtyTransferIn>1</QtyTransferIn>
+    <QtyTransferOut>3</QtyTransferOut>
+    <QtyOnRMA>2</QtyOnRMA>
+    <QtyOnLoan>2</QtyOnLoan>
+    <QtyCommittedOnOrderEntry>0</QtyCommittedOnOrderEntry>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <GlobalProductID>9647</GlobalProductID>
+    <SpecialProductID>0</SpecialProductID>
+    <ProductSKU>KLERAP000191</ProductSKU>
+    <ProductName>Products</ProductName>
+    <QtySold>403</QtySold>
+    <DailyAvg>1.1</DailyAvg>
+    <StockOut>-367</StockOut>
+    <QtyInStock>-403</QtyInStock>
+    <QtyOnOrder>1</QtyOnOrder>
+    <QtyOnBackOrder>2</QtyOnBackOrder>
+    <QtyInNonSellable>0</QtyInNonSellable>
+    <QtyTransferIn>1</QtyTransferIn>
+    <QtyTransferOut>3</QtyTransferOut>
+    <QtyOnRMA>2</QtyOnRMA>
+    <QtyOnLoan>2</QtyOnLoan>
+    <QtyCommittedOnOrderEntry>0</QtyCommittedOnOrderEntry>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+GlobalProductID,SpecialProductID,ProductSKU,ProductName,QtySold,DailyAvg,StockOut,QtyInStock,QtyOnOrder,QtyOnBackOrder,QtyInNonSellable,QtyTransferIn,QtyTransferOut,QtyOnRMA,QtyOnLoan,QtyCommittedOnOrderEntry
+9647,0,KLERAP000191,Products,403,1.1,-367,-403,1,2,0,1,3,2,2,0
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -4428,10 +9044,11 @@ GET /reports/transferhistoryinvoicedetailreport?StartDate={StartDate}&StopDate={
 
 > Example Request
 
-```javascript
+```d
 GET /reports/transferhistoryinvoicedetailreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ShippedForWho=1&ShippedForWhoIDs=6679&ReceivedForWho=1&ReceivedForWhoIDs=6679&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -4489,7 +9106,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -4504,43 +9147,254 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[transferhistoryinvoicedetailreportdata](#TransferHistoryInvoiceDetailReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[transferhistoryinvoicedetailreportdata](#TransferHistoryInvoiceDetailReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/transferhistoryinvoicedetailreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ShippedForWho=1&ShippedForWhoIDs=6679&ReceivedForWho=1&ReceivedForWhoIDs=6679&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "BillingStoreName": "100: My Network LLC - Anchorage",
+        "CancelledByID": null,
+        "CancelledByName": "null",
+        "CancelledDate": "null",
+        "Committed": true,
+        "Completed": true,
+        "DateCommitted": "2016-04-19T14:57:20.32",
+        "DateRequested": "2016-04-19T14:57:20.32",
+        "EstimatedArrivalDate": "2016-04-20T00:00:00",
+        "ReceivingChannelName": "English Channel",
+        "ReceivingComments": "",
+        "ReceivingDistrictName": "Westminster",
+        "ReceivingRegionName": "London",
+        "ReceivingStoreName": "100: My Network LLC - Anchorage",
+        "RequestingComments": "",
+        "RequestingEmployeeName": "iQmetrix User",
+        "ShippingChannelName": "English Channel",
+        "ShippingComments": "",
+        "ShippingCost": 0,
+        "ShippingDistrictName": "Valley Area District",
+        "ShippingMethod": "Regular",
+        "ShippingRegionName": "Region A",
+        "ShippingStoreName": "84 West",
+        "TotalInvoice": 500,
+        "TransferID": 4326,
+        "TransferIDByStore": "77224TR1",
+        "WaybillNumber": "53454354"
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "BillingStoreName": "100: My Network LLC - Anchorage",
+            "CancelledByID": null,
+            "CancelledByName": "null",
+            "CancelledDate": "null",
+            "Committed": true,
+            "Completed": true,
+            "DateCommitted": "2016-04-19T14:57:20.32",
+            "DateRequested": "2016-04-19T14:57:20.32",
+            "EstimatedArrivalDate": "2016-04-20T00:00:00",
+            "ReceivingChannelName": "English Channel",
+            "ReceivingComments": "",
+            "ReceivingDistrictName": "Westminster",
+            "ReceivingRegionName": "London",
+            "ReceivingStoreName": "100: My Network LLC - Anchorage",
+            "RequestingComments": "",
+            "RequestingEmployeeName": "iQmetrix User",
+            "ShippingChannelName": "English Channel",
+            "ShippingComments": "",
+            "ShippingCost": 0,
+            "ShippingDistrictName": "Valley Area District",
+            "ShippingMethod": "Regular",
+            "ShippingRegionName": "Region A",
+            "ShippingStoreName": "84 West",
+            "TotalInvoice": 500,
+            "TransferID": 4326,
+            "TransferIDByStore": "77224TR1",
+            "WaybillNumber": "53454354"
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <BillingStoreName>100: My Network LLC - Anchorage</BillingStoreName>
+    <CancelledByID>null</CancelledByID>
+    <CancelledByName>null</CancelledByName>
+    <CancelledDate>null</CancelledDate>
+    <Committed>true</Committed>
+    <Completed>true</Completed>
+    <DateCommitted>2016-04-19T14:57:20.32</DateCommitted>
+    <DateRequested>2016-04-19T14:57:20.32</DateRequested>
+    <EstimatedArrivalDate>2016-04-20T00:00:00</EstimatedArrivalDate>
+    <ReceivingChannelName>English Channel</ReceivingChannelName>
+    <ReceivingComments></ReceivingComments>
+    <ReceivingDistrictName>Westminster</ReceivingDistrictName>
+    <ReceivingRegionName>London</ReceivingRegionName>
+    <ReceivingStoreName>100: My Network LLC - Anchorage</ReceivingStoreName>
+    <RequestingComments></RequestingComments>
+    <RequestingEmployeeName>iQmetrix User</RequestingEmployeeName>
+    <ShippingChannelName>English Channel</ShippingChannelName>
+    <ShippingComments></ShippingComments>
+    <ShippingCost>0</ShippingCost>
+    <ShippingDistrictName>Valley Area District</ShippingDistrictName>
+    <ShippingMethod>Regular</ShippingMethod>
+    <ShippingRegionName>Region A</ShippingRegionName>
+    <ShippingStoreName>84 West</ShippingStoreName>
+    <TotalInvoice>500</TotalInvoice>
+    <TransferID>4326</TransferID>
+    <TransferIDByStore>77224TR1</TransferIDByStore>
+    <WaybillNumber>53454354</WaybillNumber>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <BillingStoreName>100: My Network LLC - Anchorage</BillingStoreName>
+    <CancelledByID>null</CancelledByID>
+    <CancelledByName>null</CancelledByName>
+    <CancelledDate>null</CancelledDate>
+    <Committed>true</Committed>
+    <Completed>true</Completed>
+    <DateCommitted>2016-04-19T14:57:20.32</DateCommitted>
+    <DateRequested>2016-04-19T14:57:20.32</DateRequested>
+    <EstimatedArrivalDate>2016-04-20T00:00:00</EstimatedArrivalDate>
+    <ReceivingChannelName>English Channel</ReceivingChannelName>
+    <ReceivingComments></ReceivingComments>
+    <ReceivingDistrictName>Westminster</ReceivingDistrictName>
+    <ReceivingRegionName>London</ReceivingRegionName>
+    <ReceivingStoreName>100: My Network LLC - Anchorage</ReceivingStoreName>
+    <RequestingComments></RequestingComments>
+    <RequestingEmployeeName>iQmetrix User</RequestingEmployeeName>
+    <ShippingChannelName>English Channel</ShippingChannelName>
+    <ShippingComments></ShippingComments>
+    <ShippingCost>0</ShippingCost>
+    <ShippingDistrictName>Valley Area District</ShippingDistrictName>
+    <ShippingMethod>Regular</ShippingMethod>
+    <ShippingRegionName>Region A</ShippingRegionName>
+    <ShippingStoreName>84 West</ShippingStoreName>
+    <TotalInvoice>500</TotalInvoice>
+    <TransferID>4326</TransferID>
+    <TransferIDByStore>77224TR1</TransferIDByStore>
+    <WaybillNumber>53454354</WaybillNumber>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+BillingStoreName,CancelledByID,CancelledByName,CancelledDate,Committed,Completed,DateCommitted,DateRequested,EstimatedArrivalDate,ReceivingChannelName,ReceivingComments,ReceivingDistrictName,ReceivingRegionName,ReceivingStoreName,RequestingComments,RequestingEmployeeName,ShippingChannelName,ShippingComments,ShippingCost,ShippingDistrictName,ShippingMethod,ShippingRegionName,ShippingStoreName,TotalInvoice,TransferID,TransferIDByStore,WaybillNumber
+100: My Network LLC - Anchorage,null,null,null,true,true,2016-04-19T14:57:20.32,2016-04-19T14:57:20.32,2016-04-20T00:00:00,English Channel,,Westminster,London,100: My Network LLC - Anchorage,,iQmetrix User,English Channel,,0,Valley Area District,Regular,Region A,84 West,500,4326,77224TR1,53454354
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 
@@ -4557,10 +9411,11 @@ GET /reports/transferhistoryproductdetailreport?StartDate={StartDate}&StopDate={
 
 > Example Request
 
-```javascript
+```d
 GET /reports/transferhistoryproductdetailreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ShippedForWho=1&ShippedForWhoIDs=6679&ReceivedForWho=1&ReceivedForWhoIDs=6679&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
+
 ```
 
 
@@ -4618,7 +9473,33 @@ puts response
 
 
 
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
+
+
 #### URI Parameters
+
 <ul>
     <li><code>StartDate</code> (<strong>Required</strong>)  - Date at which report will begin</li>
     <li><code>StopDate</code> (<strong>Required</strong>)  - Date at which report will end</li>
@@ -4633,43 +9514,258 @@ puts response
 
 
 
-<h5>Example</h5>
+### Response Parameters
 
 
-<h4>Response</h4>
+
+Array[[transferhistoryproductdetailreportdata](#TransferHistoryProductDetailReportData)]
 
 
-    
-        
 
 
-    
-<p>Array[[transferhistoryproductdetailreportdata](#TransferHistoryProductDetailReportData)]</p>           
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
-> Example Request
 
-```javascript
-GET /reports/transferhistoryproductdetailreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ShippedForWho=1&ShippedForWhoIDs=6679&ReceivedForWho=1&ReceivedForWhoIDs=6679&LanguageCode=en-us
-Authorization: Bearer (Access Token)
-Accept-Encoding: gzip
 
+
+
+
+> Example Response
+
+
+
+ 
+```python
+[
+    {
+        "CancelledByID": null,
+        "CancelledByName": "null",
+        "CancelledDate": "null",
+        "CategoryPath": "Galaxies",
+        "DateReceived": "2011-06-02T10:04:51.59",
+        "DateShipped": "2011-06-02T09:41:08.027",
+        "ProductIdentifier": "ASBORI000028",
+        "ProductName": "BG Curve2 Posh PK",
+        "Quantity": 1,
+        "ReceivingChannelName": "English Channel",
+        "ReceivingDistrictName": "Westminster",
+        "ReceivingEmployeeName": "Courtney Noon",
+        "ReceivingRegionName": "London",
+        "ReceivingStoreName": "100: My Network LLC - Anchorage",
+        "RequestingEmployeeName": "iQmetrix User",
+        "SerialNumber": "",
+        "ShippingChannelName": "English Channel",
+        "ShippingDistrictName": "Valley Area District",
+        "ShippingEmployeeName": "Courtney Noon",
+        "ShippingRegionName": "Region A",
+        "ShippingStoreName": "84 West",
+        "TotalCost": 9.6705,
+        "TransferID": 718,
+        "TransferIDByStore": "WIREGTR73",
+        "UnitCost": 9.6705,
+        "VendorName": "LTD Wireless",
+        "VendorPartNumber": "EEG675",
+        "WaybillNumber": "53454354"
+    }
+]
 ```
 
 
 
-        
+
+ 
+```json-doc
+{
+    "Records": [
+        {
+            "CancelledByID": null,
+            "CancelledByName": "null",
+            "CancelledDate": "null",
+            "CategoryPath": "Galaxies",
+            "DateReceived": "2011-06-02T10:04:51.59",
+            "DateShipped": "2011-06-02T09:41:08.027",
+            "ProductIdentifier": "ASBORI000028",
+            "ProductName": "BG Curve2 Posh PK",
+            "Quantity": 1,
+            "ReceivingChannelName": "English Channel",
+            "ReceivingDistrictName": "Westminster",
+            "ReceivingEmployeeName": "Courtney Noon",
+            "ReceivingRegionName": "London",
+            "ReceivingStoreName": "100: My Network LLC - Anchorage",
+            "RequestingEmployeeName": "iQmetrix User",
+            "SerialNumber": "",
+            "ShippingChannelName": "English Channel",
+            "ShippingDistrictName": "Valley Area District",
+            "ShippingEmployeeName": "Courtney Noon",
+            "ShippingRegionName": "Region A",
+            "ShippingStoreName": "84 West",
+            "TotalCost": 9.6705,
+            "TransferID": 718,
+            "TransferIDByStore": "WIREGTR73",
+            "UnitCost": 9.6705,
+            "VendorName": "LTD Wireless",
+            "VendorPartNumber": "EEG675",
+            "WaybillNumber": "53454354"
+        }
+    ],
+    "Schema": [
+        {
+            "Column_Name": "ColumnName",
+            "Type": "datatype",
+            "SafeType": "safetype",
+            "Length": 100
+        }
+    ]
+}
+```
+
+
+
+
+
+```xml
+<Table>
+  <Record>
+    <CancelledByID>null</CancelledByID>
+    <CancelledByName>null</CancelledByName>
+    <CancelledDate>null</CancelledDate>
+    <CategoryPath>Galaxies</CategoryPath>
+    <DateReceived>2011-06-02T10:04:51.59</DateReceived>
+    <DateShipped>2011-06-02T09:41:08.027</DateShipped>
+    <ProductIdentifier>ASBORI000028</ProductIdentifier>
+    <ProductName>BG Curve2 Posh PK</ProductName>
+    <Quantity>1</Quantity>
+    <ReceivingChannelName>English Channel</ReceivingChannelName>
+    <ReceivingDistrictName>Westminster</ReceivingDistrictName>
+    <ReceivingEmployeeName>Courtney Noon</ReceivingEmployeeName>
+    <ReceivingRegionName>London</ReceivingRegionName>
+    <ReceivingStoreName>100: My Network LLC - Anchorage</ReceivingStoreName>
+    <RequestingEmployeeName>iQmetrix User</RequestingEmployeeName>
+    <SerialNumber></SerialNumber>
+    <ShippingChannelName>English Channel</ShippingChannelName>
+    <ShippingDistrictName>Valley Area District</ShippingDistrictName>
+    <ShippingEmployeeName>Courtney Noon</ShippingEmployeeName>
+    <ShippingRegionName>Region A</ShippingRegionName>
+    <ShippingStoreName>84 West</ShippingStoreName>
+    <TotalCost>9.6705</TotalCost>
+    <TransferID>718</TransferID>
+    <TransferIDByStore>WIREGTR73</TransferIDByStore>
+    <UnitCost>9.6705</UnitCost>
+    <VendorName>LTD Wireless</VendorName>
+    <VendorPartNumber>EEG675</VendorPartNumber>
+    <WaybillNumber>53454354</WaybillNumber>
+  </Record>
+</Table>
+```
+
+
+
+
+
+```html
+<Table>
+  <Record>
+    <CancelledByID>null</CancelledByID>
+    <CancelledByName>null</CancelledByName>
+    <CancelledDate>null</CancelledDate>
+    <CategoryPath>Galaxies</CategoryPath>
+    <DateReceived>2011-06-02T10:04:51.59</DateReceived>
+    <DateShipped>2011-06-02T09:41:08.027</DateShipped>
+    <ProductIdentifier>ASBORI000028</ProductIdentifier>
+    <ProductName>BG Curve2 Posh PK</ProductName>
+    <Quantity>1</Quantity>
+    <ReceivingChannelName>English Channel</ReceivingChannelName>
+    <ReceivingDistrictName>Westminster</ReceivingDistrictName>
+    <ReceivingEmployeeName>Courtney Noon</ReceivingEmployeeName>
+    <ReceivingRegionName>London</ReceivingRegionName>
+    <ReceivingStoreName>100: My Network LLC - Anchorage</ReceivingStoreName>
+    <RequestingEmployeeName>iQmetrix User</RequestingEmployeeName>
+    <SerialNumber></SerialNumber>
+    <ShippingChannelName>English Channel</ShippingChannelName>
+    <ShippingDistrictName>Valley Area District</ShippingDistrictName>
+    <ShippingEmployeeName>Courtney Noon</ShippingEmployeeName>
+    <ShippingRegionName>Region A</ShippingRegionName>
+    <ShippingStoreName>84 West</ShippingStoreName>
+    <TotalCost>9.6705</TotalCost>
+    <TransferID>718</TransferID>
+    <TransferIDByStore>WIREGTR73</TransferIDByStore>
+    <UnitCost>9.6705</UnitCost>
+    <VendorName>LTD Wireless</VendorName>
+    <VendorPartNumber>EEG675</VendorPartNumber>
+    <WaybillNumber>53454354</WaybillNumber>
+  </Record>
+  <Schema>
+    <Column_Name>ColumnName</Column_Name>
+    <Type>datatybe</Type>
+    <SafeType>safetype</SafeType>
+    <Length>100</Length>
+  </Schema>
+</Table>
+```
+
+
+
+
+
+```coffeescript
+CancelledByID,CancelledByName,CancelledDate,CategoryPath,DateReceived,DateShipped,ProductIdentifier,ProductName,Quantity,ReceivingChannelName,ReceivingDistrictName,ReceivingEmployeeName,ReceivingRegionName,ReceivingStoreName,RequestingEmployeeName,SerialNumber,ShippingChannelName,ShippingDistrictName,ShippingEmployeeName,ShippingRegionName,ShippingStoreName,TotalCost,TransferID,TransferIDByStore,UnitCost,VendorName,VendorPartNumber,WaybillNumber
+null,null,null,Galaxies,2011-06-02T10:04:51.59,2011-06-02T09:41:08.027,ASBORI000028,BG Curve2 Posh PK,1,English Channel,Westminster,Courtney Noon,London,100: My Network LLC - Anchorage,iQmetrix User,,English Channel,Valley Area District,Courtney Noon,Region A,84 West,9.6705,718,WIREGTR73,9.6705,LTD Wireless,EEG675,53454354
+```
+
+
+
+
+
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
+
+
+ 
+
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
+
     
 
 

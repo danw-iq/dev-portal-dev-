@@ -8,6 +8,12 @@ language_tabs:
   - csharp: c#
   - java
   - ruby
+  - python: JSON
+  - json-doc: JsonDataTable
+  - xml: XML
+  - html: XmlDataTable
+  - coffeescript: CSV
+  - c: Excel
 
 search: true
 
@@ -57,10 +63,11 @@ noPopUp: true
 
 > Example Request
 
-```javascript
+```javscript
 {{method.method | upper }} {{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}
 {% if method.headers %}{% for header, headerObj in method.headers %}{{header}}: {{headerObj.example}}
-{% endfor %}{% endif %}```
+{% endfor %}{% endif %}
+```
 
 
 ```shell
@@ -113,15 +120,36 @@ response = RestClient.{{method.method}} '{{ baseUri | replace("{UrlSuffix}", "de
 
 puts response
 ```
-{#
-{% if method.headers %}
-<h4>Headers</h4>
-<ul>{% for header, headerObj in method.headers %}<li><code>{{header}}: {{headerObj.example}}</code>{% if headerObj.required == false %} (Optional){% elif headerObj.required == true %} (<strong>Required</strong>){% endif %}{% if headerObj.description %} - {{headerObj.description}}{% endif %}</li>{% endfor %}</ul>
-{% endif %}
-#}
+
+{# use cases for unsupported request formats #}
+
+```python
+This format not available
+```
+
+```json-doc
+This format not available
+```
+
+```xml
+This format not available
+```
+
+```html
+This format not available
+```
+
+```coffeescript
+This format not available
+```
+
+```c
+This format not available
+```
 
 {% if resource.uriParameters %}
 #### URI Parameters
+
 <ul>{% for parameter, objParameter in resource.uriParameters %}
     <li><code>{{parameter}}</code> ({% if objParameter.required %}<strong>Required</strong>{% else %}Optional{% endif %}) {% if objParameter.description %} - {{objParameter.description}}{% endif %}</li>{% endfor %}
 </ul>{% endif %}
@@ -143,76 +171,84 @@ puts response
 ### Response Parameters
 
 {% for code, body in method.responses %}{% if body %}{% for body, schema in body %}{% for scheme, schemeProperties in schema %}
-    
+
+{% if scheme == "application/json" %}{{ schemeProperties.schema | printResponseSchema(title) }}{% endif %}{% endfor %}
+
 > Example Response
 
-```json
-HTTP {{code}} Content-Type: {{scheme}}
-```
-{% if schemeProperties.example %}
-```json
-{{ schemeProperties.example }}
-```
-{% elif schemeProperties.schema %}
-```json
+{% for scheme, schemeProperties in schema %}
+
+{% if scheme == "application/json" %} 
+```python
 {{ schemeProperties.schema | printExample(title, null) }}
 ```
+{% elif scheme == "application/JsonDataTable" %} 
+```json-doc
+{{ schemeProperties.schema | printExampleJsonTable(title, true) }}
+```
+{% elif scheme == "text/xml" %}
+```xml
+{{ schemeProperties.schema | printExampleXml(false) }}
+```
+{% elif scheme == "text/XmlDataTable" %}
+```html
+{{ schemeProperties.schema | printExampleXml(true) }}
+```
+{% elif scheme == "text/csv" %}
+```coffeescript
+{{ schemeProperties.schema | printExampleCsv(title, null) }}
+```
+{% elif scheme == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" %}
+```c
+content-disposition: attachment;filename=reportname-2016-07-11.xlsx
+Binary *.xlsx file
+```
+
 {% endif %}
 
+{% endfor %} 
 
-{% if scheme == "application/json" %}
-<p>{{ schemeProperties.schema | printResponseSchema(title) }}</p>           
-    {% endif %}
+#### Headers
+
+This specifies the format of the data sent to the API.
+
+##### For JSON:
+
+`Content-Type: application/json`
+
+This is the default result obtained by omitting the `Auth` URI parameter.
+
+
+`Content-Type: application/JsonDataTable`
+
+This is the default result obtained by omitting the URI parameter `Auth=JsonDataTable`. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
+
+
+##### For XML
+
+`Content-Type: text/xml`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
+<br/>
+
+`Content-Type: text/XmlDataTable`
+
+This result is obtained by using the URL parameter `Auth=XmlDataTable`. This response type appends to the bottom of the request a summary of information about each column in the report.
+
+
+##### For CSV
+
+`Content-Type: text/csv`
+
+This result is obtained by using the URL parameter `Auth=Csv`.
+<br/>
+
+`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+
+This result is obtained by using the URL parameter `Auth=Excel`.
+
+    
 {% endfor %}
-
-
-
-
-{#
-<ul class="nav nav-tabs">
-    {% for scheme, schemeProperties in schema %}
-        <li{% if scheme == "application/json" %} class="active"{% endif %}>
-            <a href="#{{scheme | replace("/", "") | replace(".", "") }}-{{method.displayName | replace(" ", "-") | lower }}" data-toggle="tab">{% if scheme == "application/JsonDataTable" %}application/json (DataTable){% elif scheme == "text/XmlDataTable" %}text/xml (Data Table){% else %}{{scheme}}{% endif %}</a>
-        </li>
-    {% endfor %}
-</ul>
-
-<div class="tab-content"> 
-    {% for scheme, schemeProperties in schema %}
-        <div role="tabpanel" class="tab-pane {% if scheme == "application/json" %}active{% endif %}" id="{{scheme | replace("/", "") | replace(".", "") }}-{{method.displayName | replace(" ", "-") | lower }}">
-            {% if scheme == "application/json" %} 
-<pre>HTTP {{code}} Content-Type: {{scheme}}</pre>
-<p>This is the default result obtained by omitting the <code>Auth</code> URI parameter</p>
-<pre><code class="language-csharp">{{ schemeProperties.schema | printExample(title, null) }}</code></pre>      
-            {% elif scheme == "application/JsonDataTable" %} 
-<pre>HTTP {{code}} Content-Type: application/json</pre>
-<p>This is the default result obtained by omitting the URI parameter <code>Auth=JsonDataTable</code>. This response type wraps the data in a "Records" array and adds a "Schema" array, which contains information about each column in the report.
-</p>
-<pre><code class="language-csharp">{{ schemeProperties.schema | printExampleJsonTable(title, true) }}</code></pre>
-            {% elif scheme == "text/xml" %}
-<pre>HTTP {{code}} Content-Type: {{scheme}}</pre>
-<p>This result is obtained by using the URL parameter <code>Auth=Xml</code></p>
-<pre><code class="language-xml"><script>{{ schemeProperties.schema | printExampleXml(false) }}</script></code></pre>
-            {% elif scheme == "text/XmlDataTable" %}
-<pre>HTTP {{code}} Content-Type: text/xml</pre>
-<p>This result is obtained by using the URL parameter <code>Auth=XmlDataTable</code>. This response type appends to the bottom of the request a summary of information about each column in the report.
-</p>
-<pre><code class="language-xml"><script>{{ schemeProperties.schema | printExampleXml(true) }}</script></code></pre>
-            {% elif scheme == "text/csv" %}
-<pre>HTTP {{code}} Content-Type: {{scheme}}</pre>
-<p>This result is obtained by using the URL parameter <code>Auth=Csv</code></p>
-<pre>{{ schemeProperties.schema | printExampleCsv(title, null) }}</pre>
-            {% elif scheme == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" %}
-<pre>HTTP {{code}} Content-Type: {{scheme}}</pre>
-<p>This result is obtained by using the URL parameter <code>Auth=Excel</code></p>
-<pre>content-disposition: attachment;filename=reportname-2016-07-11.xlsx
-Binary *.xlsx file</pre>
-            {% endif %}
-        </div>
-    {% endfor %}            
-</div>
-#}
-        {% endfor %}
     {% endif %}
 {% endfor %}{% endfor %}{% endfor %}
 {% for item in documentation %}
