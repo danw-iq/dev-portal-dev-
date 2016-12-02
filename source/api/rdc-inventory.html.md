@@ -3,7 +3,7 @@ title:  RQ Data Connect Inventory Reports
 permalink: /api/RQ-Data-Connect-Inventory-Reports/
 
 language_tabs:
-  - d: javascript
+  - javascript
   - shell: cURL
   - csharp: c#
   - java
@@ -1405,7 +1405,7 @@ GET /reports/adjustmenthistoryinvoicedetailreport?ReasonCode={ReasonCode}&StartD
 
 > Example Request
 
-```d
+```javscript
 GET /reports/adjustmenthistoryinvoicedetailreport?ReasonCode=-1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&SerialNumber=990003427999221&ProductIdentifier=ASCLMO000001&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -1712,7 +1712,7 @@ GET /reports/adjustmenthistoryproductdetailreport?ReasonCode={ReasonCode}&StartD
 
 > Example Request
 
-```d
+```javscript
 GET /reports/adjustmenthistoryproductdetailreport?ReasonCode=-1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us&ProductIdentifier=ASCLMO000001
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -2046,7 +2046,7 @@ GET /reports/AgedSeralizedInventoryReport?SearchMethod={SearchMethod}&SearchCrit
 
 > Example Request
 
-```d
+```javscript
 GET /reports/AgedSeralizedInventoryReport?SearchMethod=3&SearchCriteria2=-1&StoreIDLoggedIn=1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -2391,7 +2391,7 @@ GET /reports/AutoOrderingReport?Search={Search}&OrderBy={OrderBy}&VendorID={Vend
 
 > Example Request
 
-```d
+```javscript
 GET /reports/AutoOrderingReport?Search=ByCategory&OrderBy=Priority&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&ProductsToShow=1&StoreTypeID=-1&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -2779,7 +2779,7 @@ GET /reports/backorderlistingreport?StartDate={StartDate}&StopDate={StopDate}&Fo
 
 > Example Request
 
-```d
+```javscript
 GET /reports/backorderlistingreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&VendorID=-1&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -3104,7 +3104,7 @@ GET /reports/countsheethistoryreport?StartDate={StartDate}&StopDate={StopDate}&F
 
 > Example Request
 
-```d
+```javscript
 GET /reports/countsheethistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&ProductIdentifier=ASCLMO000001&SerialNumber=866988333292854&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -3442,7 +3442,7 @@ GET /reports/CompletedRMAsReport?ReportType={ReportType}&StockBalanceID={StockBa
 
 > Example Request
 
-```d
+```javscript
 GET /reports/CompletedRMAsReport?ReportType=RMAs&StockBalanceID=78&SearchMethod=3&SearchCriteria=-1&StoreIDs=1&SBState=4&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -3734,7 +3734,7 @@ GET /reports/consignmenthistoryreport?StartDate={StartDate}&StopDate={StopDate}&
 
 > Example Request
 
-```d
+```javscript
 GET /reports/consignmenthistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -4058,7 +4058,7 @@ GET /reports/discontinuedinventoryreport?CategoryNumber={CategoryNumber}&ForWho=
 
 > Example Request
 
-```d
+```javscript
 GET /reports/discontinuedinventoryreport?CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -4381,7 +4381,7 @@ GET /reports/inventoryavailabilitysummaryreport?ForWho={ForWho}&ForWhoIDs={ForWh
 
 > Example Request
 
-```d
+```javscript
 GET /reports/inventoryavailabilitysummaryreport?ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&SearchType=1&ProductIdentifier=ASCLMO000001&CategoryNumber=10&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -4746,7 +4746,7 @@ GET /reports/inventorylistingreport?CategoryNumber={CategoryNumber}&BinStatus={B
 
 > Example Request
 
-```d
+```javscript
 GET /reports/inventorylistingreport?CategoryNumber=10&BinStatus=1&QtyStatus=4&BlindInventory=0&DateAsOf=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -5113,7 +5113,7 @@ GET /reports/inventoryremovalhistoryreport?StoreID={StoreID}&SearchMethod={Searc
 
 > Example Request
 
-```d
+```javscript
 GET /reports/inventoryremovalhistoryreport?StoreID=1&SearchMethod=1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -5394,7 +5394,7 @@ GET /reports/inventorytotalsbylocationreport?StoreTypeID={StoreTypeID}&CategoryN
 
 > Example Request
 
-```d
+```javscript
 GET /reports/inventorytotalsbylocationreport?StoreTypeID=-1&CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -5698,7 +5698,7 @@ GET /reports/nonsellablehistoryreport?StartDate={StartDate}&StopDate={StopDate}&
 
 > Example Request
 
-```d
+```javscript
 GET /reports/nonsellablehistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&ProductIdentifier=ASCLMO000001&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -6048,7 +6048,7 @@ GET /reports/overreceivinginventoryreport?StartDate={StartDate}StopDate={StopDat
 
 > Example Request
 
-```d
+```javscript
 GET /reports/overreceivinginventoryreport?StartDate=1970-01-01T08:00:00.000ZStopDate=2016-01-01T08:00:00.000Z&PurchaseOrderID=-1&PurchaseOrderIDByStore=84WEAPO1151&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -6358,7 +6358,7 @@ GET /reports/productsonconsignmentreport?StartDate={StartDate}&StopDate={StopDat
 
 > Example Request
 
-```d
+```javscript
 GET /reports/productsonconsignmentreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&StoreID=1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&PurchaseOrderIDByStore=84WEAPO1151&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -6680,7 +6680,7 @@ GET /reports/purchasehistoryreport?StartDate={StartDate}&StopDate={StopDate}&Sea
 
 > Example Request
 
-```d
+```javscript
 GET /reports/purchasehistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&SearchMethod=1&Filter=1&CategoryNumber=10&ProductIdentifier=ASCLMO000001&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -6969,7 +6969,7 @@ GET /reports/PurchaseOrderAmendmentReport?StartDate={StartDate}&StopDate={StopDa
 
 > Example Request
 
-```d
+```javscript
 GET /reports/PurchaseOrderAmendmentReport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&PONumber=WETM2PO325&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -7294,7 +7294,7 @@ GET /reports/ReceivingInvoiceHistoryReport_ByProduct?StartDate={StartDate}&StopD
 
 > Example Request
 
-```d
+```javscript
 GET /reports/ReceivingInvoiceHistoryReport_ByProduct?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -7636,7 +7636,7 @@ GET /reports/ReceivingInvoiceHistoryReport_ByInvoice?StartDate={StartDate}&StopD
 
 > Example Request
 
-```d
+```javscript
 GET /reports/ReceivingInvoiceHistoryReport_ByInvoice?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -8002,7 +8002,7 @@ GET /reports/rmahistoryinvoicereport?StartDate={StartDate}&StopDate={StopDate}&V
 
 > Example Request
 
-```d
+```javscript
 GET /reports/rmahistoryinvoicereport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -8358,7 +8358,7 @@ GET /reports/rmahistoryproductreport?StartDate={StartDate}&StopDate={StopDate}&V
 
 > Example Request
 
-```d
+```javscript
 GET /reports/rmahistoryproductreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -8718,7 +8718,7 @@ GET /reports/StaleInventoryReport?StartDate={StartDate}&StopDate={StopDate}&QtyT
 
 > Example Request
 
-```d
+```javscript
 GET /reports/StaleInventoryReport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&QtyThreshold=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -9044,7 +9044,7 @@ GET /reports/transferhistoryinvoicedetailreport?StartDate={StartDate}&StopDate={
 
 > Example Request
 
-```d
+```javscript
 GET /reports/transferhistoryinvoicedetailreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ShippedForWho=1&ShippedForWhoIDs=6679&ReceivedForWho=1&ReceivedForWhoIDs=6679&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
@@ -9411,7 +9411,7 @@ GET /reports/transferhistoryproductdetailreport?StartDate={StartDate}&StopDate={
 
 > Example Request
 
-```d
+```javscript
 GET /reports/transferhistoryproductdetailreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ShippedForWho=1&ShippedForWhoIDs=6679&ReceivedForWho=1&ReceivedForWhoIDs=6679&LanguageCode=en-us
 Authorization: Bearer (Access Token)
 Accept-Encoding: gzip
