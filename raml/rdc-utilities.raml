@@ -1,0 +1,283 @@
+#%RAML 0.8
+title: RQ Data Connect Utilities
+baseUri: https://rqdataconnect{UrlSuffix}.iqmetrix.net
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: |
+      RQ
+  - title: overview
+    content: |
+
+      RQ Data Connect allows you to retrieve report data from your RQ database (v4.23 and up).
+
+      To get started, see [RQ Data Connect Guide](/guides/rq-data-connect/).
+
+      #### Note
+
+      For reports that provide optional URI parameters for filtering at different levels (ForWho/ForWhoIDs/LocationType/LocationTypeIDs), omitting these values will run the report at the default company level.
+
+      ### Authentication
+
+      RQ Data Connect and Bridge support many different methods of authentication, see {{AuthenticationOptions}}.
+
+      Note that for all reports the {{AccessToken_Glossary}} should be mapped to an employee in RQ.
+
+      ### Report List
+
+      For a complete list of reports in RQ Data Connect, see [Report List](/rq-data-connect/report-list).
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Bad Request` | Ensure request body is formatted properly |
+      | `HTTP 401` | `Tokan is invalid` | Ensure Access Token is valid and has not expired |
+      | `HTTP 403` | `Unauthorized` | Ensure Access Token is valid and user has appropriate security |
+      | `HTTP 404` | `Not Found` | Ensure URI is valid |
+      | `HTTP 429` | `Too Many Requests` | See [Rate Limiting](/api/#rate-limiting) |
+      | `HTTP 500` | `Unexpected Error` | See Message in response for more information |            
+resourceTypes:
+  - collectionReadOnly:
+      get:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              required: false
+              description: Bearer token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+            Accept-Encoding:
+              example: gzip
+              required: false
+              description: Compression algorithm. For other methods of compression, see {{CompressionOptions}}
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+                application/JsonDataTable:
+                  schema: <<resource>>
+                text/xml:
+                  schema: <<resource>>
+                text/XmlDataTable:
+                  schema: <<resource>>
+                text/csv:
+                  schema: <<resource>>
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                  schema: <<resource>>
+schemas:
+  - EmployeeMasterListReportData: |
+      {
+        "name": "EmployeeMasterListReportData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Assigned Groups": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Assigned Groups - states the groups assigned to the employee", "example": "Sales Representative" },
+          "Assigned Locations": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Assigned Locations - states the locations assigned to the individual", "example": "84 West Target Dothan Wiregrass Commons Mall - Test Long Store Name Here" },
+          "City": {  "type": "string", "database": "VARCHAR(50)", "description": "City - city of the employee as entered on their profile", "example": "Dothan" },
+          "Clear Fingerprints": {  "type": "string", "database": "VARCHAR(2)", "description": "Clear Fingerprints - this will allow you to clear fingerprints", "example": "No" },
+          "Commission Group": {  "type": "string", "database": "VARCHAR(50)", "description": "Commission Group - commission group of the employee as entered on their profile", "example": "Sales Representative" },
+          "Compensation Type": {  "type": "string", "database": "VARCHAR(21)", "description": "Compensation Type - compensation type of the employee as entered on their profile", "example": "Commission" },
+          "Country": {  "type": "string", "database": "VARCHAR(50)", "description": "Country - country of the employee as entered on their profile", "example": "USA" },
+          "Disabled": {  "type": "string", "database": "VARCHAR(3)", "description": "Disabled - indicates whether or not the employee is disabled", "example": "No" },
+          "Email Address": {  "type": "string", "database": "VARCHAR(50)", "description": "Email Address - email address of the employee as entered on their profile (in the Email Settings section)", "example": "hilary@kentel.com" },
+          "Email Display Name": {  "type": "string", "database": "VARCHAR(50)", "description": "Email Display Name - email display name of the employee as entered on their profile (in the Email Settings section)", "example": "hilary@kentel.com" },
+          "Email Password": {  "type": "string", "database": "VARCHAR(1)", "description": "Email Password - email password of the employee as entered on their profile (in the Email Settings section)", "example": "test" },
+          "Email Server": {  "type": "string", "database": "VARCHAR(50)", "description": "Email Server - email server of the employee as entered on their profile (in the Email Settings section)", "example": "outlook.kentel.com" },
+          "Email User Name": {  "type": "string", "database": "VARCHAR(50)", "description": "Email Username -email username of the employee as entered on their profile (in the Email Settings section)", "example": "hilary" },
+          "Employee ID": {  "type": "integer", "database": "INT", "description": "Identifier for the employee in RQ", "example": "60" },
+          "Employee Name": {  "type": "string", "database": "VARCHAR(51)", "description": "Employee Name - name of the employee as entered on their profile", "example": "Hillary Oliver" },
+          "Fingerprint Enabled": {  "type": "string", "database": "VARCHAR(3)", "description": "Fingerprint Entered - indicates if the employee has fingerprints entered", "example": "No" },
+          "Frequency": {  "type": "string", "database": "VARCHAR(12)", "description": "Frequency - compensation frequency of the employee as entered on their profile", "example": "N/A" },
+          "FrequencyEffective": {  "type": "string", "database": "NVARCHAR(4000)", "description": "Frequency Effective - the frequency effective date of the employee as entered on their profile", "example": "Jan 10 2011" },
+          "Gender": {  "type": "string", "database": "VARCHAR(9)", "description": "Gender - gender of the employee as entered on their profile", "example": "Male" },
+          "ID #": {  "type": "string", "database": "VARCHAR(25)", "description": "ID # - employees ID listed under the admin tab of the profile", "example": "912345987654321" },
+          "Image Uploaded": {  "type": "string", "database": "VARCHAR(3)", "description": "Image Uploaded - indicates if the employee has a profile picture uploaded", "example": "No" },
+          "Internal": {  "type": "string", "database": "VARCHAR(12)", "description": "Interval - compensation interval of the employee as entered on their profile", "example": "N/A" },
+          "Intrgration Username": {  "type": "string", "database": "VARCHAR(255)", "description": "Username", "example": "hilary.kentel" },
+          "Job Title": {  "type": "string", "database": "VARCHAR(50)", "description": "Job Title - job title of the employee as entered on their profile", "example": "Wireless Consultant" },
+          "Language": {  "type": "string", "database": "VARCHAR(255)", "description": "Language - employees primary language", "example": "en-us" },
+          "Locked": {  "type": "string", "database": "VARCHAR(3)", "description": "Locked - employee is locked so they can not be accessed", "example": "No" },
+          "Part Time": {  "type": "integer", "database": "INT", "description": "Part Time - indicates if the employee is part time", "example": "0" },
+          "Personal Days Available": {  "type": "integer", "database": "INT", "description": "Personal Days Available - will state the personal days available", "example": "0" },
+          "Personal Email": {  "type": "string", "database": "VARCHAR(50)", "description": "Personal Email - personal email of the employee as entered on their profile", "example": "hilary@kentel.com" },
+          "Primary Location": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Primary Location - primary location of the employee as entered on their profile", "example": "Corporate Office" },
+          "Rate Effective": {  "type": "string", "database": "NVARCHAR(4000)", "description": "Rate Effective - rate effective date of the employee as entered on their profile", "example": "Jan 10 2011" },
+          "Rate": {  "type": "decimal", "database": "MONEY", "description": "Rate - compensation rate of the employee as entered on their profile", "example": "0" },
+          "Role": {  "type": "string", "database": "VARCHAR(1)", "description": "Role - role of the employee as entered on their profile", "example": "Store Manager" },
+          "Security Role": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Security Role - security role of the employee as entered on their profile", "example": "Sales Representative" },
+          "Sick Days Available": {  "type": "integer", "database": "INT", "description": "Sick Days Available - will state the sick days available", "example": "0" },
+          "Start Date": {  "type": "string", "database": "NVARCHAR(4000)", "description": "Start Date - the start date of the employee", "example": "Dec 05 2010" },
+          "State / Prov": {  "type": "string", "database": "VARCHAR(50)", "description": "State/Prov - state or province of the employee as entered on their profile", "example": "AL" },
+          "Supervisor": {  "type": "string", "database": "VARCHAR(51)", "description": "Supervisor - supervisor of the employee as entered on their profile", "example": "Robyn Roberts" },
+          "Termination Date": {  "type": "string", "database": "NVARCHAR(4000)", "description": "Termination Date - states the termination date of the employee", "example": "Today" },
+          "Termination Notes": {  "type": "string", "database": "VARCHAR(255)", "description": "Termination Notes - states the notes for the termination", "example": "Vacation days to be paid" },
+          "Username": {  "type": "string", "database": "VARCHAR(51)", "description": "Username - username of the employee as entered in their profile", "example": "Hillary.Oliver" },
+          "Vacation Days Available": {  "type": "integer", "database": "INT", "description": "Vacation Days Available - will state the vacation days available", "example": "0" },
+          "Work #": {  "type": "string", "database": "VARCHAR(50)", "description": "Work # - work number of the employee as entered on their profile", "example": "3347020770" }
+        }
+      }
+  - LocationMasterListReportData: |
+      {
+        "name": "LocationMasterListReportData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Abbreviation": {  "type": "string", "database": "VARCHAR(5)", "description": "Abbreviation - this cannot be edited", "example": "LIT22" },
+          "Address": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Address - address assigned to location", "example": "4970 Hillside Avenue" },
+          "AddressVerified": {  "type": "string", "database": "VARCHAR(12)", "description": "Address Verified - if the address can not be verified then you will have the option to edit the Latitude and Longitude to verify it", "example": "Not Verified" },
+          "AdjustDST": {  "type": "boolean", "database": "BIT", "description": "Adjust DST - check if the location adjusts for daylight savings", "example": "false" },
+          "BankDetails": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Bank Details - the Banks name for the location", "example": "CashSmart" },
+          "CashPolicy": {  "type": "string", "database": "VARCHAR(13)", "description": "Cash Policy - states the cash policy (single/multi-drawer)", "example": "Single-Drawer" },
+          "ChannelName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Channel - channel the region is assigned to", "example": "Alabama" },
+          "City": {  "type": "string", "database": "VARCHAR(50)", "description": "City - city the location resides in", "example": "Kansas" },
+          "Comment_on_OE": {  "type": "boolean", "database": "BIT", "description": "Comment on OE - show product and location comments on sales order", "example": "false" },
+          "Country": {  "type": "string", "database": "VARCHAR(50)", "description": "Country - country the location is located in", "example": "United States" },
+          "DepositTaken": {  "type": "decimal", "database": "MONEY", "description": "Deposit Taken - lists the deposit if applicable", "example": "0" },
+          "Disabled": {  "type": "integer", "database": "INT", "description": "Disable - indicates if the location is enabled or disabled", "example": "1" },
+          "DistrictName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "District - district the location is assigned to", "example": "Smithton" },
+          "EmailAddress": {  "type": "string", "database": "VARCHAR(255)", "description": "Email Address - email address assigned to the location", "example": "abarea@kentel.com" },
+          "FaxNumber": {  "type": "string", "database": "VARCHAR(10)", "description": "Fax # - Fax # listed under the location", "example": "5555555555" },
+          "GeneralLocationNotes": {  "type": "string", "database": "VARCHAR(255)", "description": "General Location Notes - notes specific to the location", "example": "note" },
+          "GLCode": {  "type": "string", "database": "VARCHAR(100)", "description": "Code - coded associated to the location", "example": "-MILLH" },
+          "HideCustomerAddress": {  "type": "boolean", "database": "BIT", "description": "Hide Customer Address - prevents the customers address from being seen on an invoice", "example": "false" },
+          "InsuranceAmount": {  "type": "decimal", "database": "MONEY", "description": "Insurance - cost of Insurance", "example": "0" },
+          "InsuranceCompany": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Insurance Company - name of the insurance company", "example": "Safefair" },
+          "LandlordName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Landlord Name - name of the landlord", "example": "Jim Jones" },
+          "LandlordNotes": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Landlord Notes - notes specific to the landlord", "example": "sample note" },
+          "Latitude": {  "type": "decimal", "database": "DECIMAL", "description": "Latitude - latitude location of the store", "example": "50.443559" },
+          "LeaseEndDate": {  "type": "datetime", "database": "DATETIME", "description": "Lease End Date - the day the lease ends", "example": "2014-12-24T00:00:00" },
+          "LeaseNotes": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Lease Notes - notes specific to the lease", "example": "note" },
+          "LeaseStartDate": {  "type": "datetime", "database": "DATETIME", "description": "Lease Start Date - day the lease started", "example": "2014-11-26T00:00:00" },
+          "LocationCode": {  "type": "string", "database": "VARCHAR(100)", "description": "Location Code - code entered in the property details tab in the Location Setup", "example": "500" },
+          "LocationEntityID": {  "type": "integer", "database": "INT", "description": "Identifier of the store as a {{Location}} in Entity Store", "example": "48540" },
+          "Longitude": {  "type": "decimal", "database": "DECIMAL", "description": "Longitude - longitude location of the store", "example": "-104.612034" },
+          "ManagerCommissionable": {  "type": "boolean", "database": "BIT", "description": "Manager Commissionable - indicates if the manager is commissionable.", "example": "false" },
+          "ManagerEmployeeID": {  "type": "integer", "database": "INT", "description": "Manager - manager assigned to the location", "example": "233" },
+          "MaxCashDrawer": {  "type": "decimal", "database": "MONEY", "description": "Max Cash Drawer - maximum amount of cash allowed in a cash drawer", "example": "0" },
+          "OtherCharges": {  "type": "decimal", "database": "MONEY", "description": "Other Charges - other charges associated to the location", "example": "0" },
+          "PAW_on_OE": {  "type": "boolean", "database": "BIT", "description": "PAW on OE - launch PAW on sales orders", "example": "false" },
+          "Phone_on_OE": {  "type": "boolean", "database": "BIT", "description": "Force phone number for entry on sales orders", "example": "true" },
+          "PhoneNumber": {  "type": "string", "database": "VARCHAR(10)", "description": "Phone # - designated number for the location", "example": "4353424234" },
+          "PropertyTaxes": {  "type": "decimal", "database": "MONEY", "description": "Property Taxes - applicable property taxes", "example": "0" },
+          "RegionName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Region - region the district is assigned to", "example": "Abarea" },
+          "RelocationDate": {  "type": "datetime", "database": "DATETIME", "description": "Relocation Date - lists the date of the relocation if applicable", "example": "2016-02-26T00:00:00" },
+          "Rent": {  "type": "decimal", "database": "MONEY", "description": "Rent - rent amount for the location", "example": "0" },
+          "SaleInvoiceComment": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Sale Invoice Comment - locations sales invoice comment", "example": "Sale Invoice Comments" },
+          "Serial_on_OE": {  "type": "boolean", "database": "BIT", "description": "Serial # on OE - force serial # for entry on sales orders", "example": "false" },
+          "SquareFootage": {  "type": "integer", "database": "INT", "description": "Square Feet - approx square feet of the store", "example": "0" },
+          "StaffLevel": {  "type": "decimal", "database": "DECIMAL", "description": "Staff Level - designated staffing level for the location", "example": "12" },
+          "StateProv": {  "type": "string", "database": "NVARCHAR(3)", "description": "State/Prov - state or province the location is located in", "example": "AL" },
+          "StoreID": {  "type": "integer", "database": "INT", "description": "Internal identifier for the store in RQ", "example": "1187" },
+          "StoreName": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Store Name - name of the store", "example": "Dufferin Mall" },
+          "StoreType": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Store Type - will state the store type", "example": "Retail Store" },
+          "Taxes": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Taxes - taxes assigned to the location", "example": "GOODS AND SERVICES TAX (GST)" },
+          "TimeZone": {  "type": "string", "database": "VARCHAR(200)", "description": "Time Zone - time zone assigned to location", "example": "(GMT-06:00) Saskatchewan" },
+          "UseLocationEmail": {  "type": "boolean", "database": "BIT", "description": "Use Location for Email - use the location for the email contact", "example": "false" },
+          "ZipPostal": {  "type": "string", "database": "VARCHAR(15)", "description": "Zip/Postal - zip/postal for the location", "example": "90210" }
+        }
+      }      
+  - LocationTreeReport: |
+      {
+
+          "type": "array",
+          "name": "LocationTreeReport",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": {
+            "StoreID": { "type": "integer", "database": "INT", "example": "1188", "description": "" },
+            "StoreName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Altera Kiosk", "description": "" },
+            "DistrictID": { "type": "integer", "database": "INT", "example": "16", "description": "" },
+            "DistrictName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "First District", "description": "" },
+            "RegionID": { "type": "integer", "database": "INT", "example": "5", "description": "" },
+            "RegionName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "First Region", "description": "" },
+            "ChannelID": { "type": "integer", "database": "INT", "example": "4", "description": "" },
+            "ChannelName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "First Channel", "description": "" }
+          }
+        }      
+/reports/employeemasterlistreport?EnabledStatus={EnabledStatus}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    EnabledStatus:
+      type: integer
+      example: 1
+      description: Select employees with a status of Disabled (0), Enabled (1) or Any Status (2)
+      required: true
+    ForWho:
+      type: integer
+      example: 1
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 6679
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: EmployeeMasterListReportData
+  get:
+    displayName: Getting the Employee Master List Report
+    description: |
+      For more information, see {{support_EmployeeMasterListReport}}.
+/reports/locationmasterlistreport?Auth={Auth}&Response={Response}:
+  uriParameters:
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: LocationMasterListReportData
+  get:
+    displayName: Getting the Location Master List Report
+    description: |
+      For more information, see {{LocationMasterListReport}}.
+/reports/locationtreereport?Auth={Auth}&Response={Response}:
+  uriParameters:
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: LocationTreeReport
+  get:
+    displayName: Getting the Location Tree Report
+    description: |
+      This report will return an entry for every store in the company specifying the parents of the store up the company tree (District, Region, Channel).

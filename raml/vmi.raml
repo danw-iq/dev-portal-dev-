@@ -1,0 +1,2296 @@
+#%RAML 0.8
+title: vmi
+version: v1
+baseUri: https://vmi{UrlSuffix}.iqmetrix.net/VMIService.asmx
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: demo
+    type: string
+documentation:
+  - title: errors
+    content: | 
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 500` | `Found Purchase orders for StoreID [x] by VendorInvoiceNumber [y]` | Ensure VendorInvoiceNumber is unique |   
+      | `HTTP 500` | `ShipToStoreID must be > 0 or ShipToVendorAccountNumber must be supplied` | Ensure one of ShipToStoreID or ShipToVendorAccountNumber is provided |   
+      | `HTTP 500` | `BillToStoreID must be > 0 or BillToVendorAccountNumber must be supplied` | Ensure one of BillToStoreID or BillToVendorAccountNumber is provided |   
+      | `HTTP 500` | `Existing Purchase order has been found with Purchase Order ID [x]` | Omit PurchaseOrderID from request body or ensure it is unique |   
+      | `HTTP 500` | `Cannot update Purchase Order [x] because it has received products or is marked as complete | Ensure the PO you are updating is not complete |
+      | `HTTP 500` | `The estimated arrival date is not in the MM/dd/yyyy format` | Change the `EstimatedArrivalDate` to use the format `MM/dd/yyyy` |
+
+
+  - title: author
+    content: | 
+      RQ
+  - title: overview
+    content: |
+      The Vendor Managed Inventory (VMI) API allows Vendors to automate inventory management. VMI provides a communication mechanism with RQ clients to report on product inventory and to create purchase orders to replenish products. RQ users will be able to see the purchase orders created using VMI API and receive them as they arrive in store. 
+
+      {{note}}RetailiQ is the legacy retail management system produced by iQmetrix, and has been replaced by RQ. In this document, RetailiQ and RQ are used synonymously.{{end}}
+
+      The VMI API uses different Authentication than other iQmetrix APIs. The credentials are assigned to you by iQmetrix and included in the body of the SOAP request. To request credentials, contact {{contact_support}}.
+      
+      The Vendor Managed Inventory (VMI) API can be used to:
+      
+      * Create and retrieve Purchase Orders (POs) created in RQ
+      * Create shipping notices for POs
+      * See a list of all VMI enabled stores in RQ   
+      * Enable and Disable companies for VMI  
+
+      ### Implementation
+    
+      The following call sequence is recommended. To learn more about the suggested VMI flow, see [VMI Guide](/guides/vmi).
+
+      1. [Getting a Company List](#getting-a-company-list) - Get a list of VMI enabled companies. This list contains a unique identifier for each company which is used in subsequent web method calls
+      2. One of the following;
+        * [Getting a Store List](#getting-a-store-list) - Get the VMI enabled stores for a particular company
+        * [Getting Hierarchy Info](#getting-hierarchy-info) - Get company tree (hierarchy)
+      3. One of the following;
+        * [Getting the Inventory Report](#getting-the-inventory-report) - For each store call this web method to determine stock level, minimum and maximum levels for each product
+        * [Getting the Geographic Inventory Report](#getting-the-geographic-inventory-report) - Apply logic to each level in the hierarchy to gather data for multiple stores
+      4. [Creating a Purchase Order](#creating-a-purchase-order) - If it is determined in step 3 that inventory of a particular set of products need to be replenished, call this method to create a purchase order in RQ
+      5. [Creating a Purchase Order Shipment Notice (Optional)](#creating-a-purchase-order-shipment-notice) - This method can be called to supply notification that products have shipped and any applicable serial numbers may be supplied
+
+      ### Pending State
+
+      A company that is in a Pending State has...
+      
+      * completed set up in RQ
+      * chosen you as a vendor
+      * added stores to the relationship
+      * configured products for replenishment
+
+      Pending companies must be <a href='#enabling-or-disabling-a-company'>Enabled</a> to have purchase orders created through VMI.
+
+      <hr/>
+      <div class="row">
+        <span class="col-md-3 text-center">
+          <span class="col-md-12">
+            <h4>Purchase Orders</h4>
+          </span>        
+          <span class="col-md-12">
+            <p><a href="#creating-a-purchase-order">Creating a Purchase Order</a></p>  
+            <p><a href="#canceling-an-uncommitted-purchase-order">Canceling an Uncommitted Purchase Order</a></p>  
+            <p><a href="#updating-a-purchase-order">Updating a Purchase Order</a></p>              
+            <p><a href="#creating-an-uncommitted-purchase-order">Creating an Uncommitted Purchase Order</a></p>  
+            <p><a href="#getting-committed-purchase-orders">Getting Committed Purchase Orders</a></p>  
+            <p><a href="#getting-completed-purchase-orders">Getting Completed Purchase Orders</a></p>
+            <p><a href="#getting-purchase-order-by-business-id">Getting Purchase Order By Business ID</a></p>
+            <p><a href="#getting-purchase-order-by-reference-number">Getting Purchase Order by Reference Number</a></p>  
+            <p><a href="#getting-purchase-orders-by-status">Getting Purchase Orders By Status</a></p>  
+            <p><a href="#getting-uncommitted-purchase-orders">Getting Uncommitted Purchase Orders</a></p>
+            <p><a href="#getting-purchase-orders-for-a-store">Getting Purchase Orders For a Store</a></p>  
+            <p><a href="#creating-a-purchase-order-shipment-notice">Creating a Purchase Order Shipment Notice</a></p>  
+            <p><a href="#getting-purchase-order-shipment-notices">Getting Purchase Order Shipment Notices</a></p>
+          </span>
+        </span>  
+        <span class="col-md-3 text-center">
+          <span class="col-md-12">
+            <h4>Inventory</h4>
+          </span>        
+          <span class="col-md-12">
+            <p><a href="#getting-the-inventory-list">Getting the Inventory List</a></p>  
+            <p><a href="#getting-the-updated-inventory-list">Getting the Updated Inventory List</a></p>  
+            <p><a href="#getting-serial-numbers-for-a-product">Getting Serial Numbers for a Product</a></p>  
+            <p><a href="#getting-product-receiving-info">Getting Product Receiving Info</a></p>  
+            <p><a href="#getting-transfer-counts">Getting Transfer Counts</a></p>  
+            <p><a href="#updating-min-and-max-product-quantities">Updating Min and Max Product Quantities</a></p>  
+            <p><a href="#getting-a-list-of-rmas">Getting a List of RMAs</a></p>
+            <p><a href="#creating-a-rma">Creating a RMA</a></p>
+            <p><a href="#updated-a-committed-rma">Updating a Committed RMA</a></p>
+          </span>
+        </span>  
+        <span class="col-md-3 text-center">
+          <span class="col-md-12">
+            <h4>Reports</h4>
+          </span>        
+          <span class="col-md-12">  
+            <p><a href="#getting-the-inventory-report">Getting the Inventory Report</a></p>  
+            <p><a href="#getting-the-inventory-report-by-vendor-sku">Getting the Inventory Report by Vendor SKU</a></p>  
+            <p><a href="#getting-the-inventory-listing-report">Getting the Inventory Listing Report</a></p>  
+            <p><a href="#getting-the-adjustment-report">Getting the Adjustment Report</a></p>  
+            <p><a href="#getting-the-geographic-inventory-report">Getting the Geographic Inventory Report</a></p>  
+            <p><a href="#getting-the-product-sales-report">Getting the Product Sales Report</a></p>
+          </span>
+        </span>  
+        <span class="col-md-3 text-center">
+          <span class="col-md-12">
+            <h4>Company Tree</h4>
+          </span>        
+          <span class="col-md-12">  
+            <p><a href="#getting-a-company-list">Getting a Company List</a></p>  
+            <p><a href="#enabling-or-disabling-a-company">Enabling or Disabling a Company</a></p>  
+            <p><a href="#getting-enabled-companies">Getting Enabled Companies</a></p>  
+            <p><a href="#getting-disabled-companies">Getting Disabled Companies</a></p>  
+            <p><a href="#getting-pending-companies">Getting Pending Companies</a></p>  
+            <p><a href="#getting-hierarchy-info">Getting Hierarchy Info</a></p>  
+            <p><a href="#getting-a-store-list">Getting a Store List</a></p>
+            <p><a href="#getting-store-information">Getting Store Information</a></p>  
+            <p><a href="#getting-employee-list">Getting Employee List</a></p>  
+          </span>
+        </span>          
+      </div>
+      <hr/>
+  - title: Ping
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      string pingResult = vmiService.Ping(vendor);
+  - title: GetPendingCompanies
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      VMIServiceSoapClient vmiService = new VMIServiceSoapClient();
+      CompanyInformation[] companies = vmiService.GetPendingCompanies(vendor);
+  - title: GetEnabledCompanies
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      VMIServiceSoapClient vmiService = new VMIServiceSoapClient();
+      CompanyInformation[] companies = vmiService.GetEnabledCompanies(vendor);
+  - title: GetDisabledCompanies
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      VMIServiceSoapClient vmiService = new VMIServiceSoapClient();
+      CompanyInformation[] companies = vmiService.GetDisabledCompanies(vendor);  
+  - title: EnableCompany
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vmiService.EnableCompany(vendor, true); // false to disable a company
+  - title: GetCompanyList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      VMIServiceSoapClient vmiService = new VMIServiceSoapClient();
+      CompanyInformation[] companies = vmiService.GetCompanyList(vendor);
+  - title: GetStoreList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      
+      StoreInformation[] stores = vmiService.GetStoreList(vendor);
+  - title: GetStoreInformation
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 1;
+
+      StoreInformation[] stores = vmiService.GetStoreInformation(vendor);
+  - title: GetInventoryList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      
+      ProductInformation[] products = vmiService.GetInventoryList(vendor);
+  - title: GetInventoryListingReport
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      
+      ProductInformation[] products = vmiService.GetInventoryListingReport(vendor, storeId);
+  - title: CreatePurchaseOrder
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+
+      DateTime ead1 = DateTime.Today.AddDays(14);
+      string eta = String.Format("{0:D2}/{1:D2}/{2:D4}", ead1.Month, ead1.Day, ead1.Year);
+      PurchaseOrder po = new PurchaseOrder();
+      po.PurchaseOrderID = new Guid();
+      po.PurchaseOrderData = new PurchaseOrderData();
+      po.PurchaseOrderData.BillToStoreID = stores[0].StoreID;
+      po.PurchaseOrderData.Comments = "Vendor Invoice Number #: BDP123";
+      po.PurchaseOrderData.ShipToStoreID = stores[0].StoreID;
+      po.PurchaseOrderData.VendorInvoiceNumber = "BDP123";
+      po.PurchaseOrderData.EstimatedArrivalDate = eta;
+
+      po.ProductsOrdered = new ProductInformation[1];
+      po.ProductsOrdered[0] = new ProductInformation();
+      po.ProductsOrdered[0].ProductItemID = productID;
+      po.ProductsOrdered[0].ProductName = "Samsung Galaxy S5 - Charcoal Black";
+      po.ProductsOrdered[0].ProductSKU = "SSSATM000002";
+      po.ProductsOrdered[0].VendorSKU = "SSGS5CB";
+      po.ProductsOrdered[0].QuantityOrdered = 1;
+      po.ProductsOrdered[0].ProductCost = 130.00;
+
+      PurchaseOrder poCreated = vmiService.CreatePurchaseOrder(vendor, po);
+  - title: UpdatePurchaseOrder
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+
+      DateTime ead1 = DateTime.Today.AddDays(14);
+      string eta = String.Format("{0:D2}/{1:D2}/{2:D4}", ead1.Month, ead1.Day, ead1.Year);
+      PurchaseOrder po = new PurchaseOrder();
+      po.PurchaseOrderID = purchaseOrderID;
+      po.PurchaseOrderData = new PurchaseOrderData();
+      po.PurchaseOrderData.BillToStoreID = stores[0].StoreID;
+      po.PurchaseOrderData.Comments = "Vendor Invoice Number #: BDP123";
+      po.PurchaseOrderData.ShipToStoreID = stores[0].StoreID;
+      po.PurchaseOrderData.VendorInvoiceNumber = "BDP123";
+      po.PurchaseOrderData.EstimatedArrivalDate = eta;
+
+      po.ProductsOrdered = new ProductInformation[1];
+      po.ProductsOrdered[0] = new ProductInformation();
+      po.ProductsOrdered[0].ProductItemID = productID;
+      po.ProductsOrdered[0].ProductName = "Samsung Galaxy S5 - Charcoal Black";
+      po.ProductsOrdered[0].ProductSKU = "SSSATM000002";
+      po.ProductsOrdered[0].VendorSKU = "SSGS5CB";
+      po.ProductsOrdered[0].QuantityOrdered = 1;
+      po.ProductsOrdered[0].ProductCost = 130.00;
+
+      PurchaseOrder poCreated = vmiService.UpdatePurchaseOrder(vendor, po);
+
+  - title: CreateUncommittedPurchaseOrder
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+
+      DateTime ead1 = DateTime.Today.AddDays(14);
+      string eta = String.Format("{0:D2}/{1:D2}/{2:D4}", ead1.Month, ead1.Day, ead1.Year);
+      PurchaseOrder po = new PurchaseOrder();
+      po.PurchaseOrderID = new Guid();
+      po.PurchaseOrderData = new PurchaseOrderData();
+      po.PurchaseOrderData.BillToStoreID = stores[0].StoreID;
+      po.PurchaseOrderData.Comments = "Vendor Invoice Number #: BDP123";
+      po.PurchaseOrderData.ShipToStoreID = stores[0].StoreID;
+      po.PurchaseOrderData.VendorInvoiceNumber = "BDP123";
+      po.PurchaseOrderData.EstimatedArrivalDate = eta;
+
+      po.ProductsOrdered = new ProductInformation[1];
+      po.ProductsOrdered[0] = new ProductInformation();
+      po.ProductsOrdered[0].ProductItemID = productID;
+      po.ProductsOrdered[0].ProductName = "Samsung Galaxy S5 - Charcoal Black";
+      po.ProductsOrdered[0].ProductSKU = "SSSATM000002";
+      po.ProductsOrdered[0].VendorSKU = "SSGS5CB";
+      po.ProductsOrdered[0].QuantityOrdered = 1;
+      po.ProductsOrdered[0].ProductCost = 130.00;
+
+      PurchaseOrder poCreated = vmiService.CreateUncommittedPurchaseOrder(vendor, po);
+  - title: CreatePurchaseOrderShipmentNotice
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = -1;
+
+      PurchaseOrderShipmentNotice sn = new PurchaseOrderShipmentNotice();
+      sn.PurchaseOrderID = new GUID(84DACFD3-4095-4D50-A02E-781B86B7408E);
+
+      sn.ShipmentNumber = "SHIP001 ";
+      sn.ProductItemID = 11142;
+      sn.Quantity = 2;
+      sn.SerialNumber = {"490154203237518", "12321324"};
+
+      PurchaseOrderShipmentNotice snReturn = 
+          vmiService.CreatePurchaseOrderShipmentNotice(vendor, new[] { sn });
+  - title: GetInventoryReport
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      vendor.Client.StoreID = 4;
+      ProductInformation[] inventoryReport = vmiService.GetInventoryReport(vendor, startDate, endDate);
+  - title: GetInventoryReportByVendorSku
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      ProductInformation[] inventoryReport = vmiService.GetInventoryReportByVendorSku(vendor, vendorSku, startDate, endDate);
+  - title: GetAdjustmentReport
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      vendor.Client.StoreID = 4;
+      Adjustment[] adjustmentReport = vmiService.GetAdjustmentReport(vendor, startDate, endDate, storeId);
+  - title: GetGeographicInventoryReport
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      vendor.Client.StoreID = 4;
+      ProductAndStoreInformation[] inventoryReport = vmiService.GetGeographicInventoryReport(vendor, startDate, endDate, storeId);
+  - title: GetProductSalesReport
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      vendor.Client.StoreID = 4;
+      ProductSalesReportData[] productReport = vmiService.GetProductSalesReport(vendor, startDate, endDate, storeId);
+  - title: GetReceivingInfo
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      ReceivingInfo[] receivingInfo = vmiService.GetReceivingInfo(vendor, startDate, endDate);
+  - title: UpdateMinAndMaxProductQuantities
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      vmiService.UpdateMinAndMaxProductQuantities(vendor, productItemID, minQty, maxQty);
+  - title: GetPurchaseOrderList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      PurchaseOrderInformation[] pos = vmiService.GetPurchaseOrderList(vendor);
+  - title: GetCommittedPurchaseOrderList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      PurchaseOrderInformation[] pos = vmiService.GetCommittedPurchaseOrderList(vendor);
+  - title: GetUncommittedPurchaseOrderList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      PurchaseOrderInformation[] pos = vmiService.GetUnommittedPurchaseOrderList(vendor);
+  - title: GetCompletedPurchaseOrderList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      DateTime startDateReceived = new DateTime(2011, 2, 1);
+      DateTime endDateReceived = new DateTime(2011, 2, 15);
+      PurchaseOrderInformation[] pos = vmiService. GetCompletedPurchaseOrderList (vendor, startDateReceived, endDateReceived);
+  - title: GetUpdatedInventoryList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      ProductInformation[] products = vmiService.GetUpdatedInventoryList(vendor);  
+  - title: GetTransferCounts
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      DateTime startDate = new DateTime(2011, 2, 1);
+      DateTime endDate = new DateTime(2011, 2, 15);
+
+      ProductInformation[] products = vmiService.GetTransferCounts(vendor, startDate, endDate, storeId); 
+  - title: GetHierarchyInfo
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      ProductInformation[] products = vmiService.GetHierarchyInfo(vendor); 
+  - title: GetProductSerialNumbers
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username = "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      ProductSerialNumber[] serials = vmiService.GetProductSerialNumbers(vendor, productItemID);
+  - title: GetClientPurchaseOrdersByStatus
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      vendor.Client.StoreID = 4;
+      PurchaseOrderInformation[] pos = vmiService.GetClientPurchaseOrdersByStatus(vendor, isCompleted, isCommitted, startDate, endDate);
+  - title: GetPurchaseOrderShipmentNotices
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      PurchaseOrderShipmentNotice[] sns = vmiService.GetPurchaseOrderShipmentNotices(vendor, poID);
+  - title: GetPurchaseOrderByReferenceNumber
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+      PurchaseOrderShipmentNotice[] sns = vmiService.GetPurchaseOrderByReferenceNumber(vendor, poRef);
+  - title: GetPurchaseOrderByBusinessID
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      PurchaseOrderInformation[] pos = vmiService. GetPurchaseOrderByBusinessID(vendor, poNum);
+  - title: GetEmployeeList
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      EmployeeInformation info = vmiService.GetEmployeeList(vendor, onlyEnabled);
+  - title: CancelUncommittedPurchaseOrder
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      vmiService.CancelUncommittedPurchaseOrder(vendor, poId);      
+  - title: CreateRMA
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+
+      ReturnMerchandiseAuthorization rma = new ReturnMerchandiseAuthorization();
+
+      rma.Comments = "Test RMA";
+
+      rma.VendorRMANumber = "123456789";
+      rma.ProductData = new RMAProduct[1];
+      rma.ProductData[0] = new RMAProduct();
+      rma.ProductData[0].RQProductID = productID; 
+      rma.ProductData[0].RQProductSku = "PSKU123"; 
+      rma.ProductData[0].SerialNumberRemoved = "320192949201938"; 
+      rma.ProductData[0].VendorInvoiceNumber = "12345"; 
+      rma.ProductData[0].TotalQuantity = 1; 
+      rma.ProductData[0].NonSellableQuantity = 1; 
+      rma.ProductData[0].UnitCost = 500.00m; 
+      rma.ProductData[0].ActionTaken = ActionTaken.Credit; 
+
+      ReturnMerchandiseAuthorization rmaCreated = vmiService.CreateRMA(vendor, rma);
+  - title: GetRMAList
+    content: |
+      var vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+
+      var isCommitted = true;
+      var isShipped = false;
+  
+      var rmaList = vmiService.GetRMAList(vendor, isCommitted, isShipped);            
+  - title: UpdateCommittedRMA
+    content: |
+      VendorIdentity vendor = new VendorIdentity();
+      vendor.VendorID = new Guid(009E800D-10ED-4F4A-B86F-DFB3C2A18C09);
+      vendor.Username =  "danssupplies";
+      vendor.Password = "samplepassword";
+      vendor.Client = new ClientAgent();
+      vendor.Client.ClientID = companyID;
+      vendor.Client.StoreID = 4;
+
+      ReturnMerchandiseAuthorization rma = new ReturnMerchandiseAuthorization();
+      rma.RMAID = rmaId;
+      rma.Comments = "Defective";
+      rma.VendorRMANumber = "12345";
+
+      ReturnMerchandiseAuthorization updatedRma = vmiService.UpdateCommittedRMA(vendor, rma);
+  - title: endpointNote
+    content: |
+      {{important}}
+      You should choose a production endpoint that is geographically closest to your data center 
+      {{end}}
+schemas:
+  - VendorIdentity: |
+      {
+        "name": "VendorIdentity",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Authentication for the VMI API is done by including a VendorIdentity resource in a `<vendor>` section at the beginning of each request.\n\nVendorIdentitiy information is supplied by iQmetrix and used to authenticate requests made to the VMI API.\n{{note}}Please be aware of the subtle difference between <code>&lt;vendor&gt;</code> and <code>&lt;Vendor&gt;</code> in the various requests. This API is case-sensitive and will cause an error should the incorrect tag be used.{{end}}\n\n{{note}}VendorIdentity authentication information is <a href=\"{{'#environments' | prepend: site.api_baseurl}}\">Environment</a> specific{{end}}",
+        "properties": {
+          "VendorID": { "type": "GUID", "description": "Vendor identifier", "example": "9DC6AA95-856B-42C9-8AAF-392A2A02AC77" }, 
+          "Username": { "type": "String", "description": "Username", "example": "sampleusername" }, 
+          "Password": { "type": "String", "description": "Password", "example": "samplepassword" }, 
+          "Client": { "type": "object", "description": "Client identity", "ref": "vmi.ClientAgent" }
+        },
+        "required": ["VendorID", "Username", "Password"]
+      }
+  - VendorIdentity1: |
+      {
+        "exclude": "true",        
+        "name": "VendorIdentity1",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Authentication for the VMI API is done by including a VendorIdentity resource in a `<vendor>` section at the beginning of each request.\n\nVendorIdentitiy information is supplied by iQmetrix and used to authenticate requests made to the VMI API.\n{{note}}Please be aware of the subtle difference between <code>&lt;vendor&gt;</code> and <code>&lt;Vendor&gt;</code> in the various requests. This API is case-sensitive and will cause an error should the incorrect tag be used.{{end}}\n\n{{note}}VendorIdentity authentication information is <a href=\"{{'#environments' | prepend: site.api_baseurl}}\">Environment</a> specific{{end}}",
+        "properties": {
+          "VendorID": { "type": "GUID", "description": "Vendor identifier", "example": "9DC6AA95-856B-42C9-8AAF-392A2A02AC77" }, 
+          "Username": { "type": "String", "description": "Username", "example": "sampleusername" }, 
+          "Password": { "type": "String", "description": "Password", "example": "samplepassword" }, 
+          "Client": { "type": "object", "description": "Client identity", "ref": "vmi.ClientAgent1" }
+        },
+        "required": ["VendorID", "Username", "Password", "Client"]
+      }      
+  - VendorIdentity2: |
+      {
+        "exclude": "true",        
+        "name": "VendorIdentity2",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Authentication for the VMI API is done by including a VendorIdentity resource in a `<vendor>` section at the beginning of each request.\n\nVendorIdentitiy information is supplied by iQmetrix and used to authenticate requests made to the VMI API.\n{{note}}Please be aware of the subtle difference between <code>&lt;vendor&gt;</code> and <code>&lt;Vendor&gt;</code> in the various requests. This API is case-sensitive and will cause an error should the incorrect tag be used.{{end}}\n\n{{note}}VendorIdentity authentication information is <a href=\"{{'#environments' | prepend: site.api_baseurl}}\">Environment</a> specific{{end}}",
+        "properties": {
+          "VendorID": { "type": "GUID", "description": "Vendor identifier", "example": "9DC6AA95-856B-42C9-8AAF-392A2A02AC77" }, 
+          "Username": { "type": "String", "description": "Username", "example": "sampleusername" }, 
+          "Password": { "type": "String", "description": "Password", "example": "samplepassword" }, 
+          "Client": { "type": "object", "description": "Client identity", "ref": "vmi.ClientAgent2" }
+        },
+        "required": ["VendorID", "Username", "Password", "Client"]
+      }     
+  - ClientAgent2: |
+      {
+        "exclude": "true",        
+        "name": "ClientAgent2",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "`VendorAccountNumber` can be used instead of `StoreID`. Omit or set `StoreID` to -1 if using `VendorAccountNumber`.",
+        "properties": {
+          "ClientID": { "type": "GUID", "description": "Database identifier for corresponding client", "example": "c46ccb4d-2d44-4289-950a-b9cb51d58ac4" }, 
+          "Name": { "type": "String", "description": "Company name", "example": "DropshipTestDemo" }, 
+          "StoreID": { "type": "Integer", "description": "Store identifer the vendor is targeting", "example": "4" }, 
+          "VendorAccountNumber": { "type": "String", "description": "Account number assigned by vendor.", "example": "-1", "hideFromExample":"true" }
+        },
+        "required": [ "ClientID", "StoreID" ]
+      }             
+  - ClientAgent1: |
+      {
+        "exclude": "true",        
+        "name": "ClientAgent1",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "`VendorAccountNumber` can be used instead of `StoreID`. Omit or set `StoreID` to -1 if using `VendorAccountNumber`.",
+        "properties": {
+          "ClientID": { "type": "GUID", "description": "Database identifier for corresponding client", "example": "c46ccb4d-2d44-4289-950a-b9cb51d58ac4" }, 
+          "Name": { "type": "String", "description": "Company name", "example": "DropshipTestDemo" }, 
+          "StoreID": { "type": "Integer", "description": "Store identifer the vendor is targeting", "example": "4" }, 
+          "VendorAccountNumber": { "type": "String", "description": "Account number assigned by vendor.", "example": "-1", "hideFromExample":"true" }
+        },
+        "required": [ "ClientID" ]
+      }
+  - ClientAgent: |
+      {
+        "name": "ClientAgent",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "`VendorAccountNumber` can be used instead of `StoreID`. Omit or set `StoreID` to -1 if using `VendorAccountNumber`.",
+        "properties": {
+          "ClientID": { "type": "GUID", "description": "Database identifier for corresponding client", "example": "c46ccb4d-2d44-4289-950a-b9cb51d58ac4" }, 
+          "Name": { "type": "String", "description": "Company name", "example": "DropshipTestDemo" }, 
+          "StoreID": { "type": "Integer", "description": "Store identifer the vendor is targeting", "example": "4" }, 
+          "VendorAccountNumber": { "type": "String", "description": "Account number assigned by vendor.", "example": "-1", "hideFromExample":"true" }
+        }
+      }
+  - CompanyInformation: |
+      {
+        "name": "CompanyInformation",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "CompanyID": { "type": "GUID", "description": "Unique identifier provided by iQmetrix", "example": "9DC6AA95-856B-42C9-8AAF-392A2A02AC77" }, 
+          "Name": { "type": "String", "description": "Company name", "example": "DropshipTestDemo" }
+        }
+      }
+  - PurchaseOrderShipmentNotice: |
+      {
+        "name": "PurchaseOrderShipmentNotice",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "PurchaseOrderID": { "type": "GUID", "description": "Unique identifier", "putDescription": "Either this value or VendorInvoiceNumber must be provided", "example": "84DACFD3-4095-4D50-A02E-781B86B7408E" }, 
+          "ProductItemID": { "type": "Integer", "description": "GlobalProductId from RQ", "putDescription": "Either this value or VendorSKU must be provided", "example": "11142" }, 
+          "Quantity": { "type": "Integer", "description": "Number of items shipped", "example": "1" }, 
+          "RQPurchaseOrderID": { "type": "Integer", "description": "Identifier for the Purchase Order in RQ", "putDescription": "defaults to -1", "example": "22073" }, 
+          "SerialNumbers": { "type": "array", "arrayType": "string", "description": "Serial numbers from serialized products (e.g. Phone or SIM card)", "example": "490154203237518" }, 
+          "ShipmentNumber": { "type": "String", "description": "Vendor defined identifier for the shipment", "putDescription": "If this value is not provided, the service will automatically assign one", "example": "SHIP001" }, 
+          "VendorInvoiceNumber": { "type": "String", "description": "Value supplied by the vendor when creating the purchase order", "putDescription": "Either this value <strong>OR</strong> PurchaseOrderID must be provided", "example": "1002" }, 
+          "VendorSKU": { "type": "String", "description": "The vendor part number/sku", "putDescription": "Either this value or ProductItemId must be provided", "example": "SSGS5CB" }
+        },
+        "required": ["PurchaseOrderID", "RQPurchaseOrderID", "ProductItemID", "Quantity"]
+      }   
+  - UpdatePurchaseOrderPO: |
+      {
+        "exclude": "true",
+        "name": "UpdatePurchaseOrderPO",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "PurchaseOrderID": { "type": "guid", "description": "Unique identifier", "putDescription": "Identifier for the PurchaseOrder", "example": "28890F70-8FC9-4A9B-9458-410A8D08502D" }, 
+          "PurchaseOrderData": { "type": "object", "description": "Purchase order", "ref": "vmi.PurchaseOrderDataUpdate" },
+          "ProductsOrdered": { "type": "array", "arrayType": "object", "ref": "vmi.ProductInformation", "description": "Products ordered", "putDescription": "Products ordered", "fixlink": "ProductInformation" }          
+        },
+        "required": ["PurchaseOrderData", "PurchaseOrderID" ]
+      }  
+  - PurchaseOrderDataUpdate: |
+      {
+        "exclude": "true",
+        "name": "PurchaseOrderDataUpdate",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Comments": { "type": "String", "description": "Any comments for the purchase order", "example": "comments" }, 
+          "EstimatedArrivalDate": { "type": "String", "description": "Estimated date of arrival", "putDescription": "Format mm/dd/yyyy", "example": "3/2/2014 12:00:00 AM" }, 
+          "VendorInvoiceNumber": { "type": "String", "description": "Invoice number for the vendor", "putDescription": "Vendor supplied invoice number, this must be unique", "example": "15782" } 
+        }            
+      }
+  - PurchaseOrder: |
+      {
+        "name": "PurchaseOrder",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "PurchaseOrderID": { "type": "guid", "description": "Unique identifier", "putDescription": "If this value is not supplied, VMI will assign a value", "example": "28890F70-8FC9-4A9B-9458-410A8D08502D", "generated": "true" }, 
+          "PurchaseOrderData": { "type": "object", "description": "Purchase order", "ref": "vmi.PurchaseOrderData" }, 
+          "ProductsOrdered": { "type": "array", "arrayType": "object", "ref": "vmi.ProductInformation", "description": "Products ordered", "putDescription": "Products ordered", "fixlink": "ProductInformation" }
+        },
+        "required": ["PurchaseOrderData", "ProductsOrdered" ]
+      }        
+  - PurchaseOrderData: |
+      {
+        "name": "PurchaseOrderData",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "PurchaseOrderID": { "type": "GUID", "description": "Unique identifier", "example": "28890F70-8FC9-4A9B-9458-410A8D08502D", "generated": "true" }, 
+          "BillToStoreID": { "type": "Integer", "description": "RQ StoreId", "putDescription": "Defaults to -1. Either this value or BillToVendorAccountNumber must be supplied", "example": "55" }, 
+          "BillToStoreName": { "type": "String", "description": "RQ store name", "example": "Cornwall west", "generated": "true" }, 
+          "BillToVendorAccountNumber": { "type": "String", "description": "Vendor account number to use for billing. Can be used in place of `BillToStoreId`", "example": "1", "generated": "true" }, 
+          "IsDeleted": { "type": "Boolean", "description": "A flag to indicate if this purchase order has been deleted in RQ", "example": "false", "generated": "true" }, 
+          "CreatedByVMI": { "type": "Boolean", "description": "A flag to indicate if this was created by the VMI API (true) or RQ (false)", "putDescription": "defaults to false", "example": "false" }, 
+          "CreatedDate": { "type": "String", "description": "The date and time the purchase order was created, if it was created in RQ", "example": "3/16/2014 12:00:00 AM" }, 
+          "Comments": { "type": "String", "description": "Any comments for the purchase order", "example": "comments" }, 
+          "EstimatedArrivalDate": { "type": "String", "description": "Estimated date of arrival", "putDescription": "Format mm/dd/yyyy", "example": "3/2/2014 12:00:00 AM" }, 
+          "OrderTotal": { "type": "Decimal", "description": "Cost of the order, provided by a vendor for informational purposes only", "putDescription": "Defaults to -1", "example": "99.99" }, 
+          "RetailiQPurchaseOrderID": { "type": "Integer", "description": "Identifier of purchase order in RQ", "example": "22075", "generated": "true" }, 
+          "RetailiQPurchaseOrderNumber": { "type": "String", "description": "Purchase order number in RQ", "example": "DALEKPO5", "generated": "true" }, 
+          "ShippingTotal": { "type": "Decimal", "description": "Cost of shipping", "putDescription": "Defaults to -1", "example": "99.99" }, 
+          "ShipToStoreID": { "type": "Integer", "description": "Identifier of store to use for shipping", "putDescription": "Defaults to -1. Either this value or ShipToVendorAccountNumber must be supplied", "example": "55" }, 
+          "ShipToStoreName": { "type": "String", "description": "Name of store to use for shipping", "example": "Cornwall west", "generated": "true" }, 
+          "ShipToVendorAccountNumber": { "type": "String", "description": "Vendor account number to use for shipping. Can be used in place of `ShipToStoreId`", "example": "1", "generated": "true" }, 
+          "VendorInvoiceNumber": { "type": "String", "description": "Invoice number for the vendor", "putDescription": "Vendor supplied invoice number, this must be unique", "example": "15782" }, 
+          "VendorName": { "type": "String", "description": "Name of the vendor", "example": "SampleVendor", "generated": "true" }
+        },
+        "required": [ "BillToStoreID", "EstimatedArrivalDate", "ShipToStoreID", "VendorInvoiceNumber" ]            
+      }      
+  - ProductInformation: |
+        {
+          "name": "ProductInformation",
+          "type": "object",
+          "wrap": "true",          
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "CategoryPath": {"type": "String", "description": "Category location of product. path of category delimited by '>>'", "example": "Activation >> Dropship", "generated": "true" },
+            "DateEOL": { "type": "DateTime", "description": "End of life date", "example": "1/01/2016 12:00:00 AM", "generated": "true"  }, 
+            "DateReceived": {"type": "String", "description": "Product receiving stauts in RQ", "example": "01/21/2016 16:58:23"},
+            "DoNotOrder": { "type": "Boolean", "description": "A flag to indicate if the product should not be ordered", "example": "false", "generated": "true"  }, 
+            "Enabled": { "type": "Boolean", "description": "A flag to indicate if product is enabled", "example": "true" }, 
+            "GrossQuantityReturned": { "type": "Integer", "description": "Gross amount returned", "example": "11", "generated": "true"  }, 
+            "GrossQuantitySold": { "type": "Integer", "description": "Gross amount sold", "example": "10", "generated": "true"  }, 
+            "MaximumLevel": { "type": "Integer", "description": "Maximum number of Products that can be added to the PurchaseOrder", "example": "100", "putDescription": "defaults to -1" }, 
+            "MinimumLevel": { "type": "Integer", "description": "Minimum number of Products that can be added to the PurchaseOrder", "example": "10", "putDescription": "defaults to -1" }, 
+            "MinMaxLocked": { "type": "Boolean", "description": "A flag to indicate if the Min and Max values are locked (unchangeable)", "example": "true", "generated": "true"  }, 
+            "ProductCost": { "type": "Decimal", "description": "Required for PO creation or default from RQ will be used", "example": "99.99", "putDescription": "defaults to -1" }, 
+            "ProductID": { "type": "GUID", "description": "Unique identifier", "example": "86EE477F-C6B7-48FA-AA0A-105662D9A3ED" }, 
+            "ProductItemID": { "type": "Integer", "description": "GlobalProductId from RQ", "example": "11142" }, 
+            "ProductName": { "type": "String", "description": "Name", "example": "Samsung Galaxy S6" }, 
+            "ProductReceived": { "type": "Boolean", "description": "A flag to indicate if product was received", "example": "false" }, 
+            "ProductSKU": { "type": "String", "description": "ProductIdentifier in RQ", "example": "CECPSM000017" }, 
+            "QuantityCommittedOnOrderEntry": { "type": "Integer", "description": "Amount committed on an order entry", "example": "0", "putDescription": "defaults to -1" }, 
+            "QuantityInStock": { "type": "Integer", "description": "Amount in stock", "example": "8", "putDescription": "defaults to -1" }, 
+            "QuantityInTransfer": { "type": "Integer", "description": "Amount in transfer", "example": "3", "putDescription": "defaults to -1" }, 
+            "QuantityOnBackOrder": { "type": "Integer", "description": "Amount on back order", "example": "0", "putDescription": "defaults to -1" }, 
+            "QuantityOnLoan": { "type": "Integer", "description": "Amount on loan", "example": "5", "putDescription": "defaults to -1" }, 
+            "QuantityOnOrder": { "type": "Integer", "description": "Amount on order", "example": "6", "putDescription": "defaults to -1" }, 
+            "QuantityOnRMA": { "type": "Integer", "description": "Amount on RMA", "example": "9", "putDescription": "defaults to -1" }, 
+            "QuantityOnUncommittedOrder": { "type": "Integer", "description": "Amount on uncommitted order", "example": "2", "generated": "true"  }, 
+            "QuantityOrdered": { "type": "Integer", "description": "Amount ordered", "example": "4" }, 
+            "QuantityReceived": { "type": "Integer", "description": "Amount received", "example": "4", "putDescription": "defaults to -1" }, 
+            "QuantitySold": { "type": "Integer", "description": "Amount sold", "example": "30", "putDescription": "defaults to -1" }, 
+            "QuantitySuggestedByVendor": { "type": "Integer", "description": "Amount suggested by vendor", "example": "50", "generated": "true"  }, 
+            "RetailPrice": { "type": "Decimal", "description": "Retail price", "example": "99.99", "generated": "true"  }, 
+            "SaleBegin": { "type": "DateTime", "description": "Sale begin date", "example": "01/01/2014 12:00:00 AM", "generated": "true"  }, 
+            "SaleEnd": { "type": "DateTime", "description": "Sale end date", "example": "01/10/2014 12:00:00 AM", "generated": "true"  }, 
+            "SalePrice": { "type": "Decimal", "description": "Sale price", "example": "79.99", "generated": "true"  }, 
+            "VendorSKU": { "type": "String", "description": "Vendor SKU", "example": "SSGS5CB" } 
+          },
+          "required": [ "QuantityOrdered", "VendorSKU" ]
+        }                  
+  - StoreInformation: |
+      {
+        "type": "object",
+        "name": "StoreInformation",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "wrap": "true",
+        "properties": {
+          "StoreID": { "type": "Integer", "description": "Unique identifier", "example": "36" }, 
+          "Name": { "type": "String", "description": "Name", "example": "Cornwall West" }, 
+          "Abbreviation": { "type": "String", "description": "Abbrevation", "example": "CWW" }, 
+          "Address": { "type": "String", "description": "Address", "example": "2102 11th Ave" }, 
+          "City": { "type": "String", "description": "City", "example": "Regina" }, 
+          "Country": { "type": "String", "description": "Country", "example": "Canada" }, 
+          "District": { "type": "String", "description": "District", "example": "Regina" }, 
+          "PhoneNumber": { "type": "String", "description": "Phone Number", "example": "5555555555" }, 
+          "PostalZipCode": { "type": "String", "description": "Postal or Zip Code", "example": "S2S 2S2" }, 
+          "ProvinceState": { "type": "String", "description": "Province or State", "example": "Saskatchewan" }, 
+          "Region": { "type": "String", "description": "Region", "example": "Regina" }, 
+          "ShipToStoreID": { "type": "Integer", "description": "Shipping store ID", "example": "55" }, 
+          "BillToStoreID": { "type": "Integer", "description": "RQ StoreID", "example": "55" },
+          "VendorAccountNumber": { "type": "String", "description": "Account number assigned by vendor.", "example": "123"}
+        }    
+      }           
+  - ProductAndStoreInformation: |
+      {
+        "type": "object",
+        "name": "ProductAndStoreInformation",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "wrap": "true",
+        "properties": {
+          "CategoryPath": {"type": "String", "description": "Category location of product. path of category delimited by '>>'", "example": "Activation >> Dropship", "generated": "true" },
+          "ChannelID": {  "type": "guid", "description": "Identifier for a Channel in RQ", "example": "4bbb842d-0340-4ffc-9216-bf170c861424" },
+          "ChannelName": {  "type": "string", "description": "Channel name", "example": "First Channel" },
+          "DateEOL": { "type": "DateTime", "description": "End of life date", "example": "1/01/2016 12:00:00 AM", "generated": "true"  }, 
+          "DateReceived": {"type": "String", "description": "Product receiving stauts in RQ", "example": "01/21/2016 16:58:23"},
+          "DistrictID": {  "type": "integer", "description": "Identifier for a District in RQ", "example": "1" },
+          "DistrictName": {  "type": "string", "description": "District name", "example": "First Region" },
+          "DoNotOrder": { "type": "Boolean", "description": "A flag to indicate if the product should not be ordered", "example": "false", "generated": "true"  }, 
+          "Enabled": { "type": "Boolean", "description": "A flag to indicate if product is enabled", "example": "true" }, 
+          "GrossQuantityReturned": { "type": "Integer", "description": "Gross amount returned", "example": "11", "generated": "true"  }, 
+          "GrossQuantitySold": { "type": "Integer", "description": "Gross amount sold", "example": "10", "generated": "true"  }, 
+          "MaximumLevel": { "type": "Integer", "description": "Maximum number of Products that can be added to the PurchaseOrder", "example": "100", "putDescription": "defaults to -1" }, 
+          "MinimumLevel": { "type": "Integer", "description": "Minimum number of Products that can be added to the PurchaseOrder", "example": "10", "putDescription": "defaults to -1" }, 
+          "MinMaxLocked": { "type": "Boolean", "description": "A flag to indicate if the Min and Max values are locked (unchangeable)", "example": "true", "generated": "true"  }, 
+          "ProductCost": { "type": "Decimal", "description": "Required for PO creation or default from RQ will be used", "example": "99.99", "putDescription": "defaults to -1" }, 
+          "ProductID": { "type": "GUID", "description": "Unique identifier", "example": "86EE477F-C6B7-48FA-AA0A-105662D9A3ED" }, 
+          "ProductItemID": { "type": "Integer", "description": "GlobalProductId from RQ", "example": "11142" }, 
+          "ProductName": { "type": "String", "description": "Name", "example": "Samsung Galaxy S6" }, 
+          "ProductReceived": { "type": "Boolean", "description": "A flag to indicate if product was received", "example": "false" }, 
+          "ProductSKU": { "type": "String", "description": "ProductIdentifier in RQ", "example": "CECPSM000017" }, 
+          "QuantityCommittedOnOrderEntry": { "type": "Integer", "description": "Amount committed on an order entry", "example": "0", "putDescription": "defaults to -1" }, 
+          "QuantityInStock": { "type": "Integer", "description": "Amount in stock", "example": "8", "putDescription": "defaults to -1" }, 
+          "QuantityInTransfer": { "type": "Integer", "description": "Amount in transfer", "example": "3", "putDescription": "defaults to -1" }, 
+          "QuantityOnBackOrder": { "type": "Integer", "description": "Amount on back order", "example": "0", "putDescription": "defaults to -1" }, 
+          "QuantityOnLoan": { "type": "Integer", "description": "Amount on loan", "example": "5", "putDescription": "defaults to -1" }, 
+          "QuantityOnOrder": { "type": "Integer", "description": "Amount on order", "example": "6", "putDescription": "defaults to -1" }, 
+          "QuantityOnRMA": { "type": "Integer", "description": "Amount on RMA", "example": "9", "putDescription": "defaults to -1" }, 
+          "QuantityOnUncommittedOrder": { "type": "Integer", "description": "Amount on uncommitted order", "example": "2", "generated": "true"  }, 
+          "QuantityOrdered": { "type": "Integer", "description": "Amount ordered", "example": "4" }, 
+          "QuantityReceived": { "type": "Integer", "description": "Amount received", "example": "4", "putDescription": "defaults to -1" }, 
+          "QuantitySold": { "type": "Integer", "description": "Amount sold", "example": "30", "putDescription": "defaults to -1" }, 
+          "QuantitySuggestedByVendor": { "type": "Integer", "description": "Amount suggested by vendor", "example": "50", "generated": "true"  }, 
+          "RegionID": {  "type": "integer", "description": "Identifier for a Region in RQ", "example": "1" },
+          "RegionName": {  "type": "string", "description": "Region name", "example": "First District" },
+          "RetailPrice": { "type": "Decimal", "description": "Retail price", "example": "99.99", "generated": "true"  }, 
+          "SaleBegin": { "type": "DateTime", "description": "Sale begin date", "example": "01/01/2014 12:00:00 AM", "generated": "true"  }, 
+          "SaleEnd": { "type": "DateTime", "description": "Sale end date", "example": "01/10/2014 12:00:00 AM", "generated": "true"  }, 
+          "SalePrice": { "type": "Decimal", "description": "Sale price", "example": "79.99", "generated": "true"  }, 
+          "StoreID": { "type": "Integer", "description": "Unique identifier", "example": "36" }, 
+          "StoreName": { "type": "String", "description": "Name", "example": "Cornwall West" }, 
+          "VendorSKU": { "type": "String", "description": "Vendor SKU", "example": "SSGS5CB" }
+        }    
+      }           
+  - ReceivingInfo: |
+      {
+        "type": "object",
+        "name": "ReceivingInfo",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "wrap": "true",
+        "properties": {
+          "DateReceived": {  "type": "datetime", "description": "Date product was received", "example": "1/21/2016 4:58:24 PM" },
+          "ProductCost": {  "type": "decimal", "description": "Product cost", "example": "650" },
+          "ProductItemID": {  "type": "integer", "description": "Identifier of the Product in RQ", "example": "20" },
+          "ProductName": {  "type": "string", "description": "Product name", "example": "Samsung Galaxy Alpha Flipbook - Black/Magenta" },
+          "Quantity": {  "type": "integer", "description": "Quantity", "example": "11" },
+          "RQPurchaseOrderNumber": {  "type": "string", "description": "Identifier of the PO in RQ", "example": "TT101PO1" },
+          "SerialNumber": {  "type": "string", "description": "Serial number", "example": "" },
+          "ShipToStoreID": { "type": "Integer", "description": "Identifier of store to use for shipping", "putDescription": "Defaults to -1", "example": "55" }, 
+          "ShipToStoreName": { "type": "String", "description": "Name of store to use for shipping", "example": "Cornwall west", "generated": "true" }, 
+          "RQReceivingNumber": {  "type": "string", "description": "Receiving number in RQ", "example": "TT101RE1" },
+          "VendorName": { "type": "String", "description": "Name of the vendor", "example": "SampleVendor", "generated": "true" },
+          "VendorSKU": { "type": "String", "description": "The vendor part number/sku", "putDescription": "Either this value or ProductItemId must be provided", "example": "SSGS5CB" }
+        }    
+      }      
+  - EmployeeInformation: | 
+      {
+        "name": "EmployeeInformation",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "CellPhone": {  "type": "string", "description": "Cell phone", "example": "5555555555" },
+          "CompanyName": {  "type": "string", "description": "Company name", "example": "KENTEL" },
+          "Email": {  "type": "string", "description": "Email", "example": "johnt@kentel.com" },
+          "Enabled": {  "type": "boolean", "description": "A flag to indicate if this Employee is enabled at the store", "example": "true" },
+          "EndDate": {  "type": "datetime", "description": "Date employee stopped working at store, if applicable", "example": "" },
+          "FirstName": {  "type": "string", "description": "First name", "example": "John" },
+          "LastName": {  "type": "string", "description": "Last name", "example": "Tester" },
+          "Role": {  "type": "string", "description": "Employee role at store", "example": "Store Manager" },
+          "StartDate": {  "type": "string", "description": "Date employee started working at store", "example": "" },
+          "StoreAddress": {  "type": "string", "description": "Address", "example": "123 Main Street" },
+          "StoreCity": {  "type": "string", "description": "City", "example": "Moon City" },
+          "StoreCountry": {  "type": "string", "description": "Country", "example": "US" },
+          "StoreEmail": {  "type": "string", "description": "Store email", "example": "atlantis@kentel.com" },
+          "StoreID": {  "type": "integer", "description": "Identifier for a Store in RQ", "example": "4" },
+          "StoreName": {  "type": "string", "description": "Store name", "example": "Atlantis" },
+          "StorePostalCode": {  "type": "string", "description": "Zip or Postal code", "example": "90210" },
+          "StoreProvinceOrState": {  "type": "string", "description": "State or Province", "example": "ND" }
+        }
+      }                   
+  - GetPendingCompanies: | 
+      {
+        "exclude": "true",
+        "name": "GetPendingCompanies",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity" }
+        },
+        "required": [ "GetPendingCompanies", "vendor" ]
+      } 
+  - GetEnabledCompanies: | 
+      {
+        "exclude": "true",
+        "name": "GetEnabledCompanies",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity" }
+        },
+        "required": [ "GetEnabledCompanies", "Vendor" ]
+      }       
+  - GetDisabledCompanies: | 
+      {
+        "exclude": "true",
+        "name": "GetDisabledCompanies",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity" }
+        },
+        "required": [ "GetDisabledCompanies", "vendor" ]
+      }       
+  - GetCompanyList: | 
+      {
+        "exclude": "true",
+        "name": "GetCompanyList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity" }
+        },
+        "required": [ "GetCompanyList", "Vendor" ]
+      }             
+  - GetStoreList: | 
+      {
+        "exclude": "true",
+        "name": "GetStoreList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity1" }
+        },
+        "required": [ "GetStoreList", "Vendor" ]
+      }             
+  - GetStoreInformation: | 
+      {
+        "exclude": "true",
+        "name": "GetStoreInformation",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity2" }
+        },
+        "required": [ "GetStoreInformation", "Vendor" ]
+      }             
+  - GetInventoryList: | 
+      {
+        "exclude": "true",
+        "name": "GetInventoryList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity1" }
+        },
+        "required": [ "GetInventoryList", "Vendor" ]
+      }             
+  - GetInventoryReportByVendorSku: | 
+      {
+        "exclude": "true",
+        "name": "GetInventoryReportByVendorSku",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "StartDate": { "type": "datetime", "description": "Start date", "example": "01/01/2016" },
+          "EndDate": { "type": "datetime", "description": "End date", "example": "10/31/2016" },
+          "VendorSku": { "type": "string", "description": "Vendor sku", "example": "SSGS5CB" }
+        },
+        "required": [ "GetInventoryReportByVendorSku", "Vendor", "StartDate", "EndDate", "VendorSku" ]
+      }      
+  - GetInventoryReport: | 
+      {
+        "exclude": "true",
+        "name": "GetInventoryReport",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "StartDate": { "type": "datetime", "description": "Start date", "example": "01/01/2016" },
+          "EndDate": { "type": "datetime", "description": "End date", "example": "10/31/2016" }    
+        },
+        "required": [ "GetInventoryReport", "Vendor", "StartDate", "EndDate" ]
+      }      
+  - GetInventoryListingReport: | 
+      {
+        "exclude": "true",
+        "name": "GetInventoryListingReport",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "storeId": { "type": "integer", "description": "Identifier for a Channel, Region, District or Store in RQ", "putDescription": "This value can be a Channel, Region, District or Store Id. The request body will change depending on the parameter used (i.e. <channelId></channelId>)","example": "4" }        
+        },
+        "required": [ "GetInventoryListingReport", "Vendor", "storeId" ]
+      }      
+  - InventoryListingData: | 
+      {
+        "exclude": "true",
+        "name": "InventoryListingData",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "CategoryPath": {  "type": "string", "example": "&gt;&gt; Activations &gt;&gt; SamsungCR" },
+          "ChannelID": {  "type": "guid", "example": "4bbb842d-0340-4ffc-9216-bf170c861424" },
+          "Description": {  "type": "string", "example": "Samsung Galaxy S5 - Charcoal Black" },
+          "DistrictID": {  "type": "integer", "example": "1" },
+          "DistrictName": {  "type": "string", "example": "First District" },
+          "Location": {  "type": "string", "example": "Tasha's Test" },
+          "ManufacturerSKU": {  "type": "string", "description": "", "example": "" },
+          "ProductSKU": {  "type": "string", "example": "ACCRTM000001" },
+          "Quantity": {  "type": "integer", "example": "1" },
+          "RegionID": {  "type": "integer", "example": "1" },
+          "RegionName": {  "type": "string", "example": "First Region" },
+          "TrackingNumber": {  "type": "string", "example": "12345" },
+          "VendorName": {  "type": "string", "example": "Dan's Supplies" },
+          "VendorSKU": {  "type": "string", "example": "SSGS5CB" }          
+        }
+      }
+  - GetAdjustmentReport: | 
+      {
+        "exclude": "true",
+        "name": "GetAdjustmentReport",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "storeId": { "type": "integer", "description": "Identifier for a Channel, Region, District or Store in RQ", "putDescription": "This value can be a Channel, Region, District or Store Id. The request body will change depending on the parameter used (i.e. <channelId></channelId>)","example": "4" },        
+          "StartDate": { "type": "datetime", "putDescription": "Look for adjustments created on or after this date at midnight", "example": "01/01/2016" },
+          "EndDate": { "type": "datetime", "putDescription": "Look for adjustments created up to the end of this day", "example": "10/31/2016" }          
+        },
+        "required": [ "GetAdjustmentReport", "Vendor", "storeId", "StartDate", "EndDate" ]
+      }    
+  - Adjustment: | 
+      {
+        "exclude": "true",
+        "name": "Adjustment",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {   
+          "ProductItemID": { "type": "Integer", "putDescription": "Identifier for a product in RQ", "example": "11142" }, 
+          "Quantity": { "type": "Integer", "example": "1" }, 
+          "Reason": {  "type": "string", "putDescription": "Reason the adjustment was made", "example": "Refurbished" },
+          "StoreID": {  "type": "integer", "example": "4" },
+          "VendorSKU": { "type": "String", "example": "SSGS5CB" }
+        }
+      }
+  - GetGeographicInventoryReport: | 
+      {
+        "exclude": "true",
+        "name": "GetGeographicInventoryReport",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "storeId": { "type": "integer", "description": "Identifier for a Channel, Region, District or Store in RQ", "putDescription": "This value can be a Channel, Region, District or Store Id. The request body will change depending on the parameter used (i.e. <channelId></channelId>)","example": "4" },        
+          "StartDate": { "type": "datetime", "description": "Start date", "example": "01/01/2016" },
+          "EndDate": { "type": "datetime", "description": "End date", "example": "10/31/2016" }          
+        },
+        "required": [ "GetGeographicInventoryReport", "Vendor", "storeId", "StartDate", "EndDate" ]
+      }    
+  - GetProductSalesReport: | 
+      {
+        "exclude": "true",
+        "name": "GetProductSalesReport",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "storeId": { "type": "integer", "description": "Identifier for a Channel, Region, District or Store in RQ", "putDescription": "This value can be a Channel, Region, District or Store Id. The request body will change depending on the parameter used (i.e. <channelId></channelId>)","example": "4" },        
+          "StartDate": { "type": "datetime", "description": "Start date", "example": "01/01/2016" },
+          "EndDate": { "type": "datetime", "description": "End date", "example": "10/31/2016" }          
+        },
+        "required": [ "GetProductSalesReport", "Vendor", "storeId", "StartDate", "EndDate" ]
+      }    
+  - ProductSalesReportData: | 
+      {
+        "exclude": "true",
+        "name": "ProductSalesReportData",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {   
+          "CategoryPath": {  "type": "string", "description": "", "example": "Activation >> Dropship" },
+          "ChannelID": {  "type": "guid", "description": "", "example": "4bbb842d-0340-4ffc-9216-bf170c861424" },
+          "ChannelName": {  "type": "string", "description": "", "example": "First Channel" },
+          "Description": {  "type": "string", "description": "", "example": "" },
+          "DistrictID": {  "type": "integer", "description": "", "example": "1" },
+          "DistrictName": {  "type": "string", "description": "", "example": "First District" },
+          "InvoicedBy": {  "type": "string", "description": "", "example": "iQmetrix User" },
+          "ListPrice": {  "type": "decimal", "description": "", "example": "99.99" },
+          "ProductItemID": {  "type": "integer", "description": "", "example": "11142" },
+          "ProductSKU": {  "type": "string", "description": "", "example": "CECPSM000017" },
+          "Quantity": {  "type": "integer", "description": "", "example": "1" },
+          "Refund": {  "type": "boolean", "description": "", "example": "false" },
+          "RegionID": {  "type": "integer", "description": "", "example": "1" },
+          "RegionName": {  "type": "string", "description": "", "example": "First Region" },
+          "RqInvoiceIdByStore": {  "type": "string", "description": "", "example": "BDP123" },
+          "SoldOn": {  "type": "datetime", "description": "", "example": "1/21/2016 4:58:24 PM" },
+          "StoreID": {  "type": "integer", "description": "", "example": "4" },
+          "TrackingNumber": {  "type": "string", "description": "", "example": "12345" },
+          "VendorSKU": {  "type": "string", "description": "", "example": "SSGS5CB" }
+        }
+      }
+  - GetReceivingInfo: | 
+      {
+        "exclude": "true",
+        "name": "GetReceivingInfo",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "StartDate": { "type": "datetime", "description": "Start date", "example": "01/01/2016" },
+          "EndDate": { "type": "datetime", "description": "End date", "example": "10/31/2016" }    
+        },
+        "required": [ "GetReceivingInfo", "Vendor", "StartDate", "EndDate" ]
+      }
+  - EnableCompany: | 
+      {
+        "exclude": "true",
+        "name": "EnableCompany",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "isEnabled": { "type": "boolean", "description": "True to enable, false to disable. Defaults to false", "example": "true" }             
+        },
+        "required": [ "EnableCompany", "vendor" ]
+      }                      
+  - CreateUncommittedPurchaseOrder: | 
+      {
+        "exclude": "true",
+        "name": "CreateUncommittedPurchaseOrder",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "purchaseOrder": { "type": "object", "putDescription": "The {{PurchaseOrder}}", "ref": "vmi.PurchaseOrder" }
+        },
+        "required": [ "CreatePurchaseOrder", "Vendor", "PurchaseOrder" ]
+      }       
+  - CreatePurchaseOrder: | 
+      {
+        "exclude": "true",
+        "name": "CreatePurchaseOrder",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "Case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "PurchaseOrder": { "type": "object", "putDescription": "The {{PurchaseOrder}}", "ref": "vmi.PurchaseOrder" }
+        },
+        "required": [ "CreatePurchaseOrder", "Vendor", "PurchaseOrder" ]
+      }                               
+  - CreatePurchaseOrderShipmentNotice: | 
+      {
+        "exclude": "true",
+        "name": "CreatePurchaseOrderShipmentNotice",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "notice": { "type": "array", "arrayType": "object", "ref": "vmi.PurchaseOrderShipmentNotice" }
+        },
+        "required": [ "CreatePurchaseOrderShipmentNotice", "vendor", "notice" ]
+      }                                  
+  - UpdateMinAndMaxProductQuantities: | 
+      {
+        "exclude": "true",
+        "name": "UpdateMinAndMaxProductQuantities",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "productItemID": { "type": "integer", "description": "Identifier of a Product in RQ", "example": "20" },
+          "minQuantity": { "type": "integer", "description": "Minimum quantity", "example": "1" },
+          "maxQuantity": { "type": "integer", "description": "Maximum quantity", "example": "20" }
+        },
+        "required": [ "UpdateMinAndMaxProductQuantities", "vendor" ]
+      }                                  
+  - GetPurchaseOrderList: | 
+      {
+        "exclude": "true",
+        "name": "GetPurchaseOrderList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" }
+        },
+        "required": [ "GetPurchaseOrderList", "Vendor" ]
+      }                                  
+  - PurchaseOrderInformation: | 
+      {
+        "exclude": "true",
+        "name": "PurchaseOrderInformation",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "PurchaseOrderInformation": { "type": "object", "ref": "vmi.PurchaseOrder" }
+        }
+      }                                        
+  - GetCommittedPurchaseOrderList: | 
+      {
+        "exclude": "true",
+        "name": "GetCommittedPurchaseOrderList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" }
+        },
+        "required": [ "GetCommittedPurchaseOrderList", "vendor" ]
+      }                                        
+  - GetUncommittedPurchaseOrderList: | 
+      {
+        "exclude": "true",
+        "name": "GetUncommittedPurchaseOrderList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" }
+        },
+        "required": [ "GetUncommittedPurchaseOrderList", "vendor" ]
+      }                                              
+  - GetCompletedPurchaseOrderList: | 
+      {
+        "exclude": "true",
+        "name": "GetCompletedPurchaseOrderList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "startDateReceived": { "type": "datetime", "description": "Start date", "example": "01/01/2016" },
+          "endDateReceived": { "type": "datetime", "description": "End date", "example": "10/31/2016" }        
+        },
+        "required": [ "GetCompletedPurchaseOrderList", "vendor", "endDateReceived", "startDateReceived" ]
+      }    
+  - GetUpdatedInventoryList: | 
+      {
+        "exclude": "true",
+        "name": "GetUpdatedInventoryList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" }     
+        },
+        "required": [ "GetUpdatedInventoryList", "vendor" ]
+      }                                                         
+  - GetTransferCounts: | 
+      {
+        "exclude": "true",
+        "name": "GetTransferCounts",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "StartDate": { "type": "datetime", "putDescription": "Search for transfers shipped and/or received on or after this date at midnight", "example": "01/01/2016" },
+          "EndDate": { "type": "datetime", "putDescription": "Search for transfers shipped and/or received up to the end of this date", "example": "10/31/2016" },
+          "storeId": { "type": "integer", "description": "Identifier for a Store in RQ", "example": "4" }        
+        },
+        "required": [ "GetTransferCounts", "Vendor", "EndDate", "StartDate", "storeId" ]
+      }                                                               
+  - TransferCount: | 
+      {
+        "name": "TransferCount",
+        "exclude": "true",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ProductItemID": { "type": "Integer", "example": "11142" }, 
+          "ReceivedIn": {  "type": "datetime", "example": "1/21/2016 4:58:24 PM" },
+          "ReceivedOut": {  "type": "datetime", "example": "1/22/2016 4:58:24 PM" },
+          "ShippedIn": {  "type": "datetime", "example": "1/20/2016 4:58:24 PM" },
+          "ShippedOut": {  "type": "datetime", "example": "1/19/2016 4:58:24 PM" },
+          "storeId": { "type": "integer", "description": "Identifier for a Channel, Region, District or Store in RQ", "putDescription": "This value can be a Channel, Region, District or Store Id. The request body will change depending on the parameter used (i.e. <channelId></channelId>)","example": "4" },        
+          "VendorSKU": { "type": "String", "example": "SSGS5CB" }
+        }
+      }                            
+  - GetHierarchyInfo: | 
+      {
+        "exclude": "true",
+        "name": "GetHierarchyInfo",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" }
+        },
+        "required": [ "GetHierarchyInfo", "Vendor" ]
+      }                                                                     
+  - GetProductSerialNumbers: | 
+      {
+        "exclude": "true",
+        "name": "GetProductSerialNumbers",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "RQProductID": { "type": "integer", "putDescription": "Identifier for a Product in RQ", "example": "20" }
+        },
+        "required": [ "GetProductSerialNumbers", "vendor" ]
+      }                                                                           
+  - ProductSerialNumber: | 
+      {
+        "name": "ProductSerialNumber",
+        "exclude": "true",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "DateReceived": {  "type": "DateTime", "example": "1/20/2016 4:58:24 PM" },
+          "NonSellable": {  "type": "boolean", "example": "false" },
+          "ProductItemID": {  "type": "integer", "example": "11142" },
+          "SerialNumber": {  "type": "string", "example": "490154203237518" }
+        }
+      }                                  
+  - GetClientPurchaseOrdersByStatus: | 
+      {
+        "exclude": "true",
+        "name": "GetClientPurchaseOrdersByStatus",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "startDate": { "type": "datetime", "putDescription": "Search for POs committed and/or completed on or after this date at midnight", "example": "01/01/2016" },
+          "endDate": { "type": "datetime", "putDescription": "Search for POs committed and/or completed up to the end of this day", "example": "10/31/2016" },        
+          "isCompleted": { "type": "boolean", "putDescription": "Defaults to false @TODO VERIFY", "example": "false"},
+          "isCommitted": { "type": "boolean", "putDescription": "Defaults to false @TODO VERIFY", "example": "false"}
+        },
+        "required": [ "GetClientPurchaseOrdersByStatus", "vendor", "startDate", "endDate" ]
+      }                                                                           
+  - GetPurchaseOrderShipmentNotices: | 
+      {
+        "exclude": "true",
+        "name": "GetPurchaseOrderShipmentNotices",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "purchaseOrderID": { "type": "guid", "putDescription": "Identifier for a {{PurchaseOrder}}", "example": "28890F70-8FC9-4A9B-9458-410A8D08502D" }
+        },
+        "required": [ "GetPurchaseOrderShipmentNotices ", "vendor" ]
+      }                                                                           
+  - GetPurchaseOrderByReferenceNumber: | 
+      {
+        "exclude": "true",
+        "name": "GetPurchaseOrderByReferenceNumber",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "purchaseOrderReferenceNumber": { "type": "string", "putDescription": "Reference number for a PO in RQ @TODO VALIDATE", "example": "PO12456" }
+        },
+        "required": [ "GetPurchaseOrderByReferenceNumber", "vendor", "purchaseOrderReferenceNumber" ]
+      }                                                                                 
+  - GetPurchaseOrderByBusinessID: | 
+      {
+        "exclude": "true",
+        "name": "GetPurchaseOrderByBusinessID",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "purchaseOrderIdByStore": { "type": "string", "putDescription": "Identifier for a PO shown on printouts in RQ", "example": "22073" }
+        },
+        "required": [ "GetPurchaseOrderByBusinessID", "vendor", "purchaseOrderIdByStore" ]
+      }                                                                                       
+  - GetEmployeeList: | 
+      {
+        "exclude": "true",
+        "name": "GetEmployeeList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "onlyEnabled": { "type": "boolean", "putDescription": "True for enabled employees, false for all employees", "example": "false" }
+        },
+        "required": [ "GetEmployeeList", "vendor" ]
+      }                                                                                             
+  - CancelUncommittedPurchaseOrder: | 
+      {
+        "exclude": "true",
+        "name": "CancelUncommittedPurchaseOrder",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "purchaseOrderID": { "type": "guid", "putDescription": "Identifier for a {{PurchaseOrder}}", "example": "28890F70-8FC9-4A9B-9458-410A8D08502D" }
+        },
+        "required": [ "CancelUncommittedPurchaseOrder", "vendor", "purchaseOrderID" ]
+      }
+  - UpdatePurchaseOrder: | 
+      {
+        "exclude": "true",
+        "name": "UpdatePurchaseOrder",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "purchaseOrder": { "type": "object", "putDescription": "The {{PurchaseOrder}}", "ref": "vmi.UpdatePurchaseOrderPO" }
+        },
+        "required": [ "UpdatePurchaseOrder", "vendor", "purchaseOrderID" ]
+      }
+  - Ping: | 
+      {
+        "exclude": "true",
+        "name": "Ping",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" }
+        },
+        "required": [ "Ping", "vendor", "purchaseOrderID" ]
+      }      
+  - GetRMAList: |
+      {
+        "exclude": "true",
+        "name": "GetRMAList",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity1" },
+          "isCommitted": { "type": "boolean", "putDescription": "True to include committed RMAs, false to exclude. Defaults to false", "example": "false" },
+          "isShipped": { "type": "boolean", "putDescription": "True to include shipped RMAs, false to exclude. Defaults to false", "example": "false" }
+        },
+        "required": [ "GetRMAList", "vendor" ]
+      }
+  - CreateRMA: |
+      {
+        "exclude": "true",
+        "name": "CreateRMA",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "RMA": { "type": "array", "arrayType": "object", "ref": "vmi.RMA" }
+        },
+        "required": [ "CreateRMA", "Vendor" ]
+      }
+  - RMA: |
+      {
+        "name": "RMA",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ProductData": { "type": "array", "arrayType": "object", "description": "Product data", "ref": "vmi.RMAProduct" },
+          "RMAID": { "type": "integer", "description": "Identifier", "example": "16", "generated": "true" },
+          "RMAIDByStore": { "type": "string", "description": "Identifier for the RMA in RQ", "example": "ATTEXSB3", "generated": "true" },
+          "StoreID" : { "type": "integer", "description": "Identifier for a store in RQ", "example": "0", "generated": "true" },
+          "VendorID" : { "type": "integer", "description": "Identifier for a vendor", "example": "0" },
+          "CreatedByVMI" : { "type": "boolean", "description": "A flag to indicate if the RMA was created by VMI", "example": "false" },
+          "VendorRMANumber": { "type": "string", "description": "Vendor RMA number", "example": "123456" },
+          "ShippingCost" : { "type": "decimal", "description": "Shipping cost", "example": "0" },
+          "Committed": { "type": "integer", "description": "A flag to indicate if the RMA is committed (1) or not (0)", "example": "0", "generated": "true" },
+          "DateCommitted": { "type": "datetime", "description": "Date the RMA was committed", "example": "2017-01-01T00:00:00", "generated": "true" },
+          "ShippedAway": { "type": "integer", "description": "A flag to indicate if the RMA was shipped away (1) or not (0)", "example": "0", "generated": "true" },
+          "Completed": { "type": "integer", "description": "A flag to indicate if the RMA is completed (1) or not (0)", "example": "0", "generated": "true" },
+          "Comments": { "type": "string", "description": "Comments", "example": "Sent" },
+          "DateCreated": { "type": "datetime", "description": "Date the RMA was created", "example": "2016-11-04T00:00:00", "generated": "true" }
+        },
+        "required": [ "ProductData" ]
+      }  
+  - ReturnMerchandiseAuthorization: |
+      {
+        "name": "ReturnMerchandiseAuthorization",
+        "exclude": "true",
+        "type": "object",
+        "wrap": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ProductData": { "type": "array", "arrayType": "object", "description": "Product data", "ref": "vmi.RMAProduct" },
+          "RMAID": { "type": "integer", "description": "Identifier", "example": "16", "generated": "true" },
+          "RMAIDByStore": { "type": "string", "description": "Identifier for the RMA in RQ", "example": "ATTEXSB3", "generated": "true" },
+          "StoreID" : { "type": "integer", "description": "Identifier for a store in RQ", "example": "0", "generated": "true" },
+          "VendorID" : { "type": "integer", "description": "Identifier for a vendor", "example": "0" },
+          "CreatedByVMI" : { "type": "boolean", "description": "A flag to indicate if the RMA was created by VMI", "example": "false" },
+          "VendorRMANumber": { "type": "string", "description": "Vendor RMA number", "example": "123456" },    
+          "WayBillNumber" : { "type": "integer", "description": "", "example": "0" },
+          "ShippingMethod": { "type": "string", "description": "Shipping method", "example": "USPS" },
+          "ReceivingComments": { "type": "string", "description": "Comments", "example": "Broken" },
+          "ShippingCost" : { "type": "decimal", "description": "Shipping cost", "example": "0" },
+          "Committed": { "type": "integer", "description": "A flag to indicate if the RMA is committed (1) or not (0)", "example": "0", "generated": "true" },
+          "DateCommitted": { "type": "datetime", "description": "Date the RMA was committed", "example": "2017-01-01T00:00:00", "generated": "true" },
+          "ShippedAway": { "type": "integer", "description": "A flag to indicate if the RMA was shipped away (1) or not (0)", "example": "0", "generated": "true" },
+          "Completed": { "type": "integer", "description": "A flag to indicate if the RMA is completed (1) or not (0)", "example": "0", "generated": "true" },
+          "Comments": { "type": "string", "description": "Comments", "example": "Sent" },
+          "DateCreated": { "type": "datetime", "description": "Date the RMA was created", "example": "2016-11-04T00:00:00", "generated": "true" }          
+        }
+      }        
+  - RMAProduct: |
+      {
+        "exclude": "true",
+        "name": "RMAProduct",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "RMAProduct": { "type": "array", "arrayType": "object", "ref": "vmi.ProductData" }
+        },
+        "required": [ "RMAProduct" ]
+      }  
+  - ProductData: |
+      {
+        "name": "ProductData",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {  
+            "RQProductSku": { "type": "string", "description": "Return value", "example": "CDATSS000019" },
+            "RQProductID": { "type": "integer", "description": "RQ product identifier", "example": "19" },
+            "SerialNumberRemoved": { "type": "string", "description": "Serial number of the item (if applicable)", "example": "789987741147111" },
+            "VendorInvoiceNumber": { "type": "string", "description": "Vendor invoice number", "example": "123456" },
+            "TotalQuantity": { "type": "integer", "description": "Quantity being placed on RMA (include non-sellable)", "example": "1" },
+            "NonSellableQuantity": { "type": "integer", "description": "Quantitiy of non-sellable items", "example": "0" },
+            "UnitCost": { "type": "decimal", "description": "Unit cost", "example": "0" },
+            "ActionTaken": { "type": "string", "description": "Acceptable values include: NotSet, Credit, Replacement, Rejected or Repaired ", "example": "Credit" }          
+        },
+        "required": [ "RQProductSku", "RQProductID", "TotalQuantity", "SerialNumberRemoved", "ActionTaken" ]
+      } 
+  - UpdateCommittedRMA: |
+      {
+        "exclude": "true",
+        "name": "UpdateCommittedRMA",
+        "type": "object",
+        "soapRequest": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "vendor": { "type": "object", "putDescription": "case-sensitive", "ref": "vmi.VendorIdentity2" },
+          "rma": { "type": "object", "ref": "vmi.UpdateRMA" }
+        },
+        "required": [ "UpdateCommittedRMA", "vendor", "rma" ]
+      }
+  - UpdateRMA: |
+      {
+        "name": "UpdateRMA",
+        "type": "object",
+        "exclude": "true",
+        "wrap": "true",        
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ProductData": { "type": "array", "arrayType": "object", "description": "Product data", "ref": "vmi.RMAProduct" },
+          "RMAID": { "type": "integer", "description": "Identifier", "example": "16", "generated": "true" },
+          "RMAIDByStore": { "type": "string", "description": "Identifier for the RMA in RQ", "example": "ATTEXSB3", "generated": "true" },
+          "StoreID" : { "type": "integer", "description": "Identifier for a store in RQ", "example": "0", "generated": "true" },
+          "VendorID" : { "type": "integer", "description": "Identifier for a vendor", "example": "0" },
+          "CreatedByVMI" : { "type": "boolean", "description": "A flag to indicate if the RMA was created by VMI", "example": "false" },
+          "VendorRMANumber": { "type": "string", "description": "Vendor RMA number", "example": "123456" },    
+          "WayBillNumber" : { "type": "integer", "description": "", "example": "0" },
+          "ShippingMethod": { "type": "string", "description": "Shipping method", "example": "USPS" },
+          "ReceivingComments": { "type": "string", "description": "Comments", "example": "Broken" },
+          "ShippingCost" : { "type": "decimal", "description": "Shipping cost", "example": "0" },
+          "Committed": { "type": "integer", "description": "A flag to indicate if the RMA is committed (1) or not (0)", "example": "0", "generated": "true" },
+          "DateCommitted": { "type": "datetime", "description": "Date the RMA was committed", "example": "2017-01-01T00:00:00", "generated": "true" },
+          "ShippedAway": { "type": "integer", "description": "A flag to indicate if the RMA was shipped away (1) or not (0)", "example": "0", "generated": "true" },
+          "Completed": { "type": "integer", "description": "A flag to indicate if the RMA is completed (1) or not (0)", "example": "0", "generated": "true" },
+          "Comments": { "type": "string", "description": "Comments", "example": "Sent" },
+          "DateCreated": { "type": "datetime", "description": "Date the RMA was created", "example": "2016-11-04T00:00:00", "generated": "true" }          
+        },
+        "required": [ "ProductData" ]
+      }        
+resourceTypes:
+    - collectionWriteOnly:
+        post:
+          body:
+            text/xml:
+              schema: <<postSchema>>
+          responses:
+            200:
+              body:
+                text/xml:
+                  schema: <<resultSchema>>      
+/?op=CreatePurchaseOrder:
+  type:
+    collectionWriteOnly:
+      postSchema: CreatePurchaseOrder 
+      resultSchema: PurchaseOrder
+  post: 
+    displayName: Creating a Purchase Order
+    description: |
+      Allows the vendor to create a purchase order for a particular store and a set of products.
+
+      #### Notes
+
+      * Creating a Purchase Order allows RQ to properly account for products arriving at a store so that stock levels are updated correctly
+      * You must be marked as the Primary Vendor in RQ to add a product to a Purchase Order
+      * Each item must be unique
+      * To place multiple copies of an item on an order, adjust the quantity
+/?op=CreatePurchaseOrderShipmentNotice:
+  type:
+    collectionWriteOnly:
+      postSchema: CreatePurchaseOrderShipmentNotice 
+      resultSchema: PurchaseOrderShipmentNotice
+  post: 
+    displayName: Creating a Purchase Order Shipment Notice
+    description: |
+      Allows the vendor to create a shipment notice for an existing purchase order. 
+      
+      #### Notes
+      
+      * The shipment notice will be used when receiving purchase order products with serial numbers
+      * Multiple shipment notices can be created for a single purchase order
+      * Each shipment notice is for a single product
+      * If more than one product appears in a shipment, create one shipment notice for each product, but use the same shipment number for all products in the same shipment
+      
+      {{tip}}
+      This request accepts an array of PurchaseOrderShipmentNotices, so you do not need to call the VMI service multiple times for products in an order
+      {{end}}            
+/?op=Ping:
+  post: 
+    displayName: Verify API Status
+    description: |
+      Verify that the VMI Service, and RQ Client Database are up and running.
+    
+      If successful, the service will return a string declaring that the dealer’s database has been found.
+    body:
+      text/xml:
+        schema: Ping
+    responses:
+      200:
+        body:
+          text/xml:
+            example: |
+              <?xml version="1.0" encoding="utf-8"?>
+              <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                  <soap:Body>
+                      <PingResponse xmlns="http://www.iqmetrix.com">
+                          <PingResult>DansSupplies database is up (5.15.10.57126, Release, DropshipTestDemo)!</PingResult>
+                      </PingResponse>
+                  </soap:Body>
+              </soap:Envelope>                        
+/?op=EnableCompany:
+  post: 
+    displayName: Enabling or Disabling a Company
+    description: |
+      Change the interaction status of a company. 
+
+      #### Notes
+
+      * Enabled companies appear in the response of <a href="#getting-enabled-companies">Getting Enabled Companies</a>
+      * Disabled companies appear only in the response of <a href="#getting-disabled-companies">Getting Disabled Companies</a> 
+      * Only enabled companies may receive purchase orders through the VMI service    
+    body:
+      text/xml:
+        schema: EnableCompany
+    responses:
+      200:
+        body:
+          text/xml:
+            example: |
+              <?xml version="1.0" encoding="utf-8"?>
+              <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                  <soap:Body>
+                      <EnableCompanyResponse xmlns="http://www.iqmetrix.com" />
+                  </soap:Body>
+              </soap:Envelope>          
+/?op=GetCommittedPurchaseOrderList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetCommittedPurchaseOrderList 
+      resultSchema: PurchaseOrderInformation
+  post: 
+    displayName: Getting Committed Purchase Orders
+    description: |
+      Report on the committed purchase orders for a particular store to see what products have been received and have not been received. 
+
+      This request will allow you to take appropriate action for products that have not arrived at a store.   
+/?op=GetCompanyList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetCompanyList 
+      resultSchema: CompanyInformation
+  post: 
+    displayName: Getting a Company List
+    description: |
+          Retrieves a list of VMI enabled companies.
+/?op=GetHierarchyInfo:
+  post: 
+    displayName: Getting Hierarchy Info
+    description: |
+      Returns the company tree structure (hierarchy) including store counts.
+
+      #### Notes
+
+      * Each level contains a store count for its level. 
+      * Only levels with a valid enabled store count will be returned
+      * The structure is Company (not part of the object) -> Channels -> Regions -> Districts -> Stores
+
+      ##### Example
+
+      <img src="http://developers.iqmetrix.com/images/vmi/hierarchy.png" alt="Company Tree Structure" />
+
+      There is one Channel for this company; Default Channel. Expanding Default Channel we see Regions, the first of which is Northeast, which contains 37 locations. 
+
+      Expand the Region and you see Districts. The first District, Tri State, has 8 stores. Expand the District to see the Stores.
+
+    body:
+      text/xml:
+        schema: GetHierarchyInfo
+    responses:
+      200:
+        body:
+          text/xml:
+            example: |
+              <?xml version="1.0" encoding="utf-8"?>
+              <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                  <soap:Body>
+                      <GetHierarchyInfoResponse xmlns="http://www.iqmetrix.com">
+                          <GetHierarchyInfoResult>
+                              <Channels>
+                                  <Channel>
+                                      <ChannelID>4bbb842d-0340-4ffc-9216-bf170c861424</ChannelID>
+                                      <ChannelName>First Channel</ChannelName>
+                                      <StoreCount>6</StoreCount>
+                                      <Regions>
+                                          <Region>
+                                              <RegionID>1</RegionID>
+                                              <RegionName>First Region</RegionName>
+                                              <StoreCount>6</StoreCount>
+                                              <Districts>
+                                                  <District>
+                                                      <DistrictID>1</DistrictID>
+                                                      <DistrictName>First District</DistrictName>
+                                                      <StoreCount>6</StoreCount>
+                                                      <Stores>
+                                                          <StoreInformation>
+                                                              <StoreID>6</StoreID>
+                                                              <Name>Vineland Test Store</Name>
+                                                              <Address />
+                                                              <City>Orlando</City>
+                                                              <ProvinceState>FL</ProvinceState>
+                                                              <PostalZipCode>32801</PostalZipCode>
+                                                              <Country>United States</Country>
+                                                              <PhoneNumber>8566916400</PhoneNumber>
+                                                              <ShipToStoreID>6</ShipToStoreID>
+                                                              <BillToStoreID>6</BillToStoreID>
+                                                              <VendorAccountNumber>-</VendorAccountNumber>
+                                                              <Abbreviation>VTS01</Abbreviation>
+                                                          </StoreInformation>
+                                                      </Stores>
+                                                  </District>
+                                              </Districts>
+                                          </Region>
+                                      </Regions>
+                                  </Channel>
+                              </Channels>
+                          </GetHierarchyInfoResult>
+                      </GetHierarchyInfoResponse>
+                  </soap:Body>
+              </soap:Envelope>          
+/?op=GetCompletedPurchaseOrderList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetCompletedPurchaseOrderList 
+      resultSchema: PurchaseOrderInformation
+  post: 
+    displayName: Getting Completed Purchase Orders
+    description: |
+      This request allows you to run a report on the completed purchase orders in given time range for a particular store to see what products have been received.
+
+      #### Notes
+
+      * Purchase order completion date is determined by the latest receiving date in the purchase order
+/?op=GetDisabledCompanies:
+  type:
+    collectionWriteOnly:
+      postSchema: GetDisabledCompanies   
+      resultSchema: CompanyInformation
+  post: 
+    displayName: Getting Disabled Companies
+    description: |
+        Retrieves a list of VMI disabled companies.
+/?op=GetEmployeeList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetEmployeeList     
+      resultSchema: EmployeeInformation
+  post: 
+    displayName: Getting Employee List 
+    description: |
+      Retrieve a list of Employees and the Stores that they are assigned to. The response will include a record for each Employee/Store combination found.
+/?op=GetEnabledCompanies:
+  type:
+    collectionWriteOnly:
+      postSchema: GetEnabledCompanies   
+      resultSchema: CompanyInformation
+  post: 
+    displayName: Getting Enabled Companies
+    description: |
+        Retrieves a list of VMI enabled companies.
+/?op=GetInventoryList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetInventoryList 
+      resultSchema: ProductInformation
+  post: 
+    displayName: Getting the Inventory List
+    description: |
+      Retrieve an inventory of products for which the vendor is set as the primary vendor in RQ.        
+/?op=GetInventoryReport:
+  type:
+    collectionWriteOnly:
+      postSchema: GetInventoryReport 
+      resultSchema: ProductInformation
+  post: 
+    displayName: Getting the Inventory Report
+    description: |
+      Retrieves an inventory report for a particular store. Includes minimum and maximum inventory, quantity on hand, quantity sold within a particular date range, product SKU, etc.
+/?op=GetInventoryReportByVendorSku:
+  type:
+    collectionWriteOnly:
+      postSchema: GetInventoryReportByVendorSku 
+      resultSchema: ProductAndStoreInformation
+  post: 
+    displayName: Getting the Inventory Report by Vendor SKU
+    description: |
+      This method allows you to get an inventory report for all stores by a specified Vendor SKU. Includes minimum and maximum inventory, quantity on hand, quantity sold within a particular date range, product SKU etc.
+/?op=GetPendingCompanies:
+  type:
+    collectionWriteOnly:
+      postSchema: GetPendingCompanies   
+      resultSchema: CompanyInformation
+  post: 
+    displayName: Getting Pending Companies
+    description: |
+      Retrieves a list of all companies that are in a [Pending State](#pending-state) for the Vendor. 
+
+      Vendors can only create purchase orders for <strong>Enabled</strong> companies. 
+
+      To change the status of a company, use <a href="#enabling-or-disabling-a-company">Enabling or Disabling a Company</a>.
+/?op=GetProductSerialNumbers:
+  type:
+    collectionWriteOnly:
+      postSchema: GetProductSerialNumbers 
+      resultSchema: ProductSerialNumber
+  post: 
+    displayName: Getting Serial Numbers for a Product
+    description: |
+      Returns an array of ProductSerialNumber objects for the given RQ Product Identifier          
+/?op=GetPurchaseOrderByBusinessID:
+  type:
+    collectionWriteOnly:
+      postSchema: GetPurchaseOrderByBusinessID    
+      resultSchema: PurchaseOrder
+  post: 
+    displayName: Getting Purchase Order By Business ID
+    description: |
+      Retrieve a purchase order based on the RQ Business ID. 
+
+      This request is useful in the situation where a user has created a PO in RQ for a vendor. 
+
+      The vendor can get the PO data and product info to help with creation of shipping notifications.
+
+      #### Notes
+
+      * RQ Business ID is the visual ID by store that RQ users can see on printouts
+      * Will return both committed and uncommitted purchase orders
+      * To determine if a PO is committed or uncommitted, use [Getting Uncommitted Purchase Orders](#getting-uncommitted-purchase-orders) and [Getting Committed Purchase Orders](#getting-committed-purchase-orders)
+/?op=GetPurchaseOrderByReferenceNumber:
+  type:
+    collectionWriteOnly:
+      postSchema: GetPurchaseOrderByReferenceNumber   
+      resultSchema: PurchaseOrder
+  post: 
+    displayName: Getting Purchase Order by Reference Number      
+/?op=GetClientPurchaseOrdersByStatus:
+  type:
+    collectionWriteOnly:
+      postSchema: GetClientPurchaseOrdersByStatus 
+      resultSchema: PurchaseOrderInformation
+  post: 
+    displayName: Getting Purchase Orders By Status
+    description: |
+      Retrieves all purchase orders in the RQ database that match the provided status criteria, including those that were not created through the VMI API. 
+
+      Purchase Orders created within RQ will be available in this list.
+/?op=GetPurchaseOrderList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetPurchaseOrderList 
+      resultSchema: PurchaseOrderInformation
+  post: 
+    displayName: Getting Purchase Orders For a Store
+    description: |
+      Run a report on the purchase orders for a particular store to see what products have been received and have not been received. 
+
+      This will allow you to take appropriate action for product that has not arrived at a store.
+      
+      #### Note
+
+      * Will return both committed and uncommitted purchase orders
+      * To determine if a PO is committed or uncommitted, use [Getting Uncommitted Purchase Orders](#getting-uncommitted-purchase-orders) and [Getting Committed Purchase Orders](#getting-committed-purchase-orders)
+/?op=GetPurchaseOrderShipmentNotices :
+  type:
+    collectionWriteOnly:
+      postSchema: GetPurchaseOrderShipmentNotices  
+      resultSchema: PurchaseOrderShipmentNotice
+  post: 
+    displayName: Getting Purchase Order Shipment Notices
+    description: |
+      This method allows the vendor to query for all shipment notices created for a purchase order.
+/?op=GetStoreInformation:
+  type:
+    collectionWriteOnly:
+      postSchema: GetStoreInformation 
+      resultSchema: StoreInformation
+  post: 
+    displayName: Getting Store Information
+    description: |
+      Get store details. Same as [Getting a Store List](#getting-a-store-list) except this method only returns a single store.
+/?op=GetStoreList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetStoreList 
+      resultSchema: StoreInformation
+  post: 
+    displayName: Getting a Store List
+    description: |
+      Retrieves a list of VMI enabled stores.          
+/?op=GetUncommittedPurchaseOrderList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetUncommittedPurchaseOrderList 
+      resultSchema: PurchaseOrderInformation
+  post: 
+    displayName: Getting Uncommitted Purchase Orders
+    description: |
+      This request allows you to run a report on the uncommitted purchase orders for a particular store.
+
+      #### Notes 
+
+      * An uncommitted purchase order allows a customer to review the PO before agreeing to its contents
+      * The user may also modify the order by changing quantities or adding/removing products
+/?op=GetUpdatedInventoryList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetUpdatedInventoryList 
+      resultSchema: ProductInformation
+  post: 
+    displayName: Getting the Updated Inventory List
+    description: |
+      This method returns a list of products that were added since the last time you called [Getting the Inventory List](#getting-the-inventory-list) or [Getting The Updated Inventory List](#getting-the-updated-inventory-list).          
+/?op=UpdateMinAndMaxProductQuantities:
+  post: 
+    displayName: Updating Min and Max Product Quantities
+    description: |
+      This method allows the vendor to modify the minimum and maximum quantity thresholds for a given product in a particular store
+
+      Returns a boolean value of true for success, false for failure.
+    body:
+      text/xml:
+        schema: UpdateMinAndMaxProductQuantities
+    responses:
+      200:
+        body:
+          text/xml:
+            example: |
+              <?xml version="1.0" encoding="utf-8"?>
+              <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                  <soap:Body>
+                      <UpdateMinAndMaxProductQuantitiesResponse xmlns="http://www.iqmetrix.com">
+                          <UpdateMinAndMaxProductQuantitiesResult>true</UpdateMinAndMaxProductQuantitiesResult>
+                      </UpdateMinAndMaxProductQuantitiesResponse>
+                  </soap:Body>
+              </soap:Envelope>            
+/?op=UpdatePurchaseOrder:
+  post: 
+    displayName: Updating a Purchase Order
+    description: |
+      This method allows the vendor to update a purchase order for a particular store.
+
+      #### Notes
+
+      * The only updatable fields for the purchase order are VendorInvoiceNumber, Comments, and EstimatedArrivalDate
+      * Products are updateable. If you do not wish to change products then leave the products collection empty when submitting the update
+      * If you update any product(s) you must send the entire list of products
+      * If any products are supplied to this call, the PO is cleared and only the supplied products are added
+      * You cannot change state of a PO to Committed through this call
+      * If the PO is completed or has products received against it, it cannot be updated
+      * Every item must be unique. To place multiples of the same item on an order, adjust the quantity accordingly
+
+    body:
+      text/xml:
+        schema: UpdatePurchaseOrder
+    responses:
+      200:
+        body:
+          text/xml:
+            example: |
+              <?xml version="1.0" encoding="utf-8"?>
+              <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                  <soap:Body>
+                      <UpdatePurchaseOrderResponse xmlns="http://www.iqmetrix.com">
+                          <UpdatePurchaseOrderResult>true</UpdatePurchaseOrderResult>
+                      </UpdatePurchaseOrderResponse>
+                  </soap:Body>
+              </soap:Envelope> 
+/?op=CancelUncommittedPurchaseOrder:
+  post: 
+    displayName: Canceling an Uncommitted Purchase Order
+    description: | 
+      Cancel a Purchase Order that is in an uncommitted state.
+    body:
+      text/xml:
+        schema: CancelUncommittedPurchaseOrder
+    responses:
+      200:
+        body:
+          text/xml:
+            example: |
+              <?xml version="1.0" encoding="utf-8"?>
+              <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                <soap:Body>
+                  <CancelUncommittedPurchaseOrderResponse xmlns="http://www.iqmetrix.com">
+                    <CancelUncommittedPurchaseOrderResult>true</CancelUncommittedPurchaseOrderResult>
+                  </CancelUncommittedPurchaseOrderResponse>
+                </soap:Body>
+              </soap:Envelope>
+/?op=CreateUncommittedPurchaseOrder:
+  type:
+    collectionWriteOnly:
+      postSchema: CreateUncommittedPurchaseOrder 
+      resultSchema: PurchaseOrder
+  post: 
+    displayName: Creating an Uncommitted Purchase Order
+    description: |
+      Create a purchase order that is not committed. 
+
+      The purchase order can then be reviewed in RQ by the client, modified as required and committed by the client before any product is sent.              
+/?op=GetReceivingInfo:
+  type:
+    collectionWriteOnly:
+      postSchema: GetReceivingInfo 
+      resultSchema: ReceivingInfo
+  post: 
+    displayName: Getting Product Receiving Info
+    description: |
+      Retrieves a list of products received within a date range.
+/?op=GetTransferCounts:
+  type:
+    collectionWriteOnly:
+      postSchema: GetTransferCounts 
+      resultSchema: TransferCount
+  post: 
+    displayName: Getting Transfer Counts
+    description: |
+      Retrieves a matrix of transfers that occured within the specified date range.
+
+      #### Notes
+
+      * For no channel, use Guid.Empty or `00000000-0000-0000-0000-000000000000`
+      * For no region, district or store use -1            
+/?op=GetInventoryListingReport:
+  type:
+    collectionWriteOnly:
+      postSchema: GetInventoryListingReport 
+      resultSchema: InventoryListingData
+  post: 
+    displayName: Getting the Inventory Listing Report
+    description: |
+      Retrieve a detailed list of locations and on-hand products where you are set as the primary vendor for that product. 
+
+      To be used in conjunction with results from <a href='#getting-hierarchy-info'>Getting Hierarchy Info</a>.
+
+      #### Notes
+
+      * For no channel, use Guid.Empty or `00000000-0000-0000-0000-000000000000`
+      * For no region, district or store use -1      
+/?op=GetAdjustmentReport:
+  type:
+    collectionWriteOnly:
+      postSchema: GetAdjustmentReport 
+      resultSchema: Adjustment
+  post: 
+    displayName: Getting the Adjustment Report
+    description: |
+      Get a list of inventory adjustments with quantity and reason codes within a date range.
+
+      #### Notes
+
+      * For no channel, use Guid.Empty or `00000000-0000-0000-0000-000000000000`
+      * For no region, district or store use -1
+/?op=GetGeographicInventoryReport:
+  post: 
+    displayName: Getting the Geographic Inventory Report
+    description: |
+
+      Similar to GetInventoryReportByVendorSKU, but can be used with <a href='#getting-hierarchy-info'>Getting Hierarchy Info</a> to rub the report at any level in the company tree (hierarchy).
+           
+      This allows consumers to get inventory data for a large number of stores at one time. 
+
+      {{note}}
+      The payload and/or processing time for this call can be huge. Consider the number of locations multiplied by the number of products you supply for that store. 
+      <br/><a href='#getting-hierarchy-info'>Getting Hierarchy Info</a> includes a store count for each level of the hierarchy, use this value to allow your software to intelligently choose the appropriate level to request. 
+      <br/>Consider using a configuration value instead of hard-coding.
+      {{end}}
+
+      #### Notes
+
+      * For no channel, use Guid.Empty or `00000000-0000-0000-0000-000000000000`
+      * For no region, district or store use -1
+      * If the result of HierarchyInfo contains a default Channel of Guid.Empty (00000000-0000-0000-0000-000000000000), you must get data at the Region level.
+    body:
+      text/xml:
+        schema: GetGeographicInventoryReport 
+    responses:
+      200:
+        body:
+          text/xml:
+            example: |
+              <?xml version="1.0" encoding="utf-8"?>
+              <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                <soap:Body>
+                  <GetGeographicInventoryReportResponse xmlns="http://www.iqmetrix.com">
+                    <GetGeographicInventoryReportResult>
+                      <ProductAndStoreInformation>
+                        <StoreID>6</StoreID>
+                        <Name>Vineland Test Store</Name>
+                        <ChannelID>4bbb842d-0340-4ffc-9216-bf170c861424</ChannelID>
+                        <ChannelName>First Channel</ChannelName>
+                        <RegionID>1</RegionID>
+                        <RegionName>First Region</RegionName>
+                        <DistrictID>1</DistrictID>
+                        <DistrictName>First District</DistrictName>
+                      </ProductAndStoreInformation>
+                    </GetGeographicInventoryReportResult>
+                  </GetGeographicInventoryReportResponse>
+                </soap:Body>
+              </soap:Envelope>            
+/?op=GetProductSalesReport:
+  type:
+    collectionWriteOnly:
+      postSchema: GetProductSalesReport 
+      resultSchema: ProductSalesReportData
+  post: 
+    displayName: Getting the Product Sales Report
+    description: |
+      Retrieves detailed sell through data for products where you are set as the primary vendor.
+
+      #### Notes
+
+      * For no channel, use Guid.Empty or `00000000-0000-0000-0000-000000000000`
+      * For no region, district or store use -1
+/?op=GetRMAList:
+  type:
+    collectionWriteOnly:
+      postSchema: GetRMAList 
+      resultSchema: ReturnMerchandiseAuthorization
+  post: 
+    displayName: Getting a List of RMAs
+    description: |
+      This method allows you to retrieve a list of RMAs for a particular store. You can search on Uncommitted (pending), committed, or shipped RMAs.     
+/?op=CreateRMA:
+  type:
+    collectionWriteOnly:
+      postSchema: CreateRMA
+      resultSchema: RMA
+  post: 
+    displayName: Creating a RMA
+    description: |
+      This method allows the vendor to create a Return Merchandise Authorization for a client. 
+
+      Committed, DateCommitted, ShippedAway, Completed, ShippingCost, EmployeeID, and VendorID will be ignored if set when creating an RMA. 
+
+      These fields are only set for informational purposes in other RMA calls.
+
+      #### Notes
+
+      * The RMA is created in an uncommitted (pending) state
+      * It will become visible in RQ and will be reviewed and fulfilled by store staff using RQ
+      * For serialized products, a serial number must be supplied. 
+/?op=UpdateCommittedRMA:
+  type:
+    collectionWriteOnly:
+      postSchema: UpdateCommittedRMA
+      resultSchema: RMA
+  post: 
+    displayName: Updating a Committed RMA
+    description: |
+      This method allows the vendor to update an existing RMA that is in the committed or shipped state. 
+
+      The main purpose of this method is to allow the vendor to assign a Vendor RMA number to the RMA after the client has accepted and committed the RMA.    

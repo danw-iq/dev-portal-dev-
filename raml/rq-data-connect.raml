@@ -1,0 +1,621 @@
+#%RAML 0.8
+title: RQ Data Connect
+baseUri: https://rqdataconnect{UrlSuffix}.iqmetrix.net
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: |
+      RQ
+  - title: overview
+    content: |
+
+      RQ Data Connect allows you to retrieve report data from your RQ database (v4.23 and up).
+
+      To get started, see [RQ Data Connect Guide](/guides/rq-data-connect/).
+
+      #### Note
+
+      For reports that provide optional URI parameters for filtering at different levels (ForWho/ForWhoIDs/LocationType/LocationTypeIDs), omitting these values will run the report at the default company level.
+
+      ### Authentication
+
+      RQ Data Connect and Bridge support many different methods of authentication, see {{AuthenticationOptions}}.
+
+      Note that for all reports the {{AccessToken_Glossary}} should be mapped to an employee in RQ.
+
+      ### Report List
+
+      Reports are organized by category, for a complete list of reports in RQ Data Connect, see [Report List](/rq-data-connect/report-list).
+
+      <hr/>
+      <div id='reports-display'>
+        <div class='row text-center'>
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Customer-Reports'>
+                <h4>Customer Reports</h4>
+                <div class="rdc-sprite rdccustomers"></div>
+              </a> 
+            </span>
+          </span>
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Commission-Reports'>
+                <h4>Commission Reports</h4>
+                <div class="rdc-sprite rdccommission"></div>
+              </a>
+            </span>
+          </span>
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Employee-Reports'>
+                <h4>Employee Reports</h4>
+                <div class="rdc-sprite rdcemployees"></div>
+              </a>
+            </span>
+          </span>
+        </div>
+        <div class='row text-center'>
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Sales-Reports'>
+                <h4>Sales Reports</h4>
+                <div class="rdc-sprite rdcsales"></div>
+              </a>
+            </span>
+          </span>
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Inventory-Reports'>
+                <h4>Inventory Reports</h4>
+                <div class="rdc-sprite rdcinventory"></div>
+              </a>
+            </span>
+          </span>
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Finance-Reports'>
+                <h4>Finance Reports</h4>
+                <div class="rdc-sprite rdcfinance"></div>
+              </a>
+            </span>
+          </span>
+        </div>
+        <div class='row text-center'>
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Performance-Metrix-Reports'>
+                <h4>Performance Metrix Reports</h4>
+                <div class="rdc-sprite rdcperformance-metrix"></div>
+              </a>
+            </span>
+          </span>  
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <!--<a href='/api/RQ-Data-Connect-Dashboard-Reports'>-->
+                <h4>Dashboard Reports</h4>
+                <div class="rdc-sprite rdcdashboard"></div>
+              <!--</a>-->
+            </span>
+          </span>
+          <span class='col-md-4'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Utilities-Reports'>
+                <h4>Utilities</h4>
+                <div class="rdc-sprite rdctools"></div>
+              </a>
+            </span>
+          </span> 
+        </div>
+        <div class='row text-center'>
+          <span class='col-md-12'>
+            <span class='col-md-12'>
+              <a href='/api/RQ-Data-Connect-Import'>
+                <h4>Import</h4>
+                <div class="rdc-sprite rdcimport"></div>
+              </a>
+            </span>
+          </span>  
+        </div>        
+      </div>
+      <hr/>
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Bad Request` | Ensure request body is formatted properly |
+      | `HTTP 401` | `Tokan is invalid` | Ensure Access Token is valid and has not expired |
+      | `HTTP 403` | `Unauthorized` | Ensure Access Token is valid and user has appropriate security |
+      | `HTTP 404` | `Not Found` | Ensure URI is valid |
+      | `HTTP 429` | `Too Many Requests` | See [Rate Limiting](/api/#rate-limiting) |
+      | `HTTP 500` | `Unexpected Error` | See Message in response for more information |
+resourceTypes:
+  - collectionReadOnly:
+      get:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              required: false
+              description: Bearer token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+            Accept-Encoding:
+              example: gzip
+              required: false
+              description: Compression algorithm. For other methods of compression, see {{CompressionOptions}}
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+                application/JsonDataTable:
+                  schema: <<resource>>
+                text/xml:
+                  schema: <<resource>>
+                text/XmlDataTable:
+                  schema: <<resource>>
+                text/csv:
+                  schema: <<resource>>
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                  schema: <<resource>>
+schemas:
+  - Session: |
+      {
+        "exclude": "true",
+        "name": "Session",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "access_token": { "type": "guid", "putDescription": "{{AccessToken_Glossary}}", "example": "b0k0dY70N3Vv9jR1b9oEdW9IeT5WIn85WCYFJRo6AiIKLEMBFwNbEQsfeCUeM3gdPA1gAAVxWTJacX8mJyBaGRcFVwQOEV49NgBz" },
+          "isValid": { "type": "boolean", "putDescription": "A flag to indicate if the token is valid", "example": "true" },
+          "ParentEntityId": { "type": "integer", "putDescription": "Identifier for the {{Company}} the {{User}} belongs to", "example": "21090" },
+          "RQEmployeeId": { "type": "integer", "putDescription": "Identifier for the employee in RQ associated with this session", "example": "3494" }
+        }
+      }
+  - BasicTokenResponse: |
+      {
+        "exclude": "true",
+        "name": "BasicTokenResponse",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "access_token": { "type": "guid", "putDescription": "{{AccessToken_Glossary}}, this value can be used in the Authorization header", "example": "b0k0dY70N3Vv9jR1b9oEdW9IeT5WIn85WCYFJRo6AiIKLEMBFwNbEQsfeCUeM3gdPA1gAAVxWTJacX8mJyBaGRcFVwQOEV49NgBz" },
+          "isValid": { "type": "boolean", "putDescription": "A flag to indicate if the token is valid", "example": "true" },
+          "ParentEntityId": { "type": "integer", "putDescription": "Identifier for the {{Company}} the {{User}} belongs to", "example": "21090" },
+          "RQEmployeeId": { "type": "integer", "putDescription": "Identifier for the employee in RQ associated with the token", "example": "3494" },
+          "basic_token": { "type": "string", "putDescription": "Basic token that can be used as the Auth URL Parameter for reports", "example": "vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw" },
+          "PreferredEndpoint": { "type": "string", "putDescription": "A URL that represents the version of RQ Data Connect that is closest to your RQ database. Use this URL for best performance", "example": "https://rqdataconnect18.iqmetrix.net" }
+        }
+      }
+  - Employee: |
+      {
+        "exclude": "true",
+        "name": "Employee",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "EmployeeID": { "type": "integer", "database": "INT", "description": "Identifier for an Employee in RQ", "example": "22" },
+          "EmployeeEntityID": { "type": "integer", "database": "INT", "description": "Identifier of the corresponding [User](/api/user-manager/#user)", "example": "44567" },
+          "Name": { "type": "string", "database": "VARCHAR(51)", "description": "Employee name", "example": "Jim Bob" },
+          "First_Name": { "type": "string", "database": "VARCHAR(25)", "description": "First name", "example": "Jim" },
+          "Last_Name": { "type": "string", "database": "VARCHAR(25)", "description": "Last name", "example": "Bob" }
+        }
+      }
+  - CategoryNumber: |
+      {
+        "name": "CategoryNumber",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": { "type": "string", "description": "Category Identifier", "example": "1010271216" },
+          "Description": { "type": "string", "description": "Category name", "example": "Rate Plans" }
+        }
+      }
+  - LanguageCode: |
+      {
+        "exclude": "true",
+        "name": "LanguageCode",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": { "type": "string", "description": "Language code", "example": "en-us" }
+        }
+      }      
+  - RQCompanyTreeNode: |
+      {
+          "type": "array",
+          "name": "RQCompanyTreeNode",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "ID": { "type": "integer", "database": "INT", "description": "Identifier", "example": "0" },
+            "Description": { "type": "string", "database": "VARCHAR(255)", "example": "KENTEL Corp", "description": "Description" },
+            "EntityID": { "type": "integer", "database": "INT", "example": "14146", "description": "Identifier for the appropriate {{CompanyTreeNode}}" }
+          }
+      }
+  - ProductIdentifier: |
+      {
+        "exclude": "true",
+        "name": "ProductIdentifier",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": { "type": "string", "description": "Identifier of a product in RQ", "example": "ASCLMO000001" },
+          "Description": { "type": "string", "description": "Product name", "example": "HC Samsung U340" }
+        }
+      }      
+  - ReasonCode: |
+      {
+        "name": "ReasonCode",
+        "type": "array",
+        "description": "A ReasonCode allows an employee to provide a reason for an action, such as a ChargeBack. For example, Point of Sale Error.",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": { "type": "string", "description": "Identifier", "example": "1" },
+          "Description": { "type": "string", "description": "Reason", "example": "Write Off" }
+        }
+      }      
+  - ForWho: |
+      {
+        "exclude": "true",
+        "name": "ForWho",
+        "description": "Levels of a company tree in RQ such as Region, District, Store, etc.",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": { "type": "string", "description": "Identifier", "example": "1" },
+          "Description": { "type": "string", "description": "Name", "example": "Company" }
+        }
+      }
+  - ForWhoIDs: |
+      {
+        "name": "ForWhoIDs",
+        "exclude": "true",
+        "description": "There is a RQCompanyTreeNode resource for each Company, Channel, Region, District and Store in RQ.",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": { "type": "integer", "description": "Identifier in RQ", "example": "1" },
+          "Column1": { "type": "string", "description": "Name", "example": "KENTEL Corp" },
+          "EntityID": { "type": "integer", "description": "Identifier of the corresponding [CompanyTreeNode](/api/company-tree/#companytreenode)", "example": "11432" }
+        }
+      }      
+  - Manufacturer: |
+      {
+        "exclude": "true",
+        "name": "Manufacturer",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": { "type": "string", "description": "Identifier", "example": "9" },
+          "Description": { "type": "string", "description": "RQ Manufacturer Name", "example": "LG" }
+        }
+      }      
+  - Store: |
+      {
+        "exclude": "true",
+        "name": "Store",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "StoreID": { "type": "integer", "description": "Identifier for a Store in RQ", "example": "1188" },
+          "LocationEntityID": { "type": "integer", "description": "Identifier of the store as a {{Location}} in Entity Store", "example": "453" },
+          "StoreName": { "type": "string", "description": "Store name", "example": "Altera Kiosk" }
+        }
+      }      
+  - LocationType: |
+      {
+          "type": "array",
+          "name": "LocationType",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Type": { "type": "string", "database": "VARCHAR(8)", "description": "Name of a Location type in RQ", "example": "Channel" }
+          }
+        }      
+  - Group: |
+      {
+
+          "type": "array",
+          "name": "Group",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "GroupID": { "type": "integer", "database": "INT", "example": "4", "description": "Identifier" },  
+            "GroupName": { "type": "string", "database": "VARCHAR(50)", "example": "100% (35% GP)", "description": "Name" }  
+          }  
+        }
+  - Coupon: |
+      {
+          
+          "type": "array",
+          "name": "Coupon",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "CouponID": { "type": "integer", "database": "INT", "example": "1144", "description": "Identifier" },  
+            "CouponName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "TEST2", "description": "Name" }  
+          }  
+        }
+  - StoreType: |
+      {
+          "type": "array",
+          "name": "StoreType",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Type": { "type": "integer", "database": "INT", "description": "Identifier", "example": "3" },
+            "StoreTypeName": { "type": "string", "database": "NVARCHAR(MAX)", "description": "Name", "example": "Kiosk" }
+          }
+        }  
+  - FinancingID: |
+      {
+          "type": "array",
+          "name": "FinancingID",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "FinancingDetailID": { "type": "integer", "database": "INT", "example": "19", "description": "Identifier" },  
+            "FinancingDetailName": { "type": "string", "database": "VARCHAR(50)", "example": "Import", "description": "Name" }  
+          }  
+        }      
+  - CarrierSIP: |
+      {
+
+          "type": "array",
+          "name": "CarrierSIP",
+          "exclude": "true",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "CarrierID": { "type": "integer", "database": "INT", "example": "10", "description": "Identifier" },  
+            "CarrierName": { "type": "string", "database": "VARCHAR(50)", "example": "Nextel", "description": "Name" }  
+          }  
+        }          
+  - VendorID: |
+      {
+        "type": "array",
+        "name": "VendorID",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "VendorID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier" },  
+          "VendorName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "A.C.P", "description": "Name" }  
+        }  
+      }
+  - ProductType: |
+      { 
+        "type": "array",
+        "name": "ProductType",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "ProductTypeID": { "type": "integer", "database": "INT", "example": "0", "description": "Identifier" },  
+          "ProductType": { "type": "string", "database": "VARCHAR(30)", "example": "Regular Global Product", "description": "Name" }  
+        }  
+      }        
+  - NonSellableReasonCode: |
+      {
+          
+          "type": "array",
+          "name": "NonSellableReasonCode",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "ReasonCode": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "c5473733-e030-83cf-7a9f-4e95a3c27efa", "description": "Identifier" },  
+            "ReasonCodeDescription": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Scratched", "description": "Reason code" }  
+          }  
+        }      
+/session?Auth={Auth}:
+  uriParameters:
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic access token received from the request <a href='#basic-authentication-with-platform-credentials'>Basic Authentication with Platform Credentials</a>
+      required: true
+  get:
+    displayName: Getting Session Information
+    description: |
+      This request allows you to retrieve information about a Basic access token
+    responses:
+      200:
+        body:
+          application/json:
+            schema: Session
+/session:
+  get:
+    displayName: Basic Authentication with Platform Credentials
+    description: |
+      This request allows you to use Platform credentials to obtain an {{AccessToken_Glossary}}.
+
+      In the Authorization header, place the base 64 encoded form of your username and password prefixed by the word `Basic`.
+
+      For examples, see <a href="/guides/rq-data-connect/#basic-authentication">Basic Authentication</a>
+
+      Note that as long as your username and password do not change, the Basic token generated from your username and password will remain the same.
+    headers:
+      Authorization:
+        example: Basic vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+        required: true
+    responses:
+      200:
+        body:
+          application/json:
+            schema: BasicTokenResponse        
+/lists/employees:
+  type:
+    collectionReadOnly:
+      resource: Employee
+  get:
+    displayName: Getting Employees
+/lists/categorynumber:
+  type:
+    collectionReadOnly:
+      resource: CategoryNumber
+  get:
+    displayName: Getting Category Numbers
+/lists/languages:
+  type:
+    collectionReadOnly:
+      resource: LanguageCode
+  get:
+    displayName: Getting Language Codes
+/lists/productidentifier:
+  type:
+    collectionReadOnly:
+      resource: ProductIdentifier
+  get:
+    displayName: Getting Products in RQ
+/lists/reasoncode:
+  type:
+    collectionReadOnly:
+      resource: ReasonCode
+  get:
+    displayName: Getting Reason Codes
+/lists/forwhoid:
+  type:
+    collectionReadOnly:
+      resource: ForWho
+  get:
+    displayName: Getting Report Levels in RQ
+    description: |
+      This request will return a list of hierarchical levels in your company tree in RQ.
+
+      To learn more about Locations in RQ, see {{support_LocationSetup}}.
+/lists/forwhoids?ForWho={ForWho}:
+  uriParameters:
+    ForWho:
+      type: integer
+      example: 1
+      description: Identifier for a level at which to perform the request. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>
+      required: true
+  type:
+    collectionReadOnly:
+      resource: ForWhoIDs
+  get:
+    displayName: Getting Nodes By Location Type
+    description: |
+      This request will return a list of locations in RQ a report can be restricted to.
+/lists/manufactureid:
+  type:
+    collectionReadOnly:
+      resource: Manufacturer
+  get:
+    displayName: Getting a List of Manufacturers in RQ
+/lists/stores:
+  type:
+    collectionReadOnly:
+      resource: Store
+  get:
+    displayName: Getting A List of Stores in RQ
+/lists/CouponID?LanguageCode={LanguageCode}:
+  uriParameters:
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false  
+  type:
+    collectionReadOnly: 
+      resource: Coupon
+  get:
+    displayName: Getting a List of Coupons in RQ
+/lists/GroupID:
+  type:
+    collectionReadOnly: 
+      resource: Group
+  get:
+    displayName: Getting a List of Groups in RQ    
+/lists/CarrierSIP?LanguageCode={LanguageCode}:
+  uriParameters:
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false  
+  type:
+    collectionReadOnly:
+      resource: CarrierSIP
+  get:
+    displayName: Getting a List of Carriers in RQ
+/lists/FinancingID?LanguageCode={LanguageCode}:
+  uriParameters:
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false 
+  type: 
+    collectionReadOnly:
+      resource: FinancingID
+  get:
+    displayName: Getting Financing Types    
+/lists/StoreTypes?LanguageCode={LanguageCode}:
+  uriParameters:
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false  
+  type:
+    collectionReadOnly:
+      resource: StoreType
+  get:
+    displayName: Getting Store Types
+/lists/LocationType:
+  type:
+    collectionReadOnly:
+      resource: LocationType
+  get:
+    displayName: Getting Location Types
+/lists/LocationIDs?LocationType={LocationType}&LanguageCode={LanguageCode}:
+  uriParameters:
+    LocationType:
+      type: string
+      example: Company
+      required: true
+      description: For a complete list, see <a href='#getting-location-types'>Getting Location Types</a>
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+  type:
+    collectionReadOnly:
+      resource: RQCompanyTreeNode
+  get:
+    displayName: Getting Location Ids
+    description: |
+      This request allows you to get a list of identifiers for a specific LocationType within a company.
+
+      For example, `/lists/LocationIDs?LocationType=Region` will return a list of all Regions in the company including the RQ identifier and associated {{CompanyTreeNode}} identifier.      
+/lists/VendorID?LanguageCode={LanguageCode}:
+  uriParameters:
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false  
+  type:
+    collectionReadOnly: 
+      resource: VendorID
+  get:
+    displayName: Getting a List of Vendors in RQ 
+/lists/ProductType:
+  type:
+    collectionReadOnly: 
+      resource: ProductType
+  get:
+    displayName: Getting Product Types
+/lists/NonSellableReasonCode?LanguageCode={LanguageCode}:
+  uriParameters:
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false    
+  type:
+    collectionReadOnly: 
+      resource: NonSellableReasonCode
+  get:
+    displayName: Getting Non Sellable Reason Codes
+    
+

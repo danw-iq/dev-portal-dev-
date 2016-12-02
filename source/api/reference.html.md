@@ -188,17 +188,16 @@ puts response
 
 
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -293,17 +292,16 @@ puts response
 
 
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -391,17 +389,16 @@ puts response
 
 
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {

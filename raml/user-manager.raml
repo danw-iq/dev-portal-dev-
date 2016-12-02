@@ -1,0 +1,770 @@
+#%RAML 0.8
+title: user-manager
+version: v1
+baseUri: https://usermanager{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |
+        The User Manager API allows you to manage [User](#users) accounts for your {{Company}}.
+ 
+        To learn more about User Manager, see {{UserManager_Concept}}.
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `The temporary password must be at least 6 characters long` | Ensure the provided password is at least 6 characters long and not an empty string |
+      | `HTTP 400` | `Bad Request` | Ensure all of the required fields are provided and formatted accurately, for more details see error message |
+      | `HTTP 400` | `No search terms provided` | Ensure search terms are provided in URI |
+      | `HTTP 400` | `Query string parameter '$top'`<br/>`should be within 1 to 100 range but was {x}` | Ensure `$skip` is in the range [0-100] |
+      | `HTTP 400` | `Query string parameter '$skip'`<br/>`should be non-negative but was -1` | Ensure `$top` is non-negative |
+      | `HTTP 404` | `User not found` | Ensure UserId is valid |
+      | `HTTP 404` | `Entity not found` | Ensure LocationId is valid |
+      | `HTTP 409` | `Username and email already exist` | Ensure the email chosen does not already belong to a User. <br/> If the email address belongs to a disabled User, change the email for the disabled User before creating a new User with the original email |
+      | `HTTP 409` | `User version mismatch` | Ensure the Version value provided in the request data matches the Version for the User in the database |
+  - title: pagination
+    content: |
+        The User Manager API supports pagination of collections of resources for some requests.
+
+        ### Query Parameters
+
+        Pagination is done through the use of $skip and $top query string parameters.
+
+        `$skip` denotes the number of items to skip from the entire set of results. This value defaults to 0 if no `$skip` value is specified. If a value less than 0 is specified, the URI is considered malformed.
+
+        `$top` denotes the maximum number of items to include in the response. This value defaults to 30 if no `$top` value is specified. Acceptable values are in the range [0-100]. 
+
+        ### Navigation Links
+
+        Pagination-enabled requests include links for 'self', 'prev' and 'next' in the response data. 
+
+        These links are _relative_, they do not include the base endpoint. It is the responsibility of the client to prepend the appropriate endpoint.
+
+        ##### Example
+
+        ```csharp
+        {
+            "_links": {
+                "prev": null,
+                "self": "/v1/Entities(14146)/Users?$skip=0&$top=5",
+                "next": "/v1/Entities(14146)/Users?$skip=5&$top=5"
+            },
+            "_metadata": {
+                "count": 15,
+                "skip": 0,
+                "top": 5
+            }
+        }
+        ```
+        In the example above, the `_links` section is included in the data returned from an API call to <a href="#getting-all-users-for-a-company">Getting All Users for a Company</a>, where `$skip=0` and `$top=5`.
+
+        The `self`.`href` value is the relative version of the API call that returned these results.
+
+        The `next`.`href` refers to a resource containing a page with the **next** 5 items.
+
+        The `prev`.`href` refers to a resource containing a page with the **previous** 5 items.
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json   
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+    - collection:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json       
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<getResource>>        
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - singularEndpointPutDelete:
+        securedBy: [oauth_2_0]
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json
+          responses:
+            204:
+              body:
+                application/json:
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json     
+          responses:
+            204:        
+              body:
+                application/json:                          
+    - singularEndpoint:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)      
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>               
+          responses:
+            200:
+              body:
+                application/json:            
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - PasswordUpdate : |
+      {
+        "exclude": "true",
+        "name": "PasswordUpdate",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Password": { "type": "string", "example": "newpa55word" }
+        },
+        "required": ["Password"]
+      }
+  - ImportUser : |
+      {
+        "exclude": "true",
+        "name": "ImportUser",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "UserName": { "type": "string",  "putDescription": "The name used to identify this User. Must be unique. <strong>RQ Limitation</strong>: To import this User to RQ, ensure username follows the format <code>{Name}@{DatabaseName}</code>", "example": "johnb@kentel" }, 
+          "Password": { "type": "string", "putDescription": "The User's password. If supplied, it must be a nonempty string", "example": "samplepassword" },
+          "Email": { "type": "string", "putDescription": "The User's email address. Must be unique", "example": "johnb@kentel.com" }, 
+          "FirstName": { "type": "string", "example": "John" }, 
+          "LastName": { "type": "string", "example": "Bates" }, 
+          "ParentEntityId": { "type": "integer", "putDescription": "Identifier for the Company to which this User belongs", "example": "1" }, 
+          "ClientUserId": { "type": "string", "putDescription": "Identifier for the User in an external system", "example": "132" }, 
+          "JobTitle": { "type": "string", "example": "Sales Clerk"},          
+          "Address": { "type": "object", "ref": "user-manager.Address" },
+          "PhoneNumbers": { "type": "array", "arrayType": "object", "ref": "user-manager.PhoneNumber" }
+        },
+        "required": ["UserName", "ParentEntityId"]
+      }
+  - User : |
+      {
+        "name": "User",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "A User represents an account that can be used to perform actions on your data within iQmetrix APIs.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "2576", "generated": "true" }, 
+          "FirstName": { "type": "string",  "description": "First name", "example": "John" }, 
+          "LastName": { "type": "string",  "description": "Last name", "example": "Bates" }, 
+          "UserName": { "type": "string",  "description": "Name to be used to identify this User, must be unique", "putDescription": "The name used to identify this User. Must be unique", "example": "johnb@kentel.com" }, 
+          "Address": { "type": "object", "description": "Address", "ref": "user-manager.Address" },
+          "ClientUserId": { "type": "string",  "description": "Identifier for the User in an external system", "example": "132" }, 
+          "Email": { "type": "string", "description": "Email for the User. Must be unique. A notification will be sent to this address when a User is created.", "putDescription": "The User's email address. Must be unique. No notification will be sent when this User is updated", "example": "johnb@kentel.com" }, 
+          "IsActive": { "type": "boolean", "description": "Flag to indicate if the Users login is enabled, false if it is disabled", "example": "true", "generated": "true"  }, 
+          "JobTitle": { "type": "string", "description": "Job title", "example": "Sales Clerk"},          
+          "ParentEntityId": { "type": "integer", "description": "Identifier for the Company to which this User belongs", "example": "1" }, 
+          "PhoneNumbers": { "type": "array", "arrayType": "object", "description": "Phone numbers", "ref": "user-manager.PhoneNumber" },
+          "Picture": { "type": "object", "description": "A reference to an Asset that is a photo of the User", "putDescription": "A reference to an Asset that is a photo of the User. Once the Picture property is populated, it is immutable. However, it can be removed completely by setting Picture to null in the body of a PUT reqest", "example": "" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "putDescription": "The current version of the User, incremented on PUT if any other fields are changed. If provided, the version number will be verified against the version of the User in the database and rejected if not up to date", "example": "1" }, 
+          "Attributes": { "type": "object", "description": "Reserved for future use", "example": ""}, 
+          "CorrelationId": { "type": "string",  "description": "Reserved for internal use", "example": "" }, 
+          "Profiles": { "type": "array", "description": "This is a legacy property that should not be used", "example": "" } 
+        },
+        "required": ["FirstName", "LastName", "UserName", "ParentEntityId"]
+      }
+  - Address: |
+      {
+        "name": "Address",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "AddressLine1": { "type": "string", "example": "1432 Merry View Road"},
+          "AddressLine2": { "type": "string", "example": ""},
+          "City": { "type": "string", "example": "Big Windy"},
+          "StateCode": { "type": "string",  "description": "Code for the State in which this address resides. Based off the ISO 3166-2 standard", "putDescription": "Must include a valid CountryCode if provided. For a list of acceptable codes see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>", "example": "ON"},
+          "CountryCode": { "type": "string",  "description": "Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of accptable Countries, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>", "example": "CA" },
+          "Zip": { "type": "string",  "description": "Zip or Postal Code", "example": "A1A2B2" }
+        }
+      }
+  - PhoneNumber: |
+      {
+        "name": "PhoneNumber",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Number": { "type": "string", "description": "Must be at least 7 characters", "putDescription": "Must be at least 7 characters", "example": "6135550127" },
+          "Extension": { "type": "string", "description": "Extension", "putDescription": "If provided, Number must also be provided", "example": "5532" },
+          "Type": { "type": "string", "description": "Type of phone number", "putDescription": "Required if Number is provided. <strong>RQ Limitation:</strong> To import into RQ, value must be one of <strong>Home, Cell, Work</strong>", "example": "Work" }
+        }
+      }
+  - UserArray : |
+      {
+        "exclude": "true",
+        "name": "User",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - _links: |
+      {
+        "name": "_links",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Relative URL's used for Pagination",
+        "properties": {
+          "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null"},
+          "self": { "type": "string", "putDescription": "The request that returned these results", "example": "/v1/entities(14146)/users?$skip=0&$top=30"},
+          "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null"}
+        },
+        "required": ["self"]
+      }
+  - _metadata: |
+      {
+        "name": "_metadata",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Data representing Pagination details",
+        "properties": {
+          "count": { "type": "integer", "putDescription": "The total number of results returned from the request", "example": "1"},
+          "skip": { "type": "integer", "putDescription": "Value of skip in the request URI, if not specified the value will be 0", "example": "0"},
+          "top": { "type": "integer", "putDescription": "Value of top in the request URI, if not specified the value will be 30", "example": "30"}
+        }
+      }
+  - SearchSchema: |
+      { 
+        "name": "SearchSchema",
+        "exclude": "true",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "user-manager._links" },
+          "_metadata": { "type": "object", "putDescription": "Data representing Pagination details", "ref": "user-manager._metadata" },
+          "items": { "type": "array", "arrayType": "object", "ref": "user-manager.User"}
+        }
+      }
+  - AssignedLocations: |
+      {
+        "name": "AssignedLocations",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "UserId": { "type": "integer", "ref": "user-manager.User.Id" },
+          "LocationIDs": { "type": "array", "arrayType": "integer", "putDescription": "Location Ids for {{Locations}} assigned to the {{User}}", "example": "14202"}
+        }
+      }  
+  - Unlock: |
+      {
+        "name": "Unlock",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "CanUnlockUser": { "type": "boolean", "example": "true" },
+          "LockReasonId": { "type": "integer", "putDescription": "Identifier for a {{LockReason}}", "ref": "user-manager.LockReason.Id" }          
+        }
+      }            
+  - LockReason: |
+      {
+        "name": "LockReason",
+        "description": "A **LockReason** allows you to provide a reason when [Locking a User](/api/user-manager/#locking-a-user). Examples of reasons might include: \n\n* Incomplete paperwork on a sale \n * Equipment transfer Incomplete inventory count \n * Incomplete cash safe",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "14", "generated": "true" }, 
+          "Name": { "type": "string",  "description": "Lock reason name", "putDescription": "Must be unique within the organization", "example": "PaperworkNotDone" }, 
+          "Description": { "type": "string", "description": "Text that will appear to User when locked out", "putDescription": "Human readable description", "example": "Your account has been locked because the paperwork hasn't been done. Please contact your supervisor."}
+        },
+        "required": [ "Name", "Description" ]
+      }  
+  - LockReasons: |
+      {
+        "exclude": "true",
+        "name": "LockReason",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - LockReasonRequest: |
+      {
+        "exclude": "true",
+        "name": "LockReasonRequest",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "LockReasonId": { "type": "integer", "putDescription": "Identifier for a {{LockReason}}", "ref": "user-manager.LockReason.Id"}
+        }
+      }
+/Users/importExisting: 
+  post:
+    headers:
+      Authorization:
+        example: Bearer (Access Token) 
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>         
+      Accept:
+        example: application/json
+      Content-Type:        
+        example: application/json        
+    displayName: Importing an Existing User
+    description: |
+      {{important}}
+      This request <strong>will not send an email</strong> to the User
+      {{end}}
+      {{note}}
+      If no password is supplied, the User will not be able to log in, obtain a token or reset their password. Users created this way will <strong>not get a password</strong> and are <strong>not forced to change their password</strong> when logging in for the first time.
+      {{end}}
+      This request allows existing Users to be imported from another system. 
+    body:
+      application/json:
+        schema: ImportUser
+    responses:
+      201:
+        body:
+          application/json:
+            schema: User
+/Users({UserId}):
+  uriParameters:
+    UserId:
+      displayName: UserId
+      type: string
+      example: 2576
+      description: Identifier for the {{User}}
+      required: true
+  type:
+    singularEndpoint:
+      resource: User
+  delete:
+    displayName: Disabling a User
+    description: |
+        {{note}}
+        Disabling a User does <b>NOT</b> free up their email address or username to be used to create another User. To free up an email address or username, you must instead <a href="#updating-a-user">update</a> the email or username of the original User to something else.
+        {{end}}
+    responses:
+      200:
+        body:
+          application/json:
+            schema: User
+            example: |
+              {
+                  "Id": 2576,
+                  "FirstName": "John",
+                  "LastName": "Bates",
+                  "UserName": "johnb@kentel.com",
+                  "Address": {
+                      "AddressLine1": "1432 Merry View Road",
+                      "AddressLine2": "",
+                      "City": "Big Windy",
+                      "StateCode": "ON",
+                      "CountryCode": "CA",
+                      "Zip": "A1A2B2"
+                  },
+                  "ClientUserId": "132",
+                  "Email": "johnb@kentel.com",
+                  "IsActive": false,
+                  "JobTitle": "Sales Clerk",
+                  "ParentEntityId": 1,
+                  "PhoneNumbers": [
+                      {
+                          "Number": "6135550127",
+                          "Extension": "5532",
+                          "Type": "Work"
+                      }
+                  ],
+                  "Picture": {},
+                  "Version": 2
+              }
+  get:
+    displayName: Getting a User
+  put:
+    displayName: Updating a User
+    description: |
+      {{important}}All fields that were populated in a User prior to this request must be provided in the body of the <code>PUT</code> request.{{end}}{{tip}}To add an Asset to a User, first <a href="{{"/assets/#creating-an-asset" | prepend: site.api_baseurl}}">Create an Asset</a>, then use this request to associate the Asset with a User.{{end}}
+/Entities({CompanyId})/Users?$skip={Skip}&$top={Top}:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true 
+    Skip:
+      displayName: skip
+      description: Number of records to skip
+      type: integer
+      example: 1
+      required: false
+    Top: 
+      displayName: top
+      description: Number of records to take
+      type: integer
+      example: 10
+      required: false
+  type:
+    collectionReadOnly:
+      resource: SearchSchema
+  get:
+    displayName: Getting All Users for a Company
+    description: |
+      This request will only return Users where `IsActive` is set to `true`.
+/Entities({CompanyId})/Users/Search?terms={Terms}&$skip={Skip}&$top={Top}:
+  uriParameters:    
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true 
+    Terms:
+      displayName: terms
+      type: string
+      example: Sam+Smith
+      description: List of terms, multiple terms are separated by an encoded whitespace (+). User properties must contain/start with the term to be returned. Search terms are not case sensitive.
+      required: true
+    Skip:
+      displayName: skip
+      description: Number of records to skip
+      type: integer
+      example: 1
+      required: false
+    Top: 
+      displayName: top
+      description: Number of records to take
+      type: integer
+      example: 10
+      required: false      
+  type:
+    collectionReadOnly:
+      resource: SearchSchema
+  get:
+    displayName: Searching for Users   
+    description: |
+      This request will only return Users where `IsActive` is set to `true`.
+/Users({UserId})/Locations({LocationId}):
+  uriParameters:    
+    UserId:
+      displayName: UserId
+      type: integer
+      example: 2576
+      description: Identifier for the {{User}}
+      required: true 
+    LocationId:
+      displayName: LocationId
+      type: integer
+      example: 2
+      description: Identifier for the {{Location}}
+      required: true
+  type:
+    singularEndpointPutDelete:
+  delete:
+    displayName: Unassigning a User from a Location
+  put:
+    displayName: Assigning a User to a Location
+    description: |
+        {{note}}
+        Users can be assigned to multiple locations
+        {{end}}
+/Users({UserId})/Locations:
+  uriParameters:    
+    UserId:
+      displayName: UserId
+      type: integer
+      example: 2576
+      description: Identifier for the {{User}}
+      required: true      
+  type:
+    collectionReadOnly:
+      resource: AssignedLocations
+  get:
+    displayName: Getting Assigned Locations for a User
+    responses:
+      200:
+        body:
+          application/json:
+            schema: AssignedLocations
+/Entities({CompanyId})/Users?$filter=ClientUserId eq '{ClientUserId}'&$skip={Skip}&$top={Top}:
+  uriParameters:    
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true 
+    ClientUserId:
+      displayName: ClientUserId
+      type: string
+      example: 132
+      description: Identifier for the {{User}} in an external system
+      required: true
+    Skip:
+      displayName: skip
+      description: Number of records to skip
+      type: integer
+      example: 1
+      required: false
+    Top: 
+      displayName: top
+      description: Number of records to take
+      type: integer
+      example: 10
+      required: false      
+  type:
+    collectionReadOnly:
+      resource: UserArray
+  get: 
+    displayName: Getting Users by ClientUserId
+/Users({UserId})/Lock:
+  uriParameters:    
+    UserId:
+      displayName: UserId
+      type: integer
+      example: 2576
+      description: Identifier for the {{User}}
+      required: true
+  post:
+    headers:
+      Authorization:
+        example: Bearer (Access Token)  
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+      Accept:
+        example: application/json
+      Content-Type:        
+        example: application/json
+    securedBy: [oauth_2_0]
+    displayName: Locking a User
+    description: |
+      <ul>
+        <li>Users can be locked due to events such as exceeding the maximum failed login attempts</li>
+        <li>Once locked, a User will not be able to log in or obtain an access token until they are unlocked</li>
+        <li>To determine if a User is locked, see <a href="#getting-the-lock-status-of-a-user">Getting the Lock Status of a User</a></li>
+        <li>To unlock a User, see <a href="#unlocking-a-user">Unlocking a User</a></li>
+      </ul>
+    body:
+      application/json:
+        schema: LockReasonRequest
+        example: |
+          {
+            "LockReasonId": 14
+          }
+    responses:
+      204:
+        body:
+          application/json:
+/Users({UserId})/Unlock:
+  uriParameters:    
+    UserId:
+      displayName: UserId
+      type: integer
+      example: 2576
+      description: Identifier for the {{User}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: Unlock
+  get:
+    displayName: Getting the Lock Status of a User
+    description: |
+      This request will return `true` if the User is currently Locked, and `false` if the User is unlocked. 
+  post: 
+    headers:
+      Authorization:
+        example: Bearer (Access Token)  
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+      Accept:
+        example: application/json
+      Content-Type:        
+        example: application/json      
+    securedBy: [oauth_2_0]
+    displayName: Unlocking a User
+    description: |
+      <ul>
+        <li>A User can be unlocked if their account is locked and their parent Entity is not using third-party authentication</li>
+        <li>Once a User is unlocked, they will be allowed to log into the system with their old credentials, as well as obtain an access token</li>
+        <li>To determine if a User is locked, see <a href="#getting-the-lock-status-of-a-user">Getting the Lock Status of a User</a></li>
+        <li>To lock a User, see <a href="#locking-a-user">Locking a User</a></li>
+      </ul>
+    body:
+      application/json:
+    responses:
+      204:
+        body:
+          application/json: 
+/Users({UserId})/Enable:
+  uriParameters:
+    UserId:
+      displayName: UserId
+      type: integer
+      example: 2576
+      description: Identifier for the {{User}}
+      required: true
+  post:
+    securedBy: [oauth_2_0]
+    headers:
+      Authorization:
+        example: Bearer (Access Token)
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+      Accept:
+        example: application/json
+      Content-Type:
+        example: application/json
+    displayName: Enabling a User  
+    responses:
+      200:
+        body:
+          application/json:
+            schema: User
+/Users({UserId})/TemporaryPassword:
+  uriParameters:
+    UserId:
+      displayName: UserId
+      type: integer
+      example: 2576
+      description: Identifier for the {{User}}
+      required: true
+  post:
+    securedBy: [oauth_2_0]
+    headers:
+      Authorization:
+        example: Bearer (Access Token)
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+      Accept:
+        example: application/json
+      Content-Type:
+        example: application/json
+    displayName: Setting a Temporary Password
+    description: |
+      This request will set a User's password to the provided value and mark it as temporary, forcing the User to change it on first login. 
+      {{important}}The temporary password must be a <strong>non-empty</strong> string and <strong>at least 6 characters long</strong>{{end}}
+    body:
+      application/json:
+        schema: PasswordUpdate
+    responses:
+      204:
+        body:
+          application/json:
+/Entities({CompanyId})/lockReasons:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    collection:
+      resource: LockReason
+      getResource: LockReasons
+  get:
+    displayName: Getting all Lock Reasons
+  post:
+    displayName: Creating a Lock Reason 
+/Entities({CompanyId})/lockReasons({LockReasonId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true 
+    LockReasonId: 
+      type: integer
+      example: 1
+      description: Identifier of a {{LockReason}}
+  type:
+    singularEndpoint:
+      resource: LockReason
+  get:
+    displayName: Getting a Lock Reason
+  put:
+    displayName: Updating a Lock Reason
+  delete:
+    displayName: Deleting a Lock Reason 

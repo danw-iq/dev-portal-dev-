@@ -1,0 +1,273 @@
+#%RAML 0.8
+title: availability
+version: v1
+baseUri: https://availability{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |    
+      The inventory availability API allows you to configure stock levels and to view a snapshot of inventory stock of catalog items for your company.
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 404` | `InventoryAvailability resource with EntityId {x}` <br/> `and ProductId {y} cannot be found, nor is there`<br> `availability in the tree branch.` | Ensure CatalogItemId is valid and belongs to the [Location](/api/company-tree/#location) specified in the request |
+      | `HTTP 404` | `Resource cannot be found` | Ensure Serial Number is valid |
+      | `HTTP 500` | `Entity is not related to company` | Ensure [Location](/api/company-tree/#location) belongs to Company specified in request |  
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>  
+    - singularEndpointReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json     
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>                                   
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Availability: |
+      {
+        "name": "Availability",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier for a [CatalogItem](/api/catalog/#catalogitem)", "putDescription": "Unique identifier for a {{CatalogItem}}", "ref": "catalog.CatalogItem.CatalogItemId" }, 
+          "CompanyId": { "type": "integer", "description": "Identifier for a [Company](/api/company-tree/#company)", "ref": "company tree.Company.Id", "generated": "true" }, 
+          "EntityId": { "type": "integer", "description": "Identifier for a [CompanyTreeNode](/api/company-tree/#companytreenode)", "putDescription": "Identifier for a {{Location}}. Must be related to Company specified in URI", "ref": "company tree.Location.Id" }, 
+          "Quantity": { "type": "integer", "description": "Quantity", "putDescription": "If IsSerialized is true, this value must be omitted. Defaults to 0", "example": "15" }, 
+          "IsDropShippable": { "type": "boolean", "description": "A flag to indicate if the [CatalogItem](/api/catalog/#catalogitem) can be shipped", "putDescription": "Defaults to false. Indicates if the catalog item can be shipped.", "example": "false" },
+          "IsSerialized": { "type": "boolean", "description": "A flag to indicate Quantity is determined by a count of SerialNumbers. When true, Quantitiy is read-only and flag cannot be modified", "putDescription": "Defaults to false", "example": "false" }
+        },
+        "required": [ "Id", "EntityId" ]
+      }
+  - AvailabilityArray: |
+      {
+        "exclude": "true",
+        "name": "Availability",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - SerialNumber: |
+      {
+        "name": "SerialNumber",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "string", "description": "Serial number", "generated": "true", "example": "B7FQ-RANC" }, 
+          "CatalogProductId": { "type": "GUID", "description": "Unique identifier for a [CatalogItem](/api/catalog/#catalogitem)", "ref": "catalog.CatalogItem.CatalogItemId", "generated": "true" }, 
+          "EntityId": { "type": "integer", "description": "Identifier for a [CompanyTreeNode](/api/company-tree/#companytreenode)", "ref": "company tree.Location.Id", "generated": "true" }, 
+          "CompanyId": { "type": "integer", "description": "Identifier for a [Company](/api/company-tree/#company)", "ref": "company tree.Company.Id", "generated": "true" }
+        },
+        "required": [ "Id" ]
+      } 
+  - SerialNumberArray: |
+      {
+        "exclude": "true",
+        "name": "SerialNumber",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }         
+/Companies({CompanyId})/CatalogItems:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    collectionWriteOnly:
+      resource: Availability
+  post: 
+    displayName: Configuring Availability
+/Companies({CompanyId})/Entities({LocationId})/CatalogItems({CatalogItemId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    LocationId:
+      displayName: LocationId
+      type: integer
+      example: 14202
+      description: Identifier for the {{Location}}
+      required: true
+    CatalogItemId:
+      displayName: CatalogItemId
+      type: string
+      example: 41519509-b798-4630-abba-89c9a30df83a
+      description: Unique identifier for the {{CatalogItem}}
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: Availability
+  get: 
+    displayName: Getting Availability For a Catalog Item For a Location
+/Companies({CompanyId})/CatalogItems({CatalogItemId})/Availability:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CatalogItemId:
+      displayName: CatalogItemId
+      type: string
+      example: 41519509-b798-4630-abba-89c9a30df83a
+      description: Identifier for the {{CatalogItem}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: AvailabilityArray
+  get:
+    displayName: Getting Availability For a Catalog Item For All Locations
+/Companies({CompanyId})/Entities({LocationId})/CatalogItems({CatalogItemId})/SerialNumbers:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    LocationId:
+      displayName: LocationId
+      type: integer
+      example: 14202
+      description: Identifier for the {{Location}}
+      required: true      
+    CatalogItemId:
+      displayName: CatalogItemId
+      type: string
+      example: 41519509-b798-4630-abba-89c9a30df83a
+      description: Identifier for the {{CatalogItem}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: SerialNumberArray
+  get:
+    displayName: Getting Serial Numbers For a Catalog Item
+/Companies({CompanyId})/Entities({LocationId})/CatalogItems({CatalogItemId})/SerialNumbers({SerialNumber}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true 
+    LocationId:
+      displayName: LocationId
+      type: integer
+      example: 14202
+      description: Identifier for the {{Location}}
+      required: true
+    CatalogItemId:
+      displayName: CatalogItemId
+      type: string
+      example: 41519509-b798-4630-abba-89c9a30df83a
+      description: Identifier for the {{CatalogItem}}
+      required: true
+    SerialNumber:
+      type: string
+      example: B7FQ-RANC
+      description: Serial Number
+      required: true      
+  type:
+    singularEndpointReadOnly:
+      resource: SerialNumber
+  get:
+    displayName: Getting a Serial Number
+/Companies({CompanyId})/Entities({LocationId})/SerialNumbers?$filter=Id eq '{SerialNumber}':
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true 
+    LocationId:
+      displayName: LocationId
+      type: integer
+      example: 14202
+      description: Identifier for the {{Location}}
+      required: true
+    SerialNumber:
+      type: string
+      example: B7FQ-RANC
+      description: Serial Number
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: SerialNumberArray
+  get:
+    displayName: Getting a Serial Number by Location
+    description: This request may return multiple {{SerialNumber}} resources if a Serial Number is associated with more than one {{CatalogItem}} for a {{Location}}.

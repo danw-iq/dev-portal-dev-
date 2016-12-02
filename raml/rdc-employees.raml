@@ -1,0 +1,318 @@
+#%RAML 0.8
+title: RQ Data Connect Employee Reports
+baseUri: https://rqdataconnect{UrlSuffix}.iqmetrix.net
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: |
+      RQ
+  - title: overview
+    content: |
+
+      RQ Data Connect allows you to retrieve report data from your RQ database (v4.23 and up).
+
+      To get started, see [RQ Data Connect Guide](/guides/rq-data-connect/).
+
+      #### Note
+
+      For reports that provide optional URI parameters for filtering at different levels (ForWho/ForWhoIDs/LocationType/LocationTypeIDs), omitting these values will run the report at the default company level.
+
+      ### Authentication
+
+      RQ Data Connect and Bridge support many different methods of authentication, see {{AuthenticationOptions}}.
+
+      Note that for all reports the {{AccessToken_Glossary}} should be mapped to an employee in RQ.
+
+      ### Report List
+
+      For a complete list of reports in RQ Data Connect, see [Report List](/rq-data-connect/report-list).
+
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Bad Request` | Ensure request body is formatted properly |
+      | `HTTP 401` | `Tokan is invalid` | Ensure Access Token is valid and has not expired |
+      | `HTTP 403` | `Unauthorized` | Ensure Access Token is valid and user has appropriate security |
+      | `HTTP 404` | `Not Found` | Ensure URI is valid |
+      | `HTTP 429` | `Too Many Requests` | See [Rate Limiting](/api/#rate-limiting) |
+      | `HTTP 500` | `Unexpected Error` | See Message in response for more information |      
+resourceTypes:
+  - collectionReadOnly:
+      get:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              required: false
+              description: Bearer token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+            Accept-Encoding:
+              example: gzip
+              required: false
+              description: Compression algorithm. For other methods of compression, see {{CompressionOptions}}
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+                application/JsonDataTable:
+                  schema: <<resource>>
+                text/xml:
+                  schema: <<resource>>
+                text/XmlDataTable:
+                  schema: <<resource>>
+                text/csv:
+                  schema: <<resource>>
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                  schema: <<resource>>
+schemas:
+  - AutoPunchOutReportData: |
+      {
+          "type": "array",
+          "name": "AutoPunchOutReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "EmployeeID": { "type": "integer", "database": "INT", "example": "250", "description": "Internal identifier for an employee in RQ" },  
+            "Abbreviation": { "type": "string", "database": "VARCHAR(5)", "example": "84WEA", "description": "Abbreviation - abbreviation for the location" },  
+            "StoreName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location - location where the auto punch was performed" },  
+            "FirstName": { "type": "string", "database": "VARCHAR(25)", "example": "iQmetrix", "description": "First Name - first name of the employee" },  
+            "LastName": { "type": "string", "database": "VARCHAR(25)", "example": "Employee", "description": "Last Name - last name of the employee" },  
+            "PunchInTime": { "type": "datetime", "database": "DATETIME", "example": "2015-07-02T12:15:02.45", "description": "Punch In - date and time the employee punched in" },  
+            "PunchOutTime": { "type": "datetime", "database": "DATETIME", "example": "2015-07-10T13:49:47.457", "description": "Punch Out - if there is a date and time it will be a revised value and it will be blank if the software auto punched out for the employee" },  
+            "PunchInComments": { "type": "string", "database": "VARCHAR(100)", "example": "", "description": "Punch In Comments - any employee comments" }  
+          }  
+        }
+  - EmployeeListReportData: |
+      {
+        "name": "EmployeeListReportData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Address": {  "type": "string", "database": "VARCHAR(50)", "description": "Address - employee's address", "example": "127 starlight lane" },
+          "Cellular_Number": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Cell Phone # - employee's cell phone number", "example": "5555555555" },
+          "City": {  "type": "string", "database": "VARCHAR(50)", "description": "City - employee's city", "example": "Fargo" },
+          "DefaultLocation": {  "type": "integer", "database": "INT", "description": "Primary Location - primary location if one has been assigned. DefaultLocation and DefaultZoneForWho are used to determine this value", "example": "null" },
+          "DefaultZoneForWho": {  "type": "integer", "database": "TINYINT", "description": "Primary Location - primary location if one has been assigned. DefaultLocation and DefaultZoneForWho are used to determine this value", "example": "null" },
+          "Email": {  "type": "string", "database": "VARCHAR(50)", "description": "Email Address - employee's work email address", "example": "sams@kentel.com" },
+          "EmailAddress": {  "type": "string", "database": "VARCHAR(50)", "description": "Email ", "example": "sams@kentel.com" },
+          "Employee_Name": {  "type": "string", "database": "VARCHAR(51)", "description": "Employee - name of the employee as entered on their employee profile", "example": "Sam Smith" },
+          "ID_Number": {  "type": "integer", "database": "INT", "description": "Internal identifier for employee in RQ", "example": "59" },
+          "IsPartTime": {  "type": "boolean", "database": "BIT", "description": "Part Time - indicates if an employee is Part Time", "example": "false" },
+          "Last_Name": {  "type": "string", "database": "VARCHAR(25)", "description": "Employee last name", "example": "Smith" },
+          "LastHireDate": {  "type": "string", "database": "VARCHAR(50)", "description": "Hire Date - day and date the employee was hired", "example": "2015-07-03T22:31:05.403" },
+          "Location": {  "type": "string", "database": "VARCHAR(51)", "description": "Location - Only present if Unique is not -1. Every location the employee is assigned to", "example": "100: My Network LLC - Anchorage" },
+          "PersonalEmail": {  "type": "string", "database": "VARCHAR(50)", "description": "Personal Email - employee's personal email address", "example": "sam@yopmail.com" },
+          "Postal_Code": {  "type": "string", "database": "VARCHAR(15)", "description": "Zip/Postal Code - zip code (USA) or postal code (Canada)", "example": "90123" },
+          "Province": {  "type": "string", "database": "VARCHAR(50)", "description": "Province - employee's province or state", "example": "ND" },
+          "RoleDescription": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Security Role - security role assigned to this employee", "example": "Sales Representative" },
+          "ScheduledTerminationDate": {  "type": "datetime", "database": "DATETIME", "description": "Scheduled termination date", "example": "2015-11-22T08:00:00.000" },
+          "SMS_Number": {  "type": "string", "database": "VARCHAR(50)", "description": "SMS # - employee's text number", "example": "5555555555@yopmail.com" },
+          "SpecialIdentifier": {  "type": "string", "database": "VARCHAR(25)", "description": "ID # - ID number assigned when hired", "example": "912345987654321" },
+          "StartDate": {  "type": "datetime", "database": "DATETIME", "description": "Start Date", "example": "2010-11-22T10:06:35.133" },
+          "Status": {  "type": "string", "database": "VARCHAR(8)", "description": "Status - shows if the employee is enabled or disabled if Any Status is selected", "example": "Enabled" },
+          "TerminationDate": {  "type": "datetime", "database": "DATETIME", "description": "Termination Date - date of termination (date the employee was disabled)", "example": "2015-11-22T08:00:25.345" },
+          "Title": {  "type": "string", "database": "VARCHAR(50)", "description": "Title - title assigned to this employee", "example": "Wireless Consultant" },
+          "Username": {  "type": "string", "database": "VARCHAR(25)", "description": "Username - username of the employee as entered on their employee profile", "example": "Sam.Smith" },
+          "Work_Number": {  "type": "datetime", "database": "DATETIME", "description": "Work Phone # - employee's work number", "example": "5555555555" }
+        }
+      }
+  - TimeAndAttendanceReportData: |
+      {
+        "name": "TimeAndAttendanceReportData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "DoubleOTClockedMinutes": {  "type": "integer", "database": "INT", "description": "Double OT Clocked - total of double overtime hours calculated, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "DoubleOTScheduleMinutes": {  "type": "integer", "database": "INT", "description": "Double OT Scheduled - total of double overtime hours scheduled, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "EmployeeCompensationType": {  "type": "string", "database": "VARCHAR(50)", "description": "Compensation - type of compensation for the employee", "example": "3" },
+          "EmployeeGroup": {  "type": "string", "database": "VARCHAR(50)", "description": "Commission - type of commission for the employee", "example": "100% (35% GP)" },
+          "EmployeeID": {  "type": "integer", "database": "INT", "description": "Identifier for an Employee in RQ", "example": "186" },
+          "EmployeeLastName": {  "type": "string", "database": "VARCHAR(25)", "description": "Employee last name", "example": "Smith" },
+          "EmployeeName": {  "type": "string", "database": "VARCHAR(51)", "description": "Employee - any employee who was scheduled to work or punched in within in the report's criteria", "example": "Brooke Smith" },
+          "EmployeeUsername": {  "type": "string", "database": "VARCHAR(51)", "description": "Username - username of the employee who was scheduled to work or punched in within in the report's criteria", "example": "Brooke.Smith" },
+          "IsPartTime": {  "type": "string", "database": "VARCHAR(50)", "description": "Part Time - a check box indicating if an employee is Part Time", "example": "0" },
+          "ManagerVerified": {  "type": "integer", "database": "TINYINT", "description": "Internal flag used in RQ", "example": "0" },
+          "OTClockedMinutes": {  "type": "integer", "database": "INT", "description": "Overtime Clocked - total of overtime hours clocked, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "OTScheduleMinutes": {  "type": "integer", "database": "INT", "description": "Overtime Scheduled - total of overtime hours scheduled, calculated using decimal time rather than hours:minutes", "example": "105" },
+          "PartTimeVacationEarned": {  "type": "decimal", "database": "DECIMAL", "description": "PT Vacation Earned - total amount of part time vacation earned, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "PersonalUsedHours": {  "type": "decimal", "database": "DECIMAL", "description": "Personal Used - total amount of personal days used, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "PT_DoubleOTVacationEarned": {  "type": "decimal", "database": "DECIMAL", "description": "Double OT Vacation - total amount of Double OT vacation earned, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "PT_OTVacationEarned": {  "type": "decimal", "database": "DECIMAL", "description": "OT Vacation Earned - total amount of OT vacation earned, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "SickUsedHours": {  "type": "decimal", "database": "DECIMAL", "description": "Sick Used - total amount of sick time used, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "SpecialIdentifier": {  "type": "string", "database": "VARCHAR(25)", "description": "ID # - ID number assigned when hired", "example": "912345987654321" },
+          "SupervisorName": {  "type": "string", "database": "VARCHAR(51)", "description": "Supervisor - name of the employee's supervisor", "example": "Bob Roberts" },
+          "SupervisorUsername": {  "type": "string", "database": "VARCHAR(51)", "description": "Supervisor Username - username of the name of the employee's supervisor", "example": "Bob.Roberts" },
+          "ThresholdConflict": {  "type": "integer", "database": "INT", "description": "A flag to indicate if the employee is working in multiple locations that have different work weeks or OT parameters, highlighted in red in the report", "example": "0" },
+          "Title": {  "type": "string", "database": "VARCHAR(50)", "description": "Title - title assigned to this employee", "example": "Store Clerk" },
+          "TotalClockedMinutes": {  "type": "integer", "database": "INT", "description": "Total Clocked - total of all hours clocked, calculated using decimal time rather than hours:minutes", "example": "0" },
+          "TotalScheduleMinutes": {  "type": "integer", "database": "INT", "description": "Total Scheduled - total of all hours scheduled, calculated using decimal time rather than hours:minutes", "example": "105" },
+          "VacationUsedHours": {  "type": "decimal", "database": "DECIMAL", "description": "Vacation Used - total of amount of vacation used, calculated using decimal time rather than hours:minutes", "example": "0" }
+        }
+      }      
+/reports/AutoPunchOutReport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true         
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false    
+  type:
+    collectionReadOnly: 
+      resource: AutoPunchOutReportData
+  get:
+    displayName: Getting the Auto Punch Out Report
+    description: |
+      For more information see {{support_AutoPunchOutReport}}.
+/reports/employeelistreport?Status={Status}&Unique={Unique}&GroupID={GroupID}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    Status:
+      type: integer
+      example: 1
+      description: Select employees with a status of Disabled (0), Enabled (1) or Any Status (2)
+      required: true
+    Unique:
+      type: boolean
+      example: false
+      description: A flag to indicate if the "Master List" should be returned. If you choose to search by a district, region or the entire company, use a value of 1 for this paramter. A master list of employees, will display each employee once no matter how many locations they are assigned to
+      required: true
+    GroupID:
+      type: integer
+      example: -1
+      description: Identifier for an Employee group in RQ. Use -1 for all groups
+      required: true
+    ForWho:
+      type: integer
+      example: 1
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 6679
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false      
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: EmployeeListReportData
+  get:
+    displayName: Getting the Employee List Report
+    description: |
+      For more information, see {{support_EmployeeListReport}}.
+/reports/timeandattendancereport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    ForWho:
+      type: integer
+      example: 1
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 6679
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: TimeAndAttendanceReportData
+  get:
+    displayName: Getting the Time and Attendance Report
+    description: |
+      For more information, see {{support_TimeAndAttendanceReport}}.

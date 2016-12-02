@@ -1,0 +1,130 @@
+#%RAML 0.8
+title: Facebook Offline Conversions Reports
+baseUri: https://rqdataconnect{UrlSuffix}.iqmetrix.net
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: exclude
+    content: true
+  - title: overview
+    content: |
+
+      To get started, see [RQ Data Connect Guide](/guides/rq-data-connect/).
+
+      #### Authentication
+
+      This API supports many different methods of authentication, see {{AuthenticationOptions}}.     
+resourceTypes:
+  - collectionReadOnly:
+      get:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              required: false
+              description: Bearer token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+            Accept-Encoding:
+              example: gzip
+              required: false
+              description: Compression algorithm. For other methods of compression, see {{CompressionOptions}}
+          responses:
+            200:
+                body:
+                    application/json:
+                      schema: <<resource>>
+                    application/JsonDataTable:
+                      schema: <<resource>>
+                    text/xml:
+                      schema: <<resource>>
+                    text/XmlDataTable:
+                      schema: <<resource>>
+                    text/csv:
+                      schema: <<resource>>
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                      schema: <<resource>>
+schemas:
+  - Relationship: |
+      {
+        "name": "Relationship",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "CompanyID": {  "type": "integer", "database": "INTEGER", "description": "Identifier for a {{Company}}", "example": "14682" },
+          "CompanyName": {  "type": "string", "database": "VARCHAR(50)", "description": "Company name", "example": "KENTEL" }
+        }
+      }
+  - MarketingReportData: |
+      {
+          "type": "array",
+          "name": "MarketingReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "Email": { "type": "string", "database": "VARCHAR(200)", "example": "johntest@kentel.com", "description": "Email" },  
+            "Phone": { "type": "string", "database": "VARCHAR(200)", "example": "5555555555", "description": "Phone number" },  
+            "FirstName": { "type": "string", "database": "VARCHAR(50)", "example": "John", "description": "First name" },  
+            "LastName": { "type": "string", "database": "VARCHAR(50)", "example": "Test", "description": "Last name" },  
+            "City": { "type": "string", "database": "VARCHAR(50)", "example": "Regina", "description": "City" },  
+            "Province": { "type": "string", "database": "VARCHAR(50)", "example": "SK", "description": "Province/State" },  
+            "PostalCode": { "type": "string", "database": "VARCHAR(15)", "example": "H0H0H0", "description": "Postal/Zip code" },  
+            "Country": { "type": "string", "database": "VARCHAR(50)", "example": "Canada", "description": "Country" },  
+            "Category": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Activations,Smart Phones", "description": "Category in RQ" },  
+            "ProductLibraryID": { "type": "string", "database": "VARCHAR(50)", "example": "M5592-E12435", "description": "Identifier for a {{Product}} in Product Library" },  
+            "UnitPrice": { "type": "decimal", "database": "MONEY", "example": "250", "description": "Unit price" },  
+            "ListPrice": { "type": "decimal", "database": "MONEY", "example": "299.99", "description": "List price" },  
+            "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },  
+            "ProductLibraryName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Galaxy Gear Watch - Black", "description": "Name of the Product in Product Library" },  
+            "ProductLibraryCanonicalName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Smartphones", "description": "Name of the Product's Classification in Product Library" }  
+          }  
+        }
+/partner/relationships?Auth={Auth}&Response={Response}: 
+  uriParameters:
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false      
+  type:
+    collectionReadOnly:
+      resource: Relationship
+  get:
+    displayName: Getting Partner Relationships        
+/partner/FacebookOfflineConversions/MarketingReport?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 21090
+      required: true
+      description: Identifier for a {{Company}}
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-06-06 00:00:00
+      description: Date at which report will end
+      required: true
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false       
+  type:
+    collectionReadOnly: 
+      resource: MarketingReportData
+  get: 
+    displayName: Get Marketing Report

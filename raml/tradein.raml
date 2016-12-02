@@ -1,0 +1,145 @@
+#%RAML 0.8
+title: Trade-In Reporting Service
+version: v1
+baseUri: https://tradeinreporting{UrlSuffix}.iqmetrix.net/{version}
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: exclude
+    content: true
+  - title: overview
+    content: The Trade-In Reporting Service allows Phobio to push enhanced trade-in reporting data into iQmetrix's systems.
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Bad Request` | Ensure request body is formatted properly |
+      | `HTTP 403` | `Unauthorized` | Ensure Access Token is valid and user has appropriate security |
+      | `HTTP 404` | `Not Found` | Ensure ProviderId and/or TradeDataId are valid |
+      | `HTTP 429` | `Too Many Requests` | See [Rate Limiting](/api/#rate-limiting) |
+      | `HTTP 500` | `Unexpected Error` | Contact support |
+  - title: enumerations
+    content: |
+        ## Enumerations
+
+        ### Trade-In Status
+
+        | Name | Description |
+        |:-----|:------------|
+        | Quoted | Customer has been given quote for Trade-In |
+        | Received | Device from Customer has been received |
+        | Inspected | Device has been inspected |
+schemas:
+  - PhobioTradeInDataArray: |
+      {
+        "exclude": "true",
+        "name": "PhobioTradeInData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"        
+      }
+  - PhobioTradeInData: |
+      {
+        "name": "PhobioTradeInData",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",        
+        "properties": {
+          "inspectedDate": { "type": "datetime", "description": "Date added to statement for payment", "example": "2016-03-16T12:00:00.000Z" },
+          "originalCustomerInspectionValue ": { "type": "decimal", "description": "Amount customer should have received based on inspection", "example": "310.50" },
+          "originalCustomerTradeInValue": { "type": "decimal", "description": "Value customer deserved for Trade (updated by Phobio upon receipt)", "example": "310.50" },
+          "paymentDate": { "type": "datetime", "description": "Date payment issued by Phobio", "example": "2016-03-16T12:00:00.000Z" },
+          "postInspectionValue": { "type": "decimal", "description": "Payment amount to dealer", "example": "310.50" },
+          "processedDate": { "type": "datetime", "description": "Date processed at Phobio", "example": "2016-03-17T12:00:00.000Z" },
+          "receivedDate": { "type": "datetime", "description": "Date received at Phobio", "example": "2016-03-16T12:00:00.000Z" },
+          "receivedImei": { "type": "string", "description": "IMEI of product received at Phobio", "example": "351756051523999" },
+          "receivedProductDisplayName": { "type": "string", "description": "Name of product received at Phobio", "example": "Galaxy S6 edge+ 32GB - Black Sapphire" },
+          "referenceNumber": { "type": "string", "description": "Phobio's quote UID that contains the trade", "example": "29253392392" },
+          "serialNumber": { "type": "string", "description": "The serial number (IMEI) of the trade this data applies to", "example": "B7FQ-RANC" },
+          "shippedDate": { "type": "datetime", "description": "Date shipped from store", "example": "2016-03-13T12:00:00.000Z" },
+          "shipmentId": { "type": "string", "description": "UID of shipment", "example": "123" },
+          "tradeInStatus": { "type": "string", "description": "Status of the Trade-In, see [Trade-In Status](#trade-in-status) for a list of acceptable values", "example": "Quoted" }
+        },
+        "required": [ "referenceNumber", "receivedImei" ]
+      }
+  - ProviderTradeData: |
+      {
+        "name": "ProviderTradeData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",        
+        "properties": {
+          "referenceNumber": { "type": "string", "description": "The reference number from the provider", "example": "123" },
+          "tradeDataId": { "type": "integer", "description": "The identifier of the provider trade data", "example": "357" }
+        },
+        "required": [ "referenceNumber", "tradeDataId" ]
+      }
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]    
+/providers({ProviderId})/tradeData:
+  uriParameters:
+    ProviderId:
+      description: The provider identifier given by iQmetrix
+      type: integer
+      required: true
+      example: 10
+  post:
+    displayName: Create or Update a Trade 
+    headers:
+      Authorization:
+        example: Bearer (Access Token)  
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+    body:
+      application/json:
+        schema: PhobioTradeInDataArray
+    responses:
+      200:
+        body:
+          application/json:
+            schema: ProviderTradeData
+/providers({ProviderId})/tradeData({TradeDataId}):
+  uriParameters:
+    ProviderId:
+      description: The provider identifier given by iQmetrix
+      type: integer
+      required: true
+      example: 10
+    TradeDataId:
+      description: The identifier for the Provider trade-In data
+      type: integer
+      required: true
+      example: 357
+  get:
+    displayName: Get Provider Data for a Trade
+    headers:
+      Authorization:
+        example: Bearer (Access Token)
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+    responses:
+      200:
+        body:
+          application/json:
+            schema: PhobioTradeInData

@@ -4,6 +4,28 @@ baseUri: https://rqdataconnectdemo.iqmetrix.net
 schemas: 
 
     
+    - AutoPunchOutReportData: |
+        {
+            "type": "array",
+            "name": "AutoPunchOutReportData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": { 
+              "EmployeeID": { "type": "integer", "database": "INT", "example": "250", "description": "Internal identifier for an employee in RQ" },  
+              "Abbreviation": { "type": "string", "database": "VARCHAR(5)", "example": "84WEA", "description": "Abbreviation - abbreviation for the location" },  
+              "StoreName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location - location where the auto punch was performed" },  
+              "FirstName": { "type": "string", "database": "VARCHAR(25)", "example": "iQmetrix", "description": "First Name - first name of the employee" },  
+              "LastName": { "type": "string", "database": "VARCHAR(25)", "example": "Employee", "description": "Last Name - last name of the employee" },  
+              "PunchInTime": { "type": "datetime", "database": "DATETIME", "example": "2015-07-02T12:15:02.45", "description": "Punch In - date and time the employee punched in" },  
+              "PunchOutTime": { "type": "datetime", "database": "DATETIME", "example": "2015-07-10T13:49:47.457", "description": "Punch Out - if there is a date and time it will be a revised value and it will be blank if the software auto punched out for the employee" },  
+              "PunchInComments": { "type": "string", "database": "VARCHAR(100)", "example": "", "description": "Punch In Comments - any employee comments" }  
+            }  
+          }
+        
+
+    
+
+    
     - EmployeeListReportData: |
         {
           "name": "EmployeeListReportData",
@@ -80,6 +102,164 @@ schemas:
 
     
 
+
+/reports/AutoPunchOutReport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 4
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoIDs:
+            displayName: ForWhoIDs
+            type: integer
+            example: 1
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Auto Punch Out Report
+                
+        
+        description: |            
+            For more information see {{support_AutoPunchOutReport}}.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":250,"Abbreviation":"84WEA","StoreName":"84 West","FirstName":"iQmetrix","LastName":"Employee","PunchInTime":"2015-07-02T12:15:02.45","PunchOutTime":"2015-07-10T13:49:47.457","PunchInComments":""}]
+                            schema: |
+                                {"type":"array","name":"AutoPunchOutReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EmployeeID":{"type":"integer","database":"INT","example":"250","description":"Internal identifier for an employee in RQ"},"Abbreviation":{"type":"string","database":"VARCHAR(5)","example":"84WEA","description":"Abbreviation - abbreviation for the location"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Location - location where the auto punch was performed"},"FirstName":{"type":"string","database":"VARCHAR(25)","example":"iQmetrix","description":"First Name - first name of the employee"},"LastName":{"type":"string","database":"VARCHAR(25)","example":"Employee","description":"Last Name - last name of the employee"},"PunchInTime":{"type":"datetime","database":"DATETIME","example":"2015-07-02T12:15:02.45","description":"Punch In - date and time the employee punched in"},"PunchOutTime":{"type":"datetime","database":"DATETIME","example":"2015-07-10T13:49:47.457","description":"Punch Out - if there is a date and time it will be a revised value and it will be blank if the software auto punched out for the employee"},"PunchInComments":{"type":"string","database":"VARCHAR(100)","example":"","description":"Punch In Comments - any employee comments"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":250,"Abbreviation":"84WEA","StoreName":"84 West","FirstName":"iQmetrix","LastName":"Employee","PunchInTime":"2015-07-02T12:15:02.45","PunchOutTime":"2015-07-10T13:49:47.457","PunchInComments":""}]
+                            schema: |
+                                {"type":"array","name":"AutoPunchOutReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EmployeeID":{"type":"integer","database":"INT","example":"250","description":"Internal identifier for an employee in RQ"},"Abbreviation":{"type":"string","database":"VARCHAR(5)","example":"84WEA","description":"Abbreviation - abbreviation for the location"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Location - location where the auto punch was performed"},"FirstName":{"type":"string","database":"VARCHAR(25)","example":"iQmetrix","description":"First Name - first name of the employee"},"LastName":{"type":"string","database":"VARCHAR(25)","example":"Employee","description":"Last Name - last name of the employee"},"PunchInTime":{"type":"datetime","database":"DATETIME","example":"2015-07-02T12:15:02.45","description":"Punch In - date and time the employee punched in"},"PunchOutTime":{"type":"datetime","database":"DATETIME","example":"2015-07-10T13:49:47.457","description":"Punch Out - if there is a date and time it will be a revised value and it will be blank if the software auto punched out for the employee"},"PunchInComments":{"type":"string","database":"VARCHAR(100)","example":"","description":"Punch In Comments - any employee comments"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":250,"Abbreviation":"84WEA","StoreName":"84 West","FirstName":"iQmetrix","LastName":"Employee","PunchInTime":"2015-07-02T12:15:02.45","PunchOutTime":"2015-07-10T13:49:47.457","PunchInComments":""}]
+                            schema: |
+                                {"type":"array","name":"AutoPunchOutReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EmployeeID":{"type":"integer","database":"INT","example":"250","description":"Internal identifier for an employee in RQ"},"Abbreviation":{"type":"string","database":"VARCHAR(5)","example":"84WEA","description":"Abbreviation - abbreviation for the location"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Location - location where the auto punch was performed"},"FirstName":{"type":"string","database":"VARCHAR(25)","example":"iQmetrix","description":"First Name - first name of the employee"},"LastName":{"type":"string","database":"VARCHAR(25)","example":"Employee","description":"Last Name - last name of the employee"},"PunchInTime":{"type":"datetime","database":"DATETIME","example":"2015-07-02T12:15:02.45","description":"Punch In - date and time the employee punched in"},"PunchOutTime":{"type":"datetime","database":"DATETIME","example":"2015-07-10T13:49:47.457","description":"Punch Out - if there is a date and time it will be a revised value and it will be blank if the software auto punched out for the employee"},"PunchInComments":{"type":"string","database":"VARCHAR(100)","example":"","description":"Punch In Comments - any employee comments"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":250,"Abbreviation":"84WEA","StoreName":"84 West","FirstName":"iQmetrix","LastName":"Employee","PunchInTime":"2015-07-02T12:15:02.45","PunchOutTime":"2015-07-10T13:49:47.457","PunchInComments":""}]
+                            schema: |
+                                {"type":"array","name":"AutoPunchOutReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EmployeeID":{"type":"integer","database":"INT","example":"250","description":"Internal identifier for an employee in RQ"},"Abbreviation":{"type":"string","database":"VARCHAR(5)","example":"84WEA","description":"Abbreviation - abbreviation for the location"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Location - location where the auto punch was performed"},"FirstName":{"type":"string","database":"VARCHAR(25)","example":"iQmetrix","description":"First Name - first name of the employee"},"LastName":{"type":"string","database":"VARCHAR(25)","example":"Employee","description":"Last Name - last name of the employee"},"PunchInTime":{"type":"datetime","database":"DATETIME","example":"2015-07-02T12:15:02.45","description":"Punch In - date and time the employee punched in"},"PunchOutTime":{"type":"datetime","database":"DATETIME","example":"2015-07-10T13:49:47.457","description":"Punch Out - if there is a date and time it will be a revised value and it will be blank if the software auto punched out for the employee"},"PunchInComments":{"type":"string","database":"VARCHAR(100)","example":"","description":"Punch In Comments - any employee comments"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":250,"Abbreviation":"84WEA","StoreName":"84 West","FirstName":"iQmetrix","LastName":"Employee","PunchInTime":"2015-07-02T12:15:02.45","PunchOutTime":"2015-07-10T13:49:47.457","PunchInComments":""}]
+                            schema: |
+                                {"type":"array","name":"AutoPunchOutReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EmployeeID":{"type":"integer","database":"INT","example":"250","description":"Internal identifier for an employee in RQ"},"Abbreviation":{"type":"string","database":"VARCHAR(5)","example":"84WEA","description":"Abbreviation - abbreviation for the location"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Location - location where the auto punch was performed"},"FirstName":{"type":"string","database":"VARCHAR(25)","example":"iQmetrix","description":"First Name - first name of the employee"},"LastName":{"type":"string","database":"VARCHAR(25)","example":"Employee","description":"Last Name - last name of the employee"},"PunchInTime":{"type":"datetime","database":"DATETIME","example":"2015-07-02T12:15:02.45","description":"Punch In - date and time the employee punched in"},"PunchOutTime":{"type":"datetime","database":"DATETIME","example":"2015-07-10T13:49:47.457","description":"Punch Out - if there is a date and time it will be a revised value and it will be blank if the software auto punched out for the employee"},"PunchInComments":{"type":"string","database":"VARCHAR(100)","example":"","description":"Punch In Comments - any employee comments"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"EmployeeID":250,"Abbreviation":"84WEA","StoreName":"84 West","FirstName":"iQmetrix","LastName":"Employee","PunchInTime":"2015-07-02T12:15:02.45","PunchOutTime":"2015-07-10T13:49:47.457","PunchInComments":""}]
+                            schema: |
+                                {"type":"array","name":"AutoPunchOutReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"EmployeeID":{"type":"integer","database":"INT","example":"250","description":"Internal identifier for an employee in RQ"},"Abbreviation":{"type":"string","database":"VARCHAR(5)","example":"84WEA","description":"Abbreviation - abbreviation for the location"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Location - location where the auto punch was performed"},"FirstName":{"type":"string","database":"VARCHAR(25)","example":"iQmetrix","description":"First Name - first name of the employee"},"LastName":{"type":"string","database":"VARCHAR(25)","example":"Employee","description":"Last Name - last name of the employee"},"PunchInTime":{"type":"datetime","database":"DATETIME","example":"2015-07-02T12:15:02.45","description":"Punch In - date and time the employee punched in"},"PunchOutTime":{"type":"datetime","database":"DATETIME","example":"2015-07-10T13:49:47.457","description":"Punch Out - if there is a date and time it will be a revised value and it will be blank if the software auto punched out for the employee"},"PunchInComments":{"type":"string","database":"VARCHAR(100)","example":"","description":"Punch In Comments - any employee comments"}}}
+                            
+                        
+                    
+                
+            
+    
 
 /reports/employeelistreport?Status={Status}&Unique={Unique}&GroupID={GroupID}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
     

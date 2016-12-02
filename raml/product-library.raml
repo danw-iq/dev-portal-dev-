@@ -1,0 +1,266 @@
+#%RAML 0.8
+title: product-library
+version: v1
+baseUri: https://productlibrary{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: | 
+      Product Library
+  - title: overview
+    content: |
+        The {{ProductLibrary_Concept}} is a central hub that provides product content.
+
+        With this endpoint you can get details of a catalog product by [Slug](/api/catalog/#product-slug) or search for products by other identifiers.
+  - title: errors
+    content: |
+        | HTTP Status Code | Description | How to Resolve |
+        |:-----------------|:------------|:---------------|
+        | `HTTP 406` | `Locale not available` | This error occurs with some browsers and apps such as Postman. To resolve, add the header `Accept-Language: en-US` |
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json   
+          responses:
+              200:
+                  body:
+                      application/json:
+                        schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Product: |
+      {
+        "exclude": "true",
+        "name": "Product",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Products": { "type": "object", "ref": "catalog.Product"}
+        }
+      }
+  - ProductSearch: |
+      {
+        "exclude": "true",
+        "name": "ProductSearch",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Products": { "type": "array", "arrayType": "string", "ref": "product-library.Slug"}
+        }
+      }
+  - Slug: |
+      {
+        "exclude": "true",
+        "name": "Slug",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Slug": { "type": "string", "example": "M551"}
+        }
+      }      
+/Products/{SlugId}:
+  uriParameters:
+    SlugId:
+      displayName: SlugId
+      type: string
+      example: M870-V7
+      description: Identifier for the <a href="api/catalog/#product-slug">Product Slug</a>
+      required: true
+  type:
+    collectionReadOnly:
+      resource: 
+  get:
+    displayName: Get Product by Slug ID
+    description: |
+      Returns information for a [Catalog Product](/api/catalog/#product) item.
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "Id": "M1248-V1",
+                "Name": "Galaxy S6 edge+ 32GB - Black Sapphire",
+                "Assets": [
+                    {
+                        "Id": "732130d2-b673-461c-812b-f2b614d6076e",
+                        "Name": "iqmetrix.jpg",
+                        "Uri": "https://amsdemostorage.blob.core.windows.net/assets/732130d2-b673-461c-812b-f2b614d6076e.jpg",
+                        "Type": "Image",
+                        "IsHidden": true
+                    }
+                ],
+                "CanonicalClassification": {
+                    "Id": 4,
+                    "Name": "Smartphones",
+                    "ParentCategories": [
+                        {
+                            "Id": 2,
+                            "Name": "Devices"
+                        }
+                    ]
+                },
+                "Entity": {
+                    "Id": 14146,
+                    "Name": "Kentel Corp"
+                },
+                "HeroShotId": "44f60963-5515-44bc-9509-71aef6463580",
+                "HeroShotUri": "https://imagehost/images/44f60963-5515-44bc-9509-71aef6463580",
+                "IsLinkedToCuratedProduct": true,
+                "IsSaleable": true,
+                "LongDescription": "The world’s first dual-edge display was born from a need to create something new...",
+                "Manufacturer": {
+                    "Id": 13149,
+                    "Name": "OtterBox"
+                },
+                "ManufacturerSkus": [
+                    {
+                        "Value": "JBLPULSEBLKAM",
+                        "Description": "",
+                        "Entity": {
+                            "Id": 14146,
+                            "Name": "Kentel Corp"
+                        }
+                    }
+                ],
+                "MasterProductId": 1248,
+                "MSRP": {
+                    "Amount": 100,
+                    "CurrencyCode": "USD"
+                },
+                "Owner": {
+                    "Id": 14146,
+                    "Name": "Kentel Corp"
+                },
+                "Region": {
+                    "CountryCode": "CA",
+                    "CountryName": "Canada",
+                    "StateCode": "AB",
+                    "StateName": "British Columbia"
+                },
+                "ReleaseDate": "2011-10-14T12:00:00.000",
+                "ShortDescription": "Next is Now",
+                "Specifications": [
+                    {
+                        "Name": "Color",
+                        "Fields": [
+                            {
+                                "Id": 54,
+                                "Name": "Height",
+                                "DisplayName": "Height",
+                                "StringId": "Height",
+                                "Type": "Float",
+                                "Unit": "inches",
+                                "Value": "6.08"
+                            }
+                        ]
+                    }
+                ],
+                "UpcCodes": [
+                    {
+                        "Value": "874688002478/16W",
+                        "Description": "UPC",
+                        "Entity": 2
+                    }
+                ],
+                "VariationId": 1,
+                "VariationInfo": [
+                    {
+                        "VariationId": 1,
+                        "Slug": "M1248-V1",
+                        "Fields": [
+                            {
+                                "FieldId": 1,
+                                "Name": "Product Name",
+                                "Value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "VendorSkus": [
+                    {
+                        "Value": "JBLPULSEBLKAM",
+                        "Description": "",
+                        "Entity": {
+                            "Id": 14146,
+                            "Name": "Kentel Corp"
+                        }
+                    }
+                ],
+                "Version": 1
+              }
+/Products/FindByIdentifier?{Options}:
+  uriParameters:
+    Options:
+      displayName: Options
+      type: string
+      example: value=336963&type=VendorSKU&entityId=13238
+      description: The options for the search
+      required: true
+  type:
+    collectionReadOnly:
+      resource: ProductSearch
+  get:
+    displayName: Searching for Products by Identifier
+    description: |
+      `FindByIdentifier` can be used to search for {{Product}} resources by the following identifiers:
+       
+      | Searchable Identifiers |
+      |:-----------------------|
+      | ManufacturerSKU |
+      | VendorSKU |
+      | UPC |
+       
+      <h3>Search Format</h3>
+       
+      Query parameters are used to specify search criteria using the following format:
+       
+      ```csharp
+      {OptionName}={OptionValue}
+      ```
+
+      Multiple options are separated with a `&` symbol.
+       
+      <h3>Available Options</h3>
+       
+      See the table below for available options and the syntax of using each one. 
+       
+      | Keyword | Description | Data Type | Examples |
+      |:--------|:------------|:----------|:---------|
+      | `value` | Search for the given SKU, this option is **required** | String | `value=336963`|
+      | `type` | Search for the given SKU where the given identifier type matches. If no value is provided, all identifiers will be searched | String, see [Searchable Identifiers](#searchable-identifiers) |  `value=336963&type=VendorSKU` <br/> `value=336963&type=ManufacturerSKU` <br/> `value=336963&type=UPC`|
+      | `entityId` | Search for the given SKU where the given entityId matches and the identifier type is VendorSKU or ManufacturerSKU | Integer | `value=336963&type=VendorSKU&entityId=13238` | 

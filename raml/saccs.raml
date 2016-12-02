@@ -1,0 +1,147 @@
+#%RAML 0.8
+title: saccs
+version: v1
+baseUri: https://shippingaggregator{UrlSuffix}.iqmetrix.net/
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: | 
+      Dropship
+  - title: overview
+    content: |
+      The Shipping Aggregator requests shipping options from a vendor's shipping API and returns a list of their associated costs and timeframe.
+
+      {{important}}The Shipping Aggregator also verifies the availability of the requested catalog items. If an item is <strong>Out of Stock</strong>, then you must prevent this order from continuing. An unavailable item will be indicated in the body of an HTTP 400 response.{{end}}
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `No availability found for the following products: (Product Name)` | Occurs when item is no longer available. |
+      | `HTTP 400` | `Entity is not related to company` | Occurs when entering an incorrect `CompanyId` or `LocationEntityId` |
+      | `HTTP 400` | `Error getting catalog item identifiers for CatalogIds: (CatalogId)` | Occurs when entering an incorrect `CatalogId` |
+resourceTypes:
+    - collection:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resourcePost>>
+          responses:
+            202:
+              body:
+                application/json:
+                  schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - ShippingQuery: |
+      {
+        "name": "ShippingQuery",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "LocationEntityId": { "type": "string", "description": "[Location](/api/company-tree/#location) identifer", "example": "14202" }, 
+          "PostalCode": { "type": "string", "description": "Postal or zip code of shipping address", "example": "P9H 9I4" }, 
+          "Items": { "type":"array", "arrayType": "object", "description": "List of Products to be added to shipping query", "ref":"saccs.Item" }
+        },
+        "required": [ "LocationEntityId", "PostalCode" ]
+      }
+  - Item: |
+      {
+        "name": "Item",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "CatalogId": { "type": "GUID", "description": "[Catalog](/api/catalog/#catalogitem) identifer", "example": "18e039de-f950-4d8e-a48a-d06e4db55a07" }, 
+          "Quantity": { "type": "integer", "description": "Amount of products", "example": "1"},
+          "Cost": { "type": "decimal", "description": "Cost of item", "example": "9.99", "generated": "true" }
+        },
+        "required": [ "CatalogId", "Quantity" ]
+      }
+  - ShippingResponse: |
+      {
+        "name": "ShippingResponse",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id" : { "type": "integer", "description": "Unique identifer", "example": "1"}, 
+          "LocationEntityId": { "type": "integer", "description": "[Location](/api/company-tree/#location) identifier", "example": "14202" }, 
+          "PostalCode": { "type": "string", "description": "Postal or zip code of shipping address", "example": "P9H 9I4" }, 
+          "Shipments": { "type":"array", "arrayType": "object", "ref":"saccs.Shipments", "description": "List of suppliers and their shipping options" },
+          "Items": { "type": "array", "arrayType": "object", "description": "Reserved for internal use" }
+        }
+      }
+  - Shipments: |
+      {
+        "name": "Shipments",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "SupplierEntityId": {"type": "integer", "description": "[Supplier](/api/entity-store/#supplier) identifier", "example": "14107"},
+          "Items": { "type":"array", "arrayType": "object", "ref":"saccs.Item", "description": "List of Products to be added to shipping query" },
+          "ShippingOptions": { "type":"array", "arrayType": "object", "ref":"saccs.ShippingOptions", "description": "List of shipping options available from vendor" }
+        }
+      }
+  - ShippingOptions: |
+      {
+        "name": "ShippingOptions",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id" : { "type": "string", "description": "Vendor shipping identifer", "example": "1", "generated": "true" }, 
+          "Cost": { "type": "decimal", "description": "Cost for shipping option", "example": "7.94", "generated": "true" }, 
+          "Currency": { "type": "string", "description": "Cost currency (USD or CAD)", "example": "CAD", "generated": "true" }, 
+          "EstimatedTransitTime": { "type": "String", "description": "Total time to be in transit, where units are provided by supplier", "example": "1 week", "generated": "true" },
+          "Name": { "type": "string", "description": "Shipping option name", "example": "PurolatorExpress", "generated": "true" }
+        }
+      }
+/Companies({CompanyId})/ShippingInformation:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier of the Company
+      required: true
+  type:
+    collection:
+      resource: ShippingResponse
+      resourcePost: ShippingQuery
+  post:
+    displayName: Retrieving Shipping Options

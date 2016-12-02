@@ -1,0 +1,593 @@
+#%RAML 0.8
+title: orders
+version: v1
+baseUri: https://order{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |
+      The Order service is a centralized location for interacting with orders and their items. Each order is assigned an OrderType and OrderStatus, as are the items in the order. For example, an order could have an `InStock` item that has been `Processed`.
+
+      The state flow illustrated below shows the process from creating an order to its completion. An order can only be cancelled when in the `Pending` state, and cannot be cancelled otherwise.
+      <img src="{{ "/images/order-state-flow.png" | prepend: site.url }}" style="height: 80%; width: 80%" />
+  - title: errors
+    content: |
+      | Error Code  | Description | Reason |
+      |:------------|:------------|:-------|
+      | `HTTP 400` | `Bad Request` | Billing Customer (id={x}) not found for company {y}. Proccessing an Order requires a Billing Customer on the Order |
+      | `HTTP 400` | `Bad Request` | The request could not be understood by the server. The message returned in the response body will give more details on why the request was invalid |
+      | `HTTP 400` | `Entity is not related to company` | Ensure the `EntityId` used in the request belongs to the `Company` specified in the URI |
+      | `HTTP 400` | `The request is invalid` | Ensure the `OrderId` used in the request matches the OrderId used in the URI |
+      | `HTTP 400` | `Uri parameter representing resource id and resource`<br>`id found in the request content don't match` | Ensure the `OrderId` used in the request matches the OrderId used in the URI | 
+      | `HTTP 404` | `Order resource with id {x} cannot be found` | Ensure the provided OrderId is correct |
+      | `HTTP 409` | `Conflict` | Order expired and can no longer be updated |
+      | `HTTP 409` | `Resource state transition from {x} to {y} is invalid` | Order state can only be manually updated from Created to Pending |
+      | `HTTP 500` | `An error has occurred` | Ensure the provided Tracking Number is valid |
+  - title: enumerations
+    content: |
+        ## Enumerations
+
+        ### ItemStatus
+
+        | OrderType | ItemType | Id | 
+        |:----------|:---------|:---|
+        | Dropship | New | 1 |
+        | Dropship | Cancelled | 2 |
+        | Dropship | Processed | 3 |
+        | Dropship | Ordered | 4 |
+        | Dropship | Error | 5 |
+        | Dropship | NotAvailable | 6 |
+        | Dropship | Shipped | 7 |
+        | Dropship | Received | 8 |
+        | eCommerce | New | 13 |
+        | eCommerce | Processed | 14 |
+        | eCommerce | Cancelled | 17 |
+        | InStock | New | 9 |
+        | InStock | Processed | 10 |
+        | InStock | Error | 11 |
+        | InStock | BackOrder | 12 |
+        | InStock | Cancelled | 16 |
+        | Shipping | Shipping | 15 |
+
+        ### ItemType
+
+        | Id | Item Type | Description | 
+        |:---|:----------|:------------|
+        | 1 | DropShip | Item is available to be shipped |
+        | 2 | InStock | Item is in stock |
+        | 3 | eCommerce | Item is from an eCommerce platform |
+        | 4 | Shipping | Item is shipping |
+
+        ### OrderState
+
+        | Id | Name |
+        |:---|:-----|
+        | 0 | Created |
+        | 1 | Pending |
+        | 2 | Processed |
+        | 3 | Cancelled |
+        | 4 | Completed |
+
+        ### OrderType
+
+        | Id | Name | Description |
+        |:---|------|:------------|
+        | 3 | Purchase | An Order placed to a Supplier or Vendor |
+        | 4 | RMA | Return Merchandise Authorization, an Order for returns, repairs or replacements |
+        | 1 | Sales | An Order placed by a Customer |
+        | 2 | Transfer | An Order to relocate inventory |
+resourceTypes:
+    - collection:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json
+            responses:
+                200:
+                  body:
+                      application/json:
+                        schema: <<getResource>>
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>           
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json      
+            responses:
+                200:
+                  body:
+                      application/json:
+                        schema: <<resource>>
+    - singularEndpoint:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                  body:
+                      application/json:
+                        schema: <<resource>>
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token) 
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                   
+          responses:
+            200:
+              body:
+                application/json:            
+    - singularEndpointGetPut:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                  body:
+                      application/json:
+                        schema: <<resource>>
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - ProcessOrder: |
+      {
+        "name": "ProcessOrder",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {  
+          "OrderId": { "type": "GUID", "ref": "orders.Order.Id" }
+        },
+        "required": [ "OrderId"]
+      }
+  - Order: |
+      {
+        "name": "Order",                
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "cdd26b8f-4ed1-409d-9984-982e081c425e", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "iPhone 5 Order" }, 
+          "BillingAddressId": { "type": "GUID", "description": "Unique identifier for the billing [Address](/api/crm/#address)", "ref": "crm.Address.Id" }, 
+          "BillingCustomerId": { "type": "GUID", "description": "Unique identifier for the billing [Customer](/api/crm/#customer)", "putDescription": "Must belong to the Company specified in the URI. Required to Process an Order", "ref": "crm.Customer.Id" }, 
+          "CreatedDateUtc": { "type": "DateTime", "description": "The date and time the Order was created, in UTC", "example": "2015-03-27T18:47:29.9012402+00:00", "generated": "true" }, 
+          "DiscountAmount": { "type": "decimal", "description": "The value of the discount to be applied at the Order level", "example": "15.0" }, 
+          "DiscountCode": { "type": "string",  "description": "The discount code for a discount applied to this Order", "example": "MTRY-15" }, 
+          "DiscountDescription": { "type": "string",  "description": "A description of the discount", "example": "Military discount" }, 
+          "EmployeeId": { "type": "integer", "description": "Identifier for the Employee who created this Order", "putDescription": "Must belong to the Company specified in the URI", "example": "15" }, 
+          "EntityId": { "type": "integer", "description": "Identifier for the [Location](/api/company-tree/#location)", "ref": "company tree.Location.Id" }, 
+          "OrderExpiryDate": { "type": "DateTime", "description": "The date and time this Order expires and can no longer be updated, in UTC", "example": "2015-05-05T14:32:05.9140188+00:00", "generated": "true"  }, 
+          "OrderExpiryHours": { "type": "integer", "description": "The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.", "example": "20" }, 
+          "OrderType": { "type": "string", "description": "Name of the [OrderType](#ordertype)", "example": "Sales", "generated": "true"  }, 
+          "OrderTypeId": { "type": "integer","description": "See [OrderType](#ordertype) for a list of acceptable values", "example": "3" }, 
+          "PrintableId": { "type": "string", "description": "An identifier for this Order that can used to print on invoices. This value is system-generated and read-only", "example": "8765-1234-987", "generated": "true"  }, 
+          "ShippingAddressId": { "type": "GUID", "description": "Unique identifier for the shipping [Address](/api/crm/#address)", "ref": "crm.Address.Id"  }, 
+          "ShippingCustomerId": { "type": "GUID", "description": "Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded", "ref": "crm.Customer.Id"  }, 
+          "ShippingEntityId": { "type": "integer", "description": "Identifier for the Location this Order will be shipped to.", "putDescription": "If this value is provided, ShippingCustomerId must be excluded", "ref": "company tree.Location.Id" }, 
+          "State": { "type": "string", "description": "See [OrderState](#orderstate) for a list of acceptable values", "example": "Created", "generated": "true"  }, 
+          "TenderId": { "type": "string", "description": "An invoice number from the system that created the Order, Invoice Number in RQ", "example": "TT101IN18" }, 
+          "CustomerId": { "type": "string", "description": "This is a legacy property that should not be used", "example": "" }, 
+          "SourceId": { "type": "string", "description": "Reserved for future use", "example": "" },
+          "SourceName": { "type": "string", "description": "Reserved for future use", "example": "" },
+          "TenderOrigin": { "type": "string", "description": "Reserved for future use", "example": "" }
+        },
+        "required": ["OrderTypeId", "EntityId"]
+      }
+  - OrderArray: |
+      {
+        "exclude": "true",        
+        "name": "Order",                
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - Item: |
+      {
+        "name": "Item",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier for this Item", "example": "8592718e-bcca-468c-8009-38678929b693", "generated":"true" }, 
+          "Cost": { "type": "decimal", "description": "Cost of this Item, defaults to 0", "example": "5.99" }, 
+          "Description": { "type": "string",  "description": "Description of this Item", "example": "Samsung Galaxy S4 Standard Battery" }, 
+          "ItemStatus": { "type": "string",  "description": "Name of the [ItemStatus](#itemstatus)", "example": "New", "generated": "true" }, 
+          "ItemStatusId": { "type": "integer", "description": "See [ItemStatus](#itemstatus) for a list of acceptable values", "example": "1" }, 
+          "ItemType": { "type": "string",  "description": "Name of the [ItemType](#itemtype)", "example": "DropShip", "generated":"true" }, 
+          "ItemTypeId": { "type": "string",  "description": "See [ItemType](#itemtype) for a list of acceptable values", "example": "1" }, 
+          "Index": { "type": "integer", "description": "A value used for sorting Items, such as in a shopping cart", "example": "0" }, 
+          "ListPrice": { "type": "decimal", "description": "List Price of this Item, defaults to 0", "example": "12.99" }, 
+          "Notes": { "type": "string",  "description": "Notes for this Item", "example": "Dented corner" }, 
+          "OrderId": { "type": "GUID", "description": "Unique identifier for the [Order](#order), specified by the OrderId in the URI", "ref": "orders.Order.Id", "generated":"true" }, 
+          "ProductId": { "type": "string",  "description": "Identifier for the Product. Generally, this is a CatalogItemId", "ref": "catalog.CatalogItem.CatalogItemId" }, 
+          "Quantity": { "type": "integer", "description": "Amount of this Item In Stock, defaults to 0", "example": "2" }, 
+          "SellingPrice": { "type": "decimal", "description": "Selling Price of this Item, defaults to 0", "example": "9.99" }, 
+          "SerialNumbers": { "type": "array", "arrayType": "string", "description": "Serial numbers intended for product serialization", "example": "abc321" }, 
+          "SKU": { "type": "string",  "description": "SKU for this Item", "example": "00001" }, 
+          "ShippingOptionId": { "type": "string",  "description": "Identifier for the ShippingOption that this Item will use", "example": "1" }, 
+          "SupplierEntityId": { "type": "integer", "description": "Identifier for the Supplier of this Item", "ref": "entity-store.Supplier.Id" }, 
+          "SupplierReference": { "type": "string",  "description": "May be used for additional Supplier reference information", "example": "10" }, 
+          "TrackingInformation": { "type": "array", "arrayType": "object", "description": "Tracking information in the form of key-value pairs", "ref": "orders.TrackingInformation", "isNested": "true" },
+          "ItemExtensions": { "type": "array", "arrayType": "object", "description": "Reserved for future use", "example": ""  }                   
+        },
+        "required": ["ItemStatusId", "ItemTypeId" ]
+      }
+  - ItemExtension: |
+      {
+        "exclude": "true",
+        "name": "ItemExtension",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "063c3712-eb08-44f9-8a13-8537c6276a72", "generated":"true" },
+          "ItemId": { "type": "string", "description": "Identifier for a [Item](/api/orders/#item)", "ref": "orders.Item.Id", "generated": "true" }, 
+          "ExtensionTypeId": { "type": "integer", "putDescription": "Identifier for a {{ItemExtensionType}}", "description": "Identifier for a [ItemExtensionType](/api/orders/#itemextensiontype)", "ref": "orders.ItemExtensionType.Id" }, 
+          "ExtensionType": { "type": "string", "description": "Name of the associated [ItemExtensionType](/api/orders/#itemextensiontype)", "ref": "orders.ItemExtensionType.Name", "generated": "true" },      
+          "Value": { "type": "string", "description": "Value of the extension", "example": "True" }
+        },
+        "required": [ "ExtensionTypeId" ]
+      }
+  - ItemExtensionArray: |
+      {
+        "exclude": "true",
+        "name": "ItemExtension",        
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }   
+  - ItemExtensionType: |
+      {
+        "exclude": "true",        
+        "name": "ItemExtensionType",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "2", "generated":"true" }, 
+          "Name": { "type": "string", "description": "Name", "example": "eCommerce_PricingChanged" },
+          "Enabled": { "type": "boolean", "description": "A flag to indicate if this ItemExtensionType is Enabled", "example": "true" }
+        }        
+      }
+  - ItemExtensionTypeArray: |
+      {
+        "exclude": "true",
+        "name": "ItemExtensionType",        
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }          
+  - TrackingInformation: |
+      {
+        "exclude": "true",
+        "name": "TrackingInformation",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Quantity": { "type": "integer", "description": "Number of items being tracked", "example": "1" }, 
+          "TrackingNumber": { "type": "string",  "description": "Tracking number", "example": "1TTTTN4421" }
+        },
+        "required": [ "Quantity", "TrackingNumber"]
+      }      
+  - ItemArray: |
+      {
+        "exclude": "true",
+        "name": "Item",        
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - OrderFull: |
+      {
+        "name": "OrderFull",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "**OrderFull** is an extension on the Order resource",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "cdd26b8f-4ed1-409d-9984-982e081c425e", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "iPhone 5 Order" }, 
+          "BillingAddressId": { "type": "GUID", "description": "Unique identifier for the billing [Address](/api/crm/#address)", "ref": "crm.Address.Id" }, 
+          "BillingCustomerId": { "type": "GUID", "description": "Unique identifier for the billing [Customer](/api/crm/#customer)", "putDescription": "Must belong to the Company specified in the URI. Required to Process an Order", "ref": "crm.Customer.Id" }, 
+          "CreatedDateUtc": { "type": "DateTime", "description": "The date and time the Order was created, in UTC", "example": "2015-03-27T18:47:29.9012402+00:00", "generated": "true" }, 
+          "DiscountAmount": { "type": "decimal", "description": "The value of the discount to be applied at the Order level", "example": "15.0" }, 
+          "DiscountCode": { "type": "string",  "description": "The discount code for a discount applied to this Order", "example": "MTRY-15" }, 
+          "DiscountDescription": { "type": "string",  "description": "A description of the discount", "example": "Military discount" }, 
+          "EmployeeId": { "type": "integer", "description": "Identifier for the Employee who created this Order", "putDescription": "Must belong to the Company specified in the URI", "example": "15" }, 
+          "EntityId": { "type": "integer", "description": "Identifier for the [Location](/api/company-tree/#location)", "ref": "company tree.Location.Id" }, 
+          "OrderExpiryDate": { "type": "DateTime", "description": "The date and time this Order expires and can no longer be updated, in UTC", "example": "2015-05-05T14:32:05.9140188+00:00", "generated": "true"  }, 
+          "OrderExpiryHours": { "type": "integer", "description": "The amount of hours before this Order expires and can no longer be updated. Defaults to 72 hours.", "example": "20" }, 
+          "OrderType": { "type": "string", "description": "Name of the [OrderType](#ordertype)", "example": "Sales", "generated": "true"  }, 
+          "OrderTypeId": { "type": "integer","description": "See [OrderType](#ordertype) for a list of acceptable values", "example": "3" }, 
+          "PrintableId": { "type": "string", "description": "An identifier for this Order that can used to print on invoices. This value is system-generated and read-only", "example": "8765-1234-987", "generated": "true"  }, 
+          "ShippingAddressId": { "type": "GUID", "description": "Unique identifier for the shipping [Address](/api/crm/#address)", "ref": "crm.Address.Id"  }, 
+          "ShippingCustomerId": { "type": "GUID", "description": "Unique identifier for the shipping [Customer](/api/crm/#customer). If this value is provided, ShippingEntityId must be excluded", "ref": "crm.Customer.Id"  }, 
+          "ShippingEntityId": { "type": "integer", "description": "Identifier for the Location this Order will be shipped to.", "putDescription": "If this value is provided, ShippingCustomerId must be excluded", "ref": "company tree.Location.Id" }, 
+          "State": { "type": "string", "description": "See [OrderState](#orderstate) for a list of acceptable values", "example": "Created", "generated": "true"  }, 
+          "TenderId": { "type": "string", "description": "An invoice number from the system that created the Order, Invoice Number in RQ", "example": "INV112" }, 
+          "Items": { "type": "array", "arrayType": "object", "ref": "orders.Item", "description": "The Items in the [Order](#order)", "example": "" },
+          "CustomerId": { "type": "string", "description": "This is a legacy property that should not be used", "example": "" }, 
+          "SourceId": { "type": "string", "description": "Reserved for future use", "example": "" },
+          "SourceName": { "type": "string", "description": "Reserved for future use", "example": "" },          
+          "TenderOrigin": { "type": "string", "description": "Reserved for future use", "example": "" }
+        },
+        "required": ["OrderTypeId"]        
+      }
+  - OrderFullArray: |
+      {
+        "exclude": "true",        
+        "name": "OrderFull",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+/Companies({CompanyId})/Orders:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    collection:
+      getResource: OrderArray
+      resource: Order
+      postResource: Order
+  get:
+    displayName: Getting All Order Summaries for a Company
+  post:
+    displayName: Creating an Order
+    description: |
+        {{note}}The <code>EntityId</code> used in the request parameters must belong to the <code>CompanyId</code> used in the URI.{{end}}
+/Companies({CompanyId})/Orders({OrderId})/Items:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    OrderId:
+      displayName: OrderId
+      type: string
+      example: 2ad88692-7757-4a72-915b-dfe8f2539279
+      description: Identifier for the {{Order}} being updated
+      required: true
+  type:
+    collection:
+      resource: Item
+      postResource: Item
+      getResource: ItemArray
+  get:
+    displayName: Getting all Items on an Order
+  post:
+    displayName: Adding an Item to an Order
+/Companies({CompanyId})/Orders({OrderId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    OrderId:
+      displayName: OrderId
+      type: string
+      example: 2ad88692-7757-4a72-915b-dfe8f2539279
+      description: Identifier for the {{Order}}
+      required: true
+  type:
+    singularEndpointGetPut:
+      resource: Order
+      postResource: Order
+  get: 
+    displayName: Getting an Order
+  put:
+    displayName: Updating an Order
+/Companies({CompanyId})/Orders({OrderId})/Process:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    OrderId:
+      displayName: OrderId
+      type: string
+      example: 2ad88692-7757-4a72-915b-dfe8f2539279
+      description: Identifier for the {{Order}}
+      required: true
+  type:
+    collectionWriteOnly:
+      resource: Order
+      postResource: ProcessOrder
+  post:
+    displayName: Processing an Order
+/Companies({CompanyId})/OrderFull:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    collection:
+      resource: OrderFull
+      postResource: OrderFull
+      getResource: OrderFullArray
+  get:
+    displayName: Getting All Orders for a Company
+  post:
+    displayName: Creating an Order with Items
+    description: |
+        {{note}}Instead of creating an Order and then adding Items to the Order one at a time, this request can be used to create an Order with Items all at once.{{end}}
+/Companies({CompanyId})/OrderFull({OrderId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    OrderId:
+      displayName: OrderId
+      type: string
+      example: 2ad88692-7757-4a72-915b-dfe8f2539279
+      description: Identifier for the {{Order}} being updated
+      required: true
+  type:
+    singularEndpointGetPut:
+      resource: OrderFull
+      postResource: OrderFull
+  get:
+    displayName: Getting an Order with Items 
+  put:
+    displayName: Updating an Order with Items
+    description: |
+        {{note}}The <code>OrderId</code> in the URI must match the <code>OrderId</code> used in the request parameters{{end}}
+/Companies({CompanyId})/Orders?$filter=State eq 'Pending' and EntityId eq {LocationId}:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    LocationId:
+      displayName: LocationId
+      type: string
+      example: 14202
+      description: Identifier for the {{Location}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: OrderArray
+  get:
+    displayName: Getting Pending Orders by Location
+/Companies({CompanyId})/Orders?$filter=PrintableId eq '{PrintableId}':
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    PrintableId:
+      displayName: PrintableId
+      example: TT101IN18
+      type: string
+      description: An {{Order}} identifier printed on invoices 
+  type:
+    collectionReadOnly:
+      resource: OrderArray
+  get:
+    displayName: Getting Orders by PrintableId
+    description: |
+        {{tip}}<code>PrintableId</code> is an identifier for an Order that can used to print on invoices. This request is useful for searching for an Order using a previously printed or saved invoice.{{end}}

@@ -1,0 +1,120 @@
+#%RAML 0.8
+title: supplier availability
+version: v1
+baseUri: https://dropship{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: | 
+      Dropship
+  - title: overview
+    content: |
+      Suppliers have the ability to configure availability of products.
+  - title: errors
+    content: |
+    
+      | Error Code | Message | How to Resolve |
+      |:-----------|:--------|:---------------|
+      | `HTTP 400` | `Cannot find supplier identifier in the uri` | Occurs when entering an incorrect SupplierId in the uri |
+resourceTypes:
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>            
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<postResource>>
+          responses:
+            202:
+              body:
+                application/json:
+                  schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Availability: |
+      {
+        "name": "Availability",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "c2a97823-196b-4b3e-891a-ba01665797e4", "generated": "true" }, 
+          "Products": { "type": "array", "arrayType": "object", "description": "Products for the Availability Feed", "isNested": "true", "ref": "supplier availability.ProductAvail" }
+        },
+        "required": [ "Products" ]
+      }
+  - ProductAvail: |
+      {
+        "exclude": "true",
+        "name": "ProductAvail",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "IsAvailable": { "type": "boolean", "description": "A flag to indicate if the Product is Available", "example": "true" },
+          "Sku": { "type": "string", "description": "Vendor SKU", "example": "9101AGAP6" },
+          "Quantity": { "type": "integer", "description":"Product quantity", "example": "10" }
+        },
+        "required": [ "Sku" ]
+      }      
+  - Product: |
+      {
+        "exclude": "true",
+        "name": "Product",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "IsAvailable": { "type": "boolean", "description": "A flag to indicate if the Product is Available", "example": "true" },
+          "SupplierEntityId": { "type": "integer", "description": "Identifier for the Supplier of this Item", "ref": "entity-store.Supplier.Id" }, 
+          "SupplierSku": { "type": "string", "description": "Vendor SKU", "example": "9101AGAP6" },
+          "Quantity": { "type": "integer", "description": "Product quantity", "example": "10" }
+        }
+      }   
+/Suppliers({SupplierId})/Availability:
+  displayName: availability
+  uriParameters:
+    SupplierId:
+      displayName: SupplierId
+      type: integer
+      example: 14107
+      description: Identifier for the {{Supplier}}
+      required: true
+  type:
+    collectionWriteOnly:
+      resource: Availability
+      postResource: Availability
+  post: 
+    displayName: Configuring Product Availability

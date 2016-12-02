@@ -1,0 +1,211 @@
+#%RAML 0.8
+title: partner relationships
+version: v1
+baseUri: https://entitymanager{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:  
+  - title: author
+    content: | 
+      Partners
+  - title: overview
+    content: |
+
+      The Partner Relationships API allows a Partner to retrieve a list of Companies they have a relationship with.
+
+      A {{Company}} to Partner Relationship is formed when a Company engages a Partner service.
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 404` | `Entity Not Found` | Ensure the PartnerId specified in the URI is valid |
+  - title: pagination
+    content: |
+        The Partner Relationship API supports pagination of collections of resources for some requests.
+
+        ### Query Parameters
+
+        Pagination is done through the use of $skip and $top query string parameters.
+
+        `$skip` denotes the number of items to skip from the entire set of results. This value defaults to 0 if no `$skip` value is specified. If a value less than 0 is specified, the URI is considered malformed.
+
+        `$top` denotes the maximum number of items to include in the response. This value defaults to 20 if no `$top` value is specified. Acceptable values are in the range [0-100]. 
+
+        ### Navigation Links
+
+        Pagination-enabled requests include links for 'self', 'prev' and 'next' in the response data. 
+
+        These links are _relative_, they do not include the base endpoint. It is the responsibility of the client to prepend the appropriate endpoint.
+
+        ##### Example
+
+            {
+                "_links": {
+                    "prev": null,
+                    "self": "/v1/Entities(1)/Partners(36)/Relationships/Companies?$skip=0&$top=5",
+                    "next": "/v1/Entities(1)/Partners(36)/Relationships/Companies?$skip=5&$top=5"
+                },
+                "_metadata": {
+                    "count": 15,
+                    "skip": 0,
+                    "top": 5
+                }
+            }
+
+        In the example above, the `_links` section is included in the data returned from an API call to <a href="#getting-company-relationships-for-a-partner">Getting Company Relationships for a Partner</a>, where `$skip=0` and `$top=5`.
+
+        The `self`.`href` value is the relative version of the API call that returned these results.
+
+        The `next`.`href` refers to a resource containing a page with the **next** 5 items.
+
+        The `prev`.`href` refers to a resource containing a page with the **previous** 5 items.
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+    - collection:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json       
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>                          
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - _links: |
+      {
+        "name": "_links",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null"},
+          "self": { "type": "string", "putDescription": "The request that returned these results. If the request was made without $top or $skip, these will be filled in with the values that were used.", "example": "/v1/Partners(36)/Relationships/Companies?$skip=0&$top=10"},
+          "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null"}
+        },
+        "required": ["self"]
+      }
+  - _metadata: |
+      {
+        "name": "_metadata",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "count": { "type": "integer", "putDescription": "The total number of results returned from the request", "example": "15"},
+          "skip": { "type": "integer", "putDescription": "Value of skip in the request URI, if not specified the value will be 0", "example": "0"},
+          "top": { "type": "integer", "putDescription": "Value of top in the request URI, if not specified the value will be 20", "example": "5"}
+        }
+      }            
+  - Relationship: |
+      {
+        "name": "Relationship",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "CompanyId": { "type": "integer", "description": "Identifier for a Company", "ref": "company tree.Company.Id" },
+          "CompanyName": { "type": "string", "description": "Company Name", "ref": "company tree.Company.Name" },          
+          "CreatedUtc": { "type": "datetime", "description": "Date and time the Relationship was created, in UTC", "example": "2015-01-14T11:22:50.568Z" },
+          "RelationshipId": { "type": "integer", "description": "Unique Identifier", "example": "123" }
+        }
+      }
+  - RelationshipResponse: |
+      {
+        "name": "RelationshipResponse",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_metadata": { "type": "object", "ref": "partner relationships._metadata" },
+          "_links": { "type": "object", "ref": "partner relationships._links" },
+          "items": { "type": "array", "arrayType": "object", "ref": "partner relationships.Relationship" }
+        }
+      }    
+/Partners({PartnerId})/Relationships/Companies?$skip={Skip}&$top={Top}:
+  uriParameters:
+    PartnerId:
+      type: integer
+      example: 36
+      description: Identifier for the Partner
+      required: true
+    Skip:
+      displayName: skip
+      description: Number of records to skip, defaults to 0
+      type: integer
+      example: 1
+      required: false
+    Top: 
+      displayName: top
+      description: Number of records to take, defaults to 20
+      type: integer
+      example: 10
+      required: false
+  type:
+    collectionReadOnly:
+      resource: RelationshipResponse
+  get: 
+    displayName: Getting Company Relationships for a Partner
+    description: |
+      This request can be used by Partners to get a list of Companies they have established a Relationship with in the iQmetrix ecosystem.

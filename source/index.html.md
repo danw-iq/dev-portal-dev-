@@ -21,8 +21,8 @@ This section provides in-depth documentation for all iQmetrix RQ APIs along with
 * [Customer Managed Inventory](/api/cmi.html)
 * [Electronic Product Catalog](/api/epc.html)
 * [Punch Clock](/api/punch-clock.html)
-* [RQ Data Connect](/api/RQ-Data-Connect.html)
-* [RQ Data Connect Bridge](/api/RQ-Data-Connect-Bridge.html)
+* [RQ Data Connect](/api/rq-data-connect.html)
+* [RQ Data Connect Bridge](/api/rq-data-connect-bridge.html)
 * [Vendor Managed Inventory](/api/vmi.html)
 
       
@@ -49,7 +49,7 @@ This section provides in-depth documentation for all iQmetrix RQ APIs along with
 * [Product Subscription](/api/product-subscription.html)
 * [Reference](/api/reference.html)
 * [Shipping Aggregator](/api/saccs.html)
-* [security-roles](/api/Security Roles.html)
+* [Security Roles](/api/security-roles.html)
 * [Shipping Options](/api/shipping-options.html)
 * [Supplier Availability](/api/supplier-availability.html)
 * [Supplier Orders](/api/supplier-orders.html)

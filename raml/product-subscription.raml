@@ -1,0 +1,347 @@
+#%RAML 0.8
+title: product-subscription
+version: v1
+baseUri: https://productsubscriptions{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: | 
+      Dropship
+  - title: overview
+    content: |
+      Suppliers have the ability to add products to their subscribable lists and retrieve a list of companies from a subscription.
+      
+      Suppliers can also create their own subscribable lists and add/remove companies from their lists, or have iQmetrix handle these scenarios. When creating a subscribable list, you must specify the GUID (e.g. <a href="http://www.guidgenerator.com/online-guid-generator.aspx" target="_blank">Online GUID Generator</a>).
+  - title: errors
+    content: |
+      | Error Code | Message | How to Resolve |
+      |:-----------|:--------|:---------------|
+      | `HTTP 400` | `Validation failed. EntityId does not belong to vendor` | Occurs when entering an incorrect EntityId |
+      | `HTTP 400` | `<Field> should not be empty` | Occurs if Required Parameter is missing |
+      | `HTTP 404` | `Document not found` | Occurs when entering an incorrect ID in the uri | 
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json      
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+    - singularEndpointGetPut:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json      
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resourcePut>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - singularEndpointPutOnly:
+        securedBy: [oauth_2_0]
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resourcePut>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - singularEndpointPutDelete:
+        securedBy: [oauth_2_0]
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+          responses:
+            204:
+              body:
+                application/json:
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)  
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                 
+          responses:
+            204:
+              body:
+                application/json:
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Subscription: |
+      {
+        "name": "Subscription",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Companies": { "type": "array", "arrayType": "object", "description": "Companies for the subscription", "ref": "product-subscription.Company" }, 
+          "ListId": { "type": "GUID", "description": "Subscription identifier", "example": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4" }
+        }
+      }
+  - Company: |
+      {
+        "name": "Company",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "DateSubscribedUtc": { "type": "DateTime", "description": "Date company subscribed to product subscription, in UTC", "example": "2015-09-23T23:48:37.744Z" }, 
+          "Id": { "type": "integer", "description": "Company identifier", "example": "146454" }, 
+          "Name": { "type": "string",  "description": "Company Name", "example": "Kentel Corp" }
+        }
+      }
+  - SubscribableList: |
+      {
+        "name": "SubscribableList",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "EntityId": { "type": "integer", "description": "[Supplier](/api/entity-store/#supplier) identifier", "ref": "entity-store.Supplier.Id" }, 
+          "Id": { "type": "GUID", "description": "Subscribable List identifer", "example": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4" }, 
+          "Name": { "type": "string",  "description": "Title of product subscription", "example": "Nozama's Product List" }, 
+          "Dropshippable": { "type": "boolean",  "description": "Indicates if products in list are dropshippable. Defaults to false", "example": "true" },
+          "Products": { "type": "array", "arrayType": "object", "description": "Products for the subscribable list", "ref": "product-subscription.Product" }, 
+          "Version": { "type": "integer", "description": "Subscription revision", "example": "2", "generated": "true", "putGenerate": "true" },
+          "CountOfProducts": { "type": "integer", "description": "Number of Products in the List", "example": "1", "generated": "true" },
+          "MasterEntityId": { "type": "integer",  "description": "Reserved for internal use", "example": "" }
+        },
+        "required": [ "EntityId", "Name", "Products" ]
+      }
+  - Product: |
+      {
+          "name": "Product",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",      
+          "properties": {
+            "Dropshippable": { "type": "boolean", "description": "Indicates if the product is dropshippable", "example": "true" }, 
+            "Price": { "type": "decimal", "description": "Product MSRP. Currency code defaults internally to retailer location. ", "example": "24.99" }, 
+            "ProductName": { "type": "string",  "description": "Name of product", "example": "Samsung Galaxy S4 Standard Battery" }, 
+            "ProductSlugs": { "type": "array", "arrayType": "string", "description": "List of slugs that match the vendor sku", "example": "M5218" }, 
+            "VendorSku": { "type": "string",  "description": "Vendor product SKU", "example": "B00LAOKN4S" }, 
+            "Version": { "type": "integer", "description": "Product revision", "example": "2", "generated": "true", "putGenerate": "true"  }
+          },
+          "required": [ "ProductName", "VendorSku" ]
+      }
+  - SubListHidden: |
+      {
+        "exclude": "true",
+        "name": "SubListHidden",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "properties": {
+          "EntityId": { "type": "integer", "putDescription": "{{Supplier}} identifier", "ref": "entity-store.Supplier.Id" }, 
+          "Name": { "type": "string",  "putDescription": "Title of product subscription", "example": "Nozama's Product List" },
+          "Dropshippable": { "type": "boolean",  "putDescription": "Defaults to false", "example": "true" }     
+        },
+        "required": [ "EntityId", "Name" ]
+      }
+/subscription({ListId}):
+  uriParameters:
+    ListId:
+      displayName: ListId
+      type: string
+      example: 43d92a51-650e-4b85-b5d0-8d51bf4c59f4
+      description: 
+      required: true
+  type:
+    collectionReadOnly:
+      resource: Subscription
+  get:
+    displayName: Getting All Companies in a Product Subscription
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "ListId": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4",
+                "Companies": [
+                    {
+                      "Id": 14146,
+                      "Name": "KENTEL Corp",
+                      "DateSubscribedUtc": "2015-11-23T19:12:09.92Z"
+                    },
+                  ...  
+                ]
+              }
+/subscribablelists({ListId}):
+  uriParameters:
+    ListId:
+      displayName: GUID
+      type: string
+      example: 43d92a51-650e-4b85-b5d0-8d51bf4c59f4
+      description: GUID you have added for {{SubscribableList}}
+      required: true
+  type:
+    singularEndpointPutOnly:
+      resource: SubscribableList
+      resourcePut: SubListHidden
+  put:
+    displayName: Creating a Subscribable List
+    description: |
+      Allows you to create your own subscribable list. You must provide a GUID for the  `SubscribableListId`.{{note}}The naming convention for subscribable lists is in the format "Vendor Name - Product List Name". For example, Supplier123 - Otterbox Products.{{end}}
+    body:
+      application/json:
+        example: |
+          {
+              "EntityId": 14107,
+              "Name": "Test List Name",
+              "Dropshippable": true
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                  "Id": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4",
+                  "EntityId": 14107,
+                  "Name": "Nozama - Samsung Products",
+                  "Dropshippable": true,
+                  "Products": [],
+                  "Version": 2
+              }
+/subscribablelists({SubscribableListId}):
+  uriParameters:
+    SubscribableListId:
+      displayName: Id
+      type: string
+      example: 43d92a51-650e-4b85-b5d0-8d51bf4c59f4
+      description: Identifier for a {{SubscribableList}}
+      required: true
+  type:
+    singularEndpointGetPut:
+      resource: SubscribableList
+      resourcePut: SubscribableList
+  get:
+    displayName: Getting a Subscribable List
+  put:
+    displayName: Updating Products in a Subscribable List
+    description: |
+        {{note}}The new product list in the payload replaces the old product list. Any matching old products (determined by vendor sku) will have their slug and version data copied over into the new products.{{end}}
+    body:
+      application/json:
+        example: |
+         {
+            "EntityId": 14107,
+            "Name": "Nozama's Product List",
+            "Products": [
+                {
+                    "ProductName": "Samsung Galaxy S4 Standard Battery",
+                    "VendorSku": "B00LAOKN4S",
+                    "Price": 24.99,
+                    "Dropshippable": true
+                }
+            ]          
+         }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                  "Id": "43d92a51-650e-4b85-b5d0-8d51bf4c59f4",
+                  "EntityId": 41407,
+                  "Name": "Nozama's Product List",
+                  "Products": [
+                      {
+                          "ProductName": "Samsung Galaxy S4 Standard Battery",
+                          "VendorSku": "B00LAOKN4S",
+                          "Price": 24.99,
+                          "Dropshippable": true
+                          "ProductSlugs": [],
+                          "Version": 1
+                      }
+                  ],
+                  "Version": 2
+              }
+/subscription({ListId})/company({CompanyId}):
+  uriParameters:
+    ListId:
+      type: string
+      example: 43d92a51-650e-4b85-b5d0-8d51bf4c59f4
+      description: Identifier for a {{SubscribableList}}
+      required: true
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    singularEndpointPutDelete:
+  put:
+    displayName: Adding a Company to a Subscribable List
+  delete:
+    displayName: Deleting a Company from a Subscribable List

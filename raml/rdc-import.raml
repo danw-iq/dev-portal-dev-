@@ -1,0 +1,131 @@
+#%RAML 0.8
+title: RQ Data Connect Import
+baseUri: https://rqdataconnect{UrlSuffix}.iqmetrix.net
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: |
+      RQ
+  - title: overview
+    content: |
+
+      RQ Data Connect allows you to retrieve report data from your RQ database (v4.23 and up).
+
+      To get started, see [RQ Data Connect Guide](/guides/rq-data-connect/).
+
+      #### Note
+
+      For reports that provide optional URI parameters for filtering at different levels (ForWho/ForWhoIDs/LocationType/LocationTypeIDs), omitting these values will run the report at the default company level.
+
+      ### Authentication
+
+      RQ Data Connect and Bridge support many different methods of authentication, see {{AuthenticationOptions}}.
+
+      Note that for all reports the {{AccessToken_Glossary}} should be mapped to an employee in RQ.
+
+      ### Report List
+
+      For a complete list of reports in RQ Data Connect, see [Report List](/rq-data-connect/report-list).
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Bad Request` | Ensure request body is formatted properly |
+      | `HTTP 401` | `Tokan is invalid` | Ensure Access Token is valid and has not expired |
+      | `HTTP 403` | `Unauthorized` | Ensure Access Token is valid and user has appropriate security |
+      | `HTTP 404` | `Not Found` | Ensure URI is valid |
+      | `HTTP 429` | `Too Many Requests` | See [Rate Limiting](/api/#rate-limiting) |
+      | `HTTP 500` | `Unexpected Error` | See Message in response for more information |      
+resourceTypes:
+  - collectionReadOnly:
+      post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              required: false
+              description: Bearer token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+            Accept-Encoding:
+              example: gzip
+              required: false
+              description: Compression algorithm. For other methods of compression, see {{CompressionOptions}}
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+                application/JsonDataTable:
+                  schema: <<resource>>
+                text/xml:
+                  schema: <<resource>>
+                text/XmlDataTable:
+                  schema: <<resource>>
+                text/csv:
+                  schema: <<resource>>
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                  schema: <<resource>>
+schemas:
+  - TrafficCount: |
+      {   
+          "type": "array",
+          "name": "TrafficCount",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "TrafficCountID": { "type": "integer", "database": "INT", "example": "656", "description": "Identifier", "putDescription": "Identifier for a traffic count row, this value is used as a URL parameter when updating a row" },  
+            "StartDate": { "type": "datetime", "database": "DATETIME", "example": "2016-11-09T10:00:00", "description": "Start date" },  
+            "EndDate": { "type": "datetime", "database": "DATETIME", "example": "2016-11-09T11:00:00", "description": "End date" },  
+            "TrafficCount": { "type": "integer", "database": "INT", "example": "20", "description": "Traffic count" },  
+            "StoreID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for a store in RQ" },  
+            "GLCode": { "type": "string", "database": "VARCHAR(100)", "example": "84WEA", "description": "General Ledger code. For more information about G/L, {{support_GLAccountSetup}}." }  
+          }  
+        }
+/Import/TrafficCount?StoreID={StoreID}&StartDate={StartDate}&StopDate={StopDate}&TrafficCount={TrafficCount}&TrafficCountID={TrafficCountID}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StoreID:
+      type: integer
+      example: 1
+      required: true
+      description: Identifier for a store in RQ
+    StartDate:
+      type: string
+      example: 2016-11-09 10:00:00.000
+      required: true
+      description: Start date for traffic count data
+    StopDate:
+      type: string
+      example: 2016-11-09 11:00:00.000
+      required: true
+      description: End date for traffic count data
+    TrafficCount:
+      type: integer
+      example: 20
+      required: true
+      description: Traffic count
+    TrafficCountID:
+      type: string
+      example: 645
+      required: false
+      description: Identifier for a {{TrafficCount}}. Provide this value to update a specific traffic count row in the database
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly: 
+      resource: TrafficCount
+  post:
+    displayName: Importing Traffic Count Data into RQ
+    description: |
+      This request allows you to import and update Traffic Count Data into RQ. 
+
+      For more information, see {{support_TrafficCountDashboard}}.

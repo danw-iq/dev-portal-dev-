@@ -4,6 +4,47 @@ baseUri: https://rqdataconnectdemo.iqmetrix.net
 schemas: 
 
     
+    - CashOutSummaryReportData: |
+        {
+            "type": "array",
+            "name": "CashOutSummaryReportData",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "description": "",
+            "properties": { 
+              "CashOutID": { "type": "integer", "database": "INT", "example": "13775", "description": "Internal identifier in RQ" },  
+              "CashOutIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEACA649", "description": "Cashout # - number that the system generated for the cashout at the time it was created. To view the cashout simply click its underlined link" },  
+              "StoreName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Name of the store" },  
+              "Reconciled": { "type": "string", "database": "VARCHAR(3)", "example": "No", "description": "A flag to indicate if the cashout was reconciled" },  
+              "StartDate": { "type": "datetime", "database": "DATETIME", "example": "2012-08-20T18:18:52.023", "description": "Started On - start time of this cashout's interval. If this is the first cashout for this location then the Started On Date will be N/A" },  
+              "StopDate": { "type": "datetime", "database": "DATETIME", "example": "2015-02-24T13:40:33.21", "description": "Stopped On - stop time of this cashout's interval" },  
+              "EmployeeName1": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix Employee", "description": "Employee 1 - name of the employee who was logged in when the cashout was done" },  
+              "EmployeeUsername1": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix.Employee", "description": "Username1 - username of the employee who was logged in when the cashout was done" },  
+              "EmployeeName2": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix Employee", "description": "Employee 2 - name of the employee who verified the cashout was correct, this may be the same person as Employee 1" },  
+              "EmployeeUsername2": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix.Employee", "description": "Username2 - the username of the employee who was logged in when the cashout was done" },  
+              "PaymentName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Cash", "description": "Payment - payment type for the row's totals" },  
+              "CreditCardPaymentType": { "type": "string", "database": "VARCHAR(20)", "example": "", "description": "Credit card payment type" },  
+              "PaymentReconciled": { "type": "string", "database": "VARCHAR(3)", "example": "No", "description": "Payment Reconciled - indicates whether the payment type has been reconciled or not" },  
+              "Cashout": { "type": "string", "database": "VARCHAR(5000)", "example": "", "description": "Cashout Comments - comments from the cashout" },  
+              "Reconciliation": { "type": "string", "database": "VARCHAR(1000)", "example": "", "description": "Reconciliation Comments - from the reconciliation if it has been done" },  
+              "DepositNumber": { "type": "string", "database": "VARCHAR(50)", "example": "100.00", "description": "Deposit # - number for this particular deposit, e.g. bank deposit number" },  
+              "ActualTotal": { "type": "decimal", "database": "MONEY", "example": "1884.1", "description": "Your Total - total filled in by Employee 1 from the till totals for all transactions during the cashoutinterval for the row's payment type" },  
+              "SystemTotal": { "type": "decimal", "database": "MONEY", "example": "0", "description": "System Total - overall total the software has recorded for all transactions during the cashout interval for the row's payment type. This includes all payments accepted for sales, bill pay and for customer account payments" },  
+              "Skim": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Internal value in RQ" },  
+              "Float": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Internal value in RQ" },  
+              "DifferenceTotal": { "type": "decimal", "database": "MONEY", "example": "1884.1", "description": "Difference - Your Total - System Total" },  
+              "TransactionQuantity": { "type": "integer", "database": "INT", "example": "0", "description": "Internal value in RQ" },  
+              "CashAndCheque": { "type": "decimal", "database": "MONEY", "example": "1884.1", "description": "Cash/check (cheque) - total for the cash and check payment types" },  
+              "FloatRetained": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Float Retained - dollar amount retained as a float" },  
+              "DepositAmount": { "type": "decimal", "database": "MONEY", "example": "1884.1", "description": "Deposit - actual deposit value for that cashout" },  
+              "CashInAmount": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Cashin - cashed in float amount" },  
+              "BankDetails": { "type": "string", "database": "NVARCHAR(MAX)", "example": "", "description": "Bank Details - states the bank associated to the cashout" }  
+            }  
+          }
+        
+
+    
+
+    
     - ChargeBackSummaryReportLocationData: |
         {
           "name": "ChargeBackSummaryReportLocationData",
@@ -29,7 +70,7 @@ schemas:
           "properties": {
             "CategoryName": { "type": "string", "description": "Category Name", "database": "NVARCHAR (MAX)", "example": "Financing" },
             "CategoryNumber": { "type": "string", "description": "Internal identifier for a Category in RQ", "database": "NVARCHAR (100)", "example": "10101012" },
-            "CategoryPath": { "type": "string", "description": "Category", "database": "NVARCHAR (MAX)", "example": ">> Activations >> Financing" },
+            "CategoryPath": { "type": "string", "description": "Category", "database": "NVARCHAR (MAX)", "example": "Activations" },
             "Quantity": { "type": "integer", "description": "Qty", "database": "INT", "example": "1" },
             "TotalValue": { "type": "decimal", "description": "Total Value - dollar value of the charge backs", "database": "MONEY", "example": "-100" }
           }
@@ -158,6 +199,32 @@ schemas:
     
 
     
+    - OutstandingGiftCardsReportData: |
+        {
+          "type": "array",
+          "name": "OutstandingGiftCardsReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "SerialNumber": { "type": "string", "database": "VARCHAR(35)", "example": "7777085179051274", "description": "Card Number - activation number for the gift card" },  
+            "DateSold": { "type": "datetime", "database": "DATETIME", "example": "2016-10-14T13:05:14.133", "description": "Activated On - date the gift card was activated" },  
+            "CustomerName": { "type": "string", "database": "VARCHAR(101)", "example": "Bill Smith", "description": "Customer - name of the customer who purchased the gift card" },  
+            "LastRedeemedGMT": { "type": "datetime", "database": "DATETIME", "example": "2016-10-14T19:30:37.063", "description": "Last Redeemed (GMT) - when the gift card was last redeemed, in GMT time" },  
+            "LastRedeemed": { "type": "datetime", "database": "DATETIME", "example": "2016-10-14T13:30:37.063", "description": "Last Redeemed - when the gift card was last redeemed, local time" },  
+            "RedeemedAt": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Redeemed At - location where the card was redeemed" },  
+            "RedeemedBy": { "type": "string", "database": "VARCHAR(151)", "example": "Bill Smith", "description": "Redeemed By - name of the customer who redeemed the gift card" },  
+            "Balance": { "type": "decimal", "database": "MONEY", "example": "77.52", "description": "Balance - remaining balance" },  
+            "SaleInvoiceID": { "type": "integer", "database": "INT", "example": "634", "description": "Internal identifier for an invoice in RQ" },  
+            "InvoiceIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "MIL44AH9", "description": "Invoice Number - invoice number with a link to the invoice" },  
+            "ProductName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "iTunes 20", "description": "Product Name - product description of the card" },  
+            "ProductSKU": { "type": "string", "database": "VARCHAR(20)", "example": "ASBTHT000018", "description": "Product SKU - product SKU assigned to the gift card" },  
+            "InvoiceSerialMask": { "type": "integer", "database": "INT", "example": "6", "description": "Amount of the SerialNumber to mask" }  
+          }  
+        }
+        
+
+    
+
+    
     - PaymentIntegrationTransactionReportData: |
         {
           "type": "array",
@@ -274,6 +341,164 @@ schemas:
 
     
 
+
+/reports/CashOutSummaryReport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        StartDate:
+            displayName: StartDate
+            type: string
+            example: 1969-12-31
+            required: true
+            description: Date at which report will begin
+        
+        StopDate:
+            displayName: StopDate
+            type: string
+            example: 2015-12-31
+            required: true
+            description: Date at which report will end
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 4
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoIDs:
+            displayName: ForWhoIDs
+            type: integer
+            example: 1
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Cashout Summary Report
+                
+        
+        description: |            
+            For more information see {{support_CashoutSummaryReport}}.      
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"CashOutID":13775,"CashOutIDByStore":"84WEACA649","StoreName":"84 West","Reconciled":"No","StartDate":"2012-08-20T18:18:52.023","StopDate":"2015-02-24T13:40:33.21","EmployeeName1":"iQmetrix Employee","EmployeeUsername1":"iQmetrix.Employee","EmployeeName2":"iQmetrix Employee","EmployeeUsername2":"iQmetrix.Employee","PaymentName":"Cash","CreditCardPaymentType":"","PaymentReconciled":"No","Cashout":"","Reconciliation":"","DepositNumber":"100.00","ActualTotal":1884.1,"SystemTotal":0,"Skim":0,"Float":0,"DifferenceTotal":1884.1,"TransactionQuantity":0,"CashAndCheque":1884.1,"FloatRetained":0,"DepositAmount":1884.1,"CashInAmount":0,"BankDetails":""}]
+                            schema: |
+                                {"type":"array","name":"CashOutSummaryReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CashOutID":{"type":"integer","database":"INT","example":"13775","description":"Internal identifier in RQ"},"CashOutIDByStore":{"type":"string","database":"VARCHAR(14)","example":"84WEACA649","description":"Cashout # - number that the system generated for the cashout at the time it was created. To view the cashout simply click its underlined link"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Name of the store"},"Reconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"A flag to indicate if the cashout was reconciled"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2012-08-20T18:18:52.023","description":"Started On - start time of this cashout's interval. If this is the first cashout for this location then the Started On Date will be N/A"},"StopDate":{"type":"datetime","database":"DATETIME","example":"2015-02-24T13:40:33.21","description":"Stopped On - stop time of this cashout's interval"},"EmployeeName1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 1 - name of the employee who was logged in when the cashout was done"},"EmployeeUsername1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username1 - username of the employee who was logged in when the cashout was done"},"EmployeeName2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 2 - name of the employee who verified the cashout was correct, this may be the same person as Employee 1"},"EmployeeUsername2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username2 - the username of the employee who was logged in when the cashout was done"},"PaymentName":{"type":"string","database":"NVARCHAR(MAX)","example":"Cash","description":"Payment - payment type for the row's totals"},"CreditCardPaymentType":{"type":"string","database":"VARCHAR(20)","example":"","description":"Credit card payment type"},"PaymentReconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"Payment Reconciled - indicates whether the payment type has been reconciled or not"},"Cashout":{"type":"string","database":"VARCHAR(5000)","example":"","description":"Cashout Comments - comments from the cashout"},"Reconciliation":{"type":"string","database":"VARCHAR(1000)","example":"","description":"Reconciliation Comments - from the reconciliation if it has been done"},"DepositNumber":{"type":"string","database":"VARCHAR(50)","example":"100.00","description":"Deposit # - number for this particular deposit, e.g. bank deposit number"},"ActualTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Your Total - total filled in by Employee 1 from the till totals for all transactions during the cashoutinterval for the row's payment type"},"SystemTotal":{"type":"decimal","database":"MONEY","example":"0","description":"System Total - overall total the software has recorded for all transactions during the cashout interval for the row's payment type. This includes all payments accepted for sales, bill pay and for customer account payments"},"Skim":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"Float":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"DifferenceTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Difference - Your Total - System Total"},"TransactionQuantity":{"type":"integer","database":"INT","example":"0","description":"Internal value in RQ"},"CashAndCheque":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Cash/check (cheque) - total for the cash and check payment types"},"FloatRetained":{"type":"decimal","database":"MONEY","example":"0","description":"Float Retained - dollar amount retained as a float"},"DepositAmount":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Deposit - actual deposit value for that cashout"},"CashInAmount":{"type":"decimal","database":"MONEY","example":"0","description":"Cashin - cashed in float amount"},"BankDetails":{"type":"string","database":"NVARCHAR(MAX)","example":"","description":"Bank Details - states the bank associated to the cashout"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"CashOutID":13775,"CashOutIDByStore":"84WEACA649","StoreName":"84 West","Reconciled":"No","StartDate":"2012-08-20T18:18:52.023","StopDate":"2015-02-24T13:40:33.21","EmployeeName1":"iQmetrix Employee","EmployeeUsername1":"iQmetrix.Employee","EmployeeName2":"iQmetrix Employee","EmployeeUsername2":"iQmetrix.Employee","PaymentName":"Cash","CreditCardPaymentType":"","PaymentReconciled":"No","Cashout":"","Reconciliation":"","DepositNumber":"100.00","ActualTotal":1884.1,"SystemTotal":0,"Skim":0,"Float":0,"DifferenceTotal":1884.1,"TransactionQuantity":0,"CashAndCheque":1884.1,"FloatRetained":0,"DepositAmount":1884.1,"CashInAmount":0,"BankDetails":""}]
+                            schema: |
+                                {"type":"array","name":"CashOutSummaryReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CashOutID":{"type":"integer","database":"INT","example":"13775","description":"Internal identifier in RQ"},"CashOutIDByStore":{"type":"string","database":"VARCHAR(14)","example":"84WEACA649","description":"Cashout # - number that the system generated for the cashout at the time it was created. To view the cashout simply click its underlined link"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Name of the store"},"Reconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"A flag to indicate if the cashout was reconciled"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2012-08-20T18:18:52.023","description":"Started On - start time of this cashout's interval. If this is the first cashout for this location then the Started On Date will be N/A"},"StopDate":{"type":"datetime","database":"DATETIME","example":"2015-02-24T13:40:33.21","description":"Stopped On - stop time of this cashout's interval"},"EmployeeName1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 1 - name of the employee who was logged in when the cashout was done"},"EmployeeUsername1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username1 - username of the employee who was logged in when the cashout was done"},"EmployeeName2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 2 - name of the employee who verified the cashout was correct, this may be the same person as Employee 1"},"EmployeeUsername2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username2 - the username of the employee who was logged in when the cashout was done"},"PaymentName":{"type":"string","database":"NVARCHAR(MAX)","example":"Cash","description":"Payment - payment type for the row's totals"},"CreditCardPaymentType":{"type":"string","database":"VARCHAR(20)","example":"","description":"Credit card payment type"},"PaymentReconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"Payment Reconciled - indicates whether the payment type has been reconciled or not"},"Cashout":{"type":"string","database":"VARCHAR(5000)","example":"","description":"Cashout Comments - comments from the cashout"},"Reconciliation":{"type":"string","database":"VARCHAR(1000)","example":"","description":"Reconciliation Comments - from the reconciliation if it has been done"},"DepositNumber":{"type":"string","database":"VARCHAR(50)","example":"100.00","description":"Deposit # - number for this particular deposit, e.g. bank deposit number"},"ActualTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Your Total - total filled in by Employee 1 from the till totals for all transactions during the cashoutinterval for the row's payment type"},"SystemTotal":{"type":"decimal","database":"MONEY","example":"0","description":"System Total - overall total the software has recorded for all transactions during the cashout interval for the row's payment type. This includes all payments accepted for sales, bill pay and for customer account payments"},"Skim":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"Float":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"DifferenceTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Difference - Your Total - System Total"},"TransactionQuantity":{"type":"integer","database":"INT","example":"0","description":"Internal value in RQ"},"CashAndCheque":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Cash/check (cheque) - total for the cash and check payment types"},"FloatRetained":{"type":"decimal","database":"MONEY","example":"0","description":"Float Retained - dollar amount retained as a float"},"DepositAmount":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Deposit - actual deposit value for that cashout"},"CashInAmount":{"type":"decimal","database":"MONEY","example":"0","description":"Cashin - cashed in float amount"},"BankDetails":{"type":"string","database":"NVARCHAR(MAX)","example":"","description":"Bank Details - states the bank associated to the cashout"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"CashOutID":13775,"CashOutIDByStore":"84WEACA649","StoreName":"84 West","Reconciled":"No","StartDate":"2012-08-20T18:18:52.023","StopDate":"2015-02-24T13:40:33.21","EmployeeName1":"iQmetrix Employee","EmployeeUsername1":"iQmetrix.Employee","EmployeeName2":"iQmetrix Employee","EmployeeUsername2":"iQmetrix.Employee","PaymentName":"Cash","CreditCardPaymentType":"","PaymentReconciled":"No","Cashout":"","Reconciliation":"","DepositNumber":"100.00","ActualTotal":1884.1,"SystemTotal":0,"Skim":0,"Float":0,"DifferenceTotal":1884.1,"TransactionQuantity":0,"CashAndCheque":1884.1,"FloatRetained":0,"DepositAmount":1884.1,"CashInAmount":0,"BankDetails":""}]
+                            schema: |
+                                {"type":"array","name":"CashOutSummaryReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CashOutID":{"type":"integer","database":"INT","example":"13775","description":"Internal identifier in RQ"},"CashOutIDByStore":{"type":"string","database":"VARCHAR(14)","example":"84WEACA649","description":"Cashout # - number that the system generated for the cashout at the time it was created. To view the cashout simply click its underlined link"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Name of the store"},"Reconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"A flag to indicate if the cashout was reconciled"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2012-08-20T18:18:52.023","description":"Started On - start time of this cashout's interval. If this is the first cashout for this location then the Started On Date will be N/A"},"StopDate":{"type":"datetime","database":"DATETIME","example":"2015-02-24T13:40:33.21","description":"Stopped On - stop time of this cashout's interval"},"EmployeeName1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 1 - name of the employee who was logged in when the cashout was done"},"EmployeeUsername1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username1 - username of the employee who was logged in when the cashout was done"},"EmployeeName2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 2 - name of the employee who verified the cashout was correct, this may be the same person as Employee 1"},"EmployeeUsername2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username2 - the username of the employee who was logged in when the cashout was done"},"PaymentName":{"type":"string","database":"NVARCHAR(MAX)","example":"Cash","description":"Payment - payment type for the row's totals"},"CreditCardPaymentType":{"type":"string","database":"VARCHAR(20)","example":"","description":"Credit card payment type"},"PaymentReconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"Payment Reconciled - indicates whether the payment type has been reconciled or not"},"Cashout":{"type":"string","database":"VARCHAR(5000)","example":"","description":"Cashout Comments - comments from the cashout"},"Reconciliation":{"type":"string","database":"VARCHAR(1000)","example":"","description":"Reconciliation Comments - from the reconciliation if it has been done"},"DepositNumber":{"type":"string","database":"VARCHAR(50)","example":"100.00","description":"Deposit # - number for this particular deposit, e.g. bank deposit number"},"ActualTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Your Total - total filled in by Employee 1 from the till totals for all transactions during the cashoutinterval for the row's payment type"},"SystemTotal":{"type":"decimal","database":"MONEY","example":"0","description":"System Total - overall total the software has recorded for all transactions during the cashout interval for the row's payment type. This includes all payments accepted for sales, bill pay and for customer account payments"},"Skim":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"Float":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"DifferenceTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Difference - Your Total - System Total"},"TransactionQuantity":{"type":"integer","database":"INT","example":"0","description":"Internal value in RQ"},"CashAndCheque":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Cash/check (cheque) - total for the cash and check payment types"},"FloatRetained":{"type":"decimal","database":"MONEY","example":"0","description":"Float Retained - dollar amount retained as a float"},"DepositAmount":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Deposit - actual deposit value for that cashout"},"CashInAmount":{"type":"decimal","database":"MONEY","example":"0","description":"Cashin - cashed in float amount"},"BankDetails":{"type":"string","database":"NVARCHAR(MAX)","example":"","description":"Bank Details - states the bank associated to the cashout"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"CashOutID":13775,"CashOutIDByStore":"84WEACA649","StoreName":"84 West","Reconciled":"No","StartDate":"2012-08-20T18:18:52.023","StopDate":"2015-02-24T13:40:33.21","EmployeeName1":"iQmetrix Employee","EmployeeUsername1":"iQmetrix.Employee","EmployeeName2":"iQmetrix Employee","EmployeeUsername2":"iQmetrix.Employee","PaymentName":"Cash","CreditCardPaymentType":"","PaymentReconciled":"No","Cashout":"","Reconciliation":"","DepositNumber":"100.00","ActualTotal":1884.1,"SystemTotal":0,"Skim":0,"Float":0,"DifferenceTotal":1884.1,"TransactionQuantity":0,"CashAndCheque":1884.1,"FloatRetained":0,"DepositAmount":1884.1,"CashInAmount":0,"BankDetails":""}]
+                            schema: |
+                                {"type":"array","name":"CashOutSummaryReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CashOutID":{"type":"integer","database":"INT","example":"13775","description":"Internal identifier in RQ"},"CashOutIDByStore":{"type":"string","database":"VARCHAR(14)","example":"84WEACA649","description":"Cashout # - number that the system generated for the cashout at the time it was created. To view the cashout simply click its underlined link"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Name of the store"},"Reconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"A flag to indicate if the cashout was reconciled"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2012-08-20T18:18:52.023","description":"Started On - start time of this cashout's interval. If this is the first cashout for this location then the Started On Date will be N/A"},"StopDate":{"type":"datetime","database":"DATETIME","example":"2015-02-24T13:40:33.21","description":"Stopped On - stop time of this cashout's interval"},"EmployeeName1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 1 - name of the employee who was logged in when the cashout was done"},"EmployeeUsername1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username1 - username of the employee who was logged in when the cashout was done"},"EmployeeName2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 2 - name of the employee who verified the cashout was correct, this may be the same person as Employee 1"},"EmployeeUsername2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username2 - the username of the employee who was logged in when the cashout was done"},"PaymentName":{"type":"string","database":"NVARCHAR(MAX)","example":"Cash","description":"Payment - payment type for the row's totals"},"CreditCardPaymentType":{"type":"string","database":"VARCHAR(20)","example":"","description":"Credit card payment type"},"PaymentReconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"Payment Reconciled - indicates whether the payment type has been reconciled or not"},"Cashout":{"type":"string","database":"VARCHAR(5000)","example":"","description":"Cashout Comments - comments from the cashout"},"Reconciliation":{"type":"string","database":"VARCHAR(1000)","example":"","description":"Reconciliation Comments - from the reconciliation if it has been done"},"DepositNumber":{"type":"string","database":"VARCHAR(50)","example":"100.00","description":"Deposit # - number for this particular deposit, e.g. bank deposit number"},"ActualTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Your Total - total filled in by Employee 1 from the till totals for all transactions during the cashoutinterval for the row's payment type"},"SystemTotal":{"type":"decimal","database":"MONEY","example":"0","description":"System Total - overall total the software has recorded for all transactions during the cashout interval for the row's payment type. This includes all payments accepted for sales, bill pay and for customer account payments"},"Skim":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"Float":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"DifferenceTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Difference - Your Total - System Total"},"TransactionQuantity":{"type":"integer","database":"INT","example":"0","description":"Internal value in RQ"},"CashAndCheque":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Cash/check (cheque) - total for the cash and check payment types"},"FloatRetained":{"type":"decimal","database":"MONEY","example":"0","description":"Float Retained - dollar amount retained as a float"},"DepositAmount":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Deposit - actual deposit value for that cashout"},"CashInAmount":{"type":"decimal","database":"MONEY","example":"0","description":"Cashin - cashed in float amount"},"BankDetails":{"type":"string","database":"NVARCHAR(MAX)","example":"","description":"Bank Details - states the bank associated to the cashout"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"CashOutID":13775,"CashOutIDByStore":"84WEACA649","StoreName":"84 West","Reconciled":"No","StartDate":"2012-08-20T18:18:52.023","StopDate":"2015-02-24T13:40:33.21","EmployeeName1":"iQmetrix Employee","EmployeeUsername1":"iQmetrix.Employee","EmployeeName2":"iQmetrix Employee","EmployeeUsername2":"iQmetrix.Employee","PaymentName":"Cash","CreditCardPaymentType":"","PaymentReconciled":"No","Cashout":"","Reconciliation":"","DepositNumber":"100.00","ActualTotal":1884.1,"SystemTotal":0,"Skim":0,"Float":0,"DifferenceTotal":1884.1,"TransactionQuantity":0,"CashAndCheque":1884.1,"FloatRetained":0,"DepositAmount":1884.1,"CashInAmount":0,"BankDetails":""}]
+                            schema: |
+                                {"type":"array","name":"CashOutSummaryReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CashOutID":{"type":"integer","database":"INT","example":"13775","description":"Internal identifier in RQ"},"CashOutIDByStore":{"type":"string","database":"VARCHAR(14)","example":"84WEACA649","description":"Cashout # - number that the system generated for the cashout at the time it was created. To view the cashout simply click its underlined link"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Name of the store"},"Reconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"A flag to indicate if the cashout was reconciled"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2012-08-20T18:18:52.023","description":"Started On - start time of this cashout's interval. If this is the first cashout for this location then the Started On Date will be N/A"},"StopDate":{"type":"datetime","database":"DATETIME","example":"2015-02-24T13:40:33.21","description":"Stopped On - stop time of this cashout's interval"},"EmployeeName1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 1 - name of the employee who was logged in when the cashout was done"},"EmployeeUsername1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username1 - username of the employee who was logged in when the cashout was done"},"EmployeeName2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 2 - name of the employee who verified the cashout was correct, this may be the same person as Employee 1"},"EmployeeUsername2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username2 - the username of the employee who was logged in when the cashout was done"},"PaymentName":{"type":"string","database":"NVARCHAR(MAX)","example":"Cash","description":"Payment - payment type for the row's totals"},"CreditCardPaymentType":{"type":"string","database":"VARCHAR(20)","example":"","description":"Credit card payment type"},"PaymentReconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"Payment Reconciled - indicates whether the payment type has been reconciled or not"},"Cashout":{"type":"string","database":"VARCHAR(5000)","example":"","description":"Cashout Comments - comments from the cashout"},"Reconciliation":{"type":"string","database":"VARCHAR(1000)","example":"","description":"Reconciliation Comments - from the reconciliation if it has been done"},"DepositNumber":{"type":"string","database":"VARCHAR(50)","example":"100.00","description":"Deposit # - number for this particular deposit, e.g. bank deposit number"},"ActualTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Your Total - total filled in by Employee 1 from the till totals for all transactions during the cashoutinterval for the row's payment type"},"SystemTotal":{"type":"decimal","database":"MONEY","example":"0","description":"System Total - overall total the software has recorded for all transactions during the cashout interval for the row's payment type. This includes all payments accepted for sales, bill pay and for customer account payments"},"Skim":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"Float":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"DifferenceTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Difference - Your Total - System Total"},"TransactionQuantity":{"type":"integer","database":"INT","example":"0","description":"Internal value in RQ"},"CashAndCheque":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Cash/check (cheque) - total for the cash and check payment types"},"FloatRetained":{"type":"decimal","database":"MONEY","example":"0","description":"Float Retained - dollar amount retained as a float"},"DepositAmount":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Deposit - actual deposit value for that cashout"},"CashInAmount":{"type":"decimal","database":"MONEY","example":"0","description":"Cashin - cashed in float amount"},"BankDetails":{"type":"string","database":"NVARCHAR(MAX)","example":"","description":"Bank Details - states the bank associated to the cashout"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"CashOutID":13775,"CashOutIDByStore":"84WEACA649","StoreName":"84 West","Reconciled":"No","StartDate":"2012-08-20T18:18:52.023","StopDate":"2015-02-24T13:40:33.21","EmployeeName1":"iQmetrix Employee","EmployeeUsername1":"iQmetrix.Employee","EmployeeName2":"iQmetrix Employee","EmployeeUsername2":"iQmetrix.Employee","PaymentName":"Cash","CreditCardPaymentType":"","PaymentReconciled":"No","Cashout":"","Reconciliation":"","DepositNumber":"100.00","ActualTotal":1884.1,"SystemTotal":0,"Skim":0,"Float":0,"DifferenceTotal":1884.1,"TransactionQuantity":0,"CashAndCheque":1884.1,"FloatRetained":0,"DepositAmount":1884.1,"CashInAmount":0,"BankDetails":""}]
+                            schema: |
+                                {"type":"array","name":"CashOutSummaryReportData","$schema":"http://json-schema.org/draft-03/schema","description":"","properties":{"CashOutID":{"type":"integer","database":"INT","example":"13775","description":"Internal identifier in RQ"},"CashOutIDByStore":{"type":"string","database":"VARCHAR(14)","example":"84WEACA649","description":"Cashout # - number that the system generated for the cashout at the time it was created. To view the cashout simply click its underlined link"},"StoreName":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Name of the store"},"Reconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"A flag to indicate if the cashout was reconciled"},"StartDate":{"type":"datetime","database":"DATETIME","example":"2012-08-20T18:18:52.023","description":"Started On - start time of this cashout's interval. If this is the first cashout for this location then the Started On Date will be N/A"},"StopDate":{"type":"datetime","database":"DATETIME","example":"2015-02-24T13:40:33.21","description":"Stopped On - stop time of this cashout's interval"},"EmployeeName1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 1 - name of the employee who was logged in when the cashout was done"},"EmployeeUsername1":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username1 - username of the employee who was logged in when the cashout was done"},"EmployeeName2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix Employee","description":"Employee 2 - name of the employee who verified the cashout was correct, this may be the same person as Employee 1"},"EmployeeUsername2":{"type":"string","database":"VARCHAR(51)","example":"iQmetrix.Employee","description":"Username2 - the username of the employee who was logged in when the cashout was done"},"PaymentName":{"type":"string","database":"NVARCHAR(MAX)","example":"Cash","description":"Payment - payment type for the row's totals"},"CreditCardPaymentType":{"type":"string","database":"VARCHAR(20)","example":"","description":"Credit card payment type"},"PaymentReconciled":{"type":"string","database":"VARCHAR(3)","example":"No","description":"Payment Reconciled - indicates whether the payment type has been reconciled or not"},"Cashout":{"type":"string","database":"VARCHAR(5000)","example":"","description":"Cashout Comments - comments from the cashout"},"Reconciliation":{"type":"string","database":"VARCHAR(1000)","example":"","description":"Reconciliation Comments - from the reconciliation if it has been done"},"DepositNumber":{"type":"string","database":"VARCHAR(50)","example":"100.00","description":"Deposit # - number for this particular deposit, e.g. bank deposit number"},"ActualTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Your Total - total filled in by Employee 1 from the till totals for all transactions during the cashoutinterval for the row's payment type"},"SystemTotal":{"type":"decimal","database":"MONEY","example":"0","description":"System Total - overall total the software has recorded for all transactions during the cashout interval for the row's payment type. This includes all payments accepted for sales, bill pay and for customer account payments"},"Skim":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"Float":{"type":"decimal","database":"MONEY","example":"0","description":"Internal value in RQ"},"DifferenceTotal":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Difference - Your Total - System Total"},"TransactionQuantity":{"type":"integer","database":"INT","example":"0","description":"Internal value in RQ"},"CashAndCheque":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Cash/check (cheque) - total for the cash and check payment types"},"FloatRetained":{"type":"decimal","database":"MONEY","example":"0","description":"Float Retained - dollar amount retained as a float"},"DepositAmount":{"type":"decimal","database":"MONEY","example":"1884.1","description":"Deposit - actual deposit value for that cashout"},"CashInAmount":{"type":"decimal","database":"MONEY","example":"0","description":"Cashin - cashed in float amount"},"BankDetails":{"type":"string","database":"NVARCHAR(MAX)","example":"","description":"Bank Details - states the bank associated to the cashout"}}}
+                            
+                        
+                    
+                
+            
+    
 
 /reports/chargebacksummaryreport?SearchMethod={SearchMethod}&CategoryNumber={CategoryNumber}&InvoiceStartDate={InvoiceStartDate}&InvoiceStopDate={InvoiceStopDate}&ChargeBackStartDate={ChargeBackStartDate}&ChargeBackStopDate={ChargeBackStopDate}&JournalIDs={JournalIDs}&QueryPart={QueryPart}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&ProductIdentifier={ProductIdentifier}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
     
@@ -486,6 +711,171 @@ schemas:
                                 [{"Quantity":1,"StoreID":6679,"StoreName":"100: My Network LLC - Anchorage","TotalValue":-100}]
                             schema: |
                                 {"name":"ChargeBackSummaryReportLocationData","type":"array","$schema":"http://json-schema.org/draft-03/schema","properties":{"Quantity":{"type":"integer","description":"Qty","database":"INT","example":"1"},"StoreID":{"type":"integer","description":"Internal identifier for a store in RQ","database":"INT","example":"6679"},"StoreName":{"type":"string","description":"Location","database":"NVARCHAR (MAX)","example":"100: My Network LLC - Anchorage"},"TotalValue":{"type":"decimal","description":"Total Value - dollar value of the charge backs","database":"MONEY","example":"-100"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/reports/outstandinggiftcardsreport?DateAsOf={DateAsOf}&CardType={CardType}&CustomerID={CustomerID}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+    
+    uriParameters:
+        
+        DateAsOf:
+            displayName: DateAsOf
+            type: string
+            example: 2016-11-23
+            required: true
+            description: Date at which to begin report
+        
+        CustomerID:
+            displayName: CustomerID
+            type: integer
+            example: -1
+            required: true
+            description: Identifier for a customer in RQ. Use -1 for All Customers. For a complete list, see the CustomerID property using the request <a href='/api/RQ-Data-Connect-Customer-Reports/#getting-the-customer-list-report'>Getting the Customer List Report</a>
+        
+        CardType:
+            displayName: CardType
+            type: integer
+            example: -1
+            required: true
+            description: Acceptable values include -1 for All, 1 for Fixed Pricing or 2 for Ranged Pricing
+        
+        ForWho:
+            displayName: ForWho
+            type: integer
+            example: 1
+            required: false
+            description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+        
+        ForWhoIDs:
+            displayName: ForWhoIDs
+            type: integer
+            example: 6679
+            required: false
+            description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+        
+        LocationType:
+            displayName: LocationType
+            type: string
+            example: Store
+            required: false
+            description: A <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#locationtype'>LocationType</a> to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+        
+        LocationTypeIDs:
+            displayName: LocationTypeIDs
+            type: string
+            example: 1,2
+            required: false
+            description: A comma seperated list of <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#rqcompanytreenode'>RQCompanyTreeNode</a> identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+        
+        Auth:
+            displayName: Auth
+            type: string
+            example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+            required: false
+            description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+        
+        Response:
+            displayName: Response
+            type: string
+            example: xml
+            required: false
+            description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+          
+      
+    get:
+        
+        displayName: Getting the Outstanding Gift Cards Report
+                
+        
+        description: |            
+            For more information see {{support_OutstandingGiftCardsReport}}.
+            
+
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"SerialNumber":"7777085179051274","DateSold":"2016-10-14T13:05:14.133","CustomerName":"Bill Smith","LastRedeemedGMT":"2016-10-14T19:30:37.063","LastRedeemed":"2016-10-14T13:30:37.063","RedeemedAt":"84 West","RedeemedBy":"Bill Smith","Balance":77.52,"SaleInvoiceID":634,"InvoiceIDByStore":"MIL44AH9","ProductName":"iTunes 20","ProductSKU":"ASBTHT000018","InvoiceSerialMask":6}]
+                            schema: |
+                                {"type":"array","name":"OutstandingGiftCardsReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"SerialNumber":{"type":"string","database":"VARCHAR(35)","example":"7777085179051274","description":"Card Number - activation number for the gift card"},"DateSold":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:05:14.133","description":"Activated On - date the gift card was activated"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Bill Smith","description":"Customer - name of the customer who purchased the gift card"},"LastRedeemedGMT":{"type":"datetime","database":"DATETIME","example":"2016-10-14T19:30:37.063","description":"Last Redeemed (GMT) - when the gift card was last redeemed, in GMT time"},"LastRedeemed":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:30:37.063","description":"Last Redeemed - when the gift card was last redeemed, local time"},"RedeemedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Redeemed At - location where the card was redeemed"},"RedeemedBy":{"type":"string","database":"VARCHAR(151)","example":"Bill Smith","description":"Redeemed By - name of the customer who redeemed the gift card"},"Balance":{"type":"decimal","database":"MONEY","example":"77.52","description":"Balance - remaining balance"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"634","description":"Internal identifier for an invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice Number - invoice number with a link to the invoice"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"iTunes 20","description":"Product Name - product description of the card"},"ProductSKU":{"type":"string","database":"VARCHAR(20)","example":"ASBTHT000018","description":"Product SKU - product SKU assigned to the gift card"},"InvoiceSerialMask":{"type":"integer","database":"INT","example":"6","description":"Amount of the SerialNumber to mask"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"SerialNumber":"7777085179051274","DateSold":"2016-10-14T13:05:14.133","CustomerName":"Bill Smith","LastRedeemedGMT":"2016-10-14T19:30:37.063","LastRedeemed":"2016-10-14T13:30:37.063","RedeemedAt":"84 West","RedeemedBy":"Bill Smith","Balance":77.52,"SaleInvoiceID":634,"InvoiceIDByStore":"MIL44AH9","ProductName":"iTunes 20","ProductSKU":"ASBTHT000018","InvoiceSerialMask":6}]
+                            schema: |
+                                {"type":"array","name":"OutstandingGiftCardsReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"SerialNumber":{"type":"string","database":"VARCHAR(35)","example":"7777085179051274","description":"Card Number - activation number for the gift card"},"DateSold":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:05:14.133","description":"Activated On - date the gift card was activated"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Bill Smith","description":"Customer - name of the customer who purchased the gift card"},"LastRedeemedGMT":{"type":"datetime","database":"DATETIME","example":"2016-10-14T19:30:37.063","description":"Last Redeemed (GMT) - when the gift card was last redeemed, in GMT time"},"LastRedeemed":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:30:37.063","description":"Last Redeemed - when the gift card was last redeemed, local time"},"RedeemedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Redeemed At - location where the card was redeemed"},"RedeemedBy":{"type":"string","database":"VARCHAR(151)","example":"Bill Smith","description":"Redeemed By - name of the customer who redeemed the gift card"},"Balance":{"type":"decimal","database":"MONEY","example":"77.52","description":"Balance - remaining balance"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"634","description":"Internal identifier for an invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice Number - invoice number with a link to the invoice"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"iTunes 20","description":"Product Name - product description of the card"},"ProductSKU":{"type":"string","database":"VARCHAR(20)","example":"ASBTHT000018","description":"Product SKU - product SKU assigned to the gift card"},"InvoiceSerialMask":{"type":"integer","database":"INT","example":"6","description":"Amount of the SerialNumber to mask"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"SerialNumber":"7777085179051274","DateSold":"2016-10-14T13:05:14.133","CustomerName":"Bill Smith","LastRedeemedGMT":"2016-10-14T19:30:37.063","LastRedeemed":"2016-10-14T13:30:37.063","RedeemedAt":"84 West","RedeemedBy":"Bill Smith","Balance":77.52,"SaleInvoiceID":634,"InvoiceIDByStore":"MIL44AH9","ProductName":"iTunes 20","ProductSKU":"ASBTHT000018","InvoiceSerialMask":6}]
+                            schema: |
+                                {"type":"array","name":"OutstandingGiftCardsReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"SerialNumber":{"type":"string","database":"VARCHAR(35)","example":"7777085179051274","description":"Card Number - activation number for the gift card"},"DateSold":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:05:14.133","description":"Activated On - date the gift card was activated"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Bill Smith","description":"Customer - name of the customer who purchased the gift card"},"LastRedeemedGMT":{"type":"datetime","database":"DATETIME","example":"2016-10-14T19:30:37.063","description":"Last Redeemed (GMT) - when the gift card was last redeemed, in GMT time"},"LastRedeemed":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:30:37.063","description":"Last Redeemed - when the gift card was last redeemed, local time"},"RedeemedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Redeemed At - location where the card was redeemed"},"RedeemedBy":{"type":"string","database":"VARCHAR(151)","example":"Bill Smith","description":"Redeemed By - name of the customer who redeemed the gift card"},"Balance":{"type":"decimal","database":"MONEY","example":"77.52","description":"Balance - remaining balance"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"634","description":"Internal identifier for an invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice Number - invoice number with a link to the invoice"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"iTunes 20","description":"Product Name - product description of the card"},"ProductSKU":{"type":"string","database":"VARCHAR(20)","example":"ASBTHT000018","description":"Product SKU - product SKU assigned to the gift card"},"InvoiceSerialMask":{"type":"integer","database":"INT","example":"6","description":"Amount of the SerialNumber to mask"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"SerialNumber":"7777085179051274","DateSold":"2016-10-14T13:05:14.133","CustomerName":"Bill Smith","LastRedeemedGMT":"2016-10-14T19:30:37.063","LastRedeemed":"2016-10-14T13:30:37.063","RedeemedAt":"84 West","RedeemedBy":"Bill Smith","Balance":77.52,"SaleInvoiceID":634,"InvoiceIDByStore":"MIL44AH9","ProductName":"iTunes 20","ProductSKU":"ASBTHT000018","InvoiceSerialMask":6}]
+                            schema: |
+                                {"type":"array","name":"OutstandingGiftCardsReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"SerialNumber":{"type":"string","database":"VARCHAR(35)","example":"7777085179051274","description":"Card Number - activation number for the gift card"},"DateSold":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:05:14.133","description":"Activated On - date the gift card was activated"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Bill Smith","description":"Customer - name of the customer who purchased the gift card"},"LastRedeemedGMT":{"type":"datetime","database":"DATETIME","example":"2016-10-14T19:30:37.063","description":"Last Redeemed (GMT) - when the gift card was last redeemed, in GMT time"},"LastRedeemed":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:30:37.063","description":"Last Redeemed - when the gift card was last redeemed, local time"},"RedeemedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Redeemed At - location where the card was redeemed"},"RedeemedBy":{"type":"string","database":"VARCHAR(151)","example":"Bill Smith","description":"Redeemed By - name of the customer who redeemed the gift card"},"Balance":{"type":"decimal","database":"MONEY","example":"77.52","description":"Balance - remaining balance"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"634","description":"Internal identifier for an invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice Number - invoice number with a link to the invoice"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"iTunes 20","description":"Product Name - product description of the card"},"ProductSKU":{"type":"string","database":"VARCHAR(20)","example":"ASBTHT000018","description":"Product SKU - product SKU assigned to the gift card"},"InvoiceSerialMask":{"type":"integer","database":"INT","example":"6","description":"Amount of the SerialNumber to mask"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"SerialNumber":"7777085179051274","DateSold":"2016-10-14T13:05:14.133","CustomerName":"Bill Smith","LastRedeemedGMT":"2016-10-14T19:30:37.063","LastRedeemed":"2016-10-14T13:30:37.063","RedeemedAt":"84 West","RedeemedBy":"Bill Smith","Balance":77.52,"SaleInvoiceID":634,"InvoiceIDByStore":"MIL44AH9","ProductName":"iTunes 20","ProductSKU":"ASBTHT000018","InvoiceSerialMask":6}]
+                            schema: |
+                                {"type":"array","name":"OutstandingGiftCardsReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"SerialNumber":{"type":"string","database":"VARCHAR(35)","example":"7777085179051274","description":"Card Number - activation number for the gift card"},"DateSold":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:05:14.133","description":"Activated On - date the gift card was activated"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Bill Smith","description":"Customer - name of the customer who purchased the gift card"},"LastRedeemedGMT":{"type":"datetime","database":"DATETIME","example":"2016-10-14T19:30:37.063","description":"Last Redeemed (GMT) - when the gift card was last redeemed, in GMT time"},"LastRedeemed":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:30:37.063","description":"Last Redeemed - when the gift card was last redeemed, local time"},"RedeemedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Redeemed At - location where the card was redeemed"},"RedeemedBy":{"type":"string","database":"VARCHAR(151)","example":"Bill Smith","description":"Redeemed By - name of the customer who redeemed the gift card"},"Balance":{"type":"decimal","database":"MONEY","example":"77.52","description":"Balance - remaining balance"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"634","description":"Internal identifier for an invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice Number - invoice number with a link to the invoice"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"iTunes 20","description":"Product Name - product description of the card"},"ProductSKU":{"type":"string","database":"VARCHAR(20)","example":"ASBTHT000018","description":"Product SKU - product SKU assigned to the gift card"},"InvoiceSerialMask":{"type":"integer","database":"INT","example":"6","description":"Amount of the SerialNumber to mask"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"SerialNumber":"7777085179051274","DateSold":"2016-10-14T13:05:14.133","CustomerName":"Bill Smith","LastRedeemedGMT":"2016-10-14T19:30:37.063","LastRedeemed":"2016-10-14T13:30:37.063","RedeemedAt":"84 West","RedeemedBy":"Bill Smith","Balance":77.52,"SaleInvoiceID":634,"InvoiceIDByStore":"MIL44AH9","ProductName":"iTunes 20","ProductSKU":"ASBTHT000018","InvoiceSerialMask":6}]
+                            schema: |
+                                {"type":"array","name":"OutstandingGiftCardsReportData","$schema":"http://json-schema.org/draft-03/schema","properties":{"SerialNumber":{"type":"string","database":"VARCHAR(35)","example":"7777085179051274","description":"Card Number - activation number for the gift card"},"DateSold":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:05:14.133","description":"Activated On - date the gift card was activated"},"CustomerName":{"type":"string","database":"VARCHAR(101)","example":"Bill Smith","description":"Customer - name of the customer who purchased the gift card"},"LastRedeemedGMT":{"type":"datetime","database":"DATETIME","example":"2016-10-14T19:30:37.063","description":"Last Redeemed (GMT) - when the gift card was last redeemed, in GMT time"},"LastRedeemed":{"type":"datetime","database":"DATETIME","example":"2016-10-14T13:30:37.063","description":"Last Redeemed - when the gift card was last redeemed, local time"},"RedeemedAt":{"type":"string","database":"NVARCHAR(MAX)","example":"84 West","description":"Redeemed At - location where the card was redeemed"},"RedeemedBy":{"type":"string","database":"VARCHAR(151)","example":"Bill Smith","description":"Redeemed By - name of the customer who redeemed the gift card"},"Balance":{"type":"decimal","database":"MONEY","example":"77.52","description":"Balance - remaining balance"},"SaleInvoiceID":{"type":"integer","database":"INT","example":"634","description":"Internal identifier for an invoice in RQ"},"InvoiceIDByStore":{"type":"string","database":"VARCHAR(14)","example":"MIL44AH9","description":"Invoice Number - invoice number with a link to the invoice"},"ProductName":{"type":"string","database":"NVARCHAR(MAX)","example":"iTunes 20","description":"Product Name - product description of the card"},"ProductSKU":{"type":"string","database":"VARCHAR(20)","example":"ASBTHT000018","description":"Product SKU - product SKU assigned to the gift card"},"InvoiceSerialMask":{"type":"integer","database":"INT","example":"6","description":"Amount of the SerialNumber to mask"}}}
                             
                         
                     

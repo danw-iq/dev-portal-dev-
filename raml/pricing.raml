@@ -1,0 +1,552 @@
+#%RAML 0.8
+title: pricing
+version: v1
+baseUri: https://pricing{UrlSuffix}.iqmetrix.net/{version}
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |
+      Pricing information for products can be retrieved and managed using the Pricing API.
+
+      ### Notes
+
+      1. Two types of prices are supported: regular price and sale price
+      2. Multiple currencies are not supported, default retailer currency is implied
+      3. Pricing information for products can be set up at any level in the Company Tree
+      4. Term-based pricing is available to accommodate for scenarios where price varies based on contractual commitment
+
+      ### Pricing Resolution
+
+      When getting pricing for a product the result will be an array with an entry for each combination of Pricing Term and and Default Pricing.
+
+      Each entry will contain the following attributes used to dictate the price, in the following order:
+
+      * OverridePrice - The `SalePrice` attribute from the current or default {{SaleOverridePrice}}
+      * RegularPrice - Regular price set on the {{Pricing}}, must be greater than or equal to 0
+
+      Each {{Pricing}} also contains a set of values used to store information. These values do not dictate pricing.
+
+      * FloorPrice - Minimum amount the {{CatalogItem}} should be sold for. The user should not be able to discount past this price without permission (Manager Override)
+      * OriginalPrice - This value is used to show the original price of an item, should it need to be displayed with the Regular and Sale prices
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `A non-default sale override price must have`<br/>`start and stop dates associated with it.` | StartDate and StopDate must either both be set or both be null |
+      | `HTTP 400` | `The start date is after, or equal to the end date.`<br/>` The start date must come before the end date.` | StartDate must be before StopDate |
+      | `HTTP 400` | `Uri parameter representing resource id and resource`<br/>` id found in the request content don't match.` | When performing a PUT, ensure any URI parameters also in the request body match |
+      | `HTTP 400` | `The date range overlaps with another sale period for`<br/>` this pricing record.` | Update or delelete the existing SaleOverridePrice that overlaps with the date range |
+      | `HTTP 400` | `A default sale override price cannot have start `<br/>`or stop dates associated with it.` | Ensure StartDate and StopDate are not set if IsDefault is true |
+      | `HTTP 400` | `The sale price must be greater or equal to zero.` | Ensure SalePrice is non-negative |
+      | `HTTP 400` | `There is already a default sales overide for this pricing record.`<br/>` Either delete it first, or modify that record.` | Delete or modify the existing default SaleOverridePrice |
+      | `HTTP 400` | `Entity is not related to company` | Ensure the [Location](/api/company-tree/#location) belongs to the [Company](/api/company-tree/#company) specified in the URI |
+      | `HTTP 400` | `Error while extracting the request query...` | Ensure $filter query parameter is formatted correctly |
+      | `HTTP 404` | `Cannot find matching records` | Ensure [CatalogItem](/api/catalog/#catalogitem) ID is valid, CatalogItem exists and belongs to the Company specified in the URI |
+      | `HTTP 404` | `That term does not exist` | Ensure [PricingTerm](#pricingterm) ID is valid |
+      | `HTTP 500` | `An error occurred while updating the entries` | Ensure request body is correct, ensure Name property does not contain more then 255 characters |
+resourceTypes:
+    - singularEndpoint:
+        securedBy: [oauth_2_0]
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json
+            Accept-Language:
+              example: en-US
+            Content-Language:
+              example: en-US
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json
+            Accept-Language:
+              example: en-US
+            Content-Language:
+              example: en-US
+          responses:
+            200:
+              body:
+                application/json:
+        get:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json
+            Accept-Language:
+              example: en-US
+            Content-Language:
+              example: en-US
+          responses:
+            200:
+                body:
+                    application/json:
+                      schema: <<resource>>
+    - singularEndpointPutDelete:
+        securedBy: [oauth_2_0]
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+          responses:
+            200:
+              body:
+                application/json:
+    - collection:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<getResource>>
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - singularEndpointReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - Pricing: |
+      {
+        "name": "Pricing",
+        "description": "{{callout_info}}<b>RQ Connection</b> The following fields are not currently synced to RQ: IsDiscountable and FloorPrice{{end}}",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "16446", "generated": "true", "putGenerate": "true" },
+          "CatalogItemId": { "type": "GUID", "description": "[CatalogItem](/api/catalog/#catalogitem) identifier", "ref": "catalog.CatalogItem.CatalogItemId" },
+          "CompanyId": { "type": "integer", "description": "Identifier for the Company associated with this Pricing", "ref": "company tree.Company.Id" },
+          "EntityId": { "type": "integer", "description": "[CompanyTreeNode](/api/company-tree/#companytreenode) identifier at which the price is set", "ref": "company tree.Location.Id"  },
+          "FloorPrice": { "type": "decimal", "description": "The minimum amount the CatalogItem should be sold for", "example": "3.99" },
+          "IsDiscountable": { "type": "boolean", "description": "A flag to indicate if this Pricing allows discounting. This is not enforced by the API", "putDescription":"Defaults to false", "example": "false" },
+          "OriginalPrice": { "type": "decimal", "description": "Value used to explicitly show the original price of an item, should it need to be displayed with the regular and sale/override prices", "example": "4.99" },
+          "OverridePrice": { "type": "decimal", "description": "This value is retrieved from the `SalePrice` of the current or default [SaleOverridePrice](#SaleOverridePrice)", "generated": "true", "ref": "pricing.SaleOverridePrice.SalePrice" },
+          "OverridePriceId": { "type": "integer", "description": "Identifier for a {{SaleOverridePrice}}", "ref": "pricing.SaleOverridePrice.Id", "generated": "true" },
+          "PricingTermId": { "type": "integer", "description": "[PricingTerm](#pricingterm) identifier", "ref": "pricing.PricingTerm.Id" },
+          "RegularPrice": { "type": "decimal", "description": "The regular price, must be greater than or equal to 0", "example": "10.0" },
+          "PricingTierId": { "type": "string", "description": "Reserved for internal use", "example": "null" }
+        },
+        "required": [ "CatalogItemId", "EntityId", "RegularPrice"]
+      }
+  - SaleOverridePrice: |
+      {
+        "name": "SaleOverridePrice",
+        "description": "<p>SaleOverridePrice is used to set a sale pricing for a specific date. OverridePrice is set using the <strong>active</strong> SaleOverridePrice SalePrice property, determined using the following rules:</p><ul><li>If there is a SaleOverridePrice defined for the current date, it is used</li><li>Otherwise, if there is a Default (IsDefault set to true) SaleOverridePrice, it is used </li><li>Otherwise, null is returned</li></ul>{{callout_info}}<b>RQ Connection</b> Future SaveOverridePrice values are not currently synced to RQ, this feature is coming soon.{{end}}",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "1177", "generated": "true", "putGenerate": "true" },
+          "CompanyId": { "type": "integer", "description": "Identifier for the Company associated with this Pricing", "generated": "true", "ref": "company tree.Company.Id" },
+          "IsDefault": { "type": "boolean", "description": "A flag to indicate that this is the default SaleOverridePrice", "putDescription": "There can only be one default SaleOverridePrice for a Pricing. If StartDate and StopDate are provided, this must be false", "example": "true" },
+          "PricingInformationId": { "type" : "integer", "description": "Identifier for a [Pricing](#pricing)", "generated": "true", "ref": "pricing.Pricing.Id" },
+          "SalePrice": { "type": "decimal", "description": "Sale price", "putDescription": "Must be greater than or equal to 0, defaults to 0", "example": "3.99" },
+          "StartDateUTC": { "type": "DateTime", "description": "Date and time the sale pricing begins, in UTC", "putDescription": "If provided, StopDate must be provided, StartDate must be before StopDate and IsDefault must be false", "example": "2015-12-02T00:00:00" },
+          "StopDateUTC": { "type": "DateTime", "description": "Date and time the sale pricing ends, in UTC", "putDescription": "If provided, StartDate must be provided, StartDate must be before StopDate and IsDefault must be false", "example": "2015-12-31T00:00:00" }
+        },
+        "required": [ "IsDefault", "StartDate", "StopDate" ]
+      }
+  - PricingArray: |
+      {
+        "exclude": "true",
+        "name": "Pricing",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }
+  - SaleOverridePriceArray: |
+      {
+        "exclude": "true",
+        "name": "SaleOverridePrice",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }
+  - PricingTerm: |
+      {
+        "name": "PricingTerm",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "78" },
+          "Active": { "type": "boolean", "description": "A flag to indicate of this PricingTerm is active. When set to false, this PricingTerm can still be used, but does not appear in the responses to the Getting All Active Pricing Terms request", "example": "true" },
+          "CanFinance": { "type": "boolean", "description": "A flag to indicate if this PricingTerm can be financed", "example": "true" },
+          "CarrierEntityId": { "type": "integer", "description": "Identifier of a [Carrier](/api/entities/#Carrier)", "ref": "entity-store.Carrier.Id" },
+          "DisplayName": { "type": "string", "description": "Localized string", "example": "2 Year Plan" },
+          "EntityId": { "type": "integer", "description": "Identifier for the [Company](/api/company-tree/#company)", "ref": "company tree.Company.Id" },
+          "Name": { "type": "string", "size": "255", "description": "Name", "example": "2 Year Plan" },
+          "NumberOfPayments": { "type": "integer", "description": "If `CanFinance` is true, the number of payments for financing, otherwise this value is `null`", "example": "1" },
+          "TermLengthInYears": { "type": "integer", "description": "Length of the PricingTerm in years", "example": "3" }
+        }
+      }
+  - PricingTermArray: |
+      {
+        "exclude": "true",
+        "name": "PricingTerm",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }
+  - PricingTierArray: |
+      {
+        "exclude": "true",
+        "name": "PricingTier",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - PricingTier: |
+      {
+          "exclude": "true",
+          "type": "object",
+          "name": "PricingTier",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer","description": "Identifier","example": "1", "generated": "true" },
+            "CompanyId": { "type": "integer","description": "Identifier for a {{Company}}","ref": "company tree.Company.Id" },
+            "TierName": { "type": "string","description": "Tier name","example": "Tier 1" },
+            "QuantityLowerBound": { "type": "integer","description": "Minimum quantity, defaults to null","example": "3" }
+            },
+            "required": [ "CompanyId", "TierName" ]
+          }
+  - QuantityCalculation: |
+      {
+          "exclude": "true",
+          "type": "object",
+          "name": "QuantityCalculation",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": {
+            "Id": { "type": "integer","description": "Identifier","example": "46203" },
+            "PricingTierId": { "type": "string","description": "Identifier for a {{PricingTier}}","ref": "pricing.PricingTier.Id" },
+            "PricePerUnit": { "type": "integer","description": "Price per unit","example": "5" },
+            "Quantity": { "type": "integer","description": "Quantity","example": "5" },
+            "CompanyId": { "type": "integer","description": "Identifier for a {{Company}}","ref": "company tree.Company.Id" },
+            "EntityId": { "type": "integer","description": "Identifier for a {{CompanyTreeNode}}","ref": "company tree.Location.Id" },
+            "CatalogItemId": { "type": "guid","description": "Identifier for a {{CatalogItem}}","ref": "catalog.CatalogItem.CatalogItemId" }
+            }
+          }
+  - QuantityCalculationBody: |
+      {
+        "type": "object",
+        "exclude": "true",
+        "name": "QuantityCalculationBody",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Quantity": { "type": "integer","putDescription": "Quantity","example": "5" }
+          },
+          "required": [ "Quantity" ]
+        }
+/Companies({CompanyId})/Pricing:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    collectionWriteOnly:
+      resource: Pricing
+  post:
+    displayName: Creating or Updating Product Pricing at Company Level
+    description: |
+        {{note}}
+          When Product Pricing is set at the Company level, all Locations within the Company will use this Product Pricing by default unless <b>overridden</b> by a Location level Pricing.
+          For more information, see <a href="http://developers.iqmetrix.com/concepts/company-tree/#inheritance">Company Tree Inheritance</a>.
+        {{end}}
+/Companies({CompanyId})/Entities({LocationId})/CatalogItems({CatalogItemId})/Pricing:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    LocationId:
+      displayName: LocationId
+      type: string
+      example: 14202
+      description: Identifier for the {{Location}}
+      required: true
+    CatalogItemId:
+      displayName: CatalogItemId
+      type: string
+      example: a183f1a9-c58f-426a-930a-9a6357db52ed
+      description: Unique identifier for the {{CatalogItem}}
+      required: true
+  type:
+    collection:
+      resource: Pricing
+      getResource: PricingArray
+  post:
+    displayName: Creating or Updating Product Pricing at Location Level
+    description: |
+        {{note}}This request can be used to set Product Pricing for a specific Location. Location level Pricing <b>overrides</b> any Product Pricing set at the Company level. For more information, see <a href="http://developers.iqmetrix.com/concepts/company-tree/#inheritance">Company Tree Inheritance</a>.{{end}}
+  get:
+    displayName: Getting Product Pricing for a Retail Location
+/Companies({CompanyId})/CatalogItems({CatalogItemId})/Pricing:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CatalogItemId:
+      displayName: CatalogItemId
+      type: string
+      example: a183f1a9-c58f-426a-930a-9a6357db52ed
+      description: Unique identifier for the {{CatalogItem}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: PricingArray
+  get:
+    displayName: Getting Product Pricing at Company Level
+/Companies({CompanyId})/PricingTerms:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: PricingTermArray
+  get:
+    headers:
+      Accept-Language:
+        example: en-US
+    displayName: Getting all Active Pricing Terms
+/Companies({CompanyId})/PricingTerms({PricingTermId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    PricingTermId:
+      displayName: PricingTermId
+      type: string
+      example: 78
+      description: Identifier for the {{PricingTerm}}
+      required: true
+  type:
+    singularEndpointReadOnly:
+      resource: PricingTerm
+  get:
+    headers:
+      Accept-Language:
+        example: en-US
+    displayName: Getting a Pricing Term
+/Companies({CompanyId})/Pricing({PricingId})/SaleOverridePrices:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    PricingId:
+      type: integer
+      example: 16446
+      description: Identifier for a {{Pricing}}
+      required: true
+  type:
+    collection:
+      resource: SaleOverridePrice
+      getResource: SaleOverridePriceArray
+  post:
+    displayName: Creating a Sale Price
+    description: |
+      When creating a SaleOverridePrice, the following rules are enforced:
+      <ul>
+        <li>If StartDate or StopDate are supplied, they must both be provided, StartDate must be before StopDate and IsDefault must be false</li>
+        <li>If StartDate and StopDate are null, IsDefault must be true</li>
+        <li>For each Pricing resource, there can only be one SaleOverridePrice where IsDefault is true (this is the "Default" Sale price)</li>
+        <li>SalePrice must be greater than or equal to 0</li>
+        <li>Multiple date ranges can be defined (multiple sales), but date ranges cannot overlap</li>
+      </ul>
+  get:
+    displayName: Getting All Sale Pricing
+/Companies({CompanyId})/Pricing({PricingId})/SaleOverridePrices({SaleOverridePriceId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    PricingId:
+      type: integer
+      example: 16446
+      description: Identifier for a {{Pricing}}
+      required: true
+    SaleOverridePriceId:
+      type: integer
+      example: 2802
+      description: Identifier for a {{SaleOverridePrice}}
+      required: true
+  type:
+    singularEndpointPutDelete:
+      resource: SaleOverridePrice
+  put:
+    displayName: Updating a Sale Pricing
+  delete:
+    displayName: Deleting a Sale Pricing
+/Companies({CompanyId})/CatalogItems({CatalogItemId})/Pricing?$filter={PricingTermId}:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CatalogItemId:
+      displayName: CatalogItemId
+      type: string
+      example: a183f1a9-c58f-426a-930a-9a6357db52ed
+      description: Unique identifier for the {{CatalogItem}}
+      required: true
+    PricingTermId:
+      displayName: PricingTermId
+      type: string
+      example: 78
+      description: Identifier for the {{PricingTerm}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: PricingArray
+  get:
+    displayName: Getting Product Pricing by Pricing Term

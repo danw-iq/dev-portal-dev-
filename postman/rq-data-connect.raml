@@ -304,6 +304,52 @@ schemas:
 
     
 
+    
+    - VendorID: |
+        {
+          "type": "array",
+          "name": "VendorID",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "VendorID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier" },  
+            "VendorName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "A.C.P", "description": "Name" }  
+          }  
+        }
+        
+
+    
+
+    
+    - ProductType: |
+        { 
+          "type": "array",
+          "name": "ProductType",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "ProductTypeID": { "type": "integer", "database": "INT", "example": "0", "description": "Identifier" },  
+            "ProductType": { "type": "string", "database": "VARCHAR(30)", "example": "Regular Global Product", "description": "Name" }  
+          }  
+        }        
+        
+
+    
+
+    
+    - NonSellableReasonCode: |
+        {
+            
+            "type": "array",
+            "name": "NonSellableReasonCode",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": { 
+              "ReasonCode": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "c5473733-e030-83cf-7a9f-4e95a3c27efa", "description": "Identifier" },  
+              "ReasonCodeDescription": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Scratched", "description": "Reason code" }  
+            }  
+          }      
+        
+
+    
+
 
 /session?Auth={Auth}:
     
@@ -1824,6 +1870,7 @@ schemas:
             This request allows you to get a list of identifiers for a specific LocationType within a company.
             
             For example, `/lists/LocationIDs?LocationType=Region` will return a list of all Regions in the company including the RQ identifier and associated <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a> identifier.      
+            
 
         
         headers:
@@ -1899,6 +1946,290 @@ schemas:
                                 [{"ID":0,"Description":"KENTEL Corp","EntityID":14146}]
                             schema: |
                                 {"type":"array","name":"RQCompanyTreeNode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ID":{"type":"integer","database":"INT","description":"Identifier","example":"0"},"Description":{"type":"string","database":"VARCHAR(255)","example":"KENTEL Corp","description":"Description"},"EntityID":{"type":"integer","database":"INT","example":"14146","description":"Identifier for the appropriate <a href='http://developers.iqmetrix.com/api/company-tree/#companytreenode'>CompanyTreeNode</a>"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/VendorID?LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting a List of Vendors in RQ
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"VendorID":1,"VendorName":"A.C.P"}]
+                            schema: |
+                                {"type":"array","name":"VendorID","$schema":"http://json-schema.org/draft-03/schema","properties":{"VendorID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"VendorName":{"type":"string","database":"NVARCHAR(MAX)","example":"A.C.P","description":"Name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"VendorID":1,"VendorName":"A.C.P"}]
+                            schema: |
+                                {"type":"array","name":"VendorID","$schema":"http://json-schema.org/draft-03/schema","properties":{"VendorID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"VendorName":{"type":"string","database":"NVARCHAR(MAX)","example":"A.C.P","description":"Name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"VendorID":1,"VendorName":"A.C.P"}]
+                            schema: |
+                                {"type":"array","name":"VendorID","$schema":"http://json-schema.org/draft-03/schema","properties":{"VendorID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"VendorName":{"type":"string","database":"NVARCHAR(MAX)","example":"A.C.P","description":"Name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"VendorID":1,"VendorName":"A.C.P"}]
+                            schema: |
+                                {"type":"array","name":"VendorID","$schema":"http://json-schema.org/draft-03/schema","properties":{"VendorID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"VendorName":{"type":"string","database":"NVARCHAR(MAX)","example":"A.C.P","description":"Name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"VendorID":1,"VendorName":"A.C.P"}]
+                            schema: |
+                                {"type":"array","name":"VendorID","$schema":"http://json-schema.org/draft-03/schema","properties":{"VendorID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"VendorName":{"type":"string","database":"NVARCHAR(MAX)","example":"A.C.P","description":"Name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"VendorID":1,"VendorName":"A.C.P"}]
+                            schema: |
+                                {"type":"array","name":"VendorID","$schema":"http://json-schema.org/draft-03/schema","properties":{"VendorID":{"type":"integer","database":"INT","example":"1","description":"Identifier"},"VendorName":{"type":"string","database":"NVARCHAR(MAX)","example":"A.C.P","description":"Name"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/ProductType:
+    
+    uriParameters:
+          
+      
+    get:
+        
+        displayName: Getting Product Types
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ProductTypeID":0,"ProductType":"Regular Global Product"}]
+                            schema: |
+                                {"type":"array","name":"ProductType","$schema":"http://json-schema.org/draft-03/schema","properties":{"ProductTypeID":{"type":"integer","database":"INT","example":"0","description":"Identifier"},"ProductType":{"type":"string","database":"VARCHAR(30)","example":"Regular Global Product","description":"Name"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ProductTypeID":0,"ProductType":"Regular Global Product"}]
+                            schema: |
+                                {"type":"array","name":"ProductType","$schema":"http://json-schema.org/draft-03/schema","properties":{"ProductTypeID":{"type":"integer","database":"INT","example":"0","description":"Identifier"},"ProductType":{"type":"string","database":"VARCHAR(30)","example":"Regular Global Product","description":"Name"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ProductTypeID":0,"ProductType":"Regular Global Product"}]
+                            schema: |
+                                {"type":"array","name":"ProductType","$schema":"http://json-schema.org/draft-03/schema","properties":{"ProductTypeID":{"type":"integer","database":"INT","example":"0","description":"Identifier"},"ProductType":{"type":"string","database":"VARCHAR(30)","example":"Regular Global Product","description":"Name"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ProductTypeID":0,"ProductType":"Regular Global Product"}]
+                            schema: |
+                                {"type":"array","name":"ProductType","$schema":"http://json-schema.org/draft-03/schema","properties":{"ProductTypeID":{"type":"integer","database":"INT","example":"0","description":"Identifier"},"ProductType":{"type":"string","database":"VARCHAR(30)","example":"Regular Global Product","description":"Name"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ProductTypeID":0,"ProductType":"Regular Global Product"}]
+                            schema: |
+                                {"type":"array","name":"ProductType","$schema":"http://json-schema.org/draft-03/schema","properties":{"ProductTypeID":{"type":"integer","database":"INT","example":"0","description":"Identifier"},"ProductType":{"type":"string","database":"VARCHAR(30)","example":"Regular Global Product","description":"Name"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ProductTypeID":0,"ProductType":"Regular Global Product"}]
+                            schema: |
+                                {"type":"array","name":"ProductType","$schema":"http://json-schema.org/draft-03/schema","properties":{"ProductTypeID":{"type":"integer","database":"INT","example":"0","description":"Identifier"},"ProductType":{"type":"string","database":"VARCHAR(30)","example":"Regular Global Product","description":"Name"}}}
+                            
+                        
+                    
+                
+            
+    
+
+/lists/NonSellableReasonCode?LanguageCode={LanguageCode}:
+    
+    uriParameters:
+        
+        LanguageCode:
+            displayName: LanguageCode
+            type: string
+            example: en-us
+            required: false
+            description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+          
+      
+    get:
+        
+        displayName: Getting Non Sellable Reason Codes
+                
+        
+        headers:
+            
+            Authorization:
+                example: Bearer (Access Token)
+            
+            Accept-Encoding:
+                example: gzip
+            
+        body:
+            
+        responses:
+            
+            200:
+                
+                body:
+                    
+                    application/json:
+                        
+                            
+                            example: |
+                                [{"ReasonCode":"c5473733-e030-83cf-7a9f-4e95a3c27efa","ReasonCodeDescription":"Scratched"}]
+                            schema: |
+                                {"type":"array","name":"NonSellableReasonCode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ReasonCode":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"c5473733-e030-83cf-7a9f-4e95a3c27efa","description":"Identifier"},"ReasonCodeDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Scratched","description":"Reason code"}}}
+                            
+                        
+                    
+                    application/JsonDataTable:
+                        
+                            
+                            example: |
+                                [{"ReasonCode":"c5473733-e030-83cf-7a9f-4e95a3c27efa","ReasonCodeDescription":"Scratched"}]
+                            schema: |
+                                {"type":"array","name":"NonSellableReasonCode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ReasonCode":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"c5473733-e030-83cf-7a9f-4e95a3c27efa","description":"Identifier"},"ReasonCodeDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Scratched","description":"Reason code"}}}
+                            
+                        
+                    
+                    text/xml:
+                        
+                            
+                            example: |
+                                [{"ReasonCode":"c5473733-e030-83cf-7a9f-4e95a3c27efa","ReasonCodeDescription":"Scratched"}]
+                            schema: |
+                                {"type":"array","name":"NonSellableReasonCode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ReasonCode":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"c5473733-e030-83cf-7a9f-4e95a3c27efa","description":"Identifier"},"ReasonCodeDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Scratched","description":"Reason code"}}}
+                            
+                        
+                    
+                    text/XmlDataTable:
+                        
+                            
+                            example: |
+                                [{"ReasonCode":"c5473733-e030-83cf-7a9f-4e95a3c27efa","ReasonCodeDescription":"Scratched"}]
+                            schema: |
+                                {"type":"array","name":"NonSellableReasonCode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ReasonCode":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"c5473733-e030-83cf-7a9f-4e95a3c27efa","description":"Identifier"},"ReasonCodeDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Scratched","description":"Reason code"}}}
+                            
+                        
+                    
+                    text/csv:
+                        
+                            
+                            example: |
+                                [{"ReasonCode":"c5473733-e030-83cf-7a9f-4e95a3c27efa","ReasonCodeDescription":"Scratched"}]
+                            schema: |
+                                {"type":"array","name":"NonSellableReasonCode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ReasonCode":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"c5473733-e030-83cf-7a9f-4e95a3c27efa","description":"Identifier"},"ReasonCodeDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Scratched","description":"Reason code"}}}
+                            
+                        
+                    
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                        
+                            
+                            example: |
+                                [{"ReasonCode":"c5473733-e030-83cf-7a9f-4e95a3c27efa","ReasonCodeDescription":"Scratched"}]
+                            schema: |
+                                {"type":"array","name":"NonSellableReasonCode","$schema":"http://json-schema.org/draft-03/schema","properties":{"ReasonCode":{"type":"GUID","database":"UNIQUEIDENTIFIER","example":"c5473733-e030-83cf-7a9f-4e95a3c27efa","description":"Identifier"},"ReasonCodeDescription":{"type":"string","database":"NVARCHAR(MAX)","example":"Scratched","description":"Reason code"}}}
                             
                         
                     

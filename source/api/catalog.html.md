@@ -19,7 +19,7 @@ search: true
 
 Retailers can select products from the {{ProductLibrary_Concept}} to create a **Retailer Catalog**, a collection of products that can be sold.
 
-## Product Slug
+### Product Slug
 
 A **slug** is a generated identifier for a Product within the Product Library, determined using its {{ProductStructure_Concept}} and the following formula:
 
@@ -27,22 +27,18 @@ A **slug** is a generated identifier for a Product within the Product Library, d
 M{ProductDocumentId}-V{VariationId}-E{EntityId}-R{Region}
 ```
 
-* ProductDocumentId - Identifier for a {{ProductDocument}}
-* VariationId - Identifier for a {{Variation}}
+* ProductDocumentId - Identifier for a <a href='http://developers.iqmetrix.com/api/product-structure/#productdocument'>ProductDocument</a>
+* VariationId - Identifier for a <a href='http://developers.iqmetrix.com/api/product-structure/#variation'>Variation</a>
 * EntityId - Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> or <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a> associated with a Revision, as described in [Creating a Revision](/api/product-structure/#creating-a-revision)
 * Region - Must contain 2 or 4 characters, either a Country Code, or Country Code plus a State Code, as described in [Creating a Revision](/api/product-structure/#creating-a-revision)
 
-### Example
+##### Example
 
-> Example
-
-```
-M1-V2-E3-RCABC
-```
+    M1-V2-E3-RCABC
 
 Using the slug in the example above, we can determine the following:
 
-* The identifier for the {{ProductDocument}} for this Product is **1**
+* The identifier for the <a href='http://developers.iqmetrix.com/api/product-structure/#productdocument'>ProductDocument</a> for this Product is **1**
 * This Revision was made from a Variation, as there is a **V** present
 * The Company or Carrier that owns this Revision has an Id of `3`
 * This Revision is specific to British Columbia (`BC`), Canada (`CA`)
@@ -585,13 +581,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+</ul>
 
 
 
@@ -601,9 +592,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -713,11 +705,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    </ul>
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+</ul>
 
 
 
@@ -725,17 +714,16 @@ puts response
 
 <ul><li><code>Slug</code> (<strong>Required</strong>) - Unique identifier for a Product in Product Library</li><li><code>RmsId</code> (Optional) - Identifier for the CatalogItem in an external inventory system</li></ul>
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "CatalogItemId": "a183f1a9-c58f-426a-930a-9a6357db52ed",
@@ -834,17 +822,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>SubscriptionListId</code> (<strong>Required</strong>)  - Identifier for the {{Subscription}} List
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>SubscriptionListId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/product-subscription/#subscription'>Subscription</a> List</li>
+</ul>
 
 
 
@@ -854,9 +834,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [
@@ -960,17 +941,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a></li>
+</ul>
 
 
 
@@ -980,9 +953,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -1088,15 +1062,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
-    </li>
-    </ul>
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a></li>
+</ul>
 
 
 
@@ -1104,17 +1072,16 @@ puts response
 
 <ul><li><code>Name</code> (<strong>Required</strong>) </li><li><code>Value</code> (Optional) - Defaults to an empty string</li></ul>
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -1216,17 +1183,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a></li>
+</ul>
 
 
 
@@ -1314,17 +1273,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a></li>
+</ul>
 
 
 
@@ -1334,9 +1285,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": "M1248-V1",
@@ -1578,11 +1530,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    </ul>
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+</ul>
 
 
 
@@ -1590,17 +1539,16 @@ puts response
 
 <ul><li><code>CatalogItemIds</code> (<strong>Required</strong>) - Array of <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a> identifiers</li></ul>
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "CatalogItems": {
@@ -1806,17 +1754,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a></li>
+</ul>
 
 
 
@@ -1826,9 +1766,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [
@@ -1968,17 +1909,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>CatalogItemId</code> (<strong>Required</strong>)  - Unique identifier for the <a href='http://developers.iqmetrix.com/api/catalog/#catalogitem'>CatalogItem</a></li>
+</ul>
 
 
 
@@ -1988,9 +1921,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [
@@ -2090,21 +2024,10 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>VendorSku</code> (<strong>Required</strong>)  - Vendor SKU to search for
-    </li>
-    
-    <li>
-        <code>VendorId</code> (Optional)  - Identifier for a {{Vendor}} to search for
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>VendorSku</code> (<strong>Required</strong>)  - Vendor SKU to search for</li>
+    <li><code>VendorId</code> (Optional)  - Identifier for a <a href='http://developers.iqmetrix.com/api/epc/#vendor'>Vendor</a> to search for</li>
+</ul>
 
 
 
@@ -2114,9 +2037,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Sku": "408853",
@@ -2221,25 +2145,11 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>CategoryOrClassificationId</code> (Optional)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#category'>Category</a> or <a href='http://developers.iqmetrix.com/api/classification-tree/#classification'>Classification</a>
-    </li>
-    
-    <li>
-        <code>Page</code> (Optional)  - Page to display, if not specified defaults to 1
-    </li>
-    
-    <li>
-        <code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>CategoryOrClassificationId</code> (Optional)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#category'>Category</a> or <a href='http://developers.iqmetrix.com/api/classification-tree/#classification'>Classification</a></li>
+    <li><code>Page</code> (Optional)  - Page to display, if not specified defaults to 1</li>
+    <li><code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20</li>
+</ul>
 
 
 
@@ -2249,9 +2159,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [
@@ -2421,25 +2332,11 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>ManufacturerIds</code> (Optional)  - Array of integers representing identifiers for <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturers</a>
-    </li>
-    
-    <li>
-        <code>Page</code> (Optional)  - Page to display, if not specified defaults to 1
-    </li>
-    
-    <li>
-        <code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>ManufacturerIds</code> (Optional)  - Array of integers representing identifiers for <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturers</a></li>
+    <li><code>Page</code> (Optional)  - Page to display, if not specified defaults to 1</li>
+    <li><code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20</li>
+</ul>
 
 
 
@@ -2449,9 +2346,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [
@@ -2621,25 +2519,11 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>VendorIds</code> (Optional)  - List of comma seperated integers representing Supplier identifiers
-    </li>
-    
-    <li>
-        <code>Page</code> (Optional)  - Page to display, if not specified defaults to 1
-    </li>
-    
-    <li>
-        <code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>VendorIds</code> (Optional)  - List of comma seperated integers representing Supplier identifiers</li>
+    <li><code>Page</code> (Optional)  - Page to display, if not specified defaults to 1</li>
+    <li><code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20</li>
+</ul>
 
 
 
@@ -2649,9 +2533,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [
@@ -2821,25 +2706,11 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>IsDropShippable</code> (Optional)  - True to display products available for shipping, false to display products not available for shipping. This value is a best guess and should not be used for tracking dropshippable products
-    </li>
-    
-    <li>
-        <code>Page</code> (Optional)  - Page to display, if not specified defaults to 1
-    </li>
-    
-    <li>
-        <code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>IsDropShippable</code> (Optional)  - True to display products available for shipping, false to display products not available for shipping. This value is a best guess and should not be used for tracking dropshippable products</li>
+    <li><code>Page</code> (Optional)  - Page to display, if not specified defaults to 1</li>
+    <li><code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20</li>
+</ul>
 
 
 
@@ -2849,9 +2720,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [
@@ -3024,33 +2896,13 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>SearchTerms</code> (Optional)  - Search terms
-    </li>
-    
-    <li>
-        <code>OrderBy</code> (Optional)  - A string value representing which field to order the results by. Acceptable values are name or dateAdded. Defaults to name if not specified
-    </li>
-    
-    <li>
-        <code>OrderDir</code> (Optional)  - A string value representing the sort direction. Acceptable values are asc and desc. Defaults to asc if not specified
-    </li>
-    
-    <li>
-        <code>Page</code> (Optional)  - Page to display, if not specified defaults to 1
-    </li>
-    
-    <li>
-        <code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>SearchTerms</code> (Optional)  - Search terms</li>
+    <li><code>OrderBy</code> (Optional)  - A string value representing which field to order the results by. Acceptable values are name or dateAdded. Defaults to name if not specified</li>
+    <li><code>OrderDir</code> (Optional)  - A string value representing the sort direction. Acceptable values are asc and desc. Defaults to asc if not specified</li>
+    <li><code>Page</code> (Optional)  - Page to display, if not specified defaults to 1</li>
+    <li><code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20</li>
+</ul>
 
 
 
@@ -3060,9 +2912,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [
@@ -3232,61 +3085,20 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>VendorIds</code> (Optional)  - List of comma seperated integers representing identifiers for {{Vendors}}
-    </li>
-    
-    <li>
-        <code>ManufacturerIds</code> (Optional)  - Array of integers representing identifiers for <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturers</a>
-    </li>
-    
-    <li>
-        <code>IsDropShippable</code> (Optional)  - True to display products available for shipping, false to display products not available for shipping. This value is a best guess and should not be used for tracking dropshippable products
-    </li>
-    
-    <li>
-        <code>CategoryOrClassificationId</code> (Optional)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#category'>Category</a> or <a href='http://developers.iqmetrix.com/api/classification-tree/#classification'>Classification</a>
-    </li>
-    
-    <li>
-        <code>ClassificationTreeId</code> (Optional)  - Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a> to search within. If CategoryOrClassificationId is provided, this value is ignored
-    </li>
-    
-    <li>
-        <code>SearchTerms</code> (Optional)  - Search terms
-    </li>
-    
-    <li>
-        <code>OrderBy</code> (Optional)  - A string value representing which field to order the results by. Acceptable values are name or dateAdded. Defaults to name if not specified
-    </li>
-    
-    <li>
-        <code>OrderDir</code> (Optional)  - A string value representing the sort direction. Acceptable values are asc and desc. Defaults to asc if not specified
-    </li>
-    
-    <li>
-        <code>IsLinkedToCuratedProduct</code> (Optional)  - A flag to indicate if the search should be restricted to Private Products
-    </li>
-    
-    <li>
-        <code>ColorTagIds</code> (Optional)  - Array of integers representing identifiers for {{ColorTags}}
-    </li>
-    
-    <li>
-        <code>Page</code> (Optional)  - Page to display, if not specified defaults to 1
-    </li>
-    
-    <li>
-        <code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>VendorIds</code> (Optional)  - List of comma seperated integers representing identifiers for <a href='http://developers.iqmetrix.com/api/epc/#vendor'>Vendors</a></li>
+    <li><code>ManufacturerIds</code> (Optional)  - Array of integers representing identifiers for <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturers</a></li>
+    <li><code>IsDropShippable</code> (Optional)  - True to display products available for shipping, false to display products not available for shipping. This value is a best guess and should not be used for tracking dropshippable products</li>
+    <li><code>CategoryOrClassificationId</code> (Optional)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#category'>Category</a> or <a href='http://developers.iqmetrix.com/api/classification-tree/#classification'>Classification</a></li>
+    <li><code>ClassificationTreeId</code> (Optional)  - Identifier for a <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a> to search within. If CategoryOrClassificationId is provided, this value is ignored</li>
+    <li><code>SearchTerms</code> (Optional)  - Search terms</li>
+    <li><code>OrderBy</code> (Optional)  - A string value representing which field to order the results by. Acceptable values are name or dateAdded. Defaults to name if not specified</li>
+    <li><code>OrderDir</code> (Optional)  - A string value representing the sort direction. Acceptable values are asc and desc. Defaults to asc if not specified</li>
+    <li><code>IsLinkedToCuratedProduct</code> (Optional)  - A flag to indicate if the search should be restricted to Private Products</li>
+    <li><code>ColorTagIds</code> (Optional)  - Array of integers representing identifiers for <a href='http://developers.iqmetrix.com/api/product-structure/#colortag'>ColorTags</a></li>
+    <li><code>Page</code> (Optional)  - Page to display, if not specified defaults to 1</li>
+    <li><code>PageSize</code> (Optional)  - Number of results that will be returned, if not specified defaults to 20</li>
+</ul>
 
 
 
@@ -3296,9 +3108,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Items": [

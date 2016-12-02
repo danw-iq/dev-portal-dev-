@@ -1,0 +1,357 @@
+#%RAML 0.8
+title: security-roles
+version: v1
+baseUri: https://usermanager{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |
+      Security Roles allow you to specify what {{Users}} are allowed to do.
+
+      The figure below shows how Security Roles interact with Resources in the [User Manager](/api/user-manager) and [Company Tree](/api/company-tree) APIs.
+
+      To learn more about Users, Security Roles and Permissions see {{UserManager_Concept}}.
+
+      <img src="{{ "/images/user-manager-uml.png" | prepend: site.url }}" style="height: 80%; width: 80%" />
+
+      {{note}}
+      Changes within the Security Roles API involve complex actions behind the scenes and <b>are not always immediate</b>.
+      {{end}}
+  - title: errors
+    content: | 
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `The field {x} is a required field `<br/>`but was not found in the request` | Ensure all required parameters are included |
+      | `HTTP 400` | `Expected {x} to contain {y}`<br/>` but found {z}` | Ensure parameters that are in both Request URI and body match |
+      | `HTTP 404` | `{x} not found` | Ensure URI parameters are correct | 
+      | `HTTP 409` | `The SecurityRole name {x} `<br/>`already exists for entity {y}` | SecurityRole names must be unique across the Company |
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json     
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+    - collection:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json   
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<getResource>>
+    - singularEndpointPutDelete:
+        securedBy: [oauth_2_0]
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json   
+          responses:
+            204:
+              body:
+                  application/json:
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)    
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+          body:
+          responses:
+            204:
+              body:
+                  application/json:            
+    - singularEndpointDelete:
+        securedBy: [oauth_2_0]
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)   
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                 
+          body:
+          responses:
+            204:
+              body:
+                  application/json:
+    - singularEndpoint:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)    
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>               
+          responses:
+            200:
+              body:
+                  application/json:            
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - SecurityRole: |
+      {
+        "name": "SecurityRole",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "A SecurityRole represents the relationship between a {{User}} and a set of Permissions. SecurityRoles allow you create custom groups that can hold Permissions",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "316", "generated": "true", "putGenerate": "true" }, 
+          "Name": { "type": "string",  "description": "Name", "putDescription": "A descriptive name, must be unique within the Company", "example": "Store Manager" }
+        },
+        "required": [ "Name" ]
+      }
+  - SecurityRoleArray: |
+      {
+        "exclude": "true",
+        "name": "SecurityRole",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - AssignedRole: |
+      {
+        "name": "AssignedRole",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "An AssignedRole represents the relationship between a {{User}}, {{SecurityRole}} and Entity.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "6548", "generated": "true", "putGenerate": "true" }, 
+          "EntityId": { "type": "integer", "description": "Identifier of a [CompanyTreeNode](/api/company-tree/#companytreenode)", "putDescription": "Identifier of a {{CompanyTreeNode}}", "ref": "company tree.Location.Id" }, 
+          "SecurityRoleId": { "type": "integer", "description": "Identifier of a [SecurityRole](#securityrole)", "ref": "security-roles.SecurityRole.Id" }, 
+          "UserId": { "type": "integer", "description": "Identifier of a [User](/api/usermanager/#user)", "ref": "user-manager.User.Id", "generated": "true", "putGenerate": "true" }
+        },
+        "required": [ "EntityId", "SecurityRoleId" ]        
+      }      
+  - AssignedRoleArray: |
+      {
+        "exclude": "true",
+        "name": "AssignedRole",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }
+  - Permission: |
+      {
+        "name": "Permission",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Permissions are the building blocks of SecurityRoles and represent the ability to perform an action within iQmetrix APIs.\n\n* Assigning a Permission to a Security Role always **grants** an action\n* A Permission will never overrule another Permission\n* When `IsAssignable` is set to `false`, the Permission is Restricted by iQmetrix. If you require access to a Restricted Permission, contact {{contact_support}}",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "101" }, 
+          "Name": { "type": "string",  "description": "Descriptive name", "example": "Edit Products" }, 
+          "Category": { "type": "string",  "description": "This field is used internally to group Permissions by how they impact the iQmetrix ecosystem", "example": "Products" }, 
+          "Code": { "type": "string",  "description": "Unique, system generated name used for sorting Permissions", "example": "editproducts" }, 
+          "Description": { "type": "string",  "description": "Describes the function of the Permission", "example": "Enables the user to create, update and archive their private products and retailer revisions." }, 
+          "IsAssignable": { "type": "boolean", "description": "A flag to indicate if this Permission is Restricted, see Notes above", "example": "true" }, 
+          "ParentPermissionId": { "type": "integer", "description": "Identifier of a similar Permission, used for organizing Permissions into groups", "example": "99" }
+        }
+      }
+  - PermissionArray: |
+      {
+        "exclude": "true",
+        "name": "Permission",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+/Entities({EntityId})/Permissions:
+  uriParameters:
+    EntityId:
+      displayName: EntityId
+      type: string
+      example: 14146
+      description: Identifier of a {{CompanyTreeNode}}
+      required: true
+  type:
+    collectionReadOnly:
+      resource: PermissionArray
+  get: 
+    displayName: Getting All Permissions for an Entity
+    description: |
+      This request will return all [Permissions](#permission) within the [SecurityRoles](#security-role) belonging to the specified Entity.
+/Entities({EntityId})/SecurityRoles:
+  uriParameters:
+    EntityId:
+      displayName: EntityId
+      type: string
+      example: 14146
+      description: Identifier of a {{CompanyTreeNode}}
+      required: true
+  type:
+    collection:
+      resource: SecurityRole
+      getResource: SecurityRoleArray
+  post:
+    displayName: Creating a Security Role
+  get:
+    displayName: Getting All Security Roles for an Entity
+/Entities({EntityId})/SecurityRoles({SecurityRoleId})/Permissions({PermissionId}):
+  uriParameters:
+    EntityId:
+      displayName: EntityId
+      type: string
+      example: 14146
+      description: Identifier of a {{CompanyTreeNode}}
+      required: true
+    SecurityRoleId:
+      displayName: SecurityRoleId
+      type: string
+      example: 316
+      description: Identifier of a SecurityRole
+      required: true
+    PermissionId:
+      displayName: PermissionId
+      type: string
+      example: 101
+      description: Identifier of a Permission
+      required: true
+  type:
+    singularEndpointPutDelete:
+  put:
+    displayName: Enabling a Permission for a Security Role
+  delete:
+    displayName: Disabling a Permission for a Security Role
+/Entities({EntityId})/SecurityRoles({SecurityRoleId})/Permissions:
+  uriParameters:
+    EntityId:
+      displayName: EntityId
+      type: string
+      example: 14146
+      description: Identifier of a {{CompanyTreeNode}}
+      required: true
+    SecurityRoleId:
+      displayName: SecurityRoleId
+      type: string
+      example: 316
+      description: Identifier of a SecurityRole
+      required: true
+  type:
+    collectionReadOnly:
+      resource: PermissionArray
+  get:
+    displayName: Getting Permissions for a Security Role
+/Users({UserId})/AssignedRoles:
+  uriParameters:
+    UserId:
+      displayName: UserId
+      type: string
+      example: 2576
+      description: Identifier of a User
+      required: true
+  type:
+    collection:
+      resource: AssignedRole
+      getResource: AssignedRoleArray
+  get:
+    displayName: Getting Assigned Roles for a User
+  post:
+    displayName: Assigning a Security Role to a User 
+    description: If the User is assigned a SecurityRole they already have, the result will be a `HTTP 200` with the {{AssignedRole}}, the same response as assigning a new SecurityRole to a User.
+    body:
+      application/json:
+        schema: AssignedRole
+/Users({UserId})/AssignedRoles({SecurityRoleId}):
+  uriParameters:
+    UserId:
+      displayName: UserId
+      type: string
+      example: 2572
+      description: Identifier of a User
+      required: true
+    SecurityRoleId:
+      displayName: SecurityRoleId
+      type: string
+      example: 316
+      description: Identifier of a SecurityRole
+      required: true
+  type:
+    singularEndpointDelete:
+  delete:
+    displayName: Unassigning a Security Role from a User

@@ -1,0 +1,834 @@
+#%RAML 0.8
+title: product structure
+version: v1
+baseUri: https://productlibrary{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+resourceTypes:
+    - collectionPutOnly:
+        securedBy: [oauth_2_0]
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>            
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            204:
+              body:
+                application/json:
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>            
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resourcePost>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - singularEndpointGetPut:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            204:
+              body:
+                application/json:   
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json      
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>          
+    - collection:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json      
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>       
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>                                                      
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+documentation:
+  - title: author
+    content: | 
+      Product Library
+  - title: overview
+    content: |
+      The Product Structure API allows you to create Master Products, Variations and Revisions in Product Library which can then be added to your Catalog.  
+
+      To learn more about Master Products, Variations and Revisions see {{ProductStructure_Concept}}.
+
+      To learn more about Product Library and your Catalog, see {{ProductLibrary_Concept}}.
+
+  - title: extended-examples
+    content: |
+      These examples are intended to illustrate some of the more complex concepts in the Product Structure API.
+
+      #### Revision Group
+
+      A [RevisionGroup](#revisiongroup) is how child Revisions of a given Master Product or Variation are represented in the API.
+
+      ```csharp
+      {
+          "VariationId": 3,
+          "GroupType": "Entity",
+          "Revisions": [
+              {
+                  "Id": 4,
+                  "Entity": {
+                      "Id": 12372,
+                      "Name": "Jump.ca"
+                  },
+                  ...
+              },
+              {
+                  "Id": 3,
+                  "Entity": {
+                      "Id": 3335,
+                      "Name": "KENTEL"
+                  },
+                  ...
+              }              
+          ]
+      }
+      ```
+
+      The example above is a snippet from a {{MasterProduct}} with two child Revisions.
+
+      `"GroupType": "Entity"` means that these Revisions are Entity Revisions, owned by a specific Entity, such as a Company or Carrier. 
+
+      In this case, the two Entities that own these Revisions are {{Company}} Entities, Jump.ca and KENTEL.
+
+      #### Field Values
+
+      A [FieldValue](#fieldvalue) pairs a {{FieldDefinition}} with a value that allows us to see how a child Variation or Revision differs from its parent.
+
+      ```csharp
+      {
+          "Revisions": [
+              {
+                  "Id": 4,
+                  "FieldValues": [
+                      {
+                          "FieldDefinitionId": 76,
+                          "LanguageInvariantValue": "659.50 CAD"
+                      }
+                  ]
+              },
+              {
+                  "Id": 3,
+                  "FieldValues": [
+                      {
+                          "FieldDefinitionId": 76,
+                          "LanguageInvariantValue": "449.50 USD"
+                      }
+                  ]
+              },              
+          ]
+      }
+      ```
+
+      The example above is a snippet from a {{MasterProduct}} with two child Revisions which have one FieldValue change each.
+
+      Using [Getting a Field Definition](/api/field-definitions/#getting-a-fielddefinition) we can determine that the FieldDefinition specified is MSRP.
+
+      Therefore, these Revisions differ from the MasterProduct by MSRP, one Revision has `659.50 CAD` and the other has `449.50 USD`.
+
+      #### Force Overide 
+
+      Products in Product Library can have an **inheritance** relationship between a parent (Master Product or Variation) and child (Variation or Revision).
+
+      Inheriting an [IdentifierGroup](#identifiergroup) allows a child to have an identicial set of [Identifiers](#identifier) as its parent.
+
+      IdentifierGroups can also be **synched**, allowing a child to automatically inherit any changes made to the inherited group.
+
+      Note that Identifiers can only be synced as a complete set, either all Identifiers of a specific type (Vendor, UPC, Manufacturer) are synced, or none are.
+
+      By forcing a child to override an IdentifierGroup, we prevent the sync and allow the child to have different Identifiers than its parent.
+
+
+      ```csharp
+      {
+        "Variations": [
+          {
+            "IdentifierGroups": [
+              {
+                "Type": "VendorSKU",
+                "Identifiers": [
+                  {
+                    "Type": "VendorSKU",
+                    "Value": "V8341221L"
+                  }
+                ],
+                "ForceOverride": true
+              },
+              {    
+                "Type": "ManufacturerSKU",
+                "Identifiers": [
+                  {
+                    "Type": "ManufacturerSKU",
+                    "Value": "ME341LL/A"
+                  }
+                ],
+                "ForceOverride": false
+              }
+            ],
+          },
+        ],
+        "IdentifierGroups": [
+          {
+            "Type": "VendorSKU",
+            "Identifiers": [
+              {
+                "Type": "VendorSKU",
+                "Value": "V8341221L"
+              }
+            ],
+            "ForceOverride": true
+          },
+          {    
+            "Type": "ManufacturerSKU",
+            "Identifiers": [
+              {
+                "Type": "ManufacturerSKU",
+                "Value": "545512G/A"
+              }
+            ],
+            "ForceOverride": false
+          }        
+          ...
+        ]
+      }
+      ```
+
+      The example above is a summarized {{MasterProduct}} which includes one child {{Variation}}, one Vendor SKU (`V8341221L`) and one Manufacturer SKU (`545512G/A`).
+
+      With ForceOverride set to `true` for Vendor SKUs, we know that the child Variation has one and only one Vendor SKU - `V8341221L`.
+
+      However, Manufacturer SKU's have ForceOverride set to `false`, showing that the child Variation is not inheriting all of the parent Master Product's Manufacturer SKUs.
+
+      Looking at the Variation, there is a Manufacturer SKU with a value of `ME341LL/A` that is breaking inheritance.
+  - title: enumerations 
+    content: |
+
+      ## Enumerations
+
+      ### GroupType
+
+      | Name   | Description |
+      |:-------|:------------|
+      | Region | Variation is specific to a [Country](/api/reference/#country) or [State](/api/reference/#state) |
+      | Entity | Variation is specific to a [Company](/api/company-tree/#company) or [Carrier](/api/entity-store/#carrier) |
+      | RegionAndEntity | Varation is a combination of the above | 
+
+
+      ### SwatchType
+
+      | Name   | Description |
+      |:-------|:------------|
+      | Asset | Color is represented by an [Asset](/api/assets/#asset) |
+      | ColorCode | Color is represented by a Hex code |
+      | Empty | No swatch |
+  - title: errors
+    content: |
+      | Error Code  | Description | How To Resolve |
+      |:------------|:------------|:---------------|
+      | `HTTP 400` | `Color Definition name cannot be empty` | Ensure ColorDefinition.Name is provided  |
+      | `HTTP 400` | `Product document must have a valid manufacturer: Entity with id {x} does not exist` | Ensure Manufacturer.Id is valid  |
+      | `HTTP 400` | `Must use valid ClassificationTree` | Ensure Classification.TreeId is valid  |
+      | `HTTP 400` | `Entity with id {x} does not exist` | Ensure the EntityId is valid |
+      | `HTTP 400` | `Product identifier '{x}SKU': Entity with id {y} does not exist` | Ensure Entity.Id values exist and are valid Entities |
+      | `HTTP 400` | `For every locale, Product Name must be different for every validation` | Ensure the Variation name used is unique for all Variations on the Master Product |
+      | `HTTP 404` | `Unable to find document id {x}` | Ensure FieldValues.FieldDefinitionId is valid  |
+      | `HTTP 404` | `Product document not found` | Ensure the Product Document exists and the ProductDocumentId is valid |
+schemas:
+  - ProductDocument: |
+      {
+        "description": "A ProductDocument represents the [hierarchical structure](/concepts/product-structure/) of Products in Product Library.",
+        "name": "ProductDocument",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "8", "generated": "true" }, 
+          "Classification": { "type": "object", "description": "[Classification](/api/classification-tree/#classification) information", "ref": "product structure.ClassificationTree", "isNested": "true" }, 
+          "ColorDefinitions": { "type": "array", "arrayType": "object", "description": "List of [ColorDefinitions](/api/catalog/#colordefinition)", "ref": "catalog.ColorDefinition" }, 
+          "CreatedUtc": { "type": "DateTime", "description": "Created date in UTC", "example": "2015-05-28T12:00:00.000Z", "generated": "true" }, 
+          "LastModifiedUtc": { "type": "DateTime", "description": "Last modified date in UTC", "example": "2015-05-28T12:00:00.000Z", "generated": "true" }, 
+          "Manufacturer": { "type": "object", "description": "[Manufacturer](/api/entity-store/#manufacturer) information", "ref": "catalog.ManufacturerRep", "isNested": "true" }, 
+          "Owner": { "type": "object", "description": "Indicates if this Product is publicly accessible (null) or private (not null)", "ref": "catalog.Owner", "isNested": "true", "generated": "true" }, 
+          "RevisionGroups": { "type": "array", "arrayType": "object", "description": "Revisions", "ref": "product structure.RevisionGroup", "generated": "true" }, 
+          "RootRevision": { "type": "object", "description": "Master Product, root of the Product hierarchy", "ref": "product structure.MasterProduct" }, 
+          "Version": { "type": "integer", "description": "The latest revision number", "example": "1", "generated": "true" }
+        },
+        "required": [ "Classification", "RootRevision" ]
+      }
+  - Asset: |
+      {
+        "name": "Asset",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "guid", "description": "Identifier", "putDescription": "Identifier for an {{Asset}}", "example": "a130e8f0-ddb1-4034-a34a-53d3ac03d384" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "HeroShot" },
+          "MimeType": { "type": "string", "description": "Type of image", "example": "image/jpeg" },
+          "IsHidden": { "type": "boolean", "description": "A flag to indicate if this Asset is hidden, not to be used in Endless Aisle", "putDescription": "Defaults to false", "example": "false" }
+        },
+        "required": [ "Id", "Name", "MimeType" ]
+      }
+  - ClassificationTree: |
+      {
+        "exclude": "true",
+        "name": "ClassificationTree",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "TreeId": { "type": "integer", "description": "Identifier for a [ClassificationTree](/api/classification-tree/#classificationtree)", "putDescription": "Identifier for a {{ClassificationTree}}", "ref": "classification-tree.ClassificationTree.Id" }, 
+          "Id": { "type": "integer", "description": "Identifier for a [Classification](/api/classification-tree/#classification) or [Category](/api/classification-tree/#category)", "putDescription": "Identifier for a {{Classification}} or {{Category}}", "ref": "classification-tree.Classification.Id" }, 
+          "Name": { "type": "string",  "description": "Name", "ref": "classification-tree.Classification.Name", "generated": "true" } 
+        },
+        "required": [ "Id", "TreeId" ]
+      }
+  - MasterProduct: |
+      {
+        "name": "MasterProduct",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ColorDefinitionId": { "type": "string", "description": "Unique identifier for a ColorDefinition", "ref": "catalog.ColorDefinition.Id" }, 
+          "FieldValues": { "type": "array", "arrayType": "object", "description": "List of FieldValues which represent the properties this Master Product has such as name, screen size, etc", "ref": "product structure.FieldValue" }, 
+          "IdentifierGroups": { "type": "array", "arrayType": "object", "description": "List of IdentifierGroups", "ref": "product structure.IdentifierGroup"}, 
+          "IsArchived": { "type": "boolean", "description": "A flag to indicate if the MasterProduct is archived", "example": "false", "generated": "true" }, 
+          "Variations": { "type": "array", "arrayType": "object", "description": "Variations", "hideFromExample": "true", "generated": "true", "ref": "product structure.Variation" }
+        },
+        "required": [ "FieldValues" ]
+      }      
+  - IdentifierGroup: |
+      {
+        "name": "IdentifierGroup",
+        "description": "An Identifier is a value that uniquely represents a product within a certain context. For example, a product sold by one vendor may have different SKU identifiers than the same product sold by another vendor. IdentifierGroups are used to group Identifiers by type.",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Type": { "type": "string", "description": "Acceptable values include: ManufacturerSKU, VendorSKU, UPC", "putDescription": "Acceptable values include: ManufacturerSKU, VendorSKU, UPC", "example": "ManufacturerSKU" }, 
+          "ForceOverride": { "type": "boolean", "description": "A flag to indicate if this Identifier Group is inherited (synced) from a parent. See <a href='#extended-examples'>Extended Examples</a>", "putDescription": "A flag to indicate if this Identifier Group is inherited (synced) from a parent. See <a href='#extended-examples'>Extended Examples</a>", "example": "false" }, 
+          "Identifiers": { "type": "array", "arrayType": "object", "description": "List of Identifiers of the given type", "ref": "product structure.Identifier", "isNested": "true" }
+        },
+        "required": [ "Type", "ForceOveride" ]
+      }
+  - Identifier: |
+      {
+        "name": "Identifier",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Description": { "type": "string",  "description": "Description", "example": "Manufacturer sku" }, 
+          "Entity": { "type": "object", "description": "Manufacturer or Vendor information for ManufacturerSKU or VendorSKU", "putDescription": "Manufacturer or Vendor information for ManufacturerSKU or VendorSKU", "ref": "catalog.Entity", "isNested": "true" }, 
+          "Type": { "type": "string", "description": "This value should match the Type property of the IdentifierGroup", "putDescription": "This value should match the Type property of the IdentifierGroup", "example": "ManufacturerSKU" }, 
+          "Value": { "type": "string", "description": "Value", "example": "ManufacturerSKU" }
+        },
+        "required": [ "Type", "Value" ]
+      }      
+  - RevisionGroup: |
+      {
+        "description": "RevisionGroups are used to group Revisions by type and parent Variation. See [Extended Examples](#extended-examples)",
+        "type": "RevisionGroup",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "GroupType": { "type": "string",  "description": "Revision type. See [GroupTypes](#grouptypes) for a list of acceptable values", "example": "Entity" }, 
+          "Order": { "type": "integer", "description": "A value used for sorting Revisions", "example": "1", "generated": "true" }, 
+          "Revisions": { "type": "array", "arrayType": "object", "description": "List of Revisions in this category", "ref": "product structure.Revision" }, 
+          "VariationId": { "type": "integer", "description": "Identifier for the Variation, if this Revision was created off of a Variation", "example": "5" }
+        }
+      }
+  - Revision: |
+      {
+        "description": "To learn more about Master Products, Variations and Revisions, see {{ProductStructure_Concept}}.",
+        "name": "Revision",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "5", "generated": "true" }, 
+          "ColorDefinitionId": { "type": "string", "description": "Unique identifier for a ColorDefinition", "ref": "catalog.ColorDefinition.Id" }, 
+          "Entity": { "type": "object", "description": "An identifier for an Entity this Revision was created for", "ref": "catalog.Entity", "isNested": "true", "generated": "true" }, 
+          "FieldValues": { "type": "array", "arrayType": "object", "description": "FieldValues representing properties that determine how this Revision differs from its parent Variation or MasterProduct", "ref": "product structure.FieldValue" }, 
+          "IdentifierGroups": { "type": "array", "arrayType": "object", "description": "List of IdentifierGroups", "ref": "product structure.IdentifierGroup" }, 
+          "Regions": { "type": "array", "arrayType": "object", "description": "List of regions this Revision is applicable to", "ref": "catalog.Region", "generated": "true" }
+        },
+        "required": [ "FieldValues" ]
+      }
+  - Variation: |
+      {
+        "description": "To learn more about Master Products, Variations and Revisions, see {{ProductStructure_Concept}}.",
+        "name": "Variation",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ColorDefinitionId": { "type": "string", "description": "Unique identifier for a ColorDefinition", "putDescription": "Identifier for a [ColorDefinition](/api/catalog/#colordefinition). For a list of ColorDefinitions, see <a href='/api/product-structure/#getting-color-definitions-for-a-master-product'>Getting Color Definitions For a Master Product</a>", "ref": "catalog.ColorDefinition.Id" }, 
+          "FieldValues": { "type": "array", "arrayType": "object", "putDescription": "Must be unique across all Variations for the MasterProduct", "description": "FieldValues representing properties that determine how this Revision differs from its parent Variation or MasterProduct", "ref": "product structure.FieldValue" }, 
+          "IdentifierGroups": { "type": "array", "arrayType": "object", "description": "List of IdentifierGroups", "ref": "product structure.IdentifierGroup" }, 
+          "IsArchived": { "type": "boolean", "description": "A flag to indicate if this Variation is archived. Archived Products are hidden from searches and can only be access directly.", "example": "false", "generated": "true" }
+        },
+        "required": [ "FieldValues" ]
+      }            
+  - FieldValue: |
+      {
+        "description": "A FieldValue represents a product property and defines how Variations and Revisions differ from their parents. FieldValues are made up of a reference to a {{field-definition}} and a value. See [Extended Examples](#extended-examples).",
+        "name": "FieldValue",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "FieldDefinitionId": { "type": "integer", "description": "Identifier for a [FieldDefinition](/api/field-definitions/#fielddefinition)", "putDescription": "Identifier for a {{FieldDefinition}}", "ref": "field-definitions.FieldDefinition.Id" }, 
+          "LanguageInvariantValue": { "type": "string", "description": "Value", "example": "iPhone 4S 16 GB Black" }
+        },
+        "required": [ "FieldDefinitionId", "LanguageInvariantValue" ]
+      }      
+  - VariationCreated: | 
+      {
+        "exclude": "true",
+        "name": "VariationCreated",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "VariationId": { "type": "integer", "putDescription": "Identifier for a {{Variation}}", "example": "8" }
+        }
+      } 
+  - ColorTag: |
+      {
+        "name": "ColorTag",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "5" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "Green", "generated": "true" }, 
+          "ColorCode": { "type": "string", "description": "A valid Hex code representing this color", "example": "#51B14D", "generated": "true" }
+        },
+        "required": [ "Id" ]
+      }
+  - ColorTags: |
+      {
+        "exclude": "true",
+        "name": "ColorTags",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ColorTags": { "type": "array", "arrayType": "object", "ref": "catalog.ColorTag" }
+        }
+      }        
+  - VariationCreate: |
+      {
+        "exclude": "true",
+        "name": "VariationCreate",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Assets": { "type": "array", "arrayType": "object", "putDescription": "Image {{Assets}} for the Variation", "ref": "product structure.Asset" },          
+          "ColorDefinitionId": { "type": "string", "description": "Unique identifier for a ColorDefinition", "putDescription": "Identifier for a ColorDefinition. For a list of ColorDefinitions, see <a href='/api/product-structure/#getting-color-definitions-for-a-master-product'>Getting Color Definitions For a Master Product</a>", "ref": "catalog.ColorDefinition.Id" }, 
+          "FieldValues": { "type": "array", "arrayType": "object", "putDescription": "Must be unique across all Variations for the MasterProduct", "description": "FieldValues representing properties that determine how this Revision differs from its parent Variation or MasterProduct", "ref": "product structure.FieldValue" }, 
+          "IdentifierGroups": { "type": "array", "arrayType": "object", "description": "List of IdentifierGroups", "ref": "product structure.IdentifierGroup" }
+        },
+        "required": [ "FieldValues" ]
+      } 
+  - ProductDocumentCreate: |
+      {
+        "exclude": "true",        
+        "description": "A ProductDocument represents the [hierarchical structure](/concepts/product-structure/) of Products in Product Library.",
+        "name": "ProductDocumentCreate",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Classification": { "type": "object", "description": "[Classification](/api/classification-tree/#classification) information", "ref": "product structure.ClassificationTree", "isNested": "true" },           
+          "ColorDefinitions": { "type": "array", "arrayType": "object", "description": "List of [ColorDefinitions](/api/catalog/#colordefinition) for the Master Product", "ref": "catalog.ColorDefinition" }, 
+          "Manufacturer": { "type": "object", "description": "[Manufacturer](/api/entity-store/#manufacturer) information", "ref": "catalog.ManufacturerRep", "isNested": "true" }, 
+          "OwnerEntityId": { "type": "integer", "putDescription": "Identifier of the <a href='/api/company-tree/#company'>Company</a> the Product will belong to", "ref": "company tree.Company.Id" },
+          "RootRevision": { "type": "object", "description": "Master Product, root of the Product hierarchy", "ref": "product structure.RootRevisionCreate" }
+        },
+        "required": [ "Classification", "RootRevision", "OwnerEntityId" ]
+      }
+  - RootRevisionCreate: |
+      {
+        "exclude": "true",
+        "name": "RootRevisionCreate",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Assets": { "type": "array", "arrayType": "object", "putDescription": "Image {{Assets}} for the Master Product", "ref": "product structure.Asset" },
+          "ColorDefinitionId": { "type": "string", "putDescription": "Unique identifier for a {{ColorDefinition}}", "ref": "catalog.ColorDefinition.Id" }, 
+          "FieldValues": { "type": "array", "arrayType": "object", "description": "List of FieldValues which represent the properties this Master Product has such as name, screen size, etc", "ref": "product structure.FieldValue" }, 
+          "IdentifierGroups": { "type": "array", "arrayType": "object", "description": "List of IdentifierGroups", "ref": "product structure.IdentifierGroup"}
+        },
+        "required": [ "FieldValues" ]
+      }      
+  - ColorDefinitions: |
+      {
+        "name": "ColorDefinitions",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ColorDefinitions": { "type": "array", "arrayType": "object", "description": "List of [ColorDefinitions](/api/catalog/#colordefinition)", "ref": "catalog.ColorDefinition" }
+        },
+        "required": [ "ColorDefinitions" ]
+      }  
+/ProductDocs:
+  post:
+    displayName: Creating a Master Product
+    headers:
+      Authorization:
+        example: Bearer (Access Token)
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+      Accept:
+        example: application/json
+      Content-Type:
+        example: application/json        
+    body:
+      application/json:
+        schema: ProductDocumentCreate
+    responses:
+      201:
+        body:
+          application/json:
+            schema: ProductDocument
+            example: |
+              {
+                  "Id": 8,
+                  "Classification": {
+                      "TreeId": 1,
+                      "Id": 4,
+                      "Name": "Smartphones"
+                  },
+                  "ColorDefinitions": [
+                      {
+                          "Id": "5c6e2779-79d1-4fbd-b6a8-36b81e851b15",
+                          "Name": "Black Sapphire",
+                          "ColorTagIds": [ 1 ]
+                          "ColorTags": [
+                              {
+                                  "Id": 1,
+                                  "Name": "Black",
+                                  "ColorCode": "#303232"
+                              }
+                          ],
+                          "Swatch": {
+                              "Type": "ColorCode",
+                              "AssetId": null,
+                              "ColorCode": "#C0C8D0"
+                          }
+                      }
+                  ],
+                  "CreatedUtc": "2015-05-28T12:00:00.000Z",
+                  "LastModifiedUtc": "2015-05-28T12:00:00.000Z",
+                  "Manufacturer": {
+                      "Id": 13149,
+                      "Name": "OtterBox"
+                  },
+                  "Owner": {
+                      "Id": 14146,
+                      "Name": "Kentel Corp"
+                  },
+                  "RevisionGroups": [
+                      {
+                          "Order": 1,
+                          "VariationId": null,
+                          "GroupType": "Entity",
+                          "Revisions": []
+                      },
+                      {
+                          "Order": 0,
+                          "VariationId": null,
+                          "GroupType": "Region",
+                          "Revisions": []
+                      },
+                      {
+                          "Order": 2,
+                          "VariationId": null,
+                          "GroupType": "RegionAndEntity",
+                          "Revisions": []
+                      }
+                  ],
+                  "RootRevision": {
+                      "ColorDefinitionId": "5c6e2779-79d1-4fbd-b6a8-36b81e851b15",
+                      "FieldValues": [
+                          {
+                              "FieldDefinitionId": 1,
+                              "LanguageInvariantValue": "iPhone 4S 16 GB Black"
+                          }
+                      ],
+                      "IdentifierGroups": [
+                          {
+                              "Type": "ManufacturerSKU",
+                              "ForceOverride": false,
+                              "Identifiers": [
+                                  {
+                                      "Description": "Manufacturer sku",
+                                      "Entity": {
+                                          "Id": 14146,
+                                          "Name": "Kentel Corp"
+                                      },
+                                      "Type": "ManufacturerSKU",
+                                      "Value": "ManufacturerSKU"
+                                  }
+                              ]
+                          }
+                      ],
+                      "IsArchived": false
+                  },
+                  "Version": 1
+              }
+/ProductDocs({ProductDocumentId}):
+  uriParameters:
+    ProductDocumentId:
+      type: integer
+      example: 8
+      description: Identifier for a {{ProductDocument}}
+      required: true  
+  type:
+    singularEndpointGetPut:
+      resource: ProductDocument
+  get:
+    displayName: Getting a Product Hierarchy
+    description: |
+      This request will get a Master Product and all child Variations and Revisions.
+  put:
+    displayName: Updating a Master Product
+    description: | 
+      {{important}} This request cannot <strong>update</strong> existing Assets, only add new Assets{{end}}
+    body:
+      application/json:
+        schema: RootRevisionCreate
+/ProductDocs({ProductDocumentId})/Variations:
+  uriParameters:
+    ProductDocumentId:
+      type: integer
+      example: 8
+      description: Identifier for a {{ProductDocument}}
+      required: true  
+  securedBy: [oauth_2_0]
+  post:
+    displayName: Creating a Variation
+    headers:
+      Authorization:
+        example: Bearer (Access Token)
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+      Accept:
+        example: application/json
+      Content-Type:
+        example: application/json        
+    body:
+      application/json:
+        schema: VariationCreate
+    responses:
+      201:
+        body:
+          application/json:
+            schema: VariationCreated
+/ProductDocs({ProductDocumentId})/Variations?variationId={VariationId}:
+  uriParameters:
+    ProductDocumentId:
+      type: integer
+      example: 8
+      description: Identifier for a {{ProductDocument}}
+      required: true 
+    VariationId:
+      type: integer
+      example: 1
+      description: Identifier of the {{Variation}}. To get a list of Variations for a Product, see <a href="#getting-a-product-hierarchy">Getting a Product Hierarchy</a>
+      required: true
+  securedBy: [oauth_2_0]
+  put:
+    displayName: Updating a Variation
+    description: | 
+      {{important}} This request cannot <strong>update</strong> existing Assets, only add new Assets{{end}}
+    headers:
+      Authorization:
+        example: Bearer (Access Token)
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+      Accept:
+        example: application/json
+      Content-Type:
+        example: application/json        
+    body:
+      application/json:
+        schema: VariationCreate
+    responses:
+      204:
+        body:
+          application/json:
+/ProductDocs({ProductDocumentId})/Revisions?variationId={VariationId}&countryCode={CountryCode}&stateCode={StateCode}&entityId={EntityId}:
+  uriParameters:
+    ProductDocumentId:
+      type: integer
+      example: 8
+      description: Identifier for a {{ProductDocument}}
+      required: true
+    VariationId:
+      type: integer
+      example: 4
+      description: Identifier for a {{Variation}}, to get a list of Variations for a Product, see <a href="#getting-a-product-hierarchy">Getting a Product Hierarchy</a>
+      required: false
+    CountryCode:
+      type: string
+      example: CA
+      description: Two letter country code for a Country. Uses the ISO 3166-1 alpha-2 standard
+      required: false
+    StateCode:
+      type: string
+      example: MB
+      description: Two letter state code for a State or Province. Based off the ISO 3166-2 standard
+      required: false
+    EntityId:
+      type: integer
+      example: 1
+      description: Identifier for a {{Company}} or {{Carrier}}
+      required: false
+  type:
+    collectionWriteOnly:
+      resourcePost: Revision
+      resource: Revision
+  securedBy: [oauth_2_0]
+  post: 
+    displayName: Creating a Revision
+    description: |
+      At least one of the following is required in the URI for this request: `VariationId`, `CountryCode`, `StateCode`, `EntityId`.
+    responses:
+      204:
+        body:
+          application/json:
+  put:
+    headers:
+      Authorization:
+        example: Bearer (Access Token)
+        description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>        
+      Accept:
+        example: application/json
+      Content-Type:
+        example: application/json  
+    displayName: Updating a Revision
+    description: |
+      To update an existing Revision, the same URI paramters that were used to create the Revision must be used. 
+    body:
+      application/json:
+        schema: Revision
+    responses:
+      204:
+        body:
+          application/json:
+/ProductDocs({ProductDocumentId})/ColorDefinitions:
+  uriParameters:
+    ProductDocumentId:
+      type: integer
+      example: 8
+      description: Identifier for a {{ProductDocument}}
+      required: true  
+  type:
+    collection:
+      resource: ColorDefinitions
+  get:
+    displayName: Getting Color Definitions
+    description: | 
+      This request can be used to get a <code>ColorDefinitionId</code> when creating a Variation or Revision.
+  post:
+    displayName: Creating a Color Definition
+    description: |
+      This request can be used to add additional ColorDefinitions to a Product once it has been created.
+/ColorTags:
+  type:
+    collectionReadOnly:
+      resource: ColorTags
+  get:
+    displayName: Getting All Color Tags

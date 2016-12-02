@@ -1,0 +1,1931 @@
+#%RAML 0.8
+title: RQ Data Connect Sales Reports
+baseUri: https://rqdataconnect{UrlSuffix}.iqmetrix.net
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: |
+      RQ
+  - title: overview
+    content: |
+
+      RQ Data Connect allows you to retrieve report data from your RQ database (v4.23 and up).
+
+      To get started, see [RQ Data Connect Guide](/guides/rq-data-connect/).
+
+      #### Note
+
+      For reports that provide optional URI parameters for filtering at different levels (ForWho/ForWhoIDs/LocationType/LocationTypeIDs), omitting these values will run the report at the default company level.
+
+      ### Authentication
+
+      RQ Data Connect and Bridge support many different methods of authentication, see {{AuthenticationOptions}}.
+
+      Note that for all reports the {{AccessToken_Glossary}} should be mapped to an employee in RQ.
+      
+      ### Report List
+
+      For a complete list of reports in RQ Data Connect, see [Report List](/rq-data-connect/report-list).
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Bad Request` | Ensure request body is formatted properly |
+      | `HTTP 401` | `Tokan is invalid` | Ensure Access Token is valid and has not expired |
+      | `HTTP 403` | `Unauthorized` | Ensure Access Token is valid and user has appropriate security |
+      | `HTTP 404` | `Not Found` | Ensure URI is valid |
+      | `HTTP 429` | `Too Many Requests` | See [Rate Limiting](/api/#rate-limiting) |
+      | `HTTP 500` | `Unexpected Error` | See Message in response for more information |        
+resourceTypes:
+  - collectionReadOnly:
+      get:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              required: false
+              description: Bearer token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+            Accept-Encoding:
+              example: gzip
+              required: false
+              description: Compression algorithm. For other methods of compression, see {{CompressionOptions}}
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+                application/JsonDataTable:
+                  schema: <<resource>>
+                text/xml:
+                  schema: <<resource>>
+                text/XmlDataTable:
+                  schema: <<resource>>
+                text/csv:
+                  schema: <<resource>>
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                  schema: <<resource>>
+schemas:
+  - ActivationGrossProfitReportData: |
+      {
+        "type": "array",
+        "name": "ActivationGrossProfitReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "InvoiceDate": { "type": "datetime", "database": "DATETIME", "example": "2016-10-12T09:16:24.63", "description": "Date - date of the transaction" },  
+          "InvoiceID": { "type": "integer", "database": "INT", "example": "129920", "description": "Identifier for an invoice in RQ" },  
+          "InvoiceIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN15624", "description": "Invoice # - invoice number of the transaction" },  
+          "StoreTypeName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Retail Store", "description": "Location Type - location type where the transaction was performed" },  
+          "LocationName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location -  location where the transaction occurred" },  
+          "Profit": { "type": "decimal", "database": "MONEY", "example": "667.99", "description": "Profit - amount of profit made on the activation, includes the total profit for the parameters run" },  
+          "CustomerID": { "type": "integer", "database": "INT", "example": "108560", "description": "Identifier for the customer in RQ" },  
+          "CustomerName": { "type": "string", "database": "VARCHAR(151)", "example": "AAA AND ASSOCIATES", "description": "Customer - name of the customer on the invoice" },  
+          "PhoneDescription": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Apple iPhone 6 Plus 16GB White - AT&T", "description": "Phone - phone used in the activation" },  
+          "PhoneNumber": { "type": "string", "database": "VARCHAR(30)", "example": "3065014785", "description": "Phone # - phone number entered into the Phone Activation Wizard" },  
+          "TermDescription": { "type": "string", "database": "NVARCHAR(MAX)", "example": "CRU 2 YR Business New Act", "description": "Term - term selected with the activation" },  
+          "RatePlanDescription": { "type": "string", "database": "NVARCHAR(MAX)", "example": "2 YR CRU Business Legacy Plan $0.01 - $9.99", "description": "Rate Plan - rate plan selected for the activation" },  
+          "VendorAccountName": { "type": "string", "database": "VARCHAR(100)", "example": "AT&T", "description": "Vendor Account - vendor account used in the activation" },  
+          "EmployeeName": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix User", "description": "Employee - sales person on the invoice" },  
+          "DistrictName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Valley Area District", "description": "District - district the store is in" },  
+          "RegionName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Region A", "description": "Region - region the store is in" },  
+          "ChannelName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Regina Channel", "description": "Channel - channel the store is in" }  
+        }  
+      }
+  - AgedSerializedSalesStatusReportData: |
+      {
+        "type": "array",
+        "name": "AgedSerializedSalesStatusReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "SaleInvoiceID": { "type": "integer", "database": "INT", "example": "126540", "description": "Identifier for an invoice in RQ" },  
+          "DateCreated": { "type": "datetime", "database": "DATETIME", "example": "2016-01-05T09:20:39.773", "description": "Sold On - date and time the product was sold" },  
+          "GlobalProductID": { "type": "integer", "database": "INT", "example": "2815", "description": "Internal identifier in RQ" },  
+          "SpecialProductID": { "type": "integer", "database": "INT", "example": "0", "description": "Acceptable values include 0 for Regular Product, 1 for Vendor Rebate, 2 for Non-Stocked Product, 3 for Gift Card, 4 for Non Revenue Product" },  
+          "Location": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location - name of the location where the product was sold" },  
+          "DistrictName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Valley Area District", "description": "District - district for the row's Location" },  
+          "RegionName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Region A", "description": "Region - region for the row's Location" },  
+          "ChannelName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Regina Channel", "description": "Channel - channel for the row's Location" },  
+          "SoldBy": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix User", "description": "Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box" },  
+          "TenderedBy": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix User", "description": "Tendered By - name of the employee logged into RQ when the invoice was tendered" },  
+          "InvoiceIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN11555", "description": "Invoice # - invoice number assigned by RQ" },  
+          "ProductIdentifier": { "type": "string", "database": "VARCHAR(12)", "example": "ACVZAP000574", "description": "Product SKU - RQ generated SKU" },  
+          "ProductName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "iPhone 5s 32GB - Gold", "description": "Product Name - name of the product as it appears in the inventory" },  
+          "SerialNumber": { "type": "string", "database": "VARCHAR(100)", "example": "866988333292854", "description": "Tracking # - tracking number associated with this product" },  
+          "IsOldest": { "type": "string", "database": "VARCHAR(3)", "example": "No", "description": "Oldest - indicates if this was the oldest one of this product when sold" },  
+          "ReceivedDate": { "type": "datetime", "database": "DATETIME", "example": "2015-08-13T00:00:00", "description": "Received - date and time this particular product was received" },  
+          "DaysOnHand": { "type": "integer", "database": "INT", "example": "145", "description": "Days On Hand - number of days on in stock" },  
+          "QtyInStock": { "type": "integer", "database": "INT", "example": "27", "description": "Qty In Stock - number of this SKU in stock before the sale" },  
+          "OlderQty": { "type": "integer", "database": "INT", "example": "1", "description": "Older Qty - number of this product older than the one sold" },  
+          "SoldAsUsed": { "type": "boolean", "database": "BIT", "example": "false", "description": "Used - indicates the product is used" },  
+          "StoreTypeName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Retail Store", "description": "Location Type - location type the the transaction was performed at" }  
+        }  
+      }
+  - CouponSummaryReportData: |
+      {  
+        "type": "array",
+        "name": "CouponSummaryReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "Date": { "type": "datetime", "database": "DATETIME", "example": "2016-01-01T00:00:00", "description": "Date - every day in the date range selected" },  
+          "QuantityApplied": { "type": "integer", "database": "INT", "example": "1", "description": "Qty Applied - total quantity of coupons applied for the day" },  
+          "QuantityRefunded": { "type": "integer", "database": "INT", "example": "1", "description": "Qty Refunded - total quantity of coupons refunded for the day" },  
+          "NetQuantity": { "type": "integer", "database": "INT", "example": "0", "description": "Net Qty - net quantity of coupons for the day calculated as Qty Applied - Qty Refunded" },  
+          "TotalValue": { "type": "decimal", "database": "MONEY", "example": "-10", "description": "Total Value - net dollar value of all coupons for the day" }  
+        }  
+      }
+  - DailySalesSummaryReportData: |
+      {   
+        "type": "array",
+        "name": "DailySalesSummaryReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "DateCreated": { "type": "datetime", "database": "DATETIME", "example": "2016-01-05T00:00:00", "description": "Created On - date the products were tendered or refunded" },  
+          "QtySold": { "type": "integer", "database": "INT", "example": "19", "description": "Qty Sold - total number of products sold" },  
+          "QtyRefunded": { "type": "integer", "database": "INT", "example": "-7", "description": "Qty Ref - total number of products refunded" },  
+          "NetQty": { "type": "integer", "database": "INT", "example": "12", "description": "Net Qty - net total number of products" },  
+          "TotalInvoiced": { "type": "decimal", "database": "MONEY", "example": "266.38", "description": "Total Invoiced - total dollar value of all invoiced products" },  
+          "Adjustment": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Adjustment - the net dollar amount of any adjustments for this day" },  
+          "Net": { "type": "decimal", "database": "MONEY", "example": "246.38", "description": "Sales - total dollar value of all sales" },  
+          "Cost": { "type": "decimal", "database": "MONEY", "example": "80.92", "description": "Cost - total purchase cost for all products sold that day" },  
+          "Coupon": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Coupon - dollar amount of coupons used on sale" },  
+          "CouponTax": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Coupon Taxes - dollar amount of coupon taxes on sale" },  
+          "Profit": { "type": "decimal", "database": "MONEY", "example": "165.46", "description": "Gross Profit - gross profit, calculated as Sales - Cost" }  
+        }  
+      }
+  - DiscountSummaryReportData: |
+      {    
+        "type": "array",
+        "name": "DiscountSummaryReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "GlobalProductID": { "type": "integer", "database": "INT", "example": "2611", "description": "Internal identifier in RQ" },  
+          "DateCreated": { "type": "datetime", "database": "DATETIME", "example": "2016-01-05T07:48:16.22", "description": "Date of Invoice/Sales Order - date and time the invoice was tendered" },  
+          "StoreID": { "type": "integer", "database": "INT", "example": "1", "description": "Internal identifier for a store in RQ" },  
+          "StoreInStoreFlowIsEnabledForStore": { "type": "boolean", "database": "BIT", "example": "false", "description": "Internal identifier in RQ" },  
+          "StoreName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location - where the transaction was done." },  
+          "EntityID": { "type": "integer", "database": "INT", "example": "126533", "description": "Identifier for the store as a {{Location}} in Entity Store" },  
+          "EntityIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN11546", "description": "Invoice/Sales Order - invoice number assigned by RQ" },  
+          "ProductIdentifier": { "type": "string", "database": "VARCHAR(12)", "example": "ASBAUN000048", "description": "Product SKU - RQ generated SKU" },  
+          "ProductName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Powerocks Tarot 1500 mAh Extended Battery Pak", "description": "Product Name - name of the product as it appears in the inventory" },  
+          "CustomerName": { "type": "string", "database": "VARCHAR(151)", "example": "John Test", "description": "Customer - name of the customer as entered on their profile" },  
+          "PrimarySalesPersonName": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix User", "description": "Primary Salesperson - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box on the Accept Payment screen" },  
+          "TenderEmployeeName": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix User", "description": "Tendered By - name of the employee logged into RQ when the invoice was tendered" },  
+          "PrimarySalesPersonUsername": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix.User", "description": "Primary Username - username of the employee of record for the sale, i.e. the employee whose name is in the Commission box on the Accept Payment screen" },  
+          "TenderEmployeeUsername": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix.User", "description": "Tendered By Username - username of the employee logged into RQ when the invoice was tendered" },  
+          "ListPrice": { "type": "decimal", "database": "MONEY", "example": "44.99", "description": "List Price - pre-discount price" },  
+          "StoreInStoreListPrice": { "type": "decimal", "database": "MONEY", "example": "250", "description": "Discounted below MLP - amount below the MLP price" },  
+          "SerialNumber": { "type": "string", "database": "VARCHAR(100)", "example": "866988333292854", "description": "Tracking # - tracking number associated with the discounted serialized product" },  
+          "UnitCost": { "type": "decimal", "database": "MONEY", "example": "19.65", "description": "Cost - actual cost for serialized product or WAC (see Weighted Average Cost Details) from the time of sale if non-serialized" },  
+          "MLPCalculatedPrice": { "type": "decimal", "database": "MONEY", "example": "599", "description": "MLP Price - the multi level price listed" },  
+          "SoldForUnitPrice": { "type": "decimal", "database": "MONEY", "example": "25", "description": "Discount below PAW - amount below the PAW price" },  
+          "StoreInStorePrice": { "type": "decimal", "database": "MONEY", "example": "599", "description": "Sold For - discounted price" },  
+          "OriginalUnitPrice": { "type": "decimal", "database": "MONEY", "example": "499", "description": "PAW Price - listed price in the Carrier Price Sheet" },  
+          "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },         
+          "CommentsFromInvoice": { "type": "string", "database": "TEXT", "example": "Damage", "description": "Comments - any comments added at the time of discount" },  
+          "DiscountReasonName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Verizon Edge", "description": "Discount Code - discount code selected by the discounting employee" },           
+          "ActivatedThroughPAW": { "type": "boolean", "database": "BIT", "example": "false", "description": "A flag to indicate if the product was activated through the Phone Activation Wizard" },  
+          "ReferenceNumbers": { "type": "string", "database": "NVARCHAR(MAX)", "example": "", "description": "Reference numbers" },                 
+          "RecordType": { "type": "integer", "database": "INT", "example": "0", "description": "Acceptable values include 0 for Invoice and 1 for Sales Order" },  
+          "InvoiceRowID": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "e66327f5-68a8-f32e-2e8e-17eb95c958f2", "description": "Internal identifier in RQ" },  
+          "ProductRowID": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "8d312986-a26c-5dd4-75c7-1f5201a34ea8", "description": "Internal identifier in RQ" }  
+        }  
+      }
+  - DonationsSummaryReportData: |
+      {      
+        "type": "array",
+        "name": "DonationsSummaryReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "DateCreated": { "type": "datetime", "database": "DATETIME", "example": "2016-04-12T07:30:43.52", "description": "Date - date and time the donation was accepted" },  
+          "SaleInvoiceID": { "type": "integer", "database": "INT", "example": "128579", "description": "Identifier for an invoice in RQ" },  
+          "InvoiceIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN14250", "description": "Invoice - invoice the donation was processed on" },  
+          "CustomerID": { "type": "integer", "database": "INT", "example": "92997", "description": "Identifier for a customer in RQ" },  
+          "CustomerName": { "type": "string", "database": "VARCHAR(151)", "example": "anne fox", "description": "Customer - name of the customer who made the donation" },  
+          "DonationID": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "bca3b5ad-923b-2955-28c1-544d524c3bd9", "description": "Identifier for the donation in RQ" },  
+          "DonationName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Free The Children", "description": "Donation - name of the charity the donation was made to" },  
+          "DonationValue": { "type": "decimal", "database": "MONEY", "example": "0.01", "description": "Value- dollar amount donated" },  
+          "ProductIdentifier": { "type": "string", "database": "VARCHAR(12)", "example": "ASBANR000069", "description": "Product SKU - SKU for the donation" },  
+          "Location": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location - location in which donation was accepted" },  
+          "StoreTypeName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Retail Store", "description": "Location Type - location type where the donation was accepted" },  
+          "TenderedBy": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix User", "description": "Tendered by - employee who accepted the donation" },  
+          "DistrictName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Valley Area District", "description": "District - district in which the donation was accepted" },  
+          "RegionName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Region A", "description": "Region - region on which the donation was accepted" },  
+          "ChannelName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Regina Channel", "description": "Channel - channel in which the donation was accepted" }  
+        }  
+      }
+  - InvoiceHistoryReportData: |
+      { 
+        "type": "array",
+        "name": "InvoiceHistoryReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "InvoiceIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN12398", "description": "Invoice # - invoice number assigned by RQ" },  
+          "CreatedByEmployee": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix User", "description": "Created By Employee - employee logged in when the invoice was created" },  
+          "CreatedByEmployeeUsername": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix.User", "description": "Created By Username - username of employee that created the invoice (person that started the creation of the invoice)" },  
+          "DateCreated": { "type": "datetime", "database": "DATETIME", "example": "2016-01-19T07:56:57.613", "description": "Date Created - date and time the invoice was started" },  
+          "CreatedWorkstationName": { "type": "string", "database": "VARCHAR(50)", "example": "MAIN", "description": "Created Workstation Name - name of the workstation where the invoice was created" },  
+          "CustomerID": { "type": "integer", "database": "INT", "example": "71419", "description": "Identifier for a customer in RQ" },  
+          "CustomerName": { "type": "string", "database": "VARCHAR(152)", "example": "John Test", "description": "Customer Name - name of the customer on the invoice" },  
+          "CompletedBy": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for the employee that completed the invoice" },  
+          "CompletedByEmployeeName": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix User", "description": "Completed By - name of the employee that has their name attached to the completed invoice (Sales Person)" },  
+          "CompletedByUsername": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix.User", "description": "Completed By Username - username of employee that completed the invoice (person that tendered the invoice)" },  
+          "CompletedOn": { "type": "datetime", "database": "DATETIME", "example": "2016-01-19T09:56:57.613", "description": "Completed On - date the invoice was completed" },  
+          "CompletedWorkstationName": { "type": "string", "database": "VARCHAR(50)", "example": "MAIN", "description": "Completed Workstation Name - workstation the invoice was completed on" },  
+          "DistrictName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Valley Area District", "description": "District Name - name of the District the invoice was created and completed at" },  
+          "RegionName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Region A", "description": "Region Name - name of the Region the invoice was created and completed at" },  
+          "ChannelName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Regina Channel", "description": "Channel Name - name of the Channel the invoice was created and completed at" },  
+          "LocationType": { "type": "integer", "database": "INT", "example": "1", "description": "Internal identifier for a Location Type in RQ. See LocationTypeName property" },  
+          "LocationTypeName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Retail Store", "description": "Location Type - type of location which is selected in the location setup screen, e.g.. retail, corporate, kiosk, etc." },  
+          "Status": { "type": "integer", "database": "INT", "example": "3", "description": "Status - status of the invoice Tendering, Failed, Incomplete, Tendered" },  
+          "LocationName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location Name - name of the location the invoice was created and completed a" },  
+          "DiscountCode": { "type": "string", "database": "NVARCHAR(MAX)", "example": "", "description": "Discount Code - discount code used on the invoice (blank if not used)" },  
+          "RefundCode": { "type": "string", "database": "NVARCHAR(MAX)", "example": "", "description": "Refund Code - refund code used on the invoice (blank if not used)" },  
+          "RefundComments": { "type": "string", "database": "TEXT", "example": "", "description": "Refund Comments - comments that were attached to the invoice" },  
+          "InvoiceSubtotal": { "type": "decimal", "database": "FLOAT", "example": "1", "description": "Invoice Subtotal - amount of the invoice before taxes, coupons and discounts (shows the price of the items, either regular or sale price)" },  
+          "InvoiceAmount": { "type": "decimal", "database": "FLOAT", "example": "11.55", "description": "Invoice Amount - total amount of the invoice" },  
+          "PaymentTaken": { "type": "boolean", "database": "BIT", "example": "true", "description": "Payment Taken - if a payment was taken this value will be true" },  
+          "PaymentTakenWorkstationName": { "type": "string", "database": "VARCHAR(50)", "example": "MAIN", "description": "Payment Taken Workstation - workstation that took the payment" }  
+        }  
+      }
+  - PawExceptionsReportData: |
+      {
+        "type": "array",
+        "name": "PawExceptionsReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "SaleInvoiceID": { "type": "integer", "database": "INT", "example": "126540", "description": "Identifier for an invoice in RQ" },  
+          "InvoiceIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN11555", "description": "Invoice - a hyperlink that you can click on to see the original invoice" },  
+          "OrderEntryID": { "type": "integer", "database": "INT", "example": "3135", "description": "Identifier for an Order in RQ" },  
+          "OrderEntryIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "", "description": "Order # - a hyperlink that you can click on to see the original order" },  
+          "DateCreated": { "type": "datetime", "database": "DATETIME", "example": "2016-01-05T09:20:39.773", "description": "Date - date and time of invoice" },  
+          "StoreID1": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for a store in RQ" },  
+          "EmployeeID1": { "type": "integer", "database": "INT", "example": "2384", "description": "Identifier for an employee in RQ" },  
+          "EmployeeName": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix Employee", "description": "Employee Name - name of the employee logged into RQ" },  
+          "Username": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix.Employee", "description": "Username - username of the employee logged into RQ" },  
+          "TermName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "1 Year UPGRADE", "description": "Term - carrier term the device was activated on" },  
+          "DeviceSKU": { "type": "string", "database": "VARCHAR(12)", "example": "ACVZAP000574", "description": "Device SKU - RQ SKU of the product referenced in the report results" },  
+          "DeviceSerialNumber": { "type": "string", "database": "VARCHAR(100)", "example": "866988333292854", "description": "ESN/IMEI - serial number of the device" },  
+          "RatePlanSKU": { "type": "string", "database": "VARCHAR(12)", "example": "ASAANS000035", "description": "Rate Plan SKU - RQ SKU of the product referenced in the report results" },  
+          "IsManualOverrideImport": { "type": "boolean", "database": "BIT", "example": "true", "description": "Manual Override - will indicate that a Manual Override was used" },  
+          "IsCarrierImportUsed": { "type": "boolean", "database": "BIT", "example": "false", "description": "Carrier Import Used - flagged to indicate when a Carrier Import was used on the transaction" },  
+          "RatePlan2SKU": { "type": "string", "database": "VARCHAR(12)", "example": "ACVZNS000159", "description": "Second rate plan SKU" },  
+          "ManualOverrideComments": { "type": "string", "database": "VARCHAR(100)", "example": "Sale", "description": "Manual Overrides Comments - will report the override comments typed in at transaction time" },  
+          "CarrierImportNotUsedComments": { "type": "string", "database": "VARCHAR(100)", "example": "Carrier down", "description": "Carrier Import Not Used Comments - will report the comments typed in at transaction time when the Carrier Import was not used" },  
+          "StoreName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location - location invoice was created in" },  
+          "DeviceDescription": { "type": "string", "database": "NVARCHAR(MAX)", "example": "iPhone 5s 32GB - Gold", "description": "Device - RQ name of the product referenced in the report results" },  
+          "RatePlanDescription": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Act $20.99 to $49.99", "description": "Rate Plan - RQ name of the product referenced in the report results" },  
+          "RatePlan2Description": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Act $9.99 to $20.98", "description": "Second rate plan description" },  
+          "ManualOverrideReason": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Damage", "description": "Manual Override Reason - will report the reason chosen at transaction time from the drop down menu of options" },  
+          "CarrierImportNotUsedReason": { "type": "string", "database": "NVARCHAR(MAX)", "example": "The Carrier site is down", "description": "Carrier Import Not Used Reason - will report the reason chosen at transaction time from the drop down menu of options" },  
+          "ManagerOverride": { "type": "string", "database": "VARCHAR(255)", "example": "No", "description": "Manager Override - indicates if a manager override was used" }  
+        }  
+      }      
+  - ProductDetailReportData: |
+      {
+        "name": "ProductDetailReportData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Activation_RowID": { "type": "guid", "description": "Internal identifier in RQ", "database": "UNIQUEIDENTIFIER", "example": "d3d65281-5201-4927-9bac-6f3a47ddf56b" },
+          "AdjustedUnitPrice": { "type": "decimal", "description": "Adjusted Unit Price - price that the product was actually sold for", "database": "MONEY", "example": "25" },
+          "BillingAccountNumber": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "BAN -  if your company uses BAN you will enter it in the Customer profile and it will show here", "example": "" },
+          "CarrierPrice": { "type": "decimal", "description": "Carrier Price - value or revenue that a carrier assigns this feature", "database": "MONEY", "example": "null" },
+          "CategoryPath": { "type": "string", "description": "Category - the category the product belongs to", "database": "NVARCHAR(MAX)", "example": ">> Phones >> Galaxies" },
+          "ChannelName": { "type": "string", "description": "Channel - channel for the rows location", "database": "NVARCHAR(MAX)", "example": "English Channel" },
+          "Comments": { "type": "string", "description": "Invoice Comments - comments added to the invoice", "database": "TEXT", "example": "" },
+          "ContractNumber": { "type": "string", "description": "Contract # - number of the contract, recorded at the time of sale", "database": "VARCHAR (50)", "example": "12345" },
+          "CustomerID": { "type": "integer", "description": "Internal identifier for a customer in RQ", "database": "INT", "example": "131149" },
+          "CustomerName": { "type": "string", "description": "Customer - name of the customer as entered on their profile", "database": "VARCHAR (101)", "example": "Bob Jones" },
+          "DateCreated": { "type": "datetime", "description": "Sold On - date and time the invoice was tendered", "database": "DATETIME", "example": "2016-05-13T12:18:08.723" },
+          "DistrictName": { "type": "string", "description": "District - district for the rows location", "database": "NVARCHAR(MAX)", "example": "Westminster" },
+          "EmployeeName": { "type": "string", "description": "Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box", "database": "VARCHAR (51)", "example": "iQmetrix User" },
+          "EmployeeID": { "type": "integer", "description": "Internal identifier for an employee in RQ", "database": "INT", "example": "4" },
+          "GlobalProductID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "5179" },
+          "InvoicedAt": { "type": "string", "description": "Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund", "database": "NVARCHAR(MAX)", "example": "100: My Network LLC - Anchorage" },
+          "InvoicedAt_StoreID": { "type": "integer", "description": "Internal identifier for a store in RQ", "database": "INT", "example": "1" },
+          "InvoicedBy": { "type": "string", "description": "Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund", "database": "NVARCHAR(MAX)", "example": "100: My Network LLC - Anchorage" },
+          "InvoicedBy_StoreID": { "type": "integer", "description": "Internal identifier for a store in RQ", "database": "INT", "example": "1" },
+          "InvoiceIDByStore": { "type": "string", "description": "Invoice # - invoice number assigned by RQ", "database": "VARCHAR (14)", "example": "77224IN3" },
+          "IsOrderServiceDropShipProduct": { "type": "boolean", "description": "Internal identifier in RQ", "database": "BIT", "example": "null" },
+          "IsOrderServiceShippingProduct": { "type": "boolean", "description": "Internal identifier in RQ", "database": "BIT", "example": "null" },
+          "ListPrice": { "type": "decimal", "description": "List Price - current price as noted on the pricing tab in the inventory console for the product", "database": "MONEY", "example": "449.95" },
+          "OriginalUnitPrice": { "type": "decimal", "description": "Orig. Unit Price - original price on the invoice", "database": "MONEY", "example": "25" },
+          "Priority": { "type": "integer", "description": "The order that the products were saved in on an Invoice", "database": "INT", "example": "1" },
+          "ProductCouponDiscount": { "type": "decimal", "description": "Coupon discount on the product", "database": "MONEY", "example": "0" },
+          "ProductIdentifier": { "type": "string", "description": "Product SKU - the RQ generated SKU", "database": "VARCHAR(12)", "example": "ASHCSA000120" },
+          "ProductName": { "type": "string", "description": "Product Name - name of the product as it appears in the inventory", "database": "NVARCHAR(MAX)", "example": "Samsung Galaxy Rugby LTE" },
+          "Quantity": { "type": "integer", "description": "Qty - total number of times the Product SKU appears on the invoice", "database": "INT", "example": "1" },
+          "Refund": { "type": "boolean", "description": "Refund - indicates if a negative quantity of this item was sold", "database": "BIT", "example": "0" },
+          "RegionName": { "type": "string", "description": "Region - region for the rows location", "database": "NVARCHAR(MAX)", "example": "London" },
+          "RetailerCatalogID": { "type": "string", "description": "Internal identifier in RQ", "database": "VARCHAR (50)", "example": "null" },
+          "SaleInvoice_RowID": { "type": "guid", "description": "Internal identifier in RQ", "database": "UNIQUEIDENTIFIER", "example": "8c6537ae-75a5-4155-82b2-c8647ed05f3d" },
+          "SaleInvoiceID": { "type": "integer", "description": "Identifier for an invoice in RQ", "database": "INT", "example": "128962" },
+          "SaleInvoiceProduct_RowID": { "type": "guid", "description": "Internal identifier in RQ", "database": "UNIQUEIDENTIFIER", "example": "0099b78f-ba02-4a91-afd4-2f7eb0fbbb06" },
+          "SerialNumber": { "type": "string", "description": "Tracking # - tracking number associated with this product, serialized products only", "database": "VARCHAR (100)", "example": "1111111" },
+          "SoldAsUsed": { "type": "boolean", "description": "Sold As Used - indicates the product was used when sold", "database": "BIT", "example": "false" },
+          "SpecialProductID": { "type": "integer", "database": "INT", "example": "0", "description": "Acceptable values include 0 for Regular Product, 1 for Vendor Rebate, 2 for Non-Stocked Product, 3 for Gift Card, 4 for Non Revenue Product" },  
+          "StoreInStoreFlowIsEnabledForStore": { "type": "boolean", "description": "Internal identifier in RQ", "database": "BIT", "example": "false" },
+          "StoreInStoreGrossProfit": { "type": "decimal", "description": "SIS Gross Profit - profit, calculated as Total Sales - Cost for a SIS location.", "database": "MONEY", "example": "null" },
+          "StoreInStoreListPrice": { "type": "decimal", "description": "SIS List Price - Price from the store-in-store setup of the product", "database": "MONEY", "example": "null" },
+          "StoreInStorePrice": { "type": "decimal", "description": "SIS Price - The default price when sold through the store-in-store flow", "database": "MONEY", "example": "null" },
+          "StoreTypeName": { "type": "string", "description": "Location Type - the location type the the transaction was performed at", "database": "NVARCHAR(MAX)", "example": "Costco" },
+          "TenderedBy": { "type": "string", "description": "Tendered By - name of the employee logged into RQ when the invoice was tendered", "database": "VARCHAR (51)", "example": "iQmetrix User" },
+          "TenderedBy_EmployeeID": { "type": "integer", "description": "Internal identifier for an employee in RQ", "database": "INT", "example": "277" },
+          "TotalCost": { "type": "decimal", "description": "Total Cost - total purchase cost for the product(s) on the invoice", "database": "MONEY", "example": "0" },
+          "TotalDiscount": { "type": "decimal", "description": "Total Discount - net discount amount for the Product SKU on the particular invoice", "database": "DECIMAL (8, 4)", "example": "424.95" },
+          "TotalPrice": { "type": "decimal", "description": "Total Sales - net dollar amount for the Product SKU on the particular invoice", "database": "MONEY", "example": "25" },
+          "UnitCost": { "type": "decimal", "description": "Unit Cost - purchase cost per unit", "database": "MONEY", "example": "0" },
+          "UnitPrice": { "type": "decimal", "description": "Sold For - price that appeared on the invoice (including hide on invoice items), i.e. negative if a refund", "database": "MONEY", "example": "25" },
+          "VendorName": { "type": "string", "description": "Name for a vendor in RQ", "database": "NVARCHAR(MAX)", "example": "" },
+          "VendorSKU": { "type": "string", "description": "Vendor SKU", "database": "VARCHAR(25)", "example": "" }
+        }
+      }
+  - ProductDetailReportTaxColumnData: |
+      {
+        "name": "ProductDetailReportTaxColumnData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ColName": { "type": "string", "description": "Tax name", "database": "VARCHAR", "example": "T102" },
+          "ColCaption": { "type": "string", "description": "Description",  "database": "NVARCHAR(MAX)", "example": "Flat tax" },
+          "CreditCardPaymentType": { "type": "string", "description": "Credit card information", "database": "VARCHAR (20)", "example": "null" }
+         }
+      }
+  - ProductDetailReportTaxDetailData: |
+      {
+        "name": "ProductDetailReportTaxDetailData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Amount": {  "type": "decimal", "description": "Amount", "database": "MONEY ", "example": "22.5" },
+          "GlobalProductID": {  "type": "integer","description": "Identifier of a Product in RQ",  "database": "INT", "example": "5179" },
+          "Priority": {  "type": "integer","description": "Priority", "database": "INT", "example": "1" },
+          "SaleInvoiceID": {  "type": "integer","description": "Identifier of a sale invoice in RQ",  "database": "INT", "example": "128996" },
+          "SerialNumber": {  "type": "string", "description": "Serial number", "database": "VARCHAR (100) ", "example": "2222222" },
+          "TaxID": {  "type": "string", "description": "Tax identifier", "database": "VARCHAR", "example": "T102" },
+          "TaxName": {  "type": "string", "description": "Tax name", "database": "NVARCHAR(MAX)", "example": "Brad flat tax" }
+         }
+      }      
+  - ProductFinancingReportData: |
+      {
+          "type": "array",
+          "name": "ProductFinancingReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "ProductSKU": { "type": "string", "database": "VARCHAR(12)", "example": "ASHCSA000120", "description": "Product SKU - product SKU that was financed" },  
+            "ProductName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Samsung Galaxy Rugby LTE", "description": "Product Name - name associated to the product SKU" },  
+            "SaleInvoiceID": { "type": "integer", "database": "INT", "example": "128903", "description": "Identifier for an invoice in RQ" },  
+            "InvoiceNumber": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN14417", "description": "Invoice # - invoice number of the sale that involved the product represented in the row" },  
+            "Date": { "type": "datetime", "database": "DATETIME", "example": "2016-05-09T08:46:40.657", "description": "Date - the date and time the invoice was tendered" },  
+            "EmployeeName": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix Employee", "description": "Employee - first/last name of the employee who tendered the invoice" },  
+            "EmployeeID": { "type": "integer", "database": "INT", "example": "221", "description": "Identifier for an employee in RQ" },  
+            "CustomerID": { "type": "integer", "database": "INT", "example": "115326", "description": "Identifier for a customer in RQ" },  
+            "CustomerName": { "type": "string", "database": "VARCHAR(151)", "example": "Bob Smith", "description": "Customer - first/last name (or Company) of the primary customer associated to the invoice" },  
+            "LocationID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier of a store in RQ" },  
+            "LocationName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location - location name where the invoice was tendered" },  
+            "TrackingNumber": { "type": "string", "database": "VARCHAR(100)", "example": "123440", "description": "Tracking # - tracking number of the device (IMEI)" },  
+            "PhoneNumber": { "type": "string", "database": "VARCHAR(30)", "example": "0123465980", "description": "Phone # - phone number entered in PAW" },  
+            "Term": { "type": "string", "database": "NVARCHAR(MAX)", "example": "1 Year UPGRADE", "description": "Term - term name selected in PAW" },  
+            "Price": { "type": "decimal", "database": "MONEY", "example": "25", "description": "Price - total price of the product - the PAW price" },  
+            "Cost": { "type": "decimal", "database": "MONEY", "example": "449.95", "description": "Cost - total cost of the product" },  
+            "ProgramName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Any Levels", "description": "Program Name - name of the financing program selected" },  
+            "RequiredDownPayment": { "type": "decimal", "database": "DECIMAL", "example": "5", "description": "Required Down Payment - amount of the down payment given that was required. This column will always have a value." },  
+            "RequiredDownPaymentPercent": { "type": "decimal", "database": "DECIMAL", "example": "10", "description": "Required Down Payment % - required down payment expressed as a percentage" },  
+            "AdditionalDownPayment": { "type": "decimal", "database": "DECIMAL", "example": "20", "description": "Additional Down Payment - optional down payment amount added by the customer. This column is optional." },  
+            "TotalDownPayment": { "type": "decimal", "database": "DECIMAL", "example": "25", "description": "Total Down Payment - total of the required + additional down payments" },  
+            "FinancedAmountSKU": { "type": "string", "database": "VARCHAR(12)", "example": "", "description": "Financed amount SKU" },  
+            "FinancedAmount": { "type": "decimal", "database": "DECIMAL", "example": "25", "description": "Financed Amount - phone price column minus the total down payment" },  
+            "RebateSKU": { "type": "string", "database": "VARCHAR(12)", "example": "ACFNRB000002", "description": "Rebate SKU - financing rebate SKU that was added to the sale. This is associated based on the Financing Rebate SKU value in the program setup." },  
+            "RebateAmount": { "type": "decimal", "database": "MONEY", "example": "25", "description": "10" },  
+            "VendorFeeSKU": { "type": "string", "database": "VARCHAR(12)", "example": "ACFNRB000007", "description": "Vendor Fee SKU - vendor fee SKU that is associated to the financing program used in the transaction. This value may be null." },  
+            "VendorFeeAmount": { "type": "decimal", "database": "MONEY", "example": "5", "description": "Vendor Fee Amount - dollar amount of the vendor fee charged on the sale which was represented by the vendor fee SKU. This value may be null." },  
+            "StoreFeeSKU": { "type": "string", "database": "VARCHAR(12)", "example": "ACFNNS000003", "description": "Financing Fee SKU - financing fee SKU that is associated to the financing program used in the transaction. This value may be null." },  
+            "StoreFeeAmount": { "type": "decimal", "database": "MONEY", "example": "5", "description": "Financing Fee Amount - dollar amount of the financing fee charged on the sale which was represented by the financing fee SKU. This value may be null." },  
+            "OriginalSaleInvoiceID": { "type": "integer", "database": "INT", "example": "128962", "description": "Internal identifier in RQ" }  
+          }  
+        }      
+  - ProductSummaryReportData: |
+      { 
+        "type": "array",
+        "name": "ProductSummaryReportData",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": { 
+          "ProductIdentifier": { "type": "string", "database": "VARCHAR(12)", "example": "AAATAP000094", "description": "Product SKU - RQ generated SKU" },  
+          "SpecialProductID": { "type": "integer", "database": "INT", "example": "0", "description": "Acceptable values include 0 for Regular Product, 1 for Vendor Rebate, 2 for Non-Stocked Product, 3 for Gift Card, 4 for Non Revenue Product" },  
+          "ProductName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Apple iPhone 6 Plus 16GB White - AT&T", "description": "Product Name - name of the product as it appears in the inventory" },  
+          "TotalInvoiced": { "type": "decimal", "database": "MONEY", "example": "949.98", "description": "Total Invoiced - net dollar amount of this product SKU invoiced" },  
+          "Adjustment": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Adjustment - net dollar amount of any adjustments for this product SKU" },  
+          "ExtendedUnitPrice": { "type": "decimal", "database": "MONEY", "example": "949.98", "description": "Avg Sales Price - calculates as Total Sales / Net Quantity" },  
+          "ExtendedUnitCost": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Cost - purchase cost of the product SKU" },  
+          "ExtendedUnitProfit": { "type": "decimal", "database": "MONEY", "example": "949.98", "description": "Gross Profit - profit calculated as Sales - Cost" },  
+          "PercentProfit": { "type": "decimal", "database": "MONEY", "example": "100", "description": "% Profit - profit expressed as a percentage" },  
+          "QuantitySold": { "type": "integer", "database": "INT", "example": "2", "description": "Qty Sold - total quantity of the product SKU sold before refunds" },  
+          "QuantityRefunded": { "type": "integer", "database": "INT", "example": "0", "description": "Qty Ref - total quantity of the product SKU refunded" },  
+          "NetQuantity": { "type": "integer", "database": "INT", "example": "2", "description": "Net Qty - net quantity sold, calculated as Qty Sold minus Qty Refunded" },  
+          "ManufacturerPartNumber": { "type": "string", "database": "VARCHAR(50)", "example": "1234567890-pl", "description": "Manufacturer SKU - SKU assigned by the manufacturer" },  
+          "VendorPartNumber": { "type": "string", "database": "VARCHAR(25)", "example": "10999", "description": "Vendor SKU - SKU assigned by the vendor" },  
+          "BarCode": { "type": "string", "database": "NVARCHAR(MAX)", "example": "738516343990", "description": "Bar Code - any bar code(s) you have assigned to this product" }  
+        }  
+      }      
+  - RefundSummaryReportData: |
+      {
+          "type": "array",
+          "name": "RefundSummaryReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "SaleInvoiceID": { "type": "integer", "description": "Identifier for an invoice in RQ", "database": "INT", "example": "128962" },
+            "OriginalSaleInvoiceID": { "type": "integer", "description": "Internal identifier in RQ", "database": "INT", "example": "-1" },
+            "StoreInStoreFlowIsEnabledForAtLeastOneStore": { "type": "integer", "database": "INT", "example": "0", "description": "A flag to indicate if Store in Store Flow is enabled for at least one store (1) or not (0)" },  
+            "OriginalDateCreated": { "type": "datetime", "database": "DATETIME", "example": "2015-07-14T13:42:43.98", "description": "Original Invoice Created On - Date and time the original invoice was created" },  
+            "DateCreated": { "type": "datetime", "description": "Refund Invoice Created On - Date and time the refund invoice was created", "database": "DATETIME", "example": "2016-05-13T12:18:08.723" },
+            "InvoicedAt": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Invoiced At - location which tendered the refund" },        
+            "InvoicedBy": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Invoiced By - location which tendered the original invoice" },  
+            "DistrictName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Valley Area District", "description": "district for the rows location" },  
+            "RegionName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Region A", "description": "Region - region for the rows location" },  
+            "ChannelName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Regina Channel", "description": "Channel - channel for the rows location" },  
+            "TenderedBy": { "type": "string", "database": "VARCHAR(51)", "example": "Chad Tester", "description": "Tendered By - name of the employee logged into RQ when the invoice was tendered" },  
+            "TenderedByUsername": { "type": "string", "database": "VARCHAR(51)", "example": "Chad.Tester", "description": "Tendered By Username - username of the employee logged into RQ when the invoice was tendered" },  
+            "SalesPersonName": { "type": "string", "database": "VARCHAR(51)", "example": "Chad Tester", "description": "Sales Person - employee that is the primary commissioned sales person" },  
+            "SalesPersonUsername": { "type": "string", "database": "VARCHAR(51)", "example": "Chad.Tester", "description": "Sales Person Username - username of the employee that is the primary commissioned sales person" },
+            "InvoiceIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN5995", "description": "Refund Invoice Created On - date and time the refund invoice was created" },  
+            "CustomerName": { "type": "string", "database": "VARCHAR(151)", "example": "BOBCAT PRESSURE CONTROL INC", "description": "Customer - name of the customer as entered on their profile" },  
+            "CustomerID": { "type": "integer", "database": "INT", "example": "110437", "description": "Internal identifier for a customer in RQ" },  
+            "CustomerAddress": { "type": "string", "database": "VARCHAR(50)", "example": "442 Athabasca st w", "description": "Address - first line of the customers address" },  
+            "CustomerCity": { "type": "string", "database": "VARCHAR(50)", "example": "Regina", "description": "City - customers city" },  
+            "CustomerProvinceOrState": { "type": "string", "database": "VARCHAR(50)", "example": "PR", "description": "State/Prov - customers state or province" },        
+            "CustomerPostalOrZipCode": { "type": "string", "database": "VARCHAR(15)", "example": "h0h0h0", "description": "Zip/Postal Code - customers zip or postal code" },  
+            "CustomerCountry": { "type": "string", "database": "VARCHAR(50)", "example": "USA", "description": "Country - customers country" },  
+            "OriginalInvoiceIDByStore": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN10368", "description": "Original Invoice # - invoice number assigned by RQ to the original sale" },  
+            "NetSale": { "type": "decimal", "database": "MONEY", "example": "420", "description": "Net Sale - net dollar amount of the refund" },  
+            "AmountRefunded": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Amount Refunded - dollar amount refunded (including Vendor Rebates)" },  
+            "SISAmountRefunded": { "type": "decimal", "database": "MONEY", "example": "0", "description": "This value may be null" },  
+            "AmountSold": { "type": "decimal", "database": "MONEY", "example": "420", "description": "Amount Sold- dollar amount of the refund" },  
+            "TotalAfterTax": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Total Invoice - net dollar amount of the refund invoice" },  
+            "TotalCoupon": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Coupon - the value of any coupons" },  
+            "TotalCouponTax": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Coupon Taxes - the value for any taxed coupons" },  
+            "RefundCode": { "type": "string", "database": "NVARCHAR(MAX)", "example": "", "description": "Refund Code - code entered at the time of the refund" },  
+            "Comments": { "type": "string", "database": "VARCHAR(500)", "example": "Invoice Editor Adjustment for 84WEAIN10368", "description": "Invoice Comments - any comments added to the invoice" },  
+            "InvoiceRowID": { "type": "guid", "description": "Internal identifier in RQ", "database": "UNIQUEIDENTIFIER", "example": "db8f28cf-5017-47f4-9ccf-b90cff32185d" },
+            "OriginalInvoiceRowID": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "f30bb5bd-0813-dc2a-1844-41ca87795e17", "description": "Internal identifier in RQ" },  
+            "ProductRowID": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "dd27caa4-274f-b5b2-c94c-78a4e5d93a6e", "description": "Internal identifier in RQ" }  
+          }  
+        }      
+  - SalesByCategoryReportData: |
+      {
+          "type": "array",
+          "name": "SalesByCategoryReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "CategoryNumber": { "type": "string", "database": "VARCHAR(100)", "example": "10101010", "description": "Identifier for a Category in RQ" },  
+            "CategoryPath": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Activations", "description": "Category - inventory category" },  
+            "TotalInvoiced": { "type": "decimal", "database": "MONEY", "example": "1", "description": "Total Invoiced - net dollar amount invoiced in this category" },  
+            "Adjustment": { "type": "decimal", "database": "MONEY", "example": "52.6", "description": "Adjustment - total dollar amount of any adjustments in this category" },  
+            "TotalPrice": { "type": "decimal", "database": "MONEY", "example": "265.62", "description": "Sales - total of sales for this category" },  
+            "TotalCost": { "type": "decimal", "database": "MONEY", "example": "363", "description": "Cost - total purchase cost for each individual product sold in the category" },  
+            "TotalProfit": { "type": "decimal", "database": "MONEY", "example": "23", "description": "Gross Profit - gross profit calculated as Sales - Cost" },  
+            "TotalDiscount": { "type": "decimal", "database": "MONEY", "example": "64", "description": "Discount - net dollar amount of discounts in this category" },  
+            "PercentProfit": { "type": "decimal", "database": "MONEY", "example": "20", "description": "% Profit - profit displayed as a percentage" },  
+            "QuantitySold": { "type": "integer", "database": "INT", "example": "2", "description": "Qty Sold - total sold before refunds" },  
+            "QuantityRefunded": { "type": "integer", "database": "INT", "example": "1", "description": "Qty Ref - total refunded" },  
+            "NetQuantity": { "type": "integer", "database": "INT", "example": "2", "description": "Net Qty - net quantity sold, calculated by Qty Sold minus Qty Refunded" },  
+            "InvoicedAtDifferentLocation": { "type": "integer", "database": "INT", "example": "0", "description": "Value invoiced at a different location" }  
+          }  
+        }
+  - SalesByCustomerReportData: |
+      {
+          "type": "array",
+          "name": "SalesByCustomerReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "CustomerID": { "type": "integer", "database": "INT", "example": "57818", "description": "Identifier for a customer in RQ" },  
+            "CustomerName": { "type": "string", "database": "VARCHAR(151)", "example": "Ann Fox", "description": "Customer - name of the customer as entered on their profile" },  
+            "Customer_CompanyName": { "type": "string", "database": "VARCHAR(50)", "example": "KENTEL", "description": "Company name" },  
+            "Customer_LastName": { "type": "string", "database": "VARCHAR(50)", "example": "Ann Fox", "description": "Customer last name" },  
+            "CustomerAddress": { "type": "string", "database": "VARCHAR(101)", "example": "8105 Blanche Dr", "description": "Address - column will contain the contents of the Address and Address 2 fields in the Customer profile (new in 5.17)" },  
+            "CustomerCity": { "type": "string", "database": "VARCHAR(50)", "example": "Panama City", "description": "City - name of the city entered on the customers profile" },  
+            "CustomerProvinceOrState": { "type": "string", "database": "VARCHAR(50)", "example": "FL", "description": "State/Province - state or province selected from the drop down list on the customer's profile" },  
+            "CustomerCountry": { "type": "string", "database": "VARCHAR(50)", "example": "United States", "description": "Country - name of the country entered on the customers profile" },  
+            "CustomerPostalCode": { "type": "string", "database": "VARCHAR(15)", "example": "32404", "description": "ZIP/Postal Code - zip or postal code as entered on the customers profile" },  
+            "CustomInteger1": { "type": "string", "database": "VARCHAR(20)", "example": "12", "description": "Custom value" },  
+            "CustomInteger2": { "type": "string", "database": "VARCHAR(20)", "example": "1", "description": "Custom value" },  
+            "CustomDate1": { "type": "datetime", "database": "DATETIME", "example": "2016-01-01T00:00:00", "description": "Custom value" },  
+            "CustomDate2": { "type": "datetime", "database": "DATETIME", "example": "2016-01-01T00:00:00", "description": "Custom value" },  
+            "CustomText1": { "type": "string", "database": "VARCHAR(150)", "example": "March", "description": "Custom value" },  
+            "CustomText2": { "type": "string", "database": "VARCHAR(150)", "example": "Orange", "description": "Custom value" },  
+            "CompanySize": { "type": "string", "database": "NVARCHAR(MAX)", "example": "200", "description": "Company Size - a Category Field which may or not be enabled on your database" },  
+            "CustomDropDown1": { "type": "string", "database": "NVARCHAR(MAX)", "example": "2112", "description": "Custom value" },  
+            "CustomDropDown2": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Orange", "description": "Custom value" },  
+            "CustomDropDown3": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Three", "description": "Custom value" },  
+            "CustomDropDown4": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Ph.D", "description": "Custom value" },  
+            "CustomDropDown5": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Enabled", "description": "Custom value" },  
+            "TotalInvoiced": { "type": "decimal", "database": "MONEY", "example": "1210.02", "description": "Total Invoiced - net dollar amount for this category, and sub-categories, or this specific product sold to this customer within the report criteria" },  
+            "Adjustment": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Adjustment - net dollar amount of any adjustments for this customer in this category or for this product" },  
+            "TotalPrice": { "type": "decimal", "database": "MONEY", "example": "1185.01", "description": "Sales - total dollar amount for this category, and sub-categories, or this specific product sold to this customer for the report criteria after any adjustment(s)" },  
+            "TotalCost": { "type": "decimal", "database": "MONEY", "example": "18.01", "description": "Cost - total inventory cost for the products sold to this customer within the report criteria" },  
+            "TotalCoupon": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Coupon - dollar amount of coupons used on sale" },  
+            "TotalCouponTax": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Coupon Taxes - dollar amount of taxes applied to the coupon" },  
+            "TotalProfit": { "type": "decimal", "database": "MONEY", "example": "1167", "description": "Gross Profit - total gross profit, calculated as Sales - Cost" },  
+            "TotalDiscount": { "type": "decimal", "database": "MONEY", "example": "-784.01", "description": "Total Discount - total dollar amount of discount(s) applied to the customers invoices within the report criteria" },  
+            "PercentProfit": { "type": "decimal", "database": "MONEY", "example": "98.48", "description": "% Profit - gross profit displayed as a percentage" },  
+            "QuantitySold": { "type": "integer", "database": "INT", "example": "18", "description": "Qty Sold - total number of products from this category, and sub-categories, or number of this specific product sold to this customer within the report criteria" },  
+            "QuantityRefunded": { "type": "integer", "database": "INT", "example": "-6", "description": "Qty Ref - total number of products from this category, and sub-categories, or number of this specific product refunded from this customer within the report criteria" },  
+            "NetQuantity": { "type": "integer", "database": "INT", "example": "12", "description": "Net Qty - net total number of products from this category, and sub-categories, or number of this specific product sold to this customer within the report criteria" },  
+            "InvoicedAtDifferentLocation": { "type": "integer", "database": "INT", "example": "0", "description": "Amount invoices at a different location" },  
+            "CustomerIdentifier": { "type": "string", "database": "VARCHAR(25)", "example": "C10KNRVY", "description": "Customer Identifier - customer identifier as entered on the customers profile" },  
+            "BillingAccountNumber": { "type": "string", "database": "NVARCHAR(MAX)", "example": "5555555555", "description": "BAN - contract number from a carrier and not editable" },  
+            "FinancedAmount": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Financed amount" },  
+            "TotalDownPayment": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Total down payment" },  
+            "TypeOfCustomer": { "type": "integer", "database": "INT", "example": "3", "description": "Type of Customer - column will display the customer type - Company, Division, Group, Individual (new in 5.17)" }  
+          }  
+        }
+  - SalesByEmployeeReportData: |
+      {
+          "type": "array",
+          "name": "SalesByEmployeeReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "EmployeeID": { "type": "integer", "database": "INT", "example": "256", "description": "ID # - Employee ID number (assigned when hired; this is usually from a Payroll system)" },  
+            "EmployeeName": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix Employee", "description": "Employee - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box on the Accept Payment screen" },  
+            "EmployeeSpecialIdentifier": { "type": "string", "database": "VARCHAR(25)", "example": "912345987654321", "description": "Internal identifier in RQ" },  
+            "StoreInStoreFlowIsEnabledForAtLeastOneStore": { "type": "integer", "database": "INT", "example": "0", "description": "A flag to indicate if Store in Store Flow is enabled for at least one store (1) or not (0)" },  
+            "QtySold": { "type": "integer", "database": "BIGINT", "example": "50", "description": "Qty Sold - total number of products sold" },  
+            "QtyRefunded": { "type": "integer", "database": "BIGINT", "example": "0", "description": "Qty Ref - total number of products refunded" },  
+            "NetQty": { "type": "integer", "database": "INT", "example": "50", "description": "Net Qty - net total number of products" },  
+            "TotalInvoiced": { "type": "decimal", "database": "MONEY", "example": "1825.74", "description": "Total Invoiced - total dollar value of all invoiced products" },  
+            "Adjustment": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Adjustment - the net dollar amount of any adjustments for this day" },  
+            "TotalSales": { "type": "decimal", "database": "MONEY", "example": "1825.74", "description": "Sales - total dollar value of all sales" },  
+            "TotalStoreInStoreSales": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Total store in store sales" },  
+            "RoundingVariance": { "type": "decimal", "database": "MONEY", "example": "0.26", "description": "Rounding Variance - total dollar value of the rounding variance [may not appear in your database]" },  
+            "TotalCost": { "type": "decimal", "database": "MONEY", "example": "284.33", "description": "Cost - total purchase cost for all products sold that day" },  
+            "TotalCoupon": { "type": "decimal", "database": "MONEY", "example": "5", "description": "Coupon - value of any coupons. The Coupon column will only appear when the user runs the report with All Categories or does not select any product in the product picker when running by This Product." },  
+            "TotalCouponTax": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Coupon Taxes - the value for any taxed coupons" },  
+            "TotalProfit": { "type": "decimal", "database": "MONEY", "example": "1536.41", "description": "Gross Profit - gross profit, calculated as Sales - Cost" },  
+            "TotalStoreInStoreProfit": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Total store in store profit" },  
+            "TotalCommission": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Commission - total dollar amount of commission calculated for the employee          " },  
+            "EmployeeUsername": { "type": "string", "database": "VARCHAR(51)", "example": "iQmetrix.Employee", "description": "Username - username of the employee of record for the sale, i.e. the employee whose name is in the Commission box on the Accept Payment screen" }  
+          }  
+        }        
+  - SalesByInvoiceReportData: |
+      {
+        "name": "SalesByInvoiceReportData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "Adjustment": { "type": "integer", "description": "Adjustment - total dollar value of any adjustments", "database": "INT", "example": "0" },
+          "ChannelName": { "type": "string", "description": "Channel - channel for the rows location", "database": "NVARCHAR(MAX)", "example": "English Channel" },
+          "Comments": { "type": "string", "description": "Invoice Comments - any comments added to the invoice", "database": "VARCHAR (1000)", "example": "Comment" },
+          "CustomerID": { "type": "integer", "description": "Internal identifier for a customer in RQ", "database": "INT", "example": "131149" },
+          "CustomerName": { "type": "string", "description": "Customer - name of the customer as entered on their profile; if this is a Quick Sale that will be the name of the customer", "database": "VARCHAR (101)", "example": "Bob Jones" },
+          "DateCreated": { "type": "datetime", "description": "Created On - date and time the invoice was created", "database": "DATETIME", "example": "2016-05-13T12:18:08.723" },
+          "DistrictName": { "type": "string", "description": "District - district for the rows location", "database": "NVARCHAR(MAX)", "example": "Westminster" },
+          "Earned": { "type": "decimal", "description": "Internal identifier in RQ", "database": "MONEY", "example": "null" },
+          "FinancedAmount": { "type": "decimal", "description": "Invoice Amount - formally known as Total Invoice - this shows the actual amount paid by the customer including coupons, gift cards, donations and taxes", "database": "MONEY", "example": "75" },
+          "InvoiceEmailed": { "type": "boolean", "description": "Emailed - indicates that the invoice was emailed", "database": "BIT", "example": "0" },
+          "InvoiceIDByStore": { "type": "string", "description": "Invoiced At - name of the location which takes the inventory on a refund, usually the same as Invoiced By but will be different if a second location process a refund", "database": "VARCHAR (14)", "example": "REDSTIN916" },
+          "Redeemed": { "type": "boolean", "description": "Ven Reb Act - net dollar amount of vendor rebates for the invoice and the taxes associated to the rebate", "database": "BIT", "example": "null" },
+          "RefundCodeID": { "type": "guid", "description": "Invoice # - invoice number assigned by RQ", "database": "UNIQUEIDENTIFIER", "example": "null" },
+          "RegionName": { "type": "string", "description": "Region - region for the rows location", "database": "NVARCHAR (MAX)", "example": "London" },
+          "RoundingVariance": { "type": "decimal", "description": "Rounding Variance - total dollar value of the rounding variance [may not be present in every database]", "database": "MONEY", "example": "0" },
+          "SaleInvoiceID": { "type": "integer", "description": "Invoice # - invoice number assigned by RQ", "database": "INT", "example": "129036" },
+          "SoldBy": { "type": "string", "description": "Sold By Username - username of the employee of record for the sale, i.e. the employee whose name is in the Commission box", "database": "NVARCHAR (51)", "example": "iQmetrix User" },
+          "SoldByUserName": { "type": "string", "description": "Sold By - name of the employee of record for the sale, i.e. the employee whose name is in the Commission box", "database": "NVARCHAR (MAX)", "example": "iQmetrix.User" },
+          "StoreID": { "type": "integer", "description": "Internal identifier for a store in RQ", "database": "INT", "example": "1" },
+          "StoreInStoreFlowIsEnabledForStore": { "type": "boolean", "description": "Internal identifier in RQ", "database": "BIT", "example": "false" },
+          "StoreName": { "type": "string", "description": "Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund", "database": "NVARCHAR (MAX)", "example": "100: My Network LLC - Anchorage" },
+          "StoreName2": { "type": "string", "description": "Invoiced By - name of the location which credited with the sale, usually the same as Invoiced At but will be different if a second location process a refund", "database": "NVARCHAR (MAX)", "example": "100: My Network LLC - Anchorage" },
+          "TenderedBy": { "type": "string", "description": "Tendered By Username - username of the employee logged into RQ when the invoice was taken", "database": "VARCHAR (51)", "example": "iQmetrix User" },
+          "TenderedByUserName": { "type": "string", "description": "Tendered By - name of the employee logged into RQ when the invoice was taken", "database": "NVARCHAR (MAX)", "example": "iQmetrix.User" },
+          "TotalAfterTax": { "type": "decimal", "description": "Total after tax", "database": "MONEY", "example": "26" },
+          "TotalCost": { "type": "decimal", "description": "Cost - total purchase cost of the products on the invoice", "database": "MONEY", "example": "0" },
+          "TotalCoupon": { "type": "decimal", "description": "Coupon Used - the sum of the coupons applied to the invoice.", "database": "MONEY", "example": "0" },
+          "TotalDonations": { "type": "decimal", "description": "Donations - total dollar value of the donation", "database": "MONEY", "example": "0" },
+          "TotalDownPayment": { "type": "decimal", "description": "Total invoiced - Financed amount = TotalDownpayment", "database": "MONEY", "example": "25" },
+          "TotalExtraCharges": { "type": "decimal", "description": "Extra Charges - total dollar value of any extra charges added to the invoice", "database": "MONEY", "example": "0" },
+          "TotalGiftCard": { "type": "decimal", "description": "Gift Card Sold - if a gift card was purchased, this is the value of the gift card.", "database": "MONEY", "example": "0" },
+          "TotalInvoiced": { "type": "decimal", "description": "Invoice Subtotal - formally known as Total Invoiced - this represents the invoice subtotal which would include gift cards and extra charges. Coupons and Vendor Rebates are removed from this amount.", "database": "MONEY", "example": "26" },
+          "TotalNRP": { "type": "decimal", "description": "NRP sold - value of any Non Revenue Products sold", "database": "MONEY", "example": "0" },
+          "TotalProfit": { "type": "decimal", "description": "Gross Profit - total dollar value of profit, calculated as Sales - Cost", "database": "MONEY", "example": "164" },
+          "TotalSales": { "type": "decimal", "description": "Sales - total dollar amount of the invoice after adjustments", "database": "MONEY", "example": "164" },
+          "TotalStoreInStoreProfit": { "type": "decimal", "description": "Internal identifier in RQ", "database": "MONEY", "example": "0" },
+          "TotalStoreInStoreSales": { "type": "decimal", "description": "Ven Reb Act - net dollar amount of vendor rebates for the invoice and the taxes associated to the rebate", "database": "MONEY", "example": "0" }
+        }
+      }        
+  - SalesByLocationReportData: |
+      {
+          "type": "array",
+          "name": "SalesByLocationReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "StoreID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for a store in RQ" },  
+            "StoreTypeName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Retail Store", "description": "Location Type - location type the the transaction was performed at" },  
+            "StoreName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "84 West", "description": "Location - name of the location being displayed" },  
+            "Date": { "type": "integer", "database": "INT", "example": "1", "description": "Date" },  
+            "DateName": { "type": "datetime", "database": "DATETIME", "example": "2016-01-01T00:00:00", "description": "Date value" },  
+            "StoreInStoreFlowIsEnabledForStore": { "type": "boolean", "database": "BIT", "example": "false", "description": "A flag to indicate if SIS is enabled" },  
+            "QtySold": { "type": "integer", "database": "INT", "example": "283", "description": "Qty Sold - total number of products, as selected in search criteria, sold" },  
+            "QtyRefunded": { "type": "integer", "database": "INT", "example": "-23", "description": "Qty Ref - total number of products, as selected in search criteria, refunded" },  
+            "NetQty": { "type": "integer", "database": "INT", "example": "260", "description": "Net Qty - total net quantity of products, as selected in search criteria, sold" },  
+            "TotalInvoiced": { "type": "decimal", "database": "MONEY", "example": "17738.1", "description": "Total Invoiced - net dollar amount invoiced in the search criteria" },  
+            "Adjustment": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Adjustment - net dollar amount of any Vendor Rebate Product (VRP)" },  
+            "Net": { "type": "decimal", "database": "MONEY", "example": "16293.58", "description": "Sales - total dollar value of all products in the search criteria after adjustments are applied" },  
+            "StoreInStoreNet": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Store in store net" },  
+            "Cost": { "type": "decimal", "database": "MONEY", "example": "90004818.51", "description": "Cost - purchase cost of all products in the search criteria" },
+            "Coupon": { "type": "decimal", "database": "MONEY", "example": "77.48", "description": "Coupon - dollar amount of coupons used" },  
+            "CouponTax": { "type": "decimal", "database": "MONEY", "example": "1", "description": "Coupon Taxes - amount in dollars of coupon taxes on sales" },  
+            "Profit": { "type": "decimal", "database": "MONEY", "example": "-89988524.93", "description": "Gross Profit - profit, calculated as Sales - Cost" },  
+            "StoreInStoreGrossProfit": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Store in store profit" },  
+            "RegionName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Region A", "description": "Region - region for the rows location" },  
+            "DistrictName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Valley Area District", "description": "District - district for the rows location" },  
+            "ChannelName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Regina Channel", "description": "Channel - channel for the rows location" },  
+            "RoundingVariance": { "type": "decimal", "database": "MONEY", "example": "0.6", "description": "Rounding Variance - Canadian clients dealing with the deletion of the penny, see Penny Rounding for more detail" }  
+          }  
+        }      
+  - SalesForecastReportData: |
+      {
+          "type": "array",
+          "name": "SalesForecastReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "CategoryName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "@ Activations (Price Sheets)", "description": "Category - name of the category directly below the category selected" },  
+            "QtyThisMonth": { "type": "integer", "database": "INT", "example": "10", "description": "Quantity Month To Date - net total number of products sold month to date" },  
+            "NetThisMonth": { "type": "decimal", "database": "MONEY", "example": "19.65", "description": "Sales Month To Date - net dollar amount of sales month to date" },  
+            "ProfitThisMonth": { "type": "decimal", "database": "MONEY", "example": "9.64", "description": "Gross Profit Month To Date - gross profit month to date" },  
+            "QtyThisMonthLastYear": { "type": "integer", "database": "INT", "example": "15", "description": "Quantity MTD Last Year - net total number of products sold month to date for last year at the same point" },  
+            "NetThisMonthLastYear": { "type": "decimal", "database": "MONEY", "example": "40.5", "description": "Sales MTD Last Year - net dollar amount of sales month to date for last year at the same point" },  
+            "ProfitThisMonthLastYear": { "type": "decimal", "database": "MONEY", "example": "10.12", "description": "Gross Profit MTD Last Year - gross profit month to date for last year at the same point" },  
+            "QtyThisYear": { "type": "integer", "database": "INT", "example": "150", "description": "Quantity Year To Date - net total number of products sold year to date" },  
+            "NetThisYear": { "type": "decimal", "database": "MONEY", "example": "476.5", "description": "Sales Year To Date - net dollar amount of sales year to date" },  
+            "ProfitThisYear": { "type": "decimal", "database": "MONEY", "example": "456.25", "description": "Gross Profit Year To Date - gross profit year to date" },  
+            "QtyLastYear": { "type": "integer", "database": "INT", "example": "160", "description": "Quantity Last Year To Date - net total number of products sold year to date for last year at the same point" },  
+            "NetLastYear": { "type": "decimal", "database": "MONEY", "example": "4579.54", "description": "Sales Last Year To Date - net dollar amount of sales year to date for last year at the same point" },  
+            "ProfitLastYear": { "type": "decimal", "database": "MONEY", "example": "4876.57", "description": "Gross Profit Last Year To Date - gross profit year to date for last year at the same point" },  
+            "OrderBy": { "type": "integer", "database": "INT", "example": "0", "description": "Sorting order" }  
+          }  
+        }
+  - SerializedCouponReportData: |
+      {
+          
+          "type": "array",
+          "name": "SerializedCouponReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "CouponID": { "type": "integer", "database": "INT", "example": "1089", "description": "Identifier for a coupon in RQ" },  
+            "Customer": { "type": "string", "database": "VARCHAR(101)", "example": "John Test", "description": "Customer - customer name (will only show if assigned to the Customer using the Marketing List Report). If not, column will state imported serial number" },  
+            "CouponName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "RQ API FpP Serialized", "description": "Coupon Name - name of the coupon, i.e. Serialized $50" },  
+            "SerialNumber": { "type": "string", "database": "VARCHAR(50)", "example": "cpn00000", "description": "Serial Number - serial number of the coupon" },  
+            "Issued": { "type": "datetime", "database": "DATETIME", "example": "2015-06-04T10:18:38.403", "description": "Issued - date coupon was issued" },  
+            "Percentage": { "type": "string", "database": "VARCHAR(31)", "example": "15", "description": "Percentage - percentage of the discount of the invoice (will only have a value if the coupon is for a percentage of the invoice)" },  
+            "Amount": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Amount - total amount of the coupon (will only have a value if the coupon is for a specific value)" },  
+            "CouponSKU": { "type": "string", "database": "VARCHAR(32)", "example": "COUPON001089", "description": "Coupon SKU - the SKU attached to the coupon used to identify it" }  
+          }  
+        }      
+/reports/ActivationGrossProfitReport?StartDate={StartDate}&StopDate={StopDate}&StoreType={StoreType}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&ReasonCode={ReasonCode}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true     
+    ReasonCode:
+      displayName: ReasonCode
+      type: integer
+      example: -1
+      required: true
+      description: Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#reasoncode'>ReasonCode</a>. Use -1 to specify All Reason Codes. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-reason-codes">Getting Reason Codes</a>
+    StoreType:
+      type: integer
+      example: -1
+      required: true
+      description: Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#storetype'>StoreType</a>. Use -1 to specify All Types. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-store-types">Getting Store Types</a>
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false      
+  type:
+    collectionReadOnly: 
+      resource: ActivationGrossProfitReportData
+  get:
+    displayName: Getting the Activation Gross Profit Report
+    description: |
+      For more information, see {{support_ActivationGrossProfitReport}}.
+/reports/AgedSerializedSalesStatusReport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&ExcludeIfOldest={ExcludeIfOldest}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true    
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false    
+    ExcludeIfOldest:
+      type: string
+      example: False
+      required: false
+      description: A flag to indicate if rows in the report that have have the "IsOldest" property set to true should be excluded from the results. Defaults to false
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false  
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false            
+  type:
+    collectionReadOnly: 
+      resource: AgedSerializedSalesStatusReportData
+  get:
+    displayName: Getting the Aged Serialized Sales Status Report      
+    description: |
+      For more information, see {{support_AgedSerializedSalesStatusReport}}.    
+/reports/CouponSummaryReport?StartDate={StartDate}&StopDate={StopDate}&ReportType={ReportType}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true  
+    ReportType:
+      type: string
+      example: DailySummary
+      required: true
+      description: Acceptable values include DailySummary, LocationSummary, CouponSummary, CouponDetail, EmployeeSummary and CommissionDetail
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false        
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false            
+  type:
+    collectionReadOnly: 
+      resource: CouponSummaryReportData
+  get:
+    displayName: Getting the Coupon Summary Report
+    description: |
+      For more information, see {{support_CouponSummaryReport}}.
+/reports/DailySalesSummaryReport?StartDate={StartDate}&StopDate={StopDate}&CategoryNumber={CategoryNumber}&SpecialProductID={SpecialProductID}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}ProductIdentifier={ProductIdentifier}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Identifier for a {{CategoryNumber}}. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+      required: true
+    SpecialProductID:
+      type: integer
+      example: -1
+      required: true
+      description: Acceptable values include -1 for All, 0 for Regular Products, 1 for Vendor Rebates, 2 for Non-Stocked Products, 3 for Gift Cards, 4 for Non Revenue Products or 5 for a Specific Product - use ProductIdentifier to specify SKU
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false    
+    ProductIdentifier:
+      type: string
+      example: ASCLMO000001
+      description: Product SKU, if this value is used SpecialProductID must be 5
+      required: false
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false            
+  type:
+    collectionReadOnly: 
+      resource: DailySalesSummaryReportData
+  get:
+    displayName: Getting the Daily Sales Summary Report
+    description: |
+      For more information, see {{support_DailySalesSummaryReport}}.
+/reports/DiscountSummaryReport?StartDate={StartDate}&StopDate={StopDate}&CategoryNumber={CategoryNumber}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&ShowRefunds={ShowRefunds}&ShowOrderEntryDiscounts={ShowOrderEntryDiscounts}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Identifier for a {{CategoryNumber}}. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+      required: true
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    ShowRefunds:
+      type: string
+      example: False
+      required: false
+      description: A flag to indicate if the report should include refunds. Defaults to false
+    ShowOrderEntryDiscounts:
+      type: string
+      example: False
+      required: false
+      description: A flag to indicate if the report should include Sales Order Discounts. Defaults to false
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false      
+  type:
+    collectionReadOnly: 
+      resource: DiscountSummaryReportData
+  get: 
+    displayName: Getting the Discount Summary Report
+    description: |
+      For more information, see {{support_DiscountSummaryReport}}.
+/reports/DonationsSummaryReport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false    
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false      
+  type:
+    collectionReadOnly: 
+      resource: DonationsSummaryReportData
+  get:
+    displayName: Getting the Donations Summary Report
+    description: |
+      For more information, see {{support_DonationsSummaryReport}}.
+/reports/InvoiceHistoryReport?StartDate={StartDate}&StopDate={StopDate}&InvoiceStatus={InvoiceStatus}&SearchType={SearchType}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&InvoiceIDByStore={InvoiceIDByStore}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    InvoiceStatus:
+      type: integer
+      example: 3
+      required: true
+      description: Acceptable values include -1 for All, 0 for Tendering, 1 for Failed, for 2 Incomplete or 3 for Tendered
+    SearchType:
+      type: integer
+      example: 0
+      required: true
+      description: Acceptable values include 0 for Invoice or 1 for Location 
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false    
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    InvoiceIDByStore:
+      type: string
+      example: 77224IN3
+      description: Tracking number
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false      
+  type:
+    collectionReadOnly: 
+      resource: InvoiceHistoryReportData
+  get: 
+    displayName: Getting the Invoice History Report
+    description: |
+      For more information, see {{support_InvoiceHistoryReport}}.
+/reports/RefundSummaryReport?StartDate={StartDate}&StopDate={StopDate}&Filter={Filter}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    Filter:
+      type: integer
+      example: 1
+      description: Acceptable values include 0 for Any Balance, 1 for Positive Balance, 2 for Negative Balance or 3 for Zero Balance
+      required: true        
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false    
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: RefundSummaryReportData
+  get:
+    displayName: Getting the Refund Summary Report
+    description: |
+      For more information, see {{support_RefundSummaryReport}}.
+/reports/PawExceptionsReport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true     
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false      
+  type:
+    collectionReadOnly: 
+      resource: PawExceptionsReportData
+  get:
+    displayName: Getting the PAW Exceptions Report
+    description: |
+      For more information, see {{support_PAWExceptionsReport}}.    
+/reports/ProductDetailReport?StartDate={StartDate}&StopDate={StopDate}&SearchMethod={SearchMethod}&ManufacturerID={ManufacturerID}&CategoryNumber={CategoryNumber}&ReportPart={ReportPart}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&ProductIdentifier={ProductIdentifier}&InvoiceIDByStore={InvoiceIDByStore}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    SearchMethod:
+      type: integer
+      example: 3
+      description: Acceptable values include 1 for Product SKU, 2 for Manufacutrer, 3 for Category and 4 for Invoice Number
+      required: true
+    ManufacturerID:
+      type: integer
+      example: -1
+      description: Identifier for a Manufacturer in RQ. Use -1 for all Manufacturers. For a complete list see <a href="/api/RQ-Data-Connect/#getting-a-list-of-manufacturers-in-rq">Getting a List of Manufacturers in RQ</a>
+      required: true
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Identifier for a {{CategoryNumber}}. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+      required: true
+    ReportPart:
+      type: integer
+      example: 1
+      description: Acceptable values include 1 to return the default report, 2 for the tax detail report and 3 for tax column data
+      required: true      
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false      
+    ProductIdentifier:
+      type: string
+      example: ASCLMO000001
+      description: Product SKU
+      required: false
+    InvoiceIDByStore:
+      type: string
+      example: 77224IN3
+      description: Tracking number
+      required: false
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: ProductDetailReportData
+  get:
+    displayName: Getting the Product Detail Report
+    description: |
+      <a name="sales-reports"></a>For more information, see {{support_ProductDetailReport}}.
+
+      Note that this report has multiple responses, depending on the ReportPart specified.
+
+      | Report Part | Response |
+      |:------------|:---------|
+      | 1 | {{ProductDetailReportData}} |
+      | 2 | {{ProductDetailReportTaxDetailData}} |
+      | 3 | {{ProductDetailReportTaxColumnData}} |
+/reports/ProductFinancingReport?StartDate={StartDate}&StopDate={StopDate}&FinancingID={FinancingID}&CarrierSIPNumbering={CarrierSIPNumbering}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    FinancingID:
+      type: integer
+      example: -1
+      required: false
+      description: Identifier for a finanacing type. Use -1 for all types. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-financing-types">Getting Financing Types</a>
+    CarrierSIPNumbering:
+      type: string
+      example: 1
+      required: false
+      description: Identifier for a carrier in RQ. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-a-list-of-carriers-in-rq">Getting a List of Carriers in RQ</a>
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false    
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false      
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false      
+  type:
+    collectionReadOnly: 
+      resource: ProductFinancingReportData
+  get:
+    displayName: Getting the Product Financing Report
+    description: |
+      For more information see {{support_ProductFinancingReport}}.
+/reports/ProductSummaryReport?StartDate={StartDate}&StopDate={StopDate}&CategoryNumber={CategoryNumber}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true     
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Identifier for a {{CategoryNumber}}. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+      required: true
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false      
+  type:
+    collectionReadOnly: 
+      resource: ProductSummaryReportData
+  get:
+    displayName: Getting the Product Summary Report
+    description: |
+      For more information, see {{support_ProductSummaryReport}}.
+/reports/SalesByCategoryReport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&CategoryNumber={CategoryNumber}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true       
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Identifier for a {{CategoryNumber}}. Defaults to all categories. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false          
+  type:
+    collectionReadOnly: 
+      resource: SalesByCategoryReportData
+  get:
+    displayName: Getting the Sales By Category Report
+    description: |
+      For more information, see {{support_SalesByCategoryReport}}.
+/reports/SalesByCustomerReport?StartDate={StartDate}&StopDate={StopDate}&ShowVendorRebate={ShowVendorRebate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&CategoryNumber={CategoryNumber}&ProductIdentifier={ProductIdentifier}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true     
+    ShowVendorRebate:
+      type: string
+      example: True
+      required: true
+      description: A flag to indicate if vendor rebates should be included in the report (true) or not (false)
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Identifier for a {{CategoryNumber}}. Defaults to all categories. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+      required: false
+    ProductIdentifier:
+      type: string
+      example: ASCLMO000001
+      description: Product SKU
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false          
+  type:
+    collectionReadOnly: 
+      resource: SalesByCustomerReportData
+  get:
+    displayName: Getting the Sales by Customer Report
+    description: |
+      For more information, see {{support_SalesByCustomerReport}}.
+/reports/SalesByEmployeeReport?StartDate={StartDate}&StopDate={StopDate}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&CategoryNumber={CategoryNumber}&ProductIdentifier={ProductIdentifier}&AssignedGroupID={AssignedGroupID}&CommissionGroupID={CommissionGroupID}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true    
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Identifier for a {{CategoryNumber}}. Defaults to all categories. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+      required: false
+    ProductIdentifier:
+      type: string
+      example: ASCLMO000001
+      description: Product SKU
+      required: false
+    AssignedGroupID:
+      type: integer
+      example: 2
+      required: false
+      description: Identifier for an assigned {{RQ-Data-Connect_Group}} in RQ. Defaults to all groups. For a complete list see <a href="/api/RQ-Data-Connect/#getting-a-list-of-groups-in-rq">Getting A List of Groups in RQ</a>
+    CommissionGroupID:
+      type: integer
+      example: 2
+      required: false
+      description: Identifier for a commission {{RQ-Data-Connect_Group}} in RQ. Defaults to all groups. For a complete list see <a href="/api/RQ-Data-Connect/#getting-a-list-of-groups-in-rq">Getting A List of Groups in RQ</a>
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false          
+  type:
+    collectionReadOnly: 
+      resource: SalesByEmployeeReportData
+  get:
+    displayName: Getting the Sales by Employee Report
+    description: |
+      For more information, see {{support_SalesByEmployeeReport}}.
+/reports/SalesByInvoiceReport?StartDate={StartDate}&StopDate={StopDate}&HideRebates={HideRebates}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    HideRebates:
+      type: integer
+      example: -1
+      description: A flag to indicate if Rebates should be included in the report (1) or not (-1)
+      required: true
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false      
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: SalesByInvoiceReportData
+  get:
+    displayName: Getting the Sales By Invoice Report
+    description: |
+      For more information, see {{support_SalesByInvoiceReport}}.      
+/reports/SalesByLocationReport?StartDate={StartDate}&StopDate={StopDate}&SearchMethod={SearchMethod}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&CategoryNumber={CategoryNumber}&ProductIdentifier={ProductIdentifier}&StoreTypeID={StoreTypeID}&ByDate={ByMonth}&CouponIDs={CouponIDs}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    SearchMethod:
+      type: integer
+      example: 1
+      required: true
+      description: Acceptable values include 1 for All Products, 2 for Regular Products, 3 for Vendor Rebates, 4 for Non-Stocked Products, 5 for Gift Cards, 6 for Products In This Category (use CategoryNumber param), 7 for This Product (use ProductIdentifier param), 8 for Coupons (use CouponIDs param) or 9 for Non-Revenue Products 
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false    
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Use with SearchMethod 6. Identifier for a CategoryNumber. For a complete list see <a href='/api/RQ-Data-Connect/#getting-category-numbers'>Getting Category Numbers</a>
+      required: true
+    ProductIdentifier:
+      type: string
+      example: ASCLMO000001
+      description: Use with SearchMethod 7. Product SKU
+      required: false
+    StoreTypeID:
+      type: integer
+      example: -1
+      required: false
+      description: Identifier for a <a href='http://developers.iqmetrix.com/api/RQ-Data-Connect/#storetype'>StoreType</a>. Use -1 to specify All Types. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-store-types'>Getting Store Types</a>
+    ByMonth:
+      type: string
+      example: ByMonth
+      required: false
+      description: A flag to indicate if the report should display sales by month 
+    CouponIDs:
+      type: integer
+      example: -1
+      required: false
+      description: Use with SearchMethod 8. Comma seperated list {{Coupon}} identifiers. For a complete list see <a href='/api/RQ-Data-Connect/#getting-a-list-of-coupons-in-rq'>Getting A List of Coupons in RQ</a> 
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false          
+  type:
+    collectionReadOnly: 
+      resource: SalesByLocationReportData
+  get:
+    displayName: Getting the Sales By Location Report
+    description: |
+      For more information, see {{support_SalesByLocationReport}}.
+/reports/SalesForecastReport?DateAsOf={DateAsOf}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&CategoryNumber={CategoryNumber}&CouponIDs={CouponIDs}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    DateAsOf:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which to run report
+      required: true
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    CategoryNumber:
+      type: integer
+      example: 10
+      description: Identifier for a {{CategoryNumber}}. Defaults to all categories. For a complete list see <a href="/api/RQ-Data-Connect/#getting-category-numbers">Getting Category Numbers</a>
+      required: false
+    CouponIDs:
+      type: integer
+      example: -1
+      required: false
+      description: Comma seperated list {{Coupon}} identifiers. For a complete list see <a href="/api/RQ-Data-Connect/#getting-a-list-of-coupons-in-rq">Getting A List of Coupons in RQ</a> 
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false          
+  type:
+    collectionReadOnly: 
+      resource: SalesForecastReportData
+  get:
+    displayName: Getting the Sales Forecast Report
+    description: |
+      For more information, see {{support_SalesForecastReport}}.      
+/reports/SerializedCouponReport?StartDate={StartDate}&StopDate={StopDate}&Enabled={Enabled}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&SerialNumberFilter={SerialNumberFilter}&CouponID={CouponID}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true  
+    Enabled:
+      type: string
+      example: True
+      required: true
+      description: A flag to indicate if the report should search by Enabled cupons (true) or Disabled (false)
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    SerialNumberFilter:
+      type: string
+      example: 866988333292854
+      required: false
+      description: A text field that allows you to search for specific serial numbers
+    CouponID:
+      type: integer
+      example: -1
+      required: false
+      description: Identifier for a {{Coupon}}. Defaults to All Coupons (-1). For a complete list see <a href="/api/RQ-Data-Connect/#getting-a-list-of-coupons-in-rq">Getting A List of Coupons in RQ</a> 
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false          
+  type:
+    collectionReadOnly: 
+      resource: SerializedCouponReportData
+  get:
+    displayName: Getting the Serialized Coupon Report
+    description: |
+      For more information, see {{support_SerializedCouponReport}}.

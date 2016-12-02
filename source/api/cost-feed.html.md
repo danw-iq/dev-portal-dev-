@@ -160,11 +160,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>SupplierId</code> (<strong>Required</strong>)  - Identifier of the Supplier
-    </li>
-    </ul>
+    <li><code>SupplierId</code> (<strong>Required</strong>)  - Identifier of the Supplier</li>
+</ul>
 
 
 
@@ -172,17 +169,16 @@ puts response
 
 <ul><li><code>Products</code> (<strong>Required</strong>) </li><ul><li><code>Sku</code> (<strong>Required</strong>) </li><li><code>Cost</code> (<strong>Required</strong>) </li><li><code>CompanyIds</code> (<strong>Required</strong>) </li></ul></ul>
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 202 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": "2e18496c-8f73-4298-8c96-a07816926734",

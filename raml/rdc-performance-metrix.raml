@@ -1,0 +1,512 @@
+#%RAML 0.8
+title: RQ Data Connect Performance Metrix Reports
+baseUri: https://rqdataconnect{UrlSuffix}.iqmetrix.net
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: |
+      RQ
+  - title: overview
+    content: |
+
+      RQ Data Connect allows you to retrieve report data from your RQ database (v4.23 and up).
+
+      To get started, see [RQ Data Connect Guide](/guides/rq-data-connect/).
+
+      #### Note
+
+      For reports that provide optional URI parameters for filtering at different levels (ForWho/ForWhoIDs/LocationType/LocationTypeIDs), omitting these values will run the report at the default company level.
+
+      ### Authentication
+
+      RQ Data Connect and Bridge support many different methods of authentication, see {{AuthenticationOptions}}.
+
+      Note that for all reports the {{AccessToken_Glossary}} should be mapped to an employee in RQ.
+
+      ### Report List
+
+      For a complete list of reports in RQ Data Connect, see [Report List](/rq-data-connect/report-list).
+
+
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 400` | `Bad Request` | Ensure request body is formatted properly |
+      | `HTTP 401` | `Tokan is invalid` | Ensure Access Token is valid and has not expired |
+      | `HTTP 403` | `Unauthorized` | Ensure Access Token is valid and user has appropriate security |
+      | `HTTP 404` | `Not Found` | Ensure URI is valid |
+      | `HTTP 429` | `Too Many Requests` | See [Rate Limiting](/api/#rate-limiting) |
+      | `HTTP 500` | `Unexpected Error` | See Message in response for more information |            
+resourceTypes:
+  - collectionReadOnly:
+      get:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              required: false
+              description: Bearer token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+            Accept-Encoding:
+              example: gzip
+              required: false
+              description: Compression algorithm. For other methods of compression, see {{CompressionOptions}}
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+                application/JsonDataTable:
+                  schema: <<resource>>
+                text/xml:
+                  schema: <<resource>>
+                text/XmlDataTable:
+                  schema: <<resource>>
+                text/csv:
+                  schema: <<resource>>
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                  schema: <<resource>>
+schemas:
+  - GraphedPerformanceMetrixReportData: |
+      {
+        "name": "GraphedPerformanceMetrixReportData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": {  "type": "integer", "database": "INT", "description": "Identifier for a performance metrix group in RQ", "example": "6" },
+          "Name": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Name of a performance metrix group in RQ", "example": "51247 Test_update" },
+          "AttachmentRate": {  "type": "string", "database": "VARCHAR(23)", "description": "Comparison of Performance Groups for the Attachment Rate displayed as a ratio", "example": "1249 : 2" },
+          "AttachmentRateTarget": {  "type": "string", "database": "VARCHAR(23)", "description": "Attachment rate target", "example": "0 : 0" },
+          "DisplayFormat": {  "type": "integer", "database": "INT", "description": "1: Ratio Format, 2: Percentage Format", "example": "2" },
+          "IsAttachmentRate": {  "type": "boolean", "database": "BIT", "description": "A flag to indicate if performance group is an attachment rate", "example": "true" },
+          "Margin": {  "type": "decimal", "database": "MONEY", "description": "Margin on sales in this performance group", "example": "null" },
+          "MarginTarget": {  "type": "decimal", "database": "MONEY", "description": "Margin target", "example": "null" },
+          "Priority": {  "type": "integer", "database": "INT", "description": "Priority", "example": "-1" },
+          "Profit": {  "type": "decimal", "database": "MONEY", "description": "Net profit amount of sales in this performance group", "example": "null" },
+          "ProfitTarget": {  "type": "decimal", "database": "MONEY", "description": "Profit target", "example": "null" },
+          "Quantity": {  "type": "integer", "database": "INT", "description": "Net count of SKUs sold in this performance group", "example": "null" },
+          "QuantityTarget": {  "type": "integer", "database": "INT", "description": "Quantity target", "example": "null" },
+          "Sales": {  "type": "decimal", "database": "MONEY", "description": "Net dollar amount of sales in this performance group", "example": "null" },
+          "SalesTarget": {  "type": "decimal", "database": "MONEY", "description": "Sales target", "example": "null" }
+        }
+      }
+  - GraphedPerformanceMetrixBreakdownReportData: |
+      {
+        "name": "GraphedPerformanceMetrixBreakdownReportData",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "ID": {  "type": "integer", "database": "INT", "description": "Internal idenfier in RQ", "example": "1" },
+          "Name": {  "type": "string", "database": "NVARCHAR(MAX)", "description": "Name of company, region, division, location or employee depending on ByWho URL parameter", "example": "84 West" },
+          "GroupInvoiceCount": {  "type": "integer", "database": "INT", "description": "This number represents the size of the section of pie graph", "example": "839" },
+          "IsAttachmentRate": {  "type": "boolean", "database": "BIT", "description": "A flag to indicate if performance group is an attachment rate", "example": "false" },
+          "Margin": {  "type": "decimal", "database": "MONEY", "description": "Margin", "example": "-1691.5747" },
+          "MarginTarget": {  "type": "decimal", "database": "DECIMAL", "description": "Margin target", "example": "0" },
+          "Profit": {  "type": "decimal", "database": "MONEY", "description": "Profit", "example": "-45860859.08" },
+          "ProfitTarget": {  "type": "decimal", "database": "MONEY", "description": "Profit target", "example": "0" },
+          "Quantity": {  "type": "integer", "database": "INT", "description": "Quantity", "example": "530" },
+          "QuantityTarget": {  "type": "integer", "database": "INT", "description": "Quantity target", "example": "0" },
+          "Sales": {  "type": "decimal", "database": "MONEY", "description": "Total sales", "example": "27111.34" },
+          "SalesTarget": {  "type": "decimal", "database": "MONEY", "description": "Sales target", "example": "0" },
+          "TotalInvoiceCount": {  "type": "integer", "database": "INT", "description": "This number represents the total size of the graph ", "example": "2772" }
+        }
+      }
+  - PerformanceMetrixReportData: |
+      {  
+          "type": "array",
+          "name": "PerformanceMetrixReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "ID": { "type": "integer", "database": "INT", "example": "4", "description": "Internal identifier in RQ" },  
+            "Name": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Attachment Ratio", "description": "Group - name of the group" },  
+            "Priority1": { "type": "integer", "database": "INT", "example": "-1", "description": "Internal value in RQ" },     
+            "SearchDateQuantity": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Quantity to Date - numeric and displays to nearest integer" },  
+            "SearchDateSales": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Sales to Date ($) - amount in dollars for sales to date" },  
+            "SearchDateProfit": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Profit to Date - numeric and displays to nearest integer" },  
+            "SearchDateMargin": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Margin to Date - numeric and displays to nearest integer" },  
+            "SearchDateAttachmentRate": { "type": "string", "database": "VARCHAR(23)", "example": "9 : 0", "description": "Margin % of Target - percentage and displays Margin to date / target" },  
+            "Quantity": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Quantity Today - numeric and displays to nearest integer for today" },  
+            "Sales": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Today - numeric and displays to nearest integer for today" },  
+            "Profit": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Profit Today - numeric and displays to nearest integer for today" },  
+            "Margin": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Margin Today - numeric and displays to nearest integer for today" },  
+            "QuantityPercentOfTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Quantity % of Target - percentage and displays Quantity to date / target" },  
+            "SalesPercentOfTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Sales % of Target - percentage and displays sales to date / target" },  
+            "ProfitPercentOfTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Profit % of Target - percentage and displays Profit to date / target" },  
+            "MarginPercentOfTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Margin % of Target - percentage and displays Margin to date / target" },  
+            "QuantityTrending": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Trending - numeric and displays to nearest integer. Formula is as follows: (Quantity To Date / (Date - beginning of period + 1)) * # of days in the period." },  
+            "SalesTrending": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Trending - numeric and displays to nearest integer. Formula is as follows: (Sales To Date / (Date - beginning of period + 1)) * # of days in the period." },  
+            "ProfitTrending": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Trending - numeric and displays to nearest integer. Formula is as follows: (Profit To Date / (Date - beginning of period + 1)) * # of days in the period." },  
+            "MarginTrending": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Trending - numeric and displays to nearest integer. Formula is as follows: (Margin To Date / (Date - beginning of period + 1)) * # of days in the period." },  
+            "QuantityTrendingPercentOfTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Quantity % of Target - percentage and displays Quantity to date / target" },  
+            "SalesTrendingPercentOfTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Trending % of Target - percentage and displays trending / target" },  
+            "ProfitTrendingPercentOfTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Trending % of Target - percentage and displays trending / target" },  
+            "MarginTrendingPercentOfTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Trending % of Target - percentage and displays trending / target" },  
+            "QuantityTarget": { "type": "integer", "database": "INT", "example": "0", "description": "Target - numeric and displays the target set in the Performance Targets Setup" },  
+            "SalesTarget": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Target - numeric and displays the target set in the Performance Targets Setup" },  
+            "ProfitTarget": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Target - numeric and displays the target set in the Performance Targets Setup" },  
+            "MarginTarget": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Target - numeric and displays the target set in the Performance Targets Setup" },  
+            "AttachmentRateTarget": { "type": "string", "database": "VARCHAR(23)", "example": "0 : 0", "description": "Target - numeric and displays the target set in the Performance Targets Setup" },  
+            "IsAttachmentRate": { "type": "boolean", "database": "BIT", "example": "true", "description": "Internal value in RQ" },  
+            "DisplayFormat": { "type": "integer", "database": "INT", "example": "2", "description": "Internal value in RQ" },  
+            "AttachmentRate": { "type": "string", "database": "VARCHAR(23)", "example": "114 : 0", "description": "Rate - as calculated by the AR (PG1 divided by PG2)" }  
+          }  
+        }
+  - PerformanceMetrixSummaryReportData: |
+      {  
+          "type": "array",
+          "name": "PerformanceMetrixSummaryReportData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "GroupID": { "type": "integer", "database": "INT", "example": "5", "description": "Internal identifier in RQ" },  
+            "GroupName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Accessories & Devices", "description": "Group Name - name of the performance group" },  
+            "Priority": { "type": "integer", "database": "INT", "example": "-1", "description": "Internal value in RQ" },  
+            "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity - net count of SKUs sold in this group for the search criteria" },  
+            "Sales": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Sales - net dollar amount of sales in this group for the search criteria" },  
+            "Profit": { "type": "decimal", "database": "MONEY", "example": "0", "description": "Profit - net profit amount of sales in this group for the search criteria" },  
+            "Margin": { "type": "decimal", "database": "DECIMAL", "example": "0", "description": "Margin - margin on the sales in this group for the search criteria" },  
+            "Enabled": { "type": "integer", "database": "INT", "example": "1", "description": "Internal value in RQ" },  
+            "IsAttachmentRate": { "type": "boolean", "database": "BIT", "example": "true", "description": "Internal value in RQ" },  
+            "DisplayFormat": { "type": "integer", "database": "INT", "example": "2", "description": "Internal value in RQ" },  
+            "AttachmentRate": { "type": "string", "database": "VARCHAR(23)", "example": "114 : 0", "description": "Rate - as calculated by the AR (PG1 divided by PG2)" }  
+          }  
+        }      
+/reports/graphedperformancemetricsreport_performancemetrix?PeriodID={PeriodID}&StartDate={StartDate}&StopDate={StopDate}&HideRebates={HideRebates}&ForWho={ForWho}&ForWhoID={ForWhoID}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    PeriodID:
+      type: integer
+      example: 1
+      description: Identifier for a Period in RQ, or -1 if a StartDate and StopDate will be used
+      required: true
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin. If PeriodID is -1, this value will be ignored
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end. If PeriodID is -1, this value will be ignored
+      required: true
+    HideRebates:
+      type: integer
+      example: -1
+      description: A flag to indicate if Rebates should be included in the report (1) or not (-1)
+      required: true
+    ForWho:
+      type: integer
+      example: 1
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoID:
+      type: integer
+      example: 6679
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false      
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: GraphedPerformanceMetrixReportData
+  get:
+    displayName: Getting the Graphed Performance Metrix Report
+    description: |
+      For more information, see {{support_GraphedPerformanceMetrixReport}}.
+/reports/graphedperformancemetricsreport_breakdown?PeriodID={PeriodID}&StartDate={StartDate}&StopDate={StopDate}&HideRebates={HideRebates}&PerformanceGroupID={PerformanceGroupID}&TopN={TopN}&TopCriteria={TopCriteria}&ByWho={ByWho}&ForWho={ForWho}&ForWhoID={ForWhoID}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    PeriodID:
+      type: integer
+      example: 1
+      description: Identifier for a Period in RQ, or -1 if a StartDate and StopDate will be used
+      required: true
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin. If PeriodID is -1, this value will be ignored
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end. If PeriodID is -1, this value will be ignored
+      required: true
+    HideRebates:
+      type: integer
+      example: -1
+      description: A flag to indicate if Rebates should be included in the report (1) or not (-1)
+      required: true
+    PerformanceGroupID:
+      type: integer
+      example: 1
+      description: Identifier for a Performance Group in RQ
+      required: true
+    TopN:
+      type: integer
+      example: 10
+      description: Gets the top X entries for the report, ordered by the value in TopCriteria. Use -1 to return all results
+      required: true
+    TopCriteria:
+      type: string
+      example: Quantity
+      description: Acceptable values include Quantity, Sales, Profit, Margin and Rate
+      required: true
+    ByWho:
+      type: integer
+      example: 5
+      description: This value will aggregate the report data at the Company (1), Region (2), Division (3), Location (4) or Employee (5) level
+      required: true      
+    ForWho:
+      type: integer
+      example: 1
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoID:
+      type: integer
+      example: 6679
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false     
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false       
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false
+  type:
+    collectionReadOnly:
+      resource: GraphedPerformanceMetrixBreakdownReportData
+  get:
+    displayName: Getting the Graphed Performance Metrix Breakdown Report
+    description: |
+      For more information, see {{support_GraphedPerformanceMetrixReport}}.
+/reports/PerformanceMetrixReport?DateAsOf={DateAsOf}&HideRebates={HideRebates}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    DateAsOf:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which to run report
+      required: true
+    HideRebates:
+      type: integer
+      example: -1
+      description: A flag to indicate if Rebates should be included in the report (1) or not (-1)
+      required: true
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false    
+  type:
+    collectionReadOnly: 
+      resource: PerformanceMetrixReportData
+  get:
+    displayName: Getting the Performance Metrix Report
+    description: |
+      For more information see {{support_PerformanceMetrixReport}}.
+/reports/PerformanceMetrixReport?DateAsOf={DateAsOf}&PerformanceGroupID={PerformanceGroupID}&TopN={TopN}&TopCriteria={TopCriteria}&ByWho={ByWho}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    DateAsOf:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which to run report
+      required: true
+    PerformanceGroupID:
+      type: integer
+      example: 1
+      description: Identifier for a Performance Group in RQ
+      required: true
+    TopN:
+      type: integer
+      example: 10
+      description: Gets the top X entries for the report, ordered by the value in TopCriteria. Use -1 to return all results
+      required: true
+    TopCriteria:
+      type: string
+      example: Quantity
+      description: Acceptable values include Quantity, Sales, Profit, Margin and Rate
+      required: true
+    ByWho:
+      type: integer
+      example: 5
+      description: This value will aggregate the report data at the Company (1), Region (2), Division (3), Location (4) or Employee (5) level
+      required: true      
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false    
+  type:
+    collectionReadOnly: 
+      resource: PerformanceMetrixReportData
+  get:
+    displayName: Getting the Performance Group Report
+    description: |
+      For more information see {{support_PerformanceGroupReport}}.
+/reports/PerformanceMetrixSummaryReport?StartDate={StartDate}&StopDate={StopDate}&HideRebates={HideRebates}&ReportType={ReportType}&ForWho={ForWho}&ForWhoIDs={ForWhoIDs}&LocationType={LocationType}&LocationTypeIDs={LocationTypeIDs}&LanguageCode={LanguageCode}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true       
+    HideRebates:
+      type: integer
+      example: -1
+      description: A flag to indicate if Rebates should be included in the report (1) or not (-1)
+      required: true  
+    ReportType:
+      type: string
+      example: Group
+      required: true
+      description: Acceptable values include Group, Location and Employee
+    ForWho:
+      type: integer
+      example: 4
+      description: Identifier for a level at which to perform the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-report-levels-in-rq">Getting Report Levels in RQ</a>. If <strong>LocationType</strong> is provided, this value is ignored
+      required: false
+    ForWhoIDs:
+      type: integer
+      example: 1
+      description: A comma seperated list of identifiers to filter the report. For a list of identifiers, see <a href="/api/RQ-Data-Connect/#getting-nodes-by-location-type">Getting Nodes By Location Type</a>. If <strong>LocationTypeIDs</strong> is provided, this value is ignored. To ignore filtering use -1
+      required: false
+    LocationType:
+      type: string
+      example: Store
+      description: A {{LocationType}} to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-types">Getting Location Types</a>. If this value is provided, <strong>ForWho</strong> is ignored
+      required: false
+    LocationTypeIDs:
+      type: string
+      example: 1,2
+      description: A comma seperated list of {{RQCompanyTreeNode}} identifiers to filter the report. For a complete list, see <a href="/api/RQ-Data-Connect/#getting-location-ids">Getting Location Ids</a>. To ignore filtering, use -1 or *. If this value is provided, <strong>ForWhoIDs</strong> is ignored
+      required: false 
+    LanguageCode:
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='/api/RQ-Data-Connect/#getting-language-codes'>Getting Language Codes</a>
+      required: false
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false    
+  type:
+    collectionReadOnly: 
+      resource: PerformanceMetrixSummaryReportData
+  get:
+    displayName: Getting the Performance Metrix Summary Report
+    description: |
+      For more information see {{support_PerformanceMetrixSummaryReport}}.

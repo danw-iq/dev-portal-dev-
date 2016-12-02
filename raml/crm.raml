@@ -1,0 +1,1402 @@
+#%RAML 0.8
+title: crm
+version: v1
+baseUri: https://crm{UrlSuffix}.iqmetrix.net/{version}
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |
+        The Customer Relationship Management (CRM) API gives you a full suite of options to create, modify, or delete customers and customer information, such as address and contact method.
+  - title: searching
+    content: |
+        The Customers API supports searching of {{Customer}} and [CustomerSearch](#customersearch) resources through the use of filters.
+
+        The `$filter` query parameter is used for specifying filtering criteria.
+
+        The type of filters available depend on the Data Type of the property being filtered on.
+
+        ## Available Filters
+
+        See the table below for available filters and the syntax of using each filter.
+
+        | Keyword | Filter Description | Data Type | Examples |
+        |:--------|:-------------------|:----------|:---------|
+        | `eq` | Property is equal to value | Integer, Boolean, String, Date | `ContactMethod eq 1` <br/> `DoNotContact eq true`  <br/> `Criteria eq 'Bob'` <br/> `DateOfBirth eq DateTime'1990-01-01'`|
+        | `gt` | Property is greater than value(s) | Integer, Date | `ContactMethod gt 1` <br/> `DateOfBirth gt DateTime'1990-01-01'` <br/> `Criteria gt DateTime'2015-01-01'`|
+        | `lt` | Property is less than value(s) | Integer, Date | `ContactMethod lt 3` <br/> `DateOfBirth lt DateTime'1990-01-01'` <br/> `Criteria lt DateTime'2015-01-01'`|
+        | `ge` | Property is greater than or equal to value(s) | Integer, Date |  `ContactMethod ge 1` <br/> `DateOfBirth ge DateTime'1990-01-01'` <br/> `Criteria ge DateTime'2015-01-01'`|
+        | `le`| Property is less than or equal to value(s) | Integer, Date |  `ContactMethod le 1` <br/> `DateOfBirth le DateTime'1990-01-01'` <br/> `Criteria le DateTime'2015-01-01'`|
+        | `substringof` | Property contains value | String | `substringof('bob', PrimaryName)` <br/> `substringof('bob', Criteria)` |
+
+        ### Combining Filters
+
+        Filters can be combined using the keyword `and` as shown below.
+
+        ###### Example
+
+            PrimaryName eq 'John' and DateOfBirth gt DateTime'1990-01-01'
+
+        ### Case Sensitivity
+
+        Filters on {{Customer}} resources are **case sensitive**.
+
+        Filters on [CustomerSearch](#customersearch) resources are **NOT** case sensitive.
+
+        To filter without case sensitivity, you can apply 'tolower' to a resource property.
+
+        ###### Example
+
+            GET /Companies(14146)/Customers?$filter=substringof('bob', tolower(PrimaryName))
+  - title: pagination
+    content: |
+        The Customers API supports pagination of collections for some resources.
+
+        Requests to resources that support pagination include the `Accept: application/hal+json` HTTP header under the Headers section.
+
+        ### Query Parameters
+
+        Pagination is done through the use of $skip and $top query string parameters.
+
+        `$skip` denotes the number of items in the collection to skip, defaults to 0 if no value is provided.
+
+        `$top` denotes the number of items to take, defaults to 50 if no value is provided.
+
+        The maximum value of 100 will be used if the value provided is outside the acceptable range [0-100].
+
+        ### Navigation Links
+
+        Pagination links for 'self', 'prev' and 'next' are returned by default when the media type is a hypermedia-enabled media type (i.e. HAL).
+
+        These links are _relative_, they do not include the base endpoint. It is the responsibility of the client to prepend the appropriate endpoint.
+
+        ##### Example
+
+        ```csharp
+        {
+            "_links": {
+                "self": {
+                  "href": "Companies(14146)/Customers?$skip=10&$top=10",
+                  "templated": false
+                },
+                "next": {
+                  "href": "Companies(14146)/Customers?$skip=20&$top=10",
+                  "templated": false
+                },
+                "prev": {
+                  "href": "Companies(14146)/Customers?$skip=0&$top=10",
+                  "templated": false
+                }
+            },
+            "_embedded": {
+                "self": [ ]
+            }
+        }
+        ```
+
+        In the example above, the `_links` section is included in the data returned from an API request to get Customers, where `$skip=10` and `$top=10`.
+
+        The `self`.`href` value is the encoded version of the API request that returned these results.
+
+        The `next`.`href` refers to a resource containing a page with the **next** 10 items.
+
+        The `prev`.`href` refers to a resource containing a page with the **previous** 10 items.
+  - title: errors
+    content: | 
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 404` | `Not Found` | Ensure the CustomerID is correct |        
+  - title: enumerations
+    content: |
+      ## Enumerations
+       
+      ### AddressType
+       
+      | Id | Name | Description |
+      |:---|:-----|:------------|
+      | 1 | None | Customer did not provide an Address |
+      | 2 | Home | Customer's Home Address |
+      | 3 | Shipping | Address to be Shipped to |
+      | 4 | Office | Customer's Work (Office) Address |
+      | 5 | Other | Other |
+
+      ### ContactMethodCategory
+       
+      | Id | Name |
+      |:---|:-----|
+      | 1 | Phone |
+      | 2 | Email |
+      | 3 | Other |
+
+      ### ContactMethodType
+       
+      | Category | Contact Method | Id |
+      |:---------|:---------------|:---|
+      | Dropship | Facebook | 15 |
+      | Dropship | LinkedIn | 16 |
+      | Dropship | Other | 17 |
+      | Dropship | Skype | 13 |
+      | Dropship | Twitter | 14 |
+      | Dropship | Website | 12 |
+      | Email | Home | 9 |
+      | Email | Other | 11 |
+      | Email | Work | 10 |
+      | Phone | Company | 4 |
+      | Phone | Home | 1 |
+      | Phone | Home Fax | 6 |
+      | Phone | Mobile | 3 |
+      | Phone | Other | 8 |
+      | Phone | Pager | 5 |
+      | Phone | Work | 2 |
+      | Phone | Work Fax | 7 |
+       
+      ### CustomerType
+       
+      | Id | Name |
+      |:---|:-----|
+      | 1 | None |
+      | 2 | Person |
+      | 3 | Company |
+resourceTypes:
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - collection:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                    body:                     
+                        application/json:
+                          schema: <<getResource>>     
+                        application/hal+json:
+                          schema: <<halResource>>
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:                          
+    - collectionHal:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
+              Accept:
+                example: application/hal+json    
+            responses:
+                200:
+                    body:
+                        application/hal+json:
+                          schema: <<halResource>>
+    - collectionWriteOnly:
+        securedBy: [oauth_2_0]
+        post:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            201:
+              body:
+                application/json:
+                  schema: <<resource>>
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
+              Accept:
+                example: application/json     
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>    
+    - singularEndpointGetDelete:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
+              Accept:
+                example: application/json      
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)   
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+          responses:
+            200:
+              body:
+                application/json:                                                
+    - singularEndpoint:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>
+              Accept:
+                example: application/json      
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+        put:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+            Accept:
+              example: application/json
+            Content-Type:
+              example: application/json        
+          body:
+            application/json:
+              schema: <<resource>>
+          responses:
+            200:
+              body:
+                application/json:
+                  schema: <<resource>>
+        delete:
+          headers:
+            Authorization:
+              example: Bearer (Access Token)   
+              description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>              
+          responses:
+            200:
+              body:
+                application/json:            
+schemas:
+  - iqCustomers: |
+      {
+        "name": "iqCustomers",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "example": "Companies(14146)/Customers?$skip=0&$top=1" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      } 
+  - iqCustomer: |
+      {
+        "name": "iqCustomer",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return a related Customer", "example": "Companies(14146)/Customers(902cdc91-65f4-4c7d-b336-5f291849f2fe)" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }  
+  - iqCustomerFull: |
+      {
+        "name": "iqCustomerFull",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return a related CustomerFull", "example": "Companies(14146)/CustomerFull(902cdc91-65f4-4c7d-b336-5f291849f2fe)" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }    
+  - iqAddresses: |
+      {
+        "name": "iqAddresses",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return related Addresses(s)", "example": "Companies(14146)/Customers(902cdc91-65f4-4c7d-b336-5f291849f2fe)/Addresses" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }
+  - iqAddress: |
+      {
+        "name": "iqAddress",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return related Addresses(s)", "example": "Companies(14146)/Customers(902cdc91-65f4-4c7d-b336-5f291849f2fe)/Addresses(a08b0640-606a-41f0-901a-facaf50e75dd" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }      
+  - iqContactMethod: |
+      {
+        "name": "iqContactMethod",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return related ContactMethods(s)", "example": "Companies(14146)/Customers(902cdc91-65f4-4c7d-b336-5f291849f2fe)/ContactMethods(b25dd8b2-a24d-4107-8fbe-9c7b21e18137)" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }    
+  - iqContactMethods: |
+      {
+        "name": "iqContactMethod",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return related ContactMethods(s)", "example": "Companies(14146)/Customers(902cdc91-65f4-4c7d-b336-5f291849f2fe)/ContactMethods" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }
+  - iqCustomerExtension: |
+      {
+        "name": "iqCustomerExtension",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return related CustomerExtension(s)", "example": "Companies(14146)/Customers(902cdc91-65f4-4c7d-b336-5f291849f2fe)/CustomerExtensions(74b87ece-5f70-454d-9991-7952127146b0)" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }
+  - iqCustomerExtensions: |
+      {
+        "name": "iqCustomerExtension",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return related CustomerExtension(s)", "example": "Companies(14146)/Customers(902cdc91-65f4-4c7d-b336-5f291849f2fe)/CustomerExtensions" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }        
+  - CustomerLinks: |
+      {
+        "name": "CustomerLinks",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "object", "ref": "crm.iqCustomer" },
+          "iq:CustomerFull": { "type": "object", "ref": "crm.iqCustomerFull" },
+          "iq:Address": { "type": "object", "ref": "crm.iqAddresses"},
+          "iq:ContactMethod": { "type": "object", "ref": "crm.iqContactMethods" },
+          "iq:CustomerExtension": { "type": "object", "ref": "crm.iqCustomerExtensions" },
+          "iq:RelatedCustomer": { "type": "object", "example": "" },
+          "iq:MemberOf": { "type": "object", "example": "" }
+        }
+      }   
+  - CustomerArrayHal: |
+      { 
+        "name": "CustomerArrayHal",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "crm.CustomerPropertyLinks" },
+          "_embedded": { "type": "object", "ref": "crm.CustomerEmbeddedLinks" }
+        }
+      }
+  - CustomerPropertyLinks: |
+      { 
+        "name": "CustomerPropertyLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "prev": { "type": "object", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null" },
+          "self": { "type": "object", "putDescription": "The request that returned this result", "ref": "crm.iqCustomers" },
+          "next": { "type": "object", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null" }
+        }
+      }
+  - CustomerEmbeddedLinks: |
+      { 
+        "name": "CustomerEmbeddedLink",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "array", "arrayType": "object", "ref": "crm.CustomerHal" }
+        }
+      }  
+  - CustomerHal: |
+      { 
+        "exclude": "true",
+        "name": "CustomerHal",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative links to requests related to this resource", "ref": "crm.CustomerLinks" },
+          "_embedded": { "type": "object", "putDescription": "?????????????", "example": "" }, 
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "659c2a38-d083-4421-9330-46d779702f85",  "generated": "true" }, 
+          "PrimaryName": { "type": "string",  "description": "First name of a given person or the full name of the business, division, organization, etc", "example": "Princess" }, 
+          "MiddleName": { "type": "string",  "description": "Middle name. Could also be referred to as Additional name", "example": "Ella" }, 
+          "FamilyName": { "type": "string",  "description": "Family name. In the U.S., the last name of a Person", "example": "Jasmine" }, 
+          "AlternateName": { "type": "string",  "description": "Alias or preferred name", "example": "Jas" }, 
+          "CustomerType": { "type": "string",  "description": "Name of the [CustomerType](#customertype)", "example": "Company", "generated": "true" }, 
+          "CustomerTypeId": { "type": "integer", "description": "See [CustomerType](#customertype) for a list of acceptable values", "example": "3" }, 
+          "DateOfBirth": { "type": "DateTime", "description": "Customer's birth date, stored in UTC but can be provided in shortened form (yyyy-mm-dd)", "putDescription": "UTC but can be provided in shortened form (yyyy-mm-dd)", "example": "1952-07-23T12:00:00.000" }, 
+          "Disabled": { "type": "boolean", "description": "A flag to indicate whether or not this Customer is disabled. The Delete operation acts as a Disable operation, as a Customer can not be deleted. When the Disabled flag is set to true, this Customer can still be retrieved and updated normally, defaults to false", "putDescription": "Defaults to false", "example": "true" }, 
+          "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this Customer is private and not to be used by external systems (such as a marketing system), defaults to true", "putDescription": "Defaults to true", "example": "true" }, 
+          "Notes": { "type": "string",  "description": "Any notes related to this Customer", "example": "Interested in iPhone 6" }, 
+          "Title": { "type": "string",  "description": "Title", "example": "Ms" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true" }
+        }
+      }
+  - Customer: |
+      { 
+        "name": "Customer",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "A Customer is a person or organization that buys goods or services from a store or business.",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "659c2a38-d083-4421-9330-46d779702f85",  "generated": "true", "putGenerate": "true" }, 
+          "PrimaryName": { "type": "string",  "description": "First name of a given person or the full name of the business, division, organization, etc", "example": "Princess" }, 
+          "MiddleName": { "type": "string",  "description": "Middle name. Could also be referred to as Additional name", "example": "Ella" }, 
+          "FamilyName": { "type": "string",  "description": "Family name. In the U.S., the last name of a Person", "example": "Jasmine" }, 
+          "AlternateName": { "type": "string",  "description": "Alias or preferred name", "example": "Jas" }, 
+          "CustomerType": { "type": "string",  "description": "Name of the [CustomerType](#customertype)", "example": "Company", "generated": "true" }, 
+          "CustomerTypeId": { "type": "integer", "description": "See [CustomerType](#customertype) for a list of acceptable values", "example": "3" }, 
+          "DateOfBirth": { "type": "DateTime", "description": "Customer's birth date, stored in UTC but can be provided in shortened form (yyyy-mm-dd)", "putDescription": "UTC but can be provided in shortened form (yyyy-mm-dd)", "example": "1952-07-23T12:00:00.000" }, 
+          "Disabled": { "type": "boolean", "description": "A flag to indicate whether or not this Customer is disabled. The Delete operation acts as a Disable operation, as a Customer can not be deleted. When the Disabled flag is set to true, this Customer can still be retrieved and updated normally, defaults to false", "putDescription": "Defaults to false", "example": "true" }, 
+          "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this Customer is private and not to be used by external systems (such as a marketing system), defaults to true", "putDescription": "Defaults to true", "example": "true" }, 
+          "Notes": { "type": "string",  "description": "Any notes related to this Customer", "example": "Interested in iPhone 6" }, 
+          "Title": { "type": "string",  "description": "Title", "example": "Ms" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true"  }
+        },
+        "required": ["CustomerTypeId", "Id"]      
+      }       
+  - CustomerArray: |
+      { 
+        "name": "Customer",
+        "type": "array",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }       
+  - AddressLinks: |
+      {
+        "name": "AddressLinks",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "object", "ref": "crm.iqAddress" },
+          "iq:Customer": { "type": "object", "ref": "crm.iqCustomer" },
+          "iq:CustomerFull": { "type": "object", "ref": "crm.iqCustomerFull" }
+        }
+      }   
+  - AddressArrayHal: |
+      { 
+        "name": "AddressArrayHal",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "crm.AddressPropertyLinks" },
+          "_embedded": { "type": "object", "ref": "crm.AddressEmbeddedLinks" }
+        }
+      }
+  - AddressPropertyLinks: |
+      { 
+        "name": "AddressPropertyLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "prev": { "type": "object", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null", "ref": "crm.iqAddress" },
+          "self": { "type": "object", "putDescription": "The request that returned this result", "ref": "crm.iqAddress" },
+          "next": { "type": "object", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null", "ref": "crm.iqAddress" }   
+        }
+      }
+  - AddressEmbeddedLinks: |
+      { 
+        "name": "AddressEmbeddedLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "array", "arrayType": "object", "ref": "crm.AddressHal" }
+        }
+      }
+  - AddressHal: |
+      { 
+        "exclude": "true",
+        "name": "AddressHal",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative links to requests related to this resource", "ref": "crm.AddressLinks" },
+          "_embedded": { "type": "object", "putDescription": "?????????????", "example": "" }, 
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "a08b0640-606a-41f0-901a-facaf50e75dd", "generated": "true" }, 
+          "CustomerId": { "type": "GUID", "description": "Unique identifier for the [Customer](#customer)", "ref": "crm.Customer.Id",  "generated": "true", "putGenerate": "true" }, 
+          "AddressType": { "type": "string",  "description": "Name of the [AddressType](#addresstype)", "example": "Home", "generated": "true" }, 
+          "AddressTypeId": { "type": "integer", "description": "See [AddressType](#addresstype) for a list of acceptable values", "putDescription": "See [AddressType](#addresstype)", "example": "2" }, 
+          "AttentionTo": { "type": "string",  "description": "Attention To (Attn:)", "example": "Princess" }, 
+          "Country": { "type": "string",  "description": "The Country. This value is system-generated and read-only", "example": "Canada", "generated": "true" }, 
+          "CountryCode": { "type": "string",  "description": "Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","putDescription": "Required if StateCode is provided", "ref": "reference.Country.Code" }, 
+          "Default": { "type": "boolean", "description": "A flag to indicate if this address is the default address for the customer", "example": "false" }, 
+          "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this address is private and not to be used by any external systems (such as a marketing system), defaults to true", "example": "true" }, 
+          "Email": { "type": "string",  "description": "Email", "example": "Jas@princess.ca" }, 
+          "Locality": { "type": "string",  "description": "City, Town, Hamlet", "example": "Mountain View" }, 
+          "Notes": { "type": "string",  "description": "Notes related to this Address", "example": "Moved as of April 15 2015" }, 
+          "Phone": { "type": "string",  "description": "Phone number", "example": "(555) 555-5555" }, 
+          "PostalCode": { "type": "string",  "description": "The postal code/zip code", "example": "94043" }, 
+          "PostOfficeBoxNumber": { "type": "string",  "description": "The post office box number for PO box addresses", "example": "P.O. Box 1022" }, 
+          "State": { "type": "string",  "description": "The State/Province", "example": "Alberta", "generated": "true" }, 
+          "StateCode": { "type": "string",  "description": "Code for the State in which this address resides. Based off the ISO 3166-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>", "ref": "reference.State.Code" }, 
+          "StreetAddress1": { "type": "string",  "description": "The street address", "example": "1600 Amphitheatre Pkwy" }, 
+          "StreetAddress2": { "type": "string",  "description": "The street address", "example": "Suite 500" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true" }
+        }
+      }
+  - Address: | 
+      {
+        "name": "Address",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "An Address represents a valid address somewhere on the planet.",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "a08b0640-606a-41f0-901a-facaf50e75dd", "generated": "true", "putGenerate": "true" }, 
+          "CustomerId": { "type": "GUID", "description": "Unique identifier for the [Customer](#customer)",  "ref": "crm.Customer.Id" }, 
+          "AddressType": { "type": "string",  "description": "Name of the [AddressType](#addresstype)", "example": "Home", "generated": "true" }, 
+          "AddressTypeId": { "type": "integer", "description": "See [AddressType](#addresstype) for a list of acceptable values", "putDescription": "Required if Addresses is not null", "example": "2" }, 
+          "AttentionTo": { "type": "string",  "description": "Attention To (Attn:)", "example": "Princess" }, 
+          "Country": { "type": "string",  "description": "The Country. This value is system-generated and read-only", "example": "Canada", "generated": "true" }, 
+          "CountryCode": { "type": "string",  "description": "Country in which this address resides. Uses the ISO 3166-1 alpha-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>","putDescription": "Required if StateCode is provided", "ref": "reference.Country.Code" }, 
+          "Default": { "type": "boolean", "description": "A flag to indicate if this address is the default address for the customer", "example": "false" }, 
+          "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this address is private and not to be used by any external systems (such as a marketing system), defaults to true", "example": "true" }, 
+          "Email": { "type": "string",  "description": "Email", "example": "Jas@princess.ca" }, 
+          "Locality": { "type": "string",  "description": "City, Town, Hamlet", "example": "Mountain View" }, 
+          "Notes": { "type": "string",  "description": "Notes related to this Address", "example": "Moved as of April 15 2015" }, 
+          "Phone": { "type": "string",  "description": "Phone number", "example": "(555) 555-5555" }, 
+          "PostalCode": { "type": "string",  "description": "The postal code/zip code", "example": "94043" }, 
+          "PostOfficeBoxNumber": { "type": "string",  "description": "The post office box number for PO box addresses", "example": "P.O. Box 1022" }, 
+          "State": { "type": "string",  "description": "The State/Province", "example": "Alberta", "generated": "true" }, 
+          "StateCode": { "type": "string",  "description": "Code for the State in which this address resides. Based off the ISO 3166-2 standard. For a list of acceptable codes, see <a href='/api/reference/#getting-all-countries'>Getting All Countries</a>", "ref": "reference.State.Code" }, 
+          "StreetAddress1": { "type": "string",  "description": "The street address", "example": "1600 Amphitheatre Pkwy" }, 
+          "StreetAddress2": { "type": "string",  "description": "The street address", "example": "Suite 500" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true" }
+        },
+        "required": ["AddressTypeId", "CountryCode", "StateCode", "CustomerId", "Id"]          
+      }
+  - AddressArray: | 
+      {
+        "exclude": "true",        
+        "name": "Address",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - ContactMethodLinks: |
+      {
+        "name": "ContactMethodLinks",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "object", "ref": "crm.iqContactMethod"},
+          "iq:Customer": { "type": "object", "ref": "crm.iqCustomer"},
+          "iq:CustomerFull": { "type": "object", "ref": "crm.iqCustomerFull"}
+        }
+      }   
+  - ContactMethodArrayHal: |
+      { 
+        "name": "ContactMethodArrayHal",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "crm.ContactMethodPropertyLinks" },
+          "_embedded": { "type": "object", "ref": "crm.ContactMethodEmbeddedLinks" }
+        }
+      }
+  - ContactMethodPropertyLinks: |
+      { 
+        "name": "ContactMethodPropertyLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "prev": { "type": "object", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null",  "ref": "crm.iqContactMethod" },
+          "self": { "type": "object", "putDescription": "The request that returned this result", "ref": "crm.iqContactMethod" },
+          "next": { "type": "object", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null",  "ref": "crm.iqContactMethod" }       
+        }
+      }
+  - ContactMethodEmbeddedLinks: |
+      { 
+        "name": "ContactMethodEmbeddedLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "array", "arrayType": "object", "ref": "crm.ContactMethodHal" }
+        }
+      }      
+  - ContactMethodHal: |
+      { 
+        "exclude": "true",
+        "name": "ContactMethodHal",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative links to requests related to this resource", "ref": "crm.ContactMethodLinks" },
+          "_embedded": { "type": "object", "putDescription": "?????????????", "example": "" }, 
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "b25dd8b2-a24d-4107-8fbe-9c7b21e18137", "generated": "true" }, 
+          "CustomerId": { "type": "GUID", "description": "Unique identifier for the [Customer](#customer)", "ref": "crm.Customer.Id" }, 
+          "ContactMethodCategory": { "type": "string",  "description": "Name of the [ContactMethodCategory](#contactmethodcategory)", "example": "Email", "generated": "true" }, 
+          "ContactMethodCategoryId": { "type": "integer", "description": "See [ContactMethodCategory](#contactmethodcategory) for a list of acceptable values", "putDescription": "Required if ContactMethods is not null", "example": "3" }, 
+          "ContactMethodType": { "type": "string",  "description": "Name of the [ContactMethodType](#contactmethodtype)", "example": "Work phone", "generated": "true" }, 
+          "ContactMethodTypeId": { "type": "integer", "description": "See [ContactMethodType](#contactmethodtype) for a list of acceptable values", "putDescription": "Required if ContactMethods is not null", "example": "5" }, 
+          "Default": { "type": "boolean", "description": "A flag to indicate if this is the default ContactMethod for the Customer", "example": "true" }, 
+          "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this ContactMethod is private and not to be used by any external systems (such as a marketing system), defaults to true", "example": "true" }, 
+          "Notes": { "type": "string",  "description": "Notes related to this ContactMethod", "example": "After 6pm" }, 
+          "Value": { "type": "string",  "description": "The value representing this ContactMethod", "example": "(306) 222-3333" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true"}
+        }
+      }
+  - ContactMethod: |
+        {
+          "name": "ContactMethod",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "A Contact Method is a method of contacting a Customer.",
+          "properties": {
+            "Id": { "type": "GUID", "description": "Unique identifier", "example": "b25dd8b2-a24d-4107-8fbe-9c7b21e18137", "generated": "true", "putGenerate": "true" }, 
+            "CustomerId": { "type": "GUID", "description": "Unique identifier for the [Customer](#customer)", "ref": "crm.Customer.Id" }, 
+            "ContactMethodCategory": { "type": "string",  "description": "Name of the [ContactMethodCategory](#contactmethodcategory)", "example": "Email", "generated": "true" }, 
+            "ContactMethodCategoryId": { "type": "integer", "description": "See [ContactMethodCategory](#contactmethodcategory) for a list of acceptable values", "putDescription": "Required if ContactMethods is not null", "example": "3" }, 
+            "ContactMethodType": { "type": "string",  "description": "Name of the [ContactMethodType](#contactmethodtype)", "example": "Work phone", "generated": "true" }, 
+            "ContactMethodTypeId": { "type": "integer", "description": "See [ContactMethodType](#contactmethodtype) for a list of acceptable values", "putDescription": "Required if ContactMethods is not null", "example": "5" }, 
+            "Default": { "type": "boolean", "description": "A flag to indicate if this is the default ContactMethod for the Customer", "example": "true" }, 
+            "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this ContactMethod is private and not to be used by any external systems (such as a marketing system), defaults to true", "example": "true" }, 
+            "Notes": { "type": "string",  "description": "Notes related to this ContactMethod", "example": "After 6pm" }, 
+            "Value": { "type": "string",  "description": "The value representing this ContactMethod", "example": "(306) 222-3333" }, 
+            "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true"}
+          },
+          "required": ["ContactMethodCategoryId", "ContactMethodTypeId", "Id", "CustomerId"]
+        }
+  - ContactMethodArray: |
+        {
+          "exclude": "true",          
+          "name": "ContactMethod",
+          "type": "array",
+          "$schema": "http://json-schema.org/draft-03/schema"
+        }        
+  - CustomerExtensionLinks: |
+      {
+        "name": "CustomerExtensionLinks",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "object", "ref": "crm.iqCustomerExtension"},
+          "iq:Customer": { "type": "object", "ref": "crm.iqCustomer"},
+          "iq:CustomerFull": { "type": "object", "ref": "crm.iqCustomerFull"}
+        }
+      }   
+  - CustomerExtensionArrayHal: |
+      { 
+        "name": "CustomerExtensionArrayHal",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "crm.CustomerExtensionPropertyLinks" },
+          "_embedded": { "type": "object", "ref": "crm.CustomerExtensionEmbeddedLinks" }
+        }
+      }
+  - CustomerExtensionPropertyLinks: |
+      { 
+        "name": "CustomerExtensionPropertyLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null" },
+          "self": { "type": "string", "putDescription": "The request that returned this result", "example": "Companies(14146)/Customers(659c2a38-d083-4421-9330-46d779702f85)/CustomerExtensions?$skip=0&$top=1" },
+          "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null" }
+        }
+      }
+  - CustomerExtensionEmbeddedLinks: |
+      { 
+        "name": "CustomerMethodEmbeddedLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "array", "arrayType": "object", "ref": "crm.CustomerExtensionHal" }          
+        }
+      }       
+  - CustomerExtensionHal: |
+      { 
+        "exclude": "true",
+        "name": "CustomerExtensionHal",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative links to requests related to this resource", "ref": "crm.CustomerExtensionLinks"},
+          "_embedded": { "type": "object", "putDescription": "?????????????", "example": "" }, 
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "74b87ece-5f70-454d-9991-7952127146b0", "generated": "true" }, 
+          "CustomerId": { "type": "GUID", "description": "Unique identifier for the [Customer](#customer)", "ref": "crm.Customer.Id", "putGenerate": "true" }, 
+          "ExtensionType": { "type": "string",  "description": "Name of the <a href='#customerextensiontype'>CustomerExtensionType</a>", "putDescription": "Required if CustomerExtensions is not null", "example": "ExternalCustomerId", "generated": "true" }, 
+          "ExtensionTypeId": { "type": "integer", "description": "Identifier for the <a href='#customerextensiontype'>CustomerExtensionType</a>", "example": "2" }, 
+          "Value": { "type": "string",  "description": "Value", "example": "66432" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true" }
+        }
+      }
+  - CustomerExtension: |
+      {
+        "name": "CustomerExtension",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "A CustomerExtension resource is used for adding custom properties to a Customer.",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "74b87ece-5f70-454d-9991-7952127146b0", "generated": "true", "putGenerate": "true" }, 
+          "CustomerId": { "type": "GUID", "description": "Unique identifier for the [Customer](#customer)",  "ref": "crm.Customer.Id", "putGenerate": "true" }, 
+          "ExtensionType": { "type": "string",  "description": "Name of the <a href='#customerextensiontype'>CustomerExtensionType</a>", "example": "ExternalCustomerId", "generated": "true" }, 
+          "ExtensionTypeId": { "type": "integer", "description": "Identifier for the <a href='#customerextensiontype'>CustomerExtensionType</a>", "putDescription": "Identifier for a <a href='#customerextensiontype'>CustomerExtensionType</a>. See <a href='#getting-all-customer-extension-types'>Getting All Customer Extension Types</a>", "example": "2" }, 
+          "Value": { "type": "string",  "description": "Value", "example": "66432" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true" }
+        },
+        "required": [ "ExtensionTypeId", "Id", "CustomerId"]      
+      }
+  - CustomerExtensionType: |
+      {
+        "name": "CustomerExtensionType",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "CustomerExtensionType resources are created by iQmetrix and are used to provide custom properties for the CustomerExtension resource.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Identifier", "example": "1" }, 
+          "Name": { "type": "string",  "description": "Name", "example": "CorrelationId" }, 
+          "Data Type": { "type": "string",  "description": "Data type", "example": "Integer" }
+        }
+      }
+  - CustomerFullLinks: |
+      {
+        "name": "CustomerFullLinks",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "object", "ref": "crm.iqCustomerFull"},
+          "iq:Customer": { "type": "object", "ref": "crm.iqCustomer"},
+          "iq:Address": { "type": "object", "ref": "crm.iqAddresses"},
+          "iq:ContactMethod": { "type": "object", "ref": "crm.iqContactMethods"},
+          "iq:CustomerExtension": { "type": "object", "ref": "crm.iqCustomerExtensions"},
+          "iq:RelatedCustomer": { "type": "object", "example": "" },
+          "iq:MemberOf": { "type": "object", "example": "" }
+        }
+      }      
+  - CustomerFullArrayHal: |
+      { 
+        "name": "CustomerFullArrayHal",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "crm.CustomerFullPropertyLinks" },
+          "_embedded": { "type": "object", "ref": "crm.CustomerFullEmbeddedLinks" }
+        }
+      }
+  - CustomerFullPropertyLinks: |
+      { 
+        "name": "CustomerFullPropertyLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null" },
+          "self": { "type": "string", "putDescription": "The request that returned this result", "example": "Companies(14146)/CustomerFull?$skip=0&$top=1" },
+          "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null" }
+        }
+      }
+  - CustomerFullEmbeddedLinks: |
+      { 
+        "name": "CustomerFullEmbeddedLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "array", "arrayType": "object", "ref": "crm.CustomerFullHal" }        
+        }
+      }       
+  - CustomerFullHal: |
+      { 
+        "exclude": "true",
+        "name": "CustomerFullHal",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative links to requests related to this resource", "ref": "crm.CustomerFullLinks"},
+          "_embedded": { "type": "object", "putDescription": "?????????????", "example": "" }, 
+          "Id": { "type": "GUID", "description": "Unique identifier",  "generated": "true", "ref": "crm.Customer.Id" }, 
+          "PrimaryName": { "type": "string",  "description": "First name of a given person or the full name of the business, division, organization, etc", "ref": "crm.Customer.PrimaryName" }, 
+          "MiddleName": { "type": "string",  "description": "Middle name. Could also be referred to as Additional name", "ref": "crm.Customer.MiddleName"}, 
+          "FamilyName": { "type": "string",  "description": "Family name. In the U.S., the last name of a Person", "ref": "crm.Customer.FamilyName" }, 
+          "Addresses": { "type": "array", "arrayType": "object", "ref": "crm.Address", "description": "A collection of Addresses" }, 
+          "AlternateName": { "type": "string",  "description": "Alias or preferred name", "ref": "crm.Customer.AlternateName"}, 
+          "ContactMethods": { "type": "array", "arrayType": "object", "description": "A collection of ContactMethods", "ref": "crm.ContactMethod" }, 
+          "CustomerExtensions": { "type": "array", "arrayType": "object", "description": "A collection of CustomerExtensions", "ref": "crm.CustomerExtension" }, 
+          "CustomerType": { "type": "string",  "description": "Name of the [CustomerType](#customertype)", "ref": "crm.Customer.CustomerType", "generated": "true" }, 
+          "CustomerTypeId": { "type": "integer", "description": "See [CustomerType](#customertype) for a list of acceptable values", "ref": "crm.Customer.CustomerTypeId" }, 
+          "DateOfBirth": { "type": "DateTime", "description": "Customer's birth date, stored in UTC but can be provided in shortened form (yyyy-mm-dd)", "putDescription": "UTC but can be provided in shortened form (yyyy-mm-dd)", "ref": "crm.Customer.DateOfBirth" }, 
+          "Disabled": { "type": "boolean", "description": "A flag to indicate whether or not this Customer is disabled. The Delete operation acts as a Disable operation, as a Customer can not be deleted. When the Disabled flag is set to true, this Customer can still be retrieved and updated normally, defaults to false", "putDescription": "Defaults to false", "ref": "crm.Customer.Disabled" }, 
+          "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this Customer is private and not to be used by external systems (such as a marketing system), defaults to true", "putDescription": "Defaults to true", "ref": "crm.Customer.DoNotContact" }, 
+          "MemberOf": { "type": "array", "arrayType": "object","description": "A collection of Customers that the Customer is a MemberOf (parent relation)", "example": "" }, 
+          "Notes": { "type": "string",  "description": "Any notes related to this Customer", "example": "Interested in iPhone 6" }, 
+          "RelatedCustomers": { "type": "array", "arrayType": "object","description": "A collection of Customers related to the Customer (child relation)", "example": "" },
+          "Title": { "type": "string",  "description": "Title", "ref": "crm.Customer.Title" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "ref": "crm.Customer.Version", "generated": "true"  } 
+        }
+      }
+  - CustomerFull: |
+      {
+        "name": "CustomerFull",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "CustomerFull is an extension on the Customer resource.",
+        "properties": {
+          "Id": { "type": "GUID", "description": "Unique identifier",  "generated": "true", "ref": "crm.Customer.Id", "putGenerate": "true" }, 
+          "PrimaryName": { "type": "string",  "description": "First name of a given person or the full name of the business, division, organization, etc", "ref": "crm.Customer.PrimaryName" }, 
+          "MiddleName": { "type": "string",  "description": "Middle name. Could also be referred to as Additional name", "ref": "crm.Customer.MiddleName"}, 
+          "FamilyName": { "type": "string",  "description": "Family name. In the U.S., the last name of a Person", "ref": "crm.Customer.FamilyName" }, 
+          "Addresses": { "type": "array", "arrayType": "object", "ref": "crm.Address", "description": "A collection of Addresses" }, 
+          "AlternateName": { "type": "string",  "description": "Alias or preferred name", "ref": "crm.Customer.AlternateName"}, 
+          "ContactMethods": { "type": "array", "arrayType": "object", "description": "A collection of ContactMethods", "ref": "crm.ContactMethod" }, 
+          "CustomerExtensions": { "type": "array", "arrayType": "object", "description": "A collection of CustomerExtensions", "ref": "crm.CustomerExtension" }, 
+          "CustomerType": { "type": "string",  "description": "Name of the [CustomerType](#customertype)", "ref": "crm.Customer.CustomerType", "generated": "true" }, 
+          "CustomerTypeId": { "type": "integer", "description": "See [CustomerType](#customertype) for a list of acceptable values", "ref": "crm.Customer.CustomerTypeId" }, 
+          "DateOfBirth": { "type": "DateTime", "description": "Customer's birth date, stored in UTC but can be provided in shortened form (yyyy-mm-dd)", "putDescription": "UTC but can be provided in shortened form (yyyy-mm-dd)", "ref": "crm.Customer.DateOfBirth" }, 
+          "Disabled": { "type": "boolean", "description": "A flag to indicate whether or not this Customer is disabled. The Delete operation acts as a Disable operation, as a Customer can not be deleted. When the Disabled flag is set to true, this Customer can still be retrieved and updated normally, defaults to false", "putDescription": "Defaults to false", "ref": "crm.Customer.Disabled" }, 
+          "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this Customer is private and not to be used by external systems (such as a marketing system), defaults to true", "putDescription": "Defaults to true", "ref": "crm.Customer.DoNotContact" }, 
+          "MemberOf": { "type": "array", "arrayType": "object","description": "A collection of Customers that the Customer is a MemberOf (parent relation)", "example": "" }, 
+          "Notes": { "type": "string",  "description": "Any notes related to this Customer", "example": "Interested in iPhone 6" }, 
+          "RelatedCustomers": { "type": "array", "arrayType": "object","description": "A collection of Customers related to the Customer (child relation)", "example": "" },
+          "Title": { "type": "string",  "description": "Title", "ref": "crm.Customer.Title" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "ref": "crm.Customer.Version", "generated": "true"  } 
+        },
+        "required": ["CustomerTypeId", "Id"]        
+      }
+  - CustomerFullArray: |
+      {
+        "exclude": "true",        
+        "name": "CustomerFull",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema"
+      }      
+  - CustomerSearch: |
+      {
+        "name": "CustomerSearch",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "CustomerSearch is used to search for CustomerFull resources based on a Criteria. A CustomerSearch resource is an extension on the CustomerFull resource.",
+        "properties": {
+          "Criteria": { "type": "string",  "description": "The criteria used to seach for the Customer", "example": "bob" },          
+          "Id": { "type": "GUID", "description": "Unique identifier", "example": "503d1d4a-c974-4286-b4a2-002699e60ad6",  "generated": "true", "putGenerate": "true" }, 
+          "PrimaryName": { "type": "string",  "description": "First name of a given person or the full name of the business, division, organization, etc", "example": "Robert" }, 
+          "MiddleName": { "type": "string",  "description": "Middle name. Could also be referred to as Additional name", "example": "Lee" }, 
+          "FamilyName": { "type": "string",  "description": "Family name. In the U.S., the last name of a Person", "example": "Smith" }, 
+          "Addresses": { "type": "array", "arrayType": "object", "ref": "crm.Address", "description": "A collection of Addresses" }, 
+          "AlternateName": { "type": "string",  "description": "Alias or preferred name", "example": "Bob" }, 
+          "ContactMethods": { "type": "array", "arrayType": "object", "description": "A collection of ContactMethods", "ref": "crm.ContactMethod" }, 
+          "CustomerExtensions": { "type": "array", "arrayType": "object", "description": "A collection of CustomerExtensions", "ref": "crm.CustomerExtension" }, 
+          "CustomerType": { "type": "string",  "description": "Name of the [CustomerType](#customertype)", "example": "Company", "generated": "true" }, 
+          "CustomerTypeId": { "type": "integer", "description": "See [CustomerType](#customertype) for a list of acceptable values", "example": "3" }, 
+          "DateOfBirth": { "type": "DateTime", "description": "Customer's birth date, stored in UTC but can be provided in shortened form (yyyy-mm-dd)", "putDescription": "UTC but can be provided in shortened form (yyyy-mm-dd)", "example": "1952-07-23T12:00:00.000" }, 
+          "Disabled": { "type": "boolean", "description": "A flag to indicate whether or not this Customer is disabled. The Delete operation acts as a Disable operation, as a Customer can not be deleted. When the Disabled flag is set to true, this Customer can still be retrieved and updated normally, defaults to false", "putDescription": "Defaults to false", "example": "true" }, 
+          "DoNotContact": { "type": "boolean", "description": "A flag to indicate if this Customer is private and not to be used by external systems (such as a marketing system), defaults to true", "putDescription": "Defaults to true", "example": "true" }, 
+          "MemberOf": { "type": "array", "arrayType": "object","description": "A collection of Customers that the Customer is a MemberOf (parent relation)", "example": "" }, 
+          "Notes": { "type": "string",  "description": "Any notes related to this Customer", "example": "Interested in iPhone 6" }, 
+          "RelatedCustomers": { "type": "array", "arrayType": "object","description": "A collection of Customers related to the Customer (child relation)", "example": "" },
+          "Title": { "type": "string",  "description": "Title", "example": "Mr" }, 
+          "Version": { "type": "integer", "description": "Latest revision number", "example": "1", "generated": "true" } 
+        }   
+      } 
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+/Companies({CompanyId})/Customers?$skip={Skip}&top={Top}:
+  uriParameters:
+    CompanyId:
+      displayName: Company Id
+      type: integer
+      description: Identifier for the {{Company}}
+      example: 14146
+      required: true
+    Skip:
+      displayName: skip
+      description: Number of records to skip
+      type: integer
+      example: 1
+      required: false
+    Top: 
+      displayName: top
+      description: Number of records to take
+      type: integer
+      example: 10
+      required: false            
+  type:
+    collectionHal:
+      halResource: CustomerArrayHal   
+  get: 
+    displayName: Getting All Customers
+/Companies({CompanyId})/Customers:
+  uriParameters:
+    CompanyId:
+      displayName: Company Id
+      type: integer
+      description: Identifier for the {{Company}}
+      example: 14146
+      required: true
+  type:
+    collectionWriteOnly:
+      resource: Customer
+  post: 
+    displayName: Creating a Customer
+/Companies({CompanyId})/Customers({CustomerId}):
+  uriParameters:
+    CompanyId:
+      displayName: Company Id
+      type: integer
+      description: Identifier for the {{Company}}
+      example: 14146
+      required: true
+    CustomerId:
+      displayName: Customer Id
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Identifier for the {{Customer}}
+      required: true  
+  type:
+    singularEndpoint:
+      resource: Customer
+  get:
+    displayName: Getting a Customer
+  put: 
+    displayName: Updating a Customer
+  delete:
+    displayName: Deleting a Customer
+/Companies({CompanyId})/Customers({CustomerId})/Addresses?$skip={Skip}&top={Top}:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CustomerId:
+      displayName: CustomerId
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Identifier for the {{Customer}} being updated
+      required: true
+    Skip:
+      displayName: skip
+      description: Number of records to skip
+      type: integer
+      example: 1
+      required: false
+    Top: 
+      displayName: top
+      description: Number of records to take
+      type: integer
+      example: 10
+      required: false          
+  type:
+    collectionHal:
+      halResource: AddressArrayHal
+  get: 
+    displayName: Getting All Addresses for a Customer
+/Companies({CompanyId})/Customers({CustomerId})/Addresses:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CustomerId:
+      displayName: CustomerId
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Identifier for the {{Customer}} being updated
+      required: true 
+  type:
+    collectionWriteOnly:
+      resource: Address
+  post:
+    displayName: Adding a Customer Address
+/Companies({CompanyId})/Customers({CustomerId})/Addresses({AddressId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier of the Company
+      required: true
+    CustomerId:
+      displayName: Customer Id
+      type: string
+      example: 902cdc91-65f4-4c7d-b336-5f291849f2fe
+      description: Identifier for the {{Customer}}
+      required: true      
+    AddressId:
+      displayName: Address Id
+      type: string
+      example: a08b0640-606a-41f0-901a-facaf50e75dd
+      description: Identifier for the {{crm_Address}}
+      required: true
+  type:
+    singularEndpoint:
+      resource: Address
+  get:
+    displayName: Getting a Customer Address
+  put:
+    displayName: Updating a Customer Address
+  delete:
+    displayName: Removing an Address from a Customer
+/Companies({CompanyId})/CustomerExtensionTypes:
+  uriParameters:
+    CompanyId:
+      type: integer
+      description: Identifier for the {{Company}}
+      example: 14146
+      required: true      
+  type:
+    collectionReadOnly:
+      resource: CustomerExtensionType
+  get: 
+    displayName: Getting all Customer Extension Types
+/Companies({CompanyId})/Customers({CustomerId})/CustomerExtensions:
+  uriParameters:
+    CompanyId:
+      type: integer
+      description: Identifier for the {{Company}}
+      example: 14146
+      required: true
+    CustomerId:
+      displayName: Customer Id
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Identifier for the {{Customer}}
+      required: true        
+  type:
+    collectionWriteOnly:
+      resource: CustomerExtension
+  post: 
+    displayName: Creating a Customer Extension
+/Companies({CompanyId})/Customers({CustomerId})/CustomerExtensions({CustomerExtensionId}):
+  uriParameters:
+    CompanyId:
+      type: integer
+      description: Identifier for the {{Company}}
+      example: 14146
+      required: true
+    CustomerId:
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Identifier for the {{Customer}}
+      required: true
+    CustomerExtensionId:
+      type: integer
+      example: 1
+      description: Identifier for the {{CustomerExtension}}
+      required: true
+  type:
+    singularEndpoint:
+      resource: CustomerExtension
+  get:
+    displayName: Getting a Customer Extension
+  delete:
+    displayName: Deleting a Customer Extension
+  put: 
+    displayName: Updating a Customer Extension
+/Companies({CompanyId})/CustomerFull:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true    
+  type:
+    collectionWriteOnly:
+      resource: CustomerFull
+  post:
+    displayName: Creating a Full Customer
+/Companies({CompanyId})/CustomerFull({CustomerId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CustomerId:
+      displayName: CustomerId
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Unique identifier for the {{Customer}}
+      required: true
+  type:
+    singularEndpointGetDelete:
+      resource: CustomerFull
+  get:
+    displayName: Getting a Full Customer
+  delete:
+    displayName: Deleting a Full Customer
+/Companies({CompanyId})/Customers({CustomerId})/ContactMethods?$skip={Skip}&top={Top}:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CustomerId:
+      displayName: CustomerId
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Identifier for the {{Customer}} being updated
+      required: true
+    Skip:
+      displayName: skip
+      description: Number of records to skip
+      type: integer
+      example: 1
+      required: false
+    Top: 
+      displayName: top
+      description: Number of records to take
+      type: integer
+      example: 10
+      required: false      
+  type:
+    collectionHal:
+      halResource: ContactMethodArrayHal
+  get: 
+    displayName: Getting All Contact Methods for a Customer
+/Companies({CompanyId})/Customers({CustomerId})/ContactMethods:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CustomerId:
+      displayName: CustomerId
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Identifier for the {{Customer}} being updated
+      required: true    
+  type:
+    collectionWriteOnly:
+      resource: ContactMethod
+  post:
+    displayName: Adding a Customer Contact Method
+/Companies({CompanyId})/Customers({CustomerId})/ContactMethods({ContactMethodId}):
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    CustomerId:
+      displayName: CustomerId
+      type: string
+      example: 659c2a38-d083-4421-9330-46d779702f85
+      description: Identifier for the {{Customer}} being updated
+      required: true
+    ContactMethodId:
+      displayName: ContactMethodId
+      type: string
+      example: 0c877e33-e0a4-46ca-be34-49718f29e791
+      description: Identifier for the {{ContactMethod}}
+      required: true
+  type:
+    singularEndpoint:
+      resource: ContactMethod
+  get:
+    displayName: Getting a Customer Contact Method
+  put:
+    displayName: Updating a Customer Contact Method
+  delete:
+    displayName: Removing a Customer Contact Method  
+/Companies({CompanyId})/Customers?$filter={FilterQuery}$skip={Skip}&$top={Top}:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true  
+    FilterQuery:
+      displayName: Filter query
+      type: string
+      description: Filter on customers
+      example: PrimaryName eq 'bob'
+      required: false
+    Skip:
+      displayName: skip
+      description: Number of records to skip
+      type: integer
+      example: 1
+      required: false
+    Top: 
+      displayName: top
+      description: Number of records to take
+      type: integer
+      example: 10
+      required: false      
+  type:
+    collectionReadOnly:
+      resource: CustomerArray
+  get: 
+    displayName: Searching for Customers
+    description: |
+      {{note}}
+      This request returns Customer resources and is case <strong>sensitive</strong>. For a similar case <strong>insensitive</strong> search that returns CustomerFull resources, see <a href='#customer-search'>Customer Search</a> 
+      {{end}}
+/Companies({CompanyId})/CustomerSearch?$filter={FilterQuery}:
+  uriParameters:
+    CompanyId:
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true  
+    FilterQuery:
+      type: string
+      description: The filter to apply, "Criteria" is required
+      example: Criteria eq 'Bob'
+      required: false
+  type:
+    collectionReadOnly:
+      resource: CustomerSearch
+  get:
+    displayName: Customer Search
+    description: |
+
+      {{note}}
+      This request returns CustomerFull resources and is case <strong>insensitive</strong>. For a similar case <strong>sensitive</strong> search that returns Customer resources, see <a href='#searching-for-customers'>Searching for Customers</a> 
+      {{end}}
+
+      <a href="#customersearch">CustomerSearch</a> resources use a special property, <code>criteria</code>.
+
+      Criteria searches all of the searchable properties for the given value and returns the resource if it is found.
+
+      This search is <strong>NOT</strong> case sensitive.
+
+      <h3> Filterable Properties</h3>
+
+      The Criteria filter will search the properties below for the given value.
+
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">Resource</th>
+            <th style="text-align:left">Property</th>
+          </tr>
+        </thead>
+      <tbody>
+          <tr>
+            <td style="text-align:left"><a href="#contactmethod">ContactMethod</a></td>
+            <td style="text-align:left">Value</td>
+          </tr>
+          <tr>
+            <td style="text-align:left"><a href="#customer">Customer</a></td>
+            <td style="text-align:left">PrimaryName</td>
+          </tr>
+          <tr>
+            <td style="text-align:left"><a href="#customer">Customer</a></td>
+            <td style="text-align:left">MiddleName</td>
+          </tr>
+          <tr>
+            <td style="text-align:left"><a href="#customer">Customer</a></td>
+            <td style="text-align:left">FamilyName</td>
+          </tr>
+          <tr>
+            <td style="text-align:left"><a href="#customer">Customer</a></td>
+            <td style="text-align:left">AlternateName</td>
+          </tr>
+          <tr>
+            <td style="text-align:left"><a href="#customerextension">CustomerExtension</a></td>
+            <td style="text-align:left">Value</td>
+          </tr>
+        </tbody>
+      </table>

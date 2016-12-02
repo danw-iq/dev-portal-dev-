@@ -1,0 +1,291 @@
+#%RAML 0.8
+title: partner reporting
+version: v1
+baseUri: https://reporting{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: author
+    content: | 
+      Partners
+  - title: overview
+    content: | 
+      The Partner Reporting API allows a Partner to retrieve sales transactions for dealers they have a relationship with.
+  - title: pagination
+    content: |
+        The Parner Reporting API supports pagination of collections of resources for some requests.
+
+        ### Query Parameters
+
+        Pagination is done through the use of $skip and $top query string parameters.
+
+        `$skip` denotes the number of items to skip from the entire set of results. This value defaults to 0 if no `$skip` value is specified. If a value less than 0 is specified, the URI is considered malformed.
+
+        `$top` denotes the maximum number of items to include in the response. This value defaults to 30 if no `$top` value is specified. Acceptable values are in the range [0-100]. 
+
+        ### Navigation Links
+
+        Pagination-enabled requests include links for 'self', 'prev' and 'next' in the response data. 
+
+        These links are _relative_, they do not include the base endpoint. It is the responsibility of the client to prepend the appropriate endpoint.
+
+        ##### Example
+
+            {
+                "_links": {
+                    "prev": null,
+                    "self": "/v1/partners(36)/salesTransactions?startDate=2015-12-03&endDate=2015-12-30&$top=5",
+                    "next": "/v1/partners(36)/salesTransactions?startDate=2015-12-03&endDate=2015-12-30&$skip=5&$top=5"
+                },
+                "_metadata": {
+                    "count": 15,
+                    "skip": 0,
+                    "top": 5
+                }
+            }
+
+        In the example above, the `_links` section is included in the data returned from an API call to <a href="#getting-sales-transactions">Getting Sales Transactions</a>, where `$skip=0` and `$top=5`.
+
+        The `self`.`href` value is the relative version of the API call that returned these results.
+
+        The `next`.`href` refers to a resource containing a page with the **next** 5 items.
+
+        The `prev`.`href` refers to a resource containing a page with the **previous** 5 items.
+  - title: errors
+    content: |
+      | HTTP Status Code | Description | How to Resolve |
+      |:-----------------|:------------|:---------------|
+      | `HTTP 401` | `Unauthorized Access` | Ensure the access code provided is valid |
+      | `HTTP 404` | `Not Found` | Ensure the PartnerId provided in the URI is correct |
+      | `HTTP 400` | `Bad Request` | Ensure URI parameters are valid |
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/json    
+            responses:
+                200:
+                    body:
+                        application/json:
+                          schema: <<resource>>
+                          example: <<exampleResponse>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - _links: |
+      {
+        "name": "_links",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Relative URL's used for Pagination",
+        "properties": {
+          "prev": { "type": "string", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null"},
+          "self": { "type": "string", "putDescription": "The request that returned these results", "example": "/v1/partners(36)/salesTransactions?startDate=2015-12-03&endDate=2015-12-30$skip=0&$top=5"},
+          "next": { "type": "string", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null"}
+        },
+        "required": ["self"]
+      }
+  - _metadata: |
+      {
+        "name": "_metadata",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Data representing Pagination details",
+        "properties": {
+          "count": { "type": "integer", "putDescription": "The total number of results returned from the request", "example": "1"},
+          "skip": { "type": "integer", "putDescription": "Value of skip in the request URI, if not specified the value will be 0", "example": "0"},
+          "top": { "type": "integer", "putDescription": "Value of top in the request URI, if not specified the value will be 30", "example": "5"}
+        }
+      }
+  - SearchSchema: |
+      { 
+        "name": "SearchSchema",
+        "exclude": "true",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "partner reporting._links" },
+          "_metadata": { "type": "object", "putDescription": "Data representing Pagination details", "ref": "partner reporting._metadata" },
+          "items": { "type": "array", "arrayType": "object", "ref": "partner reporting.Transaction"}
+        }
+      }
+  - Transaction: |
+      {
+        "name": "Transaction",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "CompanyId": { "type": "integer", "description": "Identifier for the Dealer", "example": "1548"},
+          "CompanyName": { "type": "string", "description": "Dealer name", "example": "CompanyA"},
+          "StoreId": { "type": "integer", "description": "Identifier for a [Location](/api/company-tree/#location) where the Transaction took place", "example": "548"},
+          "StoreName": { "type": "string", "description": "Name of the [Location](/api/company-tree/#location) where the Transaction took place", "example": "Vancouver City Centre Mall"},
+          "RQEmployeeId": { "type": "integer", "description": "Identifier of the sales person who tendered the Transaction. EmployeeId in RQ. Only unique in the context of a dealer", "example": "897"},
+          "SalesPersonName": { "type": "string", "description": "Name of the sales person who tendered the Transaction", "example": "Mike Johnson"},
+          "InvoiceId": { "type": "string", "description": "Identifier of the Invoice. Only unique in the context of a dealer", "example": "36977459"},
+          "OriginalInvoiceId": { "type": "string", "description": "When SalesTransactionType is Refund, this property is the InvoiceId of the original invoice. Only unique in the context of a dealer", "example": "36977400"},
+          "SalesTransactionDateTime": { "type": "datetime", "description": "Date when the Transaction occured (store local time)", "example": "2015-12-03 17:35:00.000"},
+          "SalesTransactionType": { "type": "string", "description": "Type of Transaction (i.e. Sales, Refund)", "example": "Sales"},
+          "ProductName": { "type": "string", "description": "Name of the Product on the Transaction", "example": "Samsung Galaxy S4 16GB - Black Mist"},
+          "ProductSku": { "type": "string", "description": "Product SKU saved in RQ dealer database", "example": "WDDDSM000146" }, 
+          "ProductLibrarySlug": { "type": "string", "description": "iQmetrix internal product unique identifier.", "example": "M3310-V1-E13076"},
+          "Quantity": { "type": "integer", "description": "Number of items sold on the Transaction", "example": "1" },
+          "UnitCost": { "type": "decimal", "description": "The unit cost of the Product", "example": "5.99" },
+          "GrossProfit": { "type": "decimal", "description": "Gross profit from the Transaction", "example": "4.99" },
+          "TotalSales": { "type": "decimal", "description": "Total sales from the Transaction", "example": "19.99" },
+          "SerialNumber": { "type": "string", "description": "Serial Number of the Product on the Transaction", "example": "359367059548016"},
+          "ManufacturerName": { "type": "string", "description": "Name of the [Manufacturer](/api/entity-store/#manufacturer) of the Product on the Transaction", "example": "Samsung"},
+          "ActivationType": { "type": "string", "description": "Activation type of the Transaction. See [ActivationTypes](/api/carrier-integration/#activationtype) for a list of acceptable values", "example": "New Activation"},
+          "CarrierName": { "type": "string", "description": "Name of the Carrier", "example": "Sasktel Mobility"}
+        }
+      }       
+/partners({PartnerId})/salesTransactions?startDate={StartDate}&endDate={EndDate}&$skip={Skip}&$top={Top}:
+  uriParameters:
+    PartnerId:
+      type: integer
+      example: 36
+      description: Identifier for the Partner
+      required: true
+    StartDate:
+      type: string
+      example: 2015-12-03
+      description: Date at which to begin search request
+      required: true
+    EndDate:
+      type: string
+      example: 2015-12-30
+      description: Date at which to end search request
+      required: true
+    Skip:
+      type: integer
+      description: Number of records to skip
+      example: 0
+      required: false
+    Top: 
+      type: integer
+      description: Number of records to take. Must be in the range [1-100]. Defaults to 20.
+      example: 10
+      required: false
+  type:
+    collectionReadOnly:
+      resource: SearchSchema
+      exampleResponse: |
+        {
+          "_links": {
+            "prev": null,
+            "self": "/v1/partners(36)/salesTransactions?$skip=0&$top=10&StartDate=2015-10-03T17:35:00.000Z&EndDate=2016-12-30T12:00:00.000Z",
+            "next": "/v1/partners(36)/salesTransactions?$skip=10&$top=10&StartDate=2015-10-03T17:35:00.000Z&EndDate=2016-12-30T12:00:00.000Z"
+          },
+          "_metadata": {
+            "count": 100,
+            "skip": 0,
+            "top": 10
+          },
+          "items": [
+            {
+              "CompanyId": 1548,
+              "CompanyName": "CompanyA",
+              "StoreId": 548,
+              "StoreName": "Vancouver City Centre Mall",
+              "RQEmployeeId": 897,
+              "SalesPersonName": "Mike Johnson",
+              "InvoiceId": "36977459",
+              "OriginalInvoiceId": "36977400",
+              "SalesTransactionDateTime": "2015-12-03 17:35:00.000",
+              "SalesTransactionType": "Sales",
+              "ProductName": "Samsung Galaxy S4 16GB - Black Mist",
+              "ProductSku": "WDDDSM000146",
+              "Quantity": 1,
+              "TotalSales": 35.99,
+              "UnitCost": 5.7,
+              "GrossProfit": 30.29,
+              "ProductLibrarySlug": "M3310-V1-E13076",
+              "SerialNumber": "359367059548016",
+              "ManufacturerName": "Samsung",
+              "ActivationType": "New Activation",
+              "CarrierName": "Sasktel Mobility"
+            },          
+            {
+              "CompanyId": "1548",
+              "CompanyName": "CompanyA",
+              "StoreId": 548,
+              "StoreName": "White Rock",
+              "RQEmployeeId": 397,
+              "SalesPersonName": "Jane Smith",
+              "InvoiceId": 19949,
+              "OriginalInvoiceId": 1994546,
+              "SalesTransactionDateTime": "2015-10-03 10:4:00.000",
+              "SalesTransactionType": "Refund",
+              "ProductName": "$10 Fido Device Protection (iPhone and select Premium Tab) Term",
+              "ProductSKU": "FDFERB000195",
+              "Quantity": -1,
+              "TotalSales": -25,
+              "UnitCost": 0,
+              "GrossProfit": -25,
+              "ProductLibrarySlug": null,
+              "SerialNumber": "6047236477",
+              "ManufacturerName": "",
+              "ActivationType": "NotSet",
+              "CarrierName": null
+            },
+            {
+              "CompanyId": "1548",
+              "CompanyName": "CompanyA",
+              "StoreId": 542,
+              "StoreName": "Kinetic - Mission",
+              "RQEmployeeId": 415,
+              "SalesPersonName": "John Smith",
+              "InvoiceId": 1994908,
+              "OriginalInvoiceId": 1994908,
+              "SalesTransactionDateTime": "2015-10-03 10:45:00.000",
+              "SalesTransactionType": "Sales",
+              "ProductName": "Sony Xperia TL",
+              "ProductSKU": "DHADSO000045",
+              "Quantity": 1,
+              "TotalSales": 0,
+              "UnitCost": 300,
+              "GrossProfit": -300,
+              "ProductLibrarySlug": "M73",
+              "SerialNumber": "352226073857091",
+              "ManufacturerName": "Sony Ericsson",
+              "ActivationType": "Upgrade",
+              "CarrierName": "Rogers Wireless Inc."
+            }
+          ]
+        }
+  get: 
+    displayName: Getting Sales Transactions
+    description: | 
+      This report will return sales data for both **physical** products and **non-physical** products, such as activations, upgrades and refunds.

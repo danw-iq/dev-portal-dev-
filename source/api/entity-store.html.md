@@ -238,17 +238,16 @@ puts response
 
 
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -353,13 +352,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CarrierId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a>
-    </li>
-    </ul>
-
-
+    <li><code>CarrierId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a></li>
+</ul>
 
 
 
@@ -369,9 +363,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 9,
@@ -475,17 +470,16 @@ puts response
 
 
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -590,13 +584,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>ManufacturerId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturer</a>
-    </li>
-    </ul>
-
-
+    <li><code>ManufacturerId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#manufacturer'>Manufacturer</a></li>
+</ul>
 
 
 
@@ -606,9 +595,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 13149,
@@ -712,17 +702,16 @@ puts response
 
 
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -827,13 +816,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>SupplierId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#supplier'>Supplier</a>
-    </li>
-    </ul>
-
-
+    <li><code>SupplierId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/entity-store/#supplier'>Supplier</a></li>
+</ul>
 
 
 
@@ -843,9 +827,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 14107,

@@ -201,17 +201,16 @@ puts response
 
 
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -307,13 +306,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>FieldDefinitionId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/field-definitions/#fielddefinition'>FieldDefinition</a>
-    </li>
-    </ul>
-
-
+    <li><code>FieldDefinitionId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/field-definitions/#fielddefinition'>FieldDefinition</a></li>
+</ul>
 
 
 
@@ -323,9 +317,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 1,

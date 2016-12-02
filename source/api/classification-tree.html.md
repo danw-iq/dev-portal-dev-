@@ -215,13 +215,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>ClassificationTreeId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a>
-    </li>
-    </ul>
-
-
+    <li><code>ClassificationTreeId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/classification-tree/#classificationtree'>ClassificationTree</a></li>
+</ul>
 
 
 
@@ -231,9 +226,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 1,

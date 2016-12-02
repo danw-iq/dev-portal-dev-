@@ -1,0 +1,338 @@
+#%RAML 0.8
+title: commissions
+version: v1
+baseUri: https://commission{UrlSuffix}.iqmetrix.net/{version} 
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: int
+    type: string
+documentation:
+  - title: overview
+    content: |
+      The Commissions API allows you to retrieve Commission data from your RQ database. 
+  - title: author
+    content: | 
+      RQ
+  - title: pagination
+    content: |
+        The Commissions API supports pagination of collections of resources.
+
+        ### Query Parameters
+
+        Pagination is done through the use of `$skip` and `$top` query string parameters.
+
+        `$skip` denotes the number of items to skip from the entire set of results. If a value less than 0 is specified, the URI is considered malformed.
+
+        `$top` denotes the maximum number of items to include in the response. This value defaults to 50 if a `$skip` value, but no `$top` value is specified. Acceptable values are in the range [0-100]. 
+
+        ### Navigation Links
+
+        Pagination-enabled requests include links for 'self', 'prev' and 'next' in the response data. 
+
+        These links are _relative_, they do not include the base endpoint. It is the responsibility of the client to prepend the appropriate endpoint.
+
+        ##### Example
+
+        ```csharp
+        {
+            "_links": {
+                "prev": null,
+                "self": "v1/Companies(14146)/CommissionEntries?$skip=0&$top=5",
+                "next": "v1/Companies(14146)/CommissionEntries?$skip=5&$top=5"
+            },
+            "_metadata": {
+                "count": 15,
+                "skip": 0,
+                "top": 5
+            }
+        }
+        ```
+
+        In the example above, the `_links` section is included in the data returned from an API call to [Getting All Commission Entries](#getting-all-commission-entries), where `$skip=0` and `$top=5`.
+
+        The `self`.`href` value is the relative version of the API call that returned these results.
+
+        The `next`.`href` refers to a resource containing a page with the **next** 5 items.
+
+        The `prev`.`href` refers to a resource containing a page with the **previous** 5 items.
+  - title: enumerations
+    content: |
+        ## Enumerations
+    
+        ### CommissionTypes
+
+        To learn more about Commission types, see {{CommissionTypes}}.
+
+        | Id | Name | Calculation |
+        |:---|:-----|:------------|
+        | 8 | % Above Fixed Cost | |
+        | 2 | % Of Gross Sale | (UnitCommission * 100) / CommissionRate |
+        | 3 | % Of Margin | (UnitCommission * 100) / CommissionRate |
+        | 6 | Fixed Cost | | 
+        | 7 | Floating Cost | |
+        | 0 | NonCommissionable | None |
+        | 1 | SPIF | UnitCommission |
+        | 4 | SPIF + % Of Gross Sale | ((UnitCommission – CommissionSpiff) * 100) / CommissionRate |
+        | 5 | SPIF + % Of Margin | ((UnitCommission – CommissionSpiff) * 100) / CommissionRate |
+
+        ### CouponCommissionTypes
+
+        To learn more about Coupons see {{CouponOverview}}.
+
+        | Id | Name |
+        |:---|:-----|
+        | 0 | NonCommissionable |
+        | 1 | PercentageOfCoupon |
+        | 2 | SPIF |
+
+        ### TransactionTypes
+
+        | Id | Description |
+        |:---|:------------|
+        | 0 | All |
+        | 5 | Coupon |
+        | 6 | Full Charge Back | 
+        | 1 | Invoice |
+        | 2 | Manual Entry | 
+        | 7 | Milestone Reward | 
+        | 3 | Reversal |
+        | 4 | Vendor Rebate Adjustment |    
+resourceTypes:
+    - collectionReadOnly:
+        securedBy: [oauth_2_0]
+        get:
+            headers:
+              Authorization:
+                example: Bearer (Access Token)
+                description: See <a href='/api/authentication/#obtaining-an-access-token'>Obtaining an Access Token</a>                
+              Accept:
+                example: application/hal+json      
+            responses:
+                200:
+                    body:
+                        application/hal+json:
+                          schema: <<resourceHal>>
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            iQmetrix APIs support OAuth 2.0 for authenticating API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token.
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or iQmetrix
+                        revoked or expired an access token. To fixsorry fo, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won"t help here.
+        settings:
+          authorizationUri: https://accountsint.iqmetrix.net/v1/oauth2/authorize
+          accessTokenUri: https://accountsint.iqmetrix.net/v1/oauth2/tokenn
+          authorizationGrants: [ owner ]
+schemas:
+  - CommissionEntry: |
+      {
+        "name": "CommissionEntry",
+        "type": "array",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "description": "Commission earned by an employee.",
+        "properties": {
+          "Id": { "type": "integer", "description": "Unique Identifier", "example": "24" }, 
+          "Comments": { "type": "string", "size": "255", "description": "Comments", "example": "Shared with Nick" }, 
+          "CommissionFixedCost": { "type": "decimal", "description": "Fixed cost of commission applied. Anything above this value is commission", "example": "10.0" }, 
+          "CommissionFloatingCost": { "type": "decimal", "description": "Floating cost of commission applied. This value is determined by adding anything above this value to average cost", "example": "10" }, 
+          "CommissionRate": { "type": "decimal", "description": "Commission rate applied", "example": "35.0" }, 
+          "CommissionSpiff": { "type": "decimal", "description": "A type of commission structure used to pay employees, where a fixed dollar amount is paid per unit sold", "example": "15.0" }, 
+          "CommissionSplitEmployeeSpecialId": { "type": "integer", "description": "Special Identifier for the split commission Employee in RQ", "example": "10002" }, 
+          "CommissionSplitUserId": { "type": "integer", "description": "Identifier for a [User](/api/user-manager/#user) that is the split commissionable employee", "example": "22214" }, 
+          "CommissionType": { "type": "byte", "description": "Type of commission applied. If this is a Coupon commission, see [CouponCommissionTypes](#couponcommissiontypes) for a list of acceptable values, otherwise see [CommissionTypes](#commissiontypes) for a list of acceptable values", "example": "1" }, 
+          "CouponID": { "type": "integer", "description": "Identifier for a coupon associated with this commission in RQ", "example": "8" }, 
+          "DateCreatedUtc": { "type": "DateTime", "description": "Time created in RQ, in UTC", "example": "2015-08-18T15:00:00" }, 
+          "EmployeeSpecialId": { "type": "integer", "description": "Special Identifier for the Employee in RQ", "example": "1002" }, 
+          "UserId": { "type": "integer", "description": "Identifier for a [User](/api/user-manager/#user) that is the primary commissionable employee", "ref": "user-manager.User.Id" }, 
+          "GlobalProductID": { "type": "integer", "description": "Identifier of product associated with this commission in RQ", "example": "1210" }, 
+          "HasBeenReversed": { "type": "boolean", "description": "A flag to indicate if this CommissionEntry has been reversed", "example": "false" }, 
+          "InvoiceEditedDate": { "type": "DateTime", "description": "Time last edited with the Invoice Editor in RQ", "example": "2015-09-10T20:01:49.00" }, 
+          "InvoiceNumber": { "type": "string", "size": "14", "description": "Invoice Number of the transaction which created this commission in RQ", "example": "84WEAIN5703" }, 
+          "IsChargeback": { "type": "boolean", "description": "A flag to indicate if this commission was created by a chargeback in RQ", "example": "false" }, 
+          "IsCommissionSplit": { "type": "boolean", "description": "A flag to indicate if the commission is split with a second employee", "example": "true" }, 
+          "IsFullChargeback": { "type": "boolean", "description": "A flag to indicate if this commission was created by a full chargeback in RQ", "example": "false" }, 
+          "IsSuspended": { "type": "boolean", "description": "A flag to indicate if this commission has been suspended", "example": "false" }, 
+          "LastUpdateDateUtc": { "type": "DateTime", "description": "Time created in the API, in UTC", "example": "2015-09-09T20:41:59.69" }, 
+          "LocationCode": { "type": "string",  "description": "An identifier for the Location in an external system", "example": "LOC123" }, 
+          "LocationId": { "type": "integer", "description": "Identifier for the [Location](/api/company-tree/#location)", "ref": "company tree.Location.Id" }, 
+          "MilestoneID": { "type": "GUID", "description": "Identifier for a milestone associated with this commission in RQ", "example": "74b95526-e46b-42da-baa5-19971dfe5b18" }, 
+          "Priority": { "type": "integer", "description": "Priority of product on sale invoice associated with this commission in RQ", "example": "1" }, 
+          "Quantity": { "type": "integer", "description": "The number of times the unit commission is to be applied", "example": "1" }, 
+          "RQCommissionId": { "type": "integer", "description": "Identifier of the associated commission RQ", "example": "445" }, 
+          "SaleInvoiceAndCouponID": { "type": "GUID", "description": "Identifier of the coupon on the sale invoice associated with this commission in RQ", "example": "d6ee8427-eac6-44ef-ac69-4617e18d2f66" }, 
+          "SaleInvoiceID": { "type": "integer", "description": "Identifier of the sale invoice which created this commission in RQ", "example": "7" }, 
+          "SerialNumber": { "type": "string", "size": "100", "description": "Serial number of the product associated with this commission in RQ", "example": "8508194953" }, 
+          "SplitRate1": { "type": "decimal", "description": "Percentage of the commission the primary employee receives, defaults to 100", "example": "50.0" }, 
+          "SplitRate2": { "type": "decimal", "description": "Percentage of the commission the split employee receives, defaults to 0", "example": "50.0" }, 
+          "TotalCommission": { "type": "decimal", "description": "The total commission amount to be applied equal to (UnitCommission * Quantity)", "example": "5.32" }, 
+          "TransactionGUID": { "type": "GUID", "description": "Identifier of the transaction which created this commission in RQ", "example": "a929571e-c432-4e9a-aef7-4302ed791251" }, 
+          "TransactionType": { "type": "byte", "description": "Type of transaction which created this commission. See [TransactionTypes](#transactiontypes) for a list of acceptable values", "example": "1" }, 
+          "UnitCommission": { "type": "decimal", "description": "The individual unit Commission amount", "example": "5.32" }
+        }
+      }
+  - CommissionEntryHal : |
+      {
+        "exclude": "true",
+        "name": "CommissionEntry",        
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative links to requests related to this resource", "ref": "commissions.CommissionLinks" },
+          "_embedded": { "type": "object", "putDescription": "?????????????", "example": "" }, 
+          "Id": { "type": "integer", "description": "Unique Identifier", "example": "24" }, 
+          "Comments": { "type": "string", "size": "255", "description": "Comments", "example": "Shared with Nick" }, 
+          "CommissionFixedCost": { "type": "decimal", "description": "Fixed cost of commission applied. Anything above this value is commission", "example": "10.0" }, 
+          "CommissionFloatingCost": { "type": "decimal", "description": "Floating cost of commission applied. This value is determined by adding anything above this value to average cost", "example": "10" }, 
+          "CommissionRate": { "type": "decimal", "description": "Commission rate applied", "example": "35.0" }, 
+          "CommissionSpiff": { "type": "decimal", "description": "A type of commission structure used to pay employees, where a fixed dollar amount is paid per unit sold", "example": "15.0" }, 
+          "CommissionSplitEmployeeSpecialId": { "type": "integer", "description": "Special Identifier for the split commission Employee in RQ", "example": "10002" }, 
+          "CommissionSplitUserId": { "type": "integer", "description": "Identifier for a [User](/api/user-manager/#user) that is the split commissionable employee", "example": "22214" }, 
+          "CommissionType": { "type": "byte", "description": "Type of commission applied. If this is a Coupon commission, see [CouponCommissionTypes](#couponcommissiontypes) for a list of acceptable values, otherwise see [CommissionTypes](#commissiontypes) for a list of acceptable values", "example": "1" }, 
+          "CouponID": { "type": "integer", "description": "Identifier for a coupon associated with this commission in RQ", "example": "8" }, 
+          "DateCreatedUtc": { "type": "DateTime", "description": "Time created in RQ, in UTC", "example": "2015-08-18T15:00:00" }, 
+          "EmployeeSpecialId": { "type": "integer", "description": "Special Identifier for the Employee in RQ", "example": "1002" }, 
+          "UserId": { "type": "integer", "description": "Identifier for a [User](/api/user-manager/#user) that is the primary commissionable employee", "ref": "user-manager.User.Id" }, 
+          "GlobalProductID": { "type": "integer", "description": "Identifier of product associated with this commission in RQ", "example": "1210" }, 
+          "HasBeenReversed": { "type": "boolean", "description": "A flag to indicate if this CommissionEntry has been reversed", "example": "false" }, 
+          "InvoiceEditedDate": { "type": "DateTime", "description": "Time last edited with the Invoice Editor in RQ", "example": "2015-09-10T20:01:49.00" }, 
+          "InvoiceNumber": { "type": "string", "size": "14", "description": "Invoice Number of the transaction which created this commission in RQ", "example": "84WEAIN5703" }, 
+          "IsChargeback": { "type": "boolean", "description": "A flag to indicate if this commission was created by a chargeback in RQ", "example": "false" }, 
+          "IsCommissionSplit": { "type": "boolean", "description": "A flag to indicate if the commission is split with a second employee", "example": "true" }, 
+          "IsFullChargeback": { "type": "boolean", "description": "A flag to indicate if this commission was created by a full chargeback in RQ", "example": "false" }, 
+          "IsSuspended": { "type": "boolean", "description": "A flag to indicate if this commission has been suspended", "example": "false" }, 
+          "LastUpdateDateUtc": { "type": "DateTime", "description": "Time created in the API, in UTC", "example": "2015-09-09T20:41:59.69" }, 
+          "LocationCode": { "type": "string",  "description": "An identifier for the Location in an external system", "example": "LOC123" }, 
+          "LocationId": { "type": "integer", "description": "Identifier for the [Location](/api/company-tree/#location)", "ref": "company tree.Location.Id" }, 
+          "MilestoneID": { "type": "GUID", "description": "Identifier for a milestone associated with this commission in RQ", "example": "74b95526-e46b-42da-baa5-19971dfe5b18" }, 
+          "Priority": { "type": "integer", "description": "Priority of product on sale invoice associated with this commission in RQ", "example": "1" }, 
+          "Quantity": { "type": "integer", "description": "The number of times the unit commission is to be applied", "example": "1" }, 
+          "RQCommissionId": { "type": "integer", "description": "Identifier of the associated commission RQ", "example": "445" }, 
+          "SaleInvoiceAndCouponID": { "type": "GUID", "description": "Identifier of the coupon on the sale invoice associated with this commission in RQ", "example": "d6ee8427-eac6-44ef-ac69-4617e18d2f66" }, 
+          "SaleInvoiceID": { "type": "integer", "description": "Identifier of the sale invoice which created this commission in RQ", "example": "7" }, 
+          "SerialNumber": { "type": "string", "size": "100", "description": "Serial number of the product associated with this commission in RQ", "example": "8508194953" }, 
+          "SplitRate1": { "type": "decimal", "description": "Percentage of the commission the primary employee receives, defaults to 100", "example": "50.0" }, 
+          "SplitRate2": { "type": "decimal", "description": "Percentage of the commission the split employee receives, defaults to 0", "example": "50.0" }, 
+          "TotalCommission": { "type": "decimal", "description": "The total commission amount to be applied equal to (UnitCommission * Quantity)", "example": "5.32" }, 
+          "TransactionGUID": { "type": "GUID", "description": "Identifier of the transaction which created this commission in RQ", "example": "a929571e-c432-4e9a-aef7-4302ed791251" }, 
+          "TransactionType": { "type": "byte", "description": "Type of transaction which created this commission. See [TransactionTypes](#transactiontypes) for a list of acceptable values", "example": "1" }, 
+          "UnitCommission": { "type": "decimal", "description": "The individual unit Commission amount", "example": "5.32" }
+        }
+      }
+  - CommissionEntriesHal: |
+      { 
+        "name": "CommissionEntriesHal",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "_links": { "type": "object", "putDescription": "Relative URL's used for Pagination", "ref": "commissions.CommissionPropertyLinks" },
+          "_embedded": { "type": "object", "ref": "commissions.CommissionEmbeddedLinks" }
+        }
+      }
+  - CommissionEmbeddedLinks: |
+      { 
+        "name": "CommissionEmbeddedLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "array", "arrayType": "object", "ref": "commissions.CommissionEntryHal" }
+        }
+      }
+  - CommissionLinks: |
+      {
+        "name": "CommissionLinks",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "self": { "type": "object", "ref": "commissions.CommissionSelf" }
+        }
+      }
+  - CommissionSelf: |
+      {
+        "name": "CommissionSelf",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "putDescription": "A link to the request that will return this CommissionEntry", "example": "v1/Companies(14146)/CommissionEntries(24)" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }              
+  - CommissionPropertyLinks: |
+      { 
+        "name": "CommissionPropertyLinks",
+        "type": "object",
+        "exclude": "true",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "prev": { "type": "object", "putDescription": "Refers to a resource containing the previous page of results, null if there is no previous page", "example": "null" },
+          "self": { "type": "object", "putDescription": "The request that returned this result", "ref": "commissions.iqCommissions" },
+          "next": { "type": "object", "putDescription": "Refers to a resource containing the next page of results, null if this is the last page", "example": "null" }
+        }
+      }
+  - iqCommissions: |
+      {
+        "name": "iqCommissions",
+        "exclude": "true",
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "properties": {
+          "href": { "type": "string", "example": "v1/Companies(14146)/CommissionEntries?$filter=ransactionDateUTC ge datetime'2015-01-01T00:00:00.000' and TransactionDateUTC le datetime'2015-12-31T23:59:59.000'&$skip=0&$top=10" },
+          "templated": { "type": "boolean", "putDescription": "A flag to indicate ????????????????", "example": "false" }
+        }
+      }       
+/Companies({CompanyId})/CommissionEntries?$filter=LastUpdateDateUtc ge datetime'{StartDate}' and LastUpdateDateUtc le datetime'{EndDate}'&$skip={Skip}&$top={Top}:
+  uriParameters:
+    CompanyId:
+      displayName: CompanyId
+      type: integer
+      example: 14146
+      description: Identifier for the {{Company}}
+      required: true
+    StartDate:
+      displayName: StartDate
+      type: string
+      example: 2015-01-01T00:00:00.000
+      description: Date at which to begin search request, in UTC
+      required: false
+    EndDate:
+      displayName: EndDate
+      type: string
+      example: 2015-12-31T23:59:59.000
+      description: Date at which to end search request, in UTC
+      required: false
+    Skip:
+      displayName: Skip
+      type: string
+      example: 1
+      description: The number of items to skip from the entire set of results. Defaults to 0 if no $skip value is specified. If a value less than 0 is specified, the URI is considered malformed
+      required: false
+    Top:
+      displayName: Top
+      type: string
+      example: 10
+      description: Maximum number of items to include in the response. Defaults to 50 if no $top value is specified. Acceptable values are in the range [0
+      required: false
+  type:
+    collectionReadOnly:
+      resourceHal: CommissionEntriesHal
+  get:
+      displayName: Getting All Commission Entries
+      description: By default, the sorting order of the response to this request will be **descending** order by `LastUpdateDateUtc`

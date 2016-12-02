@@ -28,7 +28,7 @@ To learn more about Company Trees, see {{CompanyTree_Concept}}.
 
 ### Company Relationships
 
-A Company <a href='http://developers.iqmetrix.com/api/company-tree/#relationship'>Relationship</a> describes the interaction between a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> and a Manufacturer, Supplier, Partner, Company Tree Node, etc.
+A Company <a href='http://developers.iqmetrix.com/api/Chatterspot-Reports/#relationship'>Relationship</a> describes the interaction between a <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> and a Manufacturer, Supplier, Partner, Company Tree Node, etc.
 
 Depending on the type of Relationship, the identifier for each Entity may appear in the `Source` or `Destination` field.
 
@@ -111,7 +111,7 @@ See the table below for a list of legal relationships and where the identifier o
 | Name | Description |
 |:-----|:------------|
 | Id (`Integer`) | Identifier for the relationship | 
-| Source (`Integer`) | Identifier for a {{Vendor}}, <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a> or {{Partner}} or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> | 
+| Source (`Integer`) | Identifier for a <a href='http://developers.iqmetrix.com/api/epc/#vendor'>Vendor</a>, <a href='http://developers.iqmetrix.com/api/entity-store/#carrier'>Carrier</a> or {{Partner}} or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> | 
 | Destination (`Integer`) | Identifier for a <a href='http://developers.iqmetrix.com/api/company-tree/#group'>Group</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>, <a href='http://developers.iqmetrix.com/api/company-tree/#division'>Division</a> or <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a> | 
 | CreatedUtc (`DateTime`) | Date the relationship was formed, in UTC | 
 | Version (`Integer`) | Latest revision number | 
@@ -558,13 +558,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+</ul>
 
 
 
@@ -574,9 +569,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 14146,
@@ -694,13 +690,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+</ul>
 
 
 
@@ -710,9 +701,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 14146,
@@ -737,7 +729,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Creating a Location
+## <span class='post'>POST</span> a Location
 
 
 
@@ -941,15 +933,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of the parent for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
-    </li>
-    </ul>
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>NodeId</code> (<strong>Required</strong>)  - Identifier of the parent for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a></li>
+</ul>
 
 
 
@@ -957,17 +943,16 @@ puts response
 
 <ul><li><code>Name</code> (<strong>Required</strong>) </li><li><code>Roles</code> (<strong>Required</strong>) - Must be `Location`</li><ul><li><code>Name</code> (<strong>Required</strong>) </li></ul><li><code>Description</code> (Optional) </li><li><code>Area</code> (Optional) </li><ul><li><code>Value</code> (<strong>Required</strong>) - Only required if Area is not null. If provided, Unit must also be provided</li><li><code>Unit</code> (<strong>Required</strong>) - Only required if Area is not null. If provided, Value must also be provided</li></ul><li><code>Address</code> (Optional) </li><ul><li><code>AddressLine1</code> (Optional) </li><li><code>AddressLine2</code> (Optional) </li><li><code>City</code> (Optional) </li><li><code>StateCode</code> (Optional) </li><li><code>StateName</code> (Optional) </li><li><code>CountryCode</code> (Optional) - Required if�StateCode�is provided</li><li><code>CountryName</code> (Optional) </li><li><code>Zip</code> (Optional) </li></ul><li><code>Attributes</code> (Optional) </li><li><code>ClientEntityId</code> (Optional) </li><li><code>Contacts</code> (Optional) </li><ul><li><code>Name</code> (Optional) </li><li><code>Description</code> (Optional) </li><li><code>PhoneNumbers</code> (Optional) </li><ul><li><code>Description</code> (Optional) </li><li><code>Number</code> (Optional) </li><li><code>Extension</code> (Optional) </li></ul></ul><li><code>Geography</code> (Optional) </li><ul><li><code>Longitude</code> (<strong>Required</strong>) - Only required if Geography is not null. If provided, Longitude must also be provided</li><li><code>Latitude</code> (<strong>Required</strong>) - Only required if Geography is not null. If provided, Latitude must also be provided</li></ul><li><code>StoreHours</code> (Optional) </li><ul><li><code>Monday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Tuesday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Wednesday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Thursday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Friday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Saturday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Sunday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul></ul><li><code>StorePhoneNumbers</code> (Optional) </li><ul><li><code>Description</code> (Optional) </li><li><code>Number</code> (Optional) </li><li><code>Extension</code> (Optional) </li></ul><li><code>TimeZone</code> (Optional) </li><ul><li><code>Id</code> (Optional) </li><li><code>DaylightSavingTimeEnabled</code> (Optional) </li></ul></ul>
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 201 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 14202,
@@ -1326,19 +1311,10 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of the parent for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
-    </li>
-    
-    <li>
-        <code>LocationId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
-    </li>
-    </ul>
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>NodeId</code> (<strong>Required</strong>)  - Identifier of the parent for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a></li>
+    <li><code>LocationId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a></li>
+</ul>
 
 
 
@@ -1346,17 +1322,16 @@ puts response
 
 <ul><li><code>Name</code> (<strong>Required</strong>) </li><li><code>Roles</code> (<strong>Required</strong>) - Must be `Location`</li><ul><li><code>Name</code> (<strong>Required</strong>) </li></ul><li><code>Id</code> (<strong>Required</strong>) - Required for PUT requests</li><li><code>Description</code> (Optional) </li><li><code>Area</code> (Optional) </li><ul><li><code>Value</code> (<strong>Required</strong>) - Only required if Area is not null. If provided, Unit must also be provided</li><li><code>Unit</code> (<strong>Required</strong>) - Only required if Area is not null. If provided, Value must also be provided</li></ul><li><code>Address</code> (Optional) </li><ul><li><code>AddressLine1</code> (Optional) </li><li><code>AddressLine2</code> (Optional) </li><li><code>City</code> (Optional) </li><li><code>StateCode</code> (Optional) </li><li><code>StateName</code> (Optional) </li><li><code>CountryCode</code> (Optional) - Required if�StateCode�is provided</li><li><code>CountryName</code> (Optional) </li><li><code>Zip</code> (Optional) </li></ul><li><code>Attributes</code> (Optional) </li><li><code>ClientEntityId</code> (Optional) </li><li><code>Contacts</code> (Optional) </li><ul><li><code>Name</code> (Optional) </li><li><code>Description</code> (Optional) </li><li><code>PhoneNumbers</code> (Optional) </li><ul><li><code>Description</code> (Optional) </li><li><code>Number</code> (Optional) </li><li><code>Extension</code> (Optional) </li></ul></ul><li><code>Geography</code> (Optional) </li><ul><li><code>Longitude</code> (<strong>Required</strong>) - Only required if Geography is not null. If provided, Longitude must also be provided</li><li><code>Latitude</code> (<strong>Required</strong>) - Only required if Geography is not null. If provided, Latitude must also be provided</li></ul><li><code>StoreHours</code> (Optional) </li><ul><li><code>Monday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Tuesday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Wednesday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Thursday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Friday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Saturday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul><li><code>Sunday</code> (Optional) </li><ul><li><code>Open</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul><li><code>Close</code> (Optional) </li><ul><li><code>Hour</code> (Optional) </li><li><code>Minute</code> (Optional) </li></ul></ul></ul><li><code>StorePhoneNumbers</code> (Optional) </li><ul><li><code>Description</code> (Optional) </li><li><code>Number</code> (Optional) </li><li><code>Extension</code> (Optional) </li></ul><li><code>TimeZone</code> (Optional) </li><ul><li><code>Id</code> (Optional) </li><li><code>DaylightSavingTimeEnabled</code> (Optional) </li></ul><li><code>Version</code> (<strong>Required</strong>) </li></ul>
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 14202,
@@ -1571,17 +1546,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>LocationId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>LocationId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#location'>Location</a></li>
+</ul>
 
 
 
@@ -1591,9 +1558,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 14202,
@@ -1808,13 +1776,8 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+</ul>
 
 
 
@@ -1824,9 +1787,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {
@@ -1969,7 +1933,7 @@ HTTP 200 Content-Type: application/json
 
 
 
-## Creating a Division
+## <span class='post'>POST</span> a Division
 
 Divisions may be added to the root Company node, or to a Division or Group node. 
 
@@ -2059,15 +2023,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of a Node
-    </li>
-    </ul>
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>NodeId</code> (<strong>Required</strong>)  - Identifier of a Node</li>
+</ul>
 
 
 
@@ -2075,17 +2033,16 @@ puts response
 
 <ul><li><code>Name</code> (<strong>Required</strong>) </li><li><code>Description</code> (Optional) </li><li><code>ClientEntityId</code> (Optional) </li><li><code>Attributes</code> (Optional) </li></ul>
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 201 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 14159,
@@ -2121,7 +2078,7 @@ HTTP 201 Content-Type: application/json
 
 
 
-## Creating a Group
+## <span class='post'>POST</span> a Group
 
 Groups may be added to the root Company node, or to a Division or Group node. 
 
@@ -2211,15 +2168,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of a Node
-    </li>
-    </ul>
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>NodeId</code> (<strong>Required</strong>)  - Identifier of a Node</li>
+</ul>
 
 
 
@@ -2227,17 +2178,16 @@ puts response
 
 <ul><li><code>Name</code> (<strong>Required</strong>) </li><li><code>Description</code> (Optional) </li><li><code>ClientEntityId</code> (Optional) </li><li><code>Attributes</code> (Optional) </li></ul>
 
-
-
 ### Response Parameters
 
 
 
 > Example Response
 
-<pre>
+```json
 HTTP 201 Content-Type: application/json
-</pre>
+```
+
 ```json
 {
     "Id": 14166,
@@ -2274,7 +2224,7 @@ HTTP 201 Content-Type: application/json
 
 
 
-## Deleting a Group or Division
+## <span class='delete'>DELETE</span> a Group or Division
 
 {{warning}}
 This operation <strong>cannot be undone</strong>.
@@ -2353,17 +2303,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>NodeId</code> (<strong>Required</strong>)  - Identifier of a Node to be deleted
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>NodeId</code> (<strong>Required</strong>)  - Identifier of a Node to be deleted</li>
+</ul>
 
 
 
@@ -2373,9 +2315,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 
 
 
@@ -2459,17 +2402,9 @@ puts response
 
 #### URI Parameters
 <ul>
-    
-    <li>
-        <code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a>
-    </li>
-    
-    <li>
-        <code>ClientEntityId</code> (<strong>Required</strong>)  - The value to search for
-    </li>
-    </ul>
-
-
+    <li><code>CompanyId</code> (<strong>Required</strong>)  - Identifier for the <a href='http://developers.iqmetrix.com/api/company-tree/#company'>Company</a></li>
+    <li><code>ClientEntityId</code> (<strong>Required</strong>)  - The value to search for</li>
+</ul>
 
 
 
@@ -2479,9 +2414,10 @@ puts response
 
 > Example Response
 
-<pre>
+```json
 HTTP 200 Content-Type: application/json
-</pre>
+```
+
 ```json
 [
     {

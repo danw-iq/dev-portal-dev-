@@ -1,0 +1,503 @@
+#%RAML 0.8
+title: Billing Reports
+baseUri: https://rqdataconnect{UrlSuffix}.iqmetrix.net/private/
+baseUriParameters:
+  UrlSuffix:
+    description: Suffix that defines the environment
+    example: demo
+    type: string 
+resourceTypes:
+  - collectionReadOnly:
+      get:
+        headers:
+          Authorization:
+            example: Bearer (Access Token)
+            required: true
+            description: Bearer token used for authentication. For other methods of authentication, see 
+          Accept-Encoding:
+            example: gzip
+            required: true
+            description: Compression algorithm. For other methods of compression, see 
+        responses:
+          200:
+            body:
+              application/json:
+                schema: <<resource>>
+              application/JsonDataTable:
+                schema: <<resource>>
+              text/xml:
+                schema: <<resource>>
+              text/XmlDataTable:
+                schema: <<resource>>
+              text/csv:
+                schema: <<resource>>
+              application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                schema: <<resource>>
+schemas: 
+  - SaleInvoice: |
+      {
+          "type": "array",
+          "name": "SaleInvoice",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "description": "",
+          "properties": { 
+            "CustomerId": { "type": "integer", "database": "INT", "example": "13699", "description": "Identifier for a customer" },  
+            "InvoiceId": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for this invoice" },  
+            "PaymentTypeId": { "type": "integer", "database": "INT", "example": "3", "description": "Identifier for a Payment Type" },  
+            "AccountsReceivableId": { "type": "integer", "database": "INT", "example": "68", "description": "" },  
+            "AccountsReceivableName": { "type": "string", "database": "VARCHAR(14)", "example": "TTL10AR1", "description": "" },  
+            "InvoiceName": { "type": "string", "database": "VARCHAR(14)", "example": "TARGEIN1", "description": "Invoice name" },  
+            "CustomerName": { "type": "string", "database": "VARCHAR(50)", "example": "KENTEL corp", "description": "Customer name" },  
+            "DatabaseName": { "type": "string", "database": "VARCHAR(25)", "example": "KENTE", "description": "Database name" },
+            "TotalAmount": { "type": "decimal", "database": "MONEY", "example": "38.14", "description": "Total amount" },  
+            "TotalPaid": { "type": "decimal", "database": "MONEY", "example": "50", "description": "Total paid" },  
+            "CreatedDate": { "type": "datetime", "database": "DATETIME", "example": "2010-07-03T11:07:19.59", "description": "Created date" },  
+            "OriginalId": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier of the original invoice" }  
+          }  
+        }
+  - EnabledRecurringInvoiceData: |
+      {
+          
+          "type": "array",
+          "name": "EnabledRecurringInvoiceData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "CustomerId": { "type": "integer", "database": "INT", "example": "124059", "description": "Identifier for a customer" },  
+            "AccountsReceivableId": { "type": "integer", "database": "INT", "example": "68", "description": "" },  
+            "AccountsReceivableName": { "type": "string", "database": "VARCHAR(14)", "example": "TTL10AR1", "description": "" },  
+            "StartDate": { "type": "datetime", "database": "DATETIME", "example": "2014-12-16T00:00:00", "description": "Start date" },  
+            "StopDate": { "type": "datetime", "database": "DATETIME", "example": "", "description": "End date" },  
+            "RecurringInvoiceId": { "type": "integer", "database": "INT", "example": "8", "description": "Identifier for the recurring invoice" },  
+            "RecurringInvoiceName": { "type": "string", "database": "VARCHAR(14)", "example": "ML101RI1", "description": "Recurring invoice name" },  
+            "ProductId": { "type": "integer", "database": "INT", "example": "5002", "description": "Product Id" },  
+            "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },  
+            "Price": { "type": "decimal", "database": "MONEY", "example": "100", "description": "Price" },  
+            "Sku": { "type": "string", "database": "VARCHAR(12)", "example": "ASBANS000070", "description": "SKU" },  
+            "Description": { "type": "string", "database": "NVARCHAR(MAX)", "example": "NSP", "description": "Description" }  
+          }  
+        }
+  - InvoicesWithUnpaidBalanceData: |
+      {
+          "exclude": "true",
+          "type": "array",
+          "name": "InvoicesWithUnpaidBalanceData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "InvoiceId": { "type": "integer", "database": "INT", "example": "130313", "description": "Identifier for an invoice" }  
+          }  
+        }
+  - SaleInvoicesByProductFilterData: |
+      {
+          
+          "type": "array",
+          "name": "SaleInvoicesByProductFilterData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "CustomerId": { "type": "integer", "database": "INT", "example": "2922", "description": "Identifier for a customer" },  
+            "SaleInvoiceId": { "type": "integer", "database": "INT", "example": "2", "description": "Identifier for the sale invoice" },  
+            "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },  
+            "Price": { "type": "decimal", "database": "MONEY", "example": "49.99", "description": "Price" },  
+            "AccountsReceivableId": { "type": "integer", "database": "INT", "example": "5", "description": "" },  
+            "AccountsReceivableName": { "type": "string", "database": "VARCHAR(14)", "example": "", "description": "" },  
+            "Year": { "type": "integer", "database": "INT", "example": "2011", "description": "Year (full)" },  
+            "Month": { "type": "integer", "database": "INT", "example": "1", "description": "Month as an integer" },  
+            "OriginalId": { "type": "integer", "database": "INT", "example": "0", "description": "Original invoice id" },  
+            "RefundCodeId": { "type": "GUID", "database": "UNIQUEIDENTIFIER", "example": "159c193f-1904-deaa-2fed-a318b17f2b70", "description": "Identifier for a refund code" },  
+            "SaleInvoiceName": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN1", "description": "Sale invoice name" },  
+            "CustomerName": { "type": "string", "database": "VARCHAR(50)", "example": "KENTEL corp", "description": "Customer name" },  
+            "DatabaseName": { "type": "string", "database": "VARCHAR(25)", "example": "KENTE", "description": "Database name" }  
+          }  
+        }
+  - SummaryOfSaaSProductData: |
+      {
+          
+          "type": "array",
+          "name": "SummaryOfSaaSProductData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "CustomerID": { "type": "integer", "database": "INT", "example": "85161", "description": "Identifier for a customer" },  
+            "LocationCount": { "type": "integer", "database": "INT", "example": "0", "description": "Number of locations" },  
+            "WorkstationCount": { "type": "integer", "database": "INT", "example": "0", "description": "Number of workstations" },  
+            "RqMobileCount": { "type": "integer", "database": "INT", "example": "0", "description": "Number of RQ Mobile devices" }  
+          }  
+        }
+  - InvoicesWithMatchingEpinIDData: |
+      {
+          
+          "type": "array",
+          "name": "InvoicesWithMatchingEpinIDData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "InvoiceID": { "type": "string", "database": "VARCHAR(14)", "example": "84WEAIN16524", "description": "Identifier for an invoice" },  
+            "ProductSKU": { "type": "string", "database": "VARCHAR(12)", "example": "INEPNS000001", "description": "Product SKU" },  
+            "SaleInvoiceID": { "type": "integer", "database": "INT", "example": "130511", "description": "Identifier for an invoice" },  
+            "Priority": { "type": "integer", "database": "INT", "example": "1", "description": "Priority" },  
+            "PinTypeID": { "type": "integer", "database": "INT", "example": "21", "description": "Identifier for a pin type" },  
+            "PinCode": { "type": "string", "database": "VARCHAR(30)", "example": "9875564858978", "description": "EPIN pin code" },  
+            "SerialNumber": { "type": "string", "database": "VARCHAR(100)", "example": "987465328", "description": "Serial number" },  
+            "Amount": { "type": "decimal", "database": "MONEY", "example": "50", "description": "Amount" },  
+            "CostToCustomer": { "type": "decimal", "database": "MONEY", "example": "50", "description": "Customer cost" }  
+          }  
+        }
+  - TrafficCount: |
+      {
+          
+          "exclude": "true",
+          "type": "array",
+          "name": "TrafficCount",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "storeid": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for a store in RQ" }  
+          }  
+        }
+  - InvoicesPaidToAccountData: |
+      {         
+          "type": "array",
+          "name": "InvoicesPaidToAccountData",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "CustomerId": { "type": "integer", "database": "INT", "example": "54514", "description": "Identifier for a customer" },  
+            "SaleInvoiceId": { "type": "integer", "database": "INT", "example": "1891", "description": "" },  
+            "ProductId": { "type": "integer", "database": "INT", "example": "1355", "description": "Identifier for a product" },  
+            "Quantity": { "type": "integer", "database": "INT", "example": "1", "description": "Quantity" },  
+            "Price": { "type": "decimal", "database": "MONEY", "example": "79.99", "description": "Price" },  
+            "Sku": { "type": "string", "database": "VARCHAR(12)", "example": "ASMIRI000016", "description": "SKU" },  
+            "Description": { "type": "string", "database": "NVARCHAR(MAX)", "example": "Blackberry Curve 3 Grey", "description": "Description" }  
+          }  
+        }
+  - GlobalProduct: |
+      {
+          "type": "array",
+          "name": "GlobalProduct",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "properties": { 
+            "GlobalProductID": { "type": "integer", "database": "INT", "example": "1", "description": "Identifier for a {{GlobalProduct}}" },  
+            "ProductIdentifier": { "type": "string", "database": "VARCHAR(12)", "example": "ASCLMO000001", "description": "Product identifier" },  
+            "ProductName": { "type": "string", "database": "NVARCHAR(MAX)", "example": "CLA Mot V262/265 Platinum_TestCLA", "description": "Product name" }  
+          }  
+        }
+/billing/GetSaleInvoicesByIDS?CompanyID={CompanyID}&SaleInvoiceIds={SaleInvoiceIds}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    SaleInvoiceIds:
+      type: string
+      example: 1,2,3
+      required: true
+      description: Comma seperated list of identifiers for invoices
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: true
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: true  
+  type:
+    collectionReadOnly: 
+      resource: SaleInvoice 
+  get:
+    displayName: Get Sale Invoices By IDs
+/billing/GetTrafficCounts?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: true
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: true  
+  type:
+    collectionReadOnly: 
+      resource: TrafficCount
+  get:
+    displayName: Getting Traffic Counts
+/billing/GetInvoicesWithMatchingEpinIDS?CompanyID={CompanyID}&IDs={IDs}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    IDs:
+      type: string
+      example: 84WEAIN16524
+      required: true
+      description: Comma seperated list of identifiers for invoices 
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: true
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: true  
+  type:
+    collectionReadOnly: 
+      resource: InvoicesWithMatchingEpinIDData
+  get:
+    displayName: Getting Invoices With Matching Epins IDs      
+/billing/GetSummaryOfSaaSProducts?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&CustomerIDS={CustomerIDS}&LocationGlobalProductIDs={LocationGlobalProductIDs}&WorkstationsGlobalProductIDs={WorkstationsGlobalProductIDs}&RQMobileGlobalProductIDs={RQMobileGlobalProductIDs}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    CustomerIDS:
+      type: string
+      example: 85161,119121,113548
+      required: true
+      description: Comma seperated list of identifiers for customers
+    LocationGlobalProductIDs:
+      type: string
+      example: 760,764
+      required: true
+      description: Comma seperated list of identifiers for RQ location line items
+    WorkstationsGlobalProductIDs:
+      type: string
+      example: 938,1456
+      required: true
+      description: Comma seperated list of identifiers for RQ workstation line items
+    RQMobileGlobalProductIDs:
+      type: integer
+      example: 1721
+      required: true
+      description: Comma seperated list of identifiers for RQ mobile line items
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: true
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: true  
+  type:
+    collectionReadOnly: 
+      resource: SummaryOfSaaSProductData
+  get:
+    displayName: Getting Summary of SaaS Products
+/billing/GetEnabledRecurringInvoices?CompanyID={CompanyID}&LanguageCode={LanguageCode}&StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    LanguageCode: 
+      type: string
+      example: en-us
+      description: Language code, defaults to en-us. For a complete list, see <a href='#getting-language-codes'>Getting Language Codes</a> 
+      required: false
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false  
+  type:
+    collectionReadOnly: 
+      resource: EnabledRecurringInvoiceData
+  get:
+    displayName: Getting Enabled Recurring Invoices
+/billing/GetInvoicesWithUnpaidBalance?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&PaymentTypeID={PaymentTypeID}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    PaymentTypeID:
+      type: integer
+      example: 1
+      required: true
+      description: Identifier for a Payment Type
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false  
+  type:
+    collectionReadOnly: 
+      resource: InvoicesWithUnpaidBalanceData
+  get:
+    displayName: Getting Invoices With Unpaid Balances
+/billing/GetSaleInvoicesByProductFilter?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&GlobalProductIds={GlobalProductIds}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    GlobalProductIds:
+      type: string
+      example: 760,764,768,1808,1809,1810
+      required: true
+      description: Comma seperated list of identifiers for {{GlobalProducts}}
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false  
+  type:
+    collectionReadOnly: 
+      resource: SaleInvoicesByProductFilterData
+  get:
+    displayName: Getting Sale Invoices By Product Filter
+/billing/GetInvoicesPaidToAccount?CompanyID={CompanyID}&StartDate={StartDate}&StopDate={StopDate}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    StartDate:
+      type: string
+      example: 1970-01-01 00:00:00
+      description: Date at which report will begin
+      required: true
+    StopDate:
+      type: string
+      example: 2016-01-01 00:00:00
+      description: Date at which report will end
+      required: true
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false  
+  type:
+    collectionReadOnly: 
+      resource: InvoicesPaidToAccountData
+  get:
+    displayName: Getting Invoices Paid To Account
+/billing/GetARPaymentInvoice?CompanyID={CompanyID}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false        
+  type:
+    collectionReadOnly: 
+      resource: GlobalProduct
+  get:
+    displayName: Getting AR Payment Invoice 
+/billing/GetAllGlobalProducts?CompanyID={CompanyID}&Auth={Auth}&Response={Response}:
+  uriParameters:
+    CompanyID:
+      type: integer
+      example: 22573
+      required: true
+      description: Identifier for a {{Company}}
+    Auth:
+      type: string
+      example: vRMt17P8rIBWWbVbLzLWjTNyLfvESgA2yfXhze0WZN7HSIl4slGV866p9dSw
+      description: Basic token used for authentication. For other methods of authentication, see {{AuthenticationOptions}}
+      required: false
+    Response:
+      type: string
+      example: xml
+      description: Default is JSON. For other methods of response, see {{ResponseOptions}}
+      required: false        
+  type:
+    collectionReadOnly: 
+      resource: GlobalProduct
+  get:
+    displayName: Get All Global Products

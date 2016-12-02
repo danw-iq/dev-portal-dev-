@@ -41,8 +41,14 @@ search: true
 
 {% for resource in resources %}{% for method in resource.methods %}
 
-## {{method.displayName | replace("Getting", "<span class='get'>GET</span>") | replace("Adding", "<span class='post'>POST</span>") | replace("Removing", "<span class='delete'>DELETE</span>")
- | replace("Updating", "<span class='put'>PUT</span>")}}
+## {{method.displayName | 
+    replace("Getting", "<span class='get'>GET</span>") | 
+    replace("Retrieving", "<span class='get'>GET</span>") | 
+    replace("Adding", "<span class='post'>POST</span>") | 
+    replace("Creating", "<span class='post'>POST</span>") | 
+    replace("Removing", "<span class='delete'>DELETE</span>") | 
+    replace("Deleting", "<span class='delete'>DELETE</span>") | 
+    replace("Updating", "<span class='put'>PUT</span>")}}
 
 {{method.description}}
 
@@ -113,12 +119,9 @@ puts response
 
 {% if resource.uriParameters %}
 #### URI Parameters
-<ul>
-    {% for parameter, objParameter in resource.uriParameters %}
-    <li>
-        <code>{{parameter}}</code> ({% if objParameter.required %}<strong>Required</strong>{% else %}Optional{% endif %}) {% if objParameter.description %} - {{objParameter.description}}{% endif %}
-    </li>
-    {% endfor %}</ul>{% endif %}
+<ul>{% for parameter, objParameter in resource.uriParameters %}
+    <li><code>{{parameter}}</code> ({% if objParameter.required %}<strong>Required</strong>{% else %}Optional{% endif %}) {% if objParameter.description %} - {{objParameter.description}}{% endif %}</li>{% endfor %}
+</ul>{% endif %}
 
 {% if method.body["application/json"].schema %}
 
@@ -134,37 +137,16 @@ puts response
 
 {{ method.body["application/x-www-form-urlencoded"].formParameters | printFormParameters() }}{% endif %}
 
-{#
-### Response Parameters
-
-{% for code, body in method.responses %}{% if body %}{% for body, schema in body %}{% for scheme, schemeProperties in schema %}{% if schemeProperties.schema %}
-{% if scheme == "application/json" %} {{ schemeProperties.schema | printResponseSchema(title) }}{% endif %}{% endif %}
-
-> Example Response
-
-<pre>
-HTTP {{code}} Content-Type: {{scheme}}
-</pre>{% if schemeProperties.example %}
-```json
-{{ schemeProperties.example }}
-```
-{% elif schemeProperties.schema %}
-```json
-{{ schemeProperties.schema | printExample(title, null) }}
-```
-{% endif %}{% endfor %}{% endfor %}{% else %}
-
-#}
-
 ### Response Parameters
 
 {% for code, body in method.responses %}{% if body %}{% for body, schema in body %}{% for scheme, schemeProperties in schema %}
 
 > Example Response
 
-<pre>
+```json
 HTTP {{code}} Content-Type: {{scheme}}
-</pre>{% if schemeProperties.example %}
+```
+{% if schemeProperties.example %}
 ```json
 {{ schemeProperties.example }}
 ```
