@@ -63,11 +63,10 @@ noPopUp: true
 
 > Example Request
 
-```javscript
+```javascript
 {{method.method | upper }} {{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}
 {% if method.headers %}{% for header, headerObj in method.headers %}{{header}}: {{headerObj.example}}
-{% endfor %}{% endif %}
-```
+{% endfor %}{% endif %}```
 
 
 ```shell
