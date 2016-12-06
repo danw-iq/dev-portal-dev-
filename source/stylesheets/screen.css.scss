@@ -614,10 +614,10 @@ html, body {
 
   pre {
     @extend %code-font;
-    background-color: #292929; /*#212D42;*/
+    background-color: /*#292929;*/ #212D42;
     color: #fff;
 
-    margin: 10px 40px 0 40px;
+    margin: 0px 40px 0 40px;
     margin-bottom: 20px;
     border-radius: 3px;
     overflow: hidden;
@@ -784,7 +784,7 @@ tr>td:first-child {
 }
 
 .fixed-top {
-  background-color: /*#364956;*/ #292929;
+  background-color: #212D42; /*#364956;*/ /*#292929;*/
   top: 0;
   right: 0;
   left: 0;

@@ -233,7 +233,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 202 Content-Type: application/json
 ```
 

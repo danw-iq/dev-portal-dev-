@@ -592,7 +592,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -720,7 +720,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -834,7 +834,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -953,7 +953,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -1078,7 +1078,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -1195,7 +1195,9 @@ puts response
 
 > Example Response
 
-<pre>HTTP 204</pre>
+```
+HTTP 204
+```
 
 
 
@@ -1285,7 +1287,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -1545,7 +1547,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -1766,7 +1768,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -1921,7 +1923,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -2037,7 +2039,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -2159,7 +2161,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -2346,7 +2348,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -2533,7 +2535,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -2720,7 +2722,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -2912,7 +2914,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -3108,7 +3110,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 

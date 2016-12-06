@@ -53,7 +53,7 @@ var CUSTOM_TEMPLATES = {
     "rdc-finance": { "template": "rq-data-connect" },
     "rdc-import": { "template": "rq-data-connect" },    
     "rdc-inventory": { "template": "rdc-test" },
-    "rdc-performance-metrix": { "template": "rq-data-connect" },
+    "rdc-performance-metrix": { "template": "rdc-test" },
     "rdc-sales": { "template": "rq-data-connect" },
     "rdc-utilities": { "template": "rq-data-connect" }
 };

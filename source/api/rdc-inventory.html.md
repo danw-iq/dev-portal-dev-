@@ -1455,7 +1455,6 @@ public static CloseableHttpResponse GettingTheAdjustmentHistoryInvoiceDetailRepo
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/adjustmenthistoryinvoicedetailreport?ReasonCode=-1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&SerialNumber=990003427999221&ProductIdentifier=ASCLMO000001&LanguageCode=en-us', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -1759,7 +1758,6 @@ public static CloseableHttpResponse GettingTheAdjustmentHistoryProductDetailRepo
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/adjustmenthistoryproductdetailreport?ReasonCode=-1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us&ProductIdentifier=ASCLMO000001', {
@@ -2092,7 +2090,6 @@ public static CloseableHttpResponse GettingTheAgedSerializedInventoryReport() th
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/AgedSeralizedInventoryReport?SearchMethod=3&SearchCriteria2=-1&StoreIDLoggedIn=1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us', {
@@ -2436,7 +2433,6 @@ public static CloseableHttpResponse GettingTheAutoOrderingReport() throws IOExce
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/AutoOrderingReport?Search=ByCategory&OrderBy=Priority&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&ProductsToShow=1&StoreTypeID=-1&LanguageCode=en-us', {
@@ -2825,7 +2821,6 @@ public static CloseableHttpResponse GettingTheBackOrderListingReport() throws IO
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/backorderlistingreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&VendorID=-1&LanguageCode=en-us', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -3147,7 +3142,6 @@ public static CloseableHttpResponse GettingTheCountSheetHistoryReport() throws I
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/countsheethistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&ProductIdentifier=ASCLMO000001&SerialNumber=866988333292854&LanguageCode=en-us', {
@@ -3486,7 +3480,6 @@ public static CloseableHttpResponse GettingTheCompletedRmasReport() throws IOExc
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/CompletedRMAsReport?ReportType=RMAs&StockBalanceID=78&SearchMethod=3&SearchCriteria=-1&StoreIDs=1&SBState=4&LanguageCode=en-us', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -3775,7 +3768,6 @@ public static CloseableHttpResponse GettingTheConsignmentHistoryReport() throws 
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/consignmenthistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us', {
@@ -4100,7 +4092,6 @@ public static CloseableHttpResponse GettingTheDiscontinuedInventoryReport() thro
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/discontinuedinventoryreport?CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -4420,7 +4411,6 @@ public static CloseableHttpResponse GettingTheInventoryAvailabilitySummaryReport
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/inventoryavailabilitysummaryreport?ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&SearchType=1&ProductIdentifier=ASCLMO000001&CategoryNumber=10&LanguageCode=en-us', {
@@ -4784,7 +4774,6 @@ public static CloseableHttpResponse GettingTheInventoryListingReport() throws IO
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/inventorylistingreport?CategoryNumber=10&BinStatus=1&QtyStatus=4&BlindInventory=0&DateAsOf=2016-01-01T08:00:00.000Z&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us', {
@@ -5152,7 +5141,6 @@ public static CloseableHttpResponse GettingTheInventoryRemovalHistoryReport() th
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/inventoryremovalhistoryreport?StoreID=1&SearchMethod=1&StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -5430,7 +5418,6 @@ public static CloseableHttpResponse GettingTheInventoryTotalsByLocationReport() 
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/inventorytotalsbylocationreport?StoreTypeID=-1&CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us', {
@@ -5733,7 +5720,6 @@ public static CloseableHttpResponse GettingTheNonSellableHistoryReport() throws 
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/nonsellablehistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&CategoryNumber=10&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&ProductIdentifier=ASCLMO000001&LanguageCode=en-us', {
@@ -6084,7 +6070,6 @@ public static CloseableHttpResponse GettingTheOverReceivingInventoryReport() thr
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/overreceivinginventoryreport?StartDate=1970-01-01T08:00:00.000ZStopDate=2016-01-01T08:00:00.000Z&PurchaseOrderID=-1&PurchaseOrderIDByStore=84WEAPO1151&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -6391,7 +6376,6 @@ public static CloseableHttpResponse GettingTheProductsOnConsignmentReport() thro
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/productsonconsignmentreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&StoreID=1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&PurchaseOrderIDByStore=84WEAPO1151&LanguageCode=en-us', {
@@ -6714,7 +6698,6 @@ public static CloseableHttpResponse GettingThePurchaseOrderHistoryReport() throw
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/purchasehistoryreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&SearchMethod=1&Filter=1&CategoryNumber=10&ProductIdentifier=ASCLMO000001&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2&LanguageCode=en-us', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -7000,7 +6983,6 @@ public static CloseableHttpResponse GettingThePurchaseOrderAmendmentReport() thr
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/PurchaseOrderAmendmentReport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&PONumber=WETM2PO325&LanguageCode=en-us', {
@@ -7324,7 +7306,6 @@ public static CloseableHttpResponse GettingTheReceivingInvoiceHistoryByProductRe
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/ReceivingInvoiceHistoryReport_ByProduct?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us', {
@@ -7665,7 +7646,6 @@ public static CloseableHttpResponse GettingTheReceivingInvoiceHistoryByInvoiceRe
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/ReceivingInvoiceHistoryReport_ByInvoice?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us', {
@@ -8032,7 +8012,6 @@ public static CloseableHttpResponse GettingTheRmaHistoryInvoiceReport() throws I
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/rmahistoryinvoicereport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -8385,7 +8364,6 @@ public static CloseableHttpResponse GettingTheRmaHistoryProductReport() throws I
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/rmahistoryproductreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&VendorID=-1&ForWho=1&ForWhoIDs=6679&LocationType=Store&LocationTypeIDs=1,2', {
@@ -8746,7 +8724,6 @@ public static CloseableHttpResponse GettingTheStaleInventoryReport() throws IOEx
 require 'rest-client'
 
 
-
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/StaleInventoryReport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&QtyThreshold=-1&ForWho=4&ForWhoIDs=1&LocationType=Store&LocationTypeIDs=1,2&CategoryNumber=10&LanguageCode=en-us', {
      :'Authorization' => 'Bearer (Access Token)',
      :'Accept-Encoding' => 'gzip',
@@ -9069,7 +9046,6 @@ public static CloseableHttpResponse GettingTheTransferHistoryInvoiceDetailReport
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/transferhistoryinvoicedetailreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ShippedForWho=1&ShippedForWhoIDs=6679&ReceivedForWho=1&ReceivedForWhoIDs=6679&LanguageCode=en-us', {
@@ -9435,7 +9411,6 @@ public static CloseableHttpResponse GettingTheTransferHistoryProductDetailReport
 
 ```ruby
 require 'rest-client'
-
 
 
 response = RestClient.get 'https://rqdataconnectdemo.iqmetrix.net/reports/transferhistoryproductdetailreport?StartDate=1970-01-01T08:00:00.000Z&StopDate=2016-01-01T08:00:00.000Z&ShippedForWho=1&ShippedForWhoIDs=6679&ReceivedForWho=1&ReceivedForWhoIDs=6679&LanguageCode=en-us', {

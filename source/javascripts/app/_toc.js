@@ -56,7 +56,7 @@
 
 
   // Change the text in the sidebar to match the CRUD css styles
-  // It's duplicate code, but will update it in the future
+  // For now it's duplicate code, but will be refactored in the future
   $(function(){
 
     var search = 'GET';

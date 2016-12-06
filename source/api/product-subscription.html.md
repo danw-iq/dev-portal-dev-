@@ -204,7 +204,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -330,7 +330,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -437,7 +437,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -578,7 +578,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 200 Content-Type: application/json
 ```
 
@@ -698,7 +698,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 204 Content-Type: application/json
 ```
 
@@ -789,7 +789,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP 204 Content-Type: application/json
 ```
 

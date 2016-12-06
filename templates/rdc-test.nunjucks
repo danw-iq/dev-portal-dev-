@@ -110,7 +110,6 @@ public static CloseableHttpResponse {{ method.displayName | printMethodName }}()
 
 ```ruby
 require 'rest-client'
-
 {% if method.body["application/json"] %}body = "{% if method.body["application/json"].example %}{{ method.body["application/json"].example | serialize }}{% elif method.body["application/json"].schema %}{% if method.method == "put" %}{{ method.body["application/json"].schema | printSerialized(title, false) }}{% else %}{{ method.body["application/json"].schema | printSerialized(title, true) }}{% endif %}";{% endif %}{% endif %}
 
 response = RestClient.{{method.method}} '{{ baseUri | replace("{UrlSuffix}", "demo") }}{{ resource.relativeUri | replaceWithExamples(resource.uriParameters) }}'{% if method.method == "post" %}, body{% elif method.method == "put" %}, body{% endif %}{% if method.headers %}, {
@@ -205,13 +204,14 @@ Binary *.xlsx file
 
 {% endif %}
 
-{% endfor %} 
+{% endfor %}
 
 #### Headers
 
 This specifies the format of the data sent to the API.
 
-##### For JSON:
+
+##### For JSON
 
 `Content-Type: application/json`
 
@@ -228,7 +228,6 @@ This is the default result obtained by omitting the URI parameter `Auth=JsonData
 `Content-Type: text/xml`
 
 This result is obtained by using the URL parameter `Auth=XmlDataTable`. 
-<br/>
 
 `Content-Type: text/XmlDataTable`
 

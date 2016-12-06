@@ -143,7 +143,7 @@ puts response
 
 > Example Response
 
-```json
+```
 HTTP {{code}} Content-Type: {{scheme}}
 ```
 {% if schemeProperties.example %}
@@ -163,7 +163,9 @@ HTTP {{code}} Content-Type: {{scheme}}
 
 > Example Response
 
-<pre>HTTP {{code}}</pre>
+```
+HTTP {{code}}
+```
 
 {% endif %}{% endfor %}{% endfor %}{% endfor %}{% for item in documentation %}{% if item.title == "extended-examples" %}
 
