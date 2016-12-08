@@ -1,8 +1,6 @@
 ---
 title:  Dropship Onboarding Guide
-
 search: true
-
 ---
 
 # Overview
@@ -11,10 +9,9 @@ The following document outlines the APIs and calls required for a dropship integ
 
 Each segment in this guide will provide high-level concepts before describing examples of the API call required.
 
-<br />
 **Figure 1:** Illustrates the interactions between supplier and iQmetrix APIs.
 
-<img src="/images/dropship-flow.jpg" alt="dropship flow diagram" />
+<img src="http://developers.iqmetrix.com/images/dropship-flow.jpg" alt="dropship flow diagram" />
 
 The following APIs will be covered in this guide:
 
@@ -26,25 +23,25 @@ The following APIs will be covered in this guide:
 * Shipping Options
 
 
-### Who Is This Guide For?
+## Who Is This Guide For?
 
 The intended audience for this guide are developers who are integrating a supplier into the iQmetrix dropship program.
 
-### Onboarding Package
+## Onboarding Package
 
 As part of the onboarding process, you will have received an onboarding package from the iQmetrix API team. This package provides you credentials and access details in order to perform the topics covered in this guide. 
 
-Should you require information beyond the scope of this guide, or did not receive the onboarding package, contact {{contact_support}}.
+Should you require information beyond the scope of this guide, or did not receive the onboarding package, contact <a href="mailto:apisupport@iqmetrix.com?subject=Support">Support</a>.
 
 
-### Environment
+## Environment
 
 iQmetrix provides you with two environments: Sandbox and Production. 
 Use the Sandbox environment to test your API and to perform end-to-end testing. After completing this stage proceed to the Production environment.
 
-For more information on environments, see {{Environment}}.
+For more information on environments, see [Environment](http://developers.iqmetrix.com/api/#environments).
 
-The iQmetrix API supports JSON and JSON + HAL. See {{SupportedResponseFormats}} for more information.
+The iQmetrix API supports JSON and JSON + HAL. See [Supported Response Formats](http://developers.iqmetrix.com/api/#supported-response-formats) for more information.
 
 
 ## Postman Example
@@ -66,18 +63,27 @@ data-postman-var-1="361a16e02eb237721346"></div>
   }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
 </script>
 
-Alternatively, you can download the collection by clicking <a href="#">here</a>.
 
-The Postman environment shared by all API references and guides can be found [here](/api/#).
+Alternatively, you can download the collection by clicking <a href="https://www.getpostman.com/collections/361a16e02eb237721346">here</a>.
 
+The Postman environment shared by all API references and guides can be found <a href="../../files/postmanEnv.postman_environment">here</a>.
 
-# Step 1 - Authentication
+# Steps
 
-In order to make authorized requests to iQmetrix APIs, you need an {{AccessToken_Glossary}}.
+## Step 1 - Authentication
+
+>
+> Example Request
+>
+
+```
+Authorization: Bearer (Access Token)
+```
+
+In order to make authorized requests to iQmetrix APIs, you need an [Access Token](http://developers.iqmetrix.com/glossary/#access-token).
 
 See the table below for different ways of getting an Access Token.
 
-<br />
 **Table 1:** Methods for Obtaining an Access Token
 
 | If... | Then... |
@@ -87,89 +93,83 @@ See the table below for different ways of getting an Access Token.
 
 The token is placed in the `Authorization` header of requests to iQmetrix APIs, prefixed by the word `Bearer`.
 
-##### Example Request
-
-    Authorization: Bearer (Access Token)
-
-# Step 2 - Product Feed
+## Step 2 - Product Feed
 
 A [Product Feed](/api/product-feed) allows you to continuously channel all of your products' information into a single source within the iQmetrix system. The product feed you provide will be curated by iQmetrix into the Product Library and made available to retailers. 
 
-Each product that has been curated will be **removed from the feed**, leaving the delta from your last push. It's recommended to update the `LastModifiedByVendorUtc` field for this product feed lifecycle, as it gives visibility to the curation team should there be any new products added to the feed or any product information updates.
+Each product that has been curated will be <strong>removed from the feed</strong>, leaving the delta from your last push. It's recommended to update the `LastModifiedByVendorUtc` field for this product feed lifecycle, as it gives visibility to the curation team should there be any new products added to the feed or any product information updates.
 
-<br />
 **Figure 2:** Illustrates supplier pushing products to be curated. 
 
-![Alt product feed diagram](/images/product-feed.jpg)
-
+<img src="http://developers.iqmetrix.com/images/product-feed.jpg" alt="product feed diagram" />
 
 ## 2.1 Get Classification Tree by ID
 
-> 
+>
 > Example Request
-> 
+>
 
-```javascript
+```
 GET https://productlibrarydemo.iqmetrix.net/v1/ClassificationTrees(1)
 ```
-
 >
 > Example Response
 >
 
-```javascript
-    HTTP 200 Content-Type: application/json
-    {
+```
+HTTP 200 Content-Type: application/json
+```
+```
+{
+    "Id": 1,
+    "Name": "Cellular & Accessories",
+    "IsCanonical": true,
+    "Description": "iQmetrix classification of products for wireless retail",
+    "Owner": {
         "Id": 1,
-        "Name": "Cellular & Accessories",
-        "IsCanonical": true,
-        "Description": "iQmetrix classification of products for wireless retail",
-        "Owner": {
-            "Id": 1,
-            "Name": "iQmetrix"
-        },
-        "Categories": [
-            {
-              "Id": 2,
-              "Name": "Devices",
-              "Order": 1,
-              "Categories": [...],
-              "Classifications": [...]
-            },
-            ...
-        ],
-        "Classifications": [
-            {
-              "Id": 69,
-              "Name": "SIM Cards",
-              "Order": 5,
-              "ProductTemplate": {
-                "Id": 16,
-                "Name": "Wireless Device"
-              }
-            },
-            ...
-        ],
-        "Version": 148
-    }
+        "Name": "iQmetrix"
+    },
+    "Categories": [
+        {
+          "Id": 2,
+          "Name": "Devices",
+          "Order": 1,
+          "Categories": [],
+          "Classifications": []
+        }
+    ],
+    "Classifications": [
+        {
+          "Id": 69,
+          "Name": "SIM Cards",
+          "Order": 5,
+          "ProductTemplate": {
+            "Id": 16,
+            "Name": "Wireless Device"
+          }
+        }
+    ],
+    "Version": 148
+}
 ```
 
 iQmetrix organizes retail products in a hierarchical structure using Classification Trees, which represent different product taxonomies. Classification Trees are made up of Categories, which group similar products together, and Classifications which act as a template for Product information. 
 
 Each Product must have an associated Classification Tree and Classification.
 
-For more details on this concept, see {{ClassificationTree_Concept}}.
+For more details on this concept, see [Classification Tree](http://developers.iqmetrix.com/concepts/classification-tree/#classification-trees).
 
 To get a list of Classifications based on your provided Classification Tree ID, see [Getting a Classification Tree](/api/classification-tree/#getting-a-classification-tree)
 
 
 ## 2.2 Get All Field Definitions
 
+
 >
 > Example Request
 >
 
-```csharp
+```
 GET https://productlibrarydemo.iqmetrix.net/v1/FieldDefinitions
 ```
 
@@ -177,8 +177,10 @@ GET https://productlibrarydemo.iqmetrix.net/v1/FieldDefinitions
 > Example Response
 >
 
-```javascript
+```
 HTTP 200 Content-Type: application/json
+```
+```
 [
     {
         "Id": 139,
@@ -273,18 +275,15 @@ HTTP 200 Content-Type: application/json
         "DisplayName": "CDMA",
         "Unit": null,
         "Options": []
-    },
-    ...
+    }
 ]
 ```
-
 
 A field definition contains all the metadata about a product's attributes, such as name, units, and how it should be displayed. A field is an instance of a field definition. Each product field has a definition and a value. Field definitions are agnostic of industry and are considered global attributes.
 
 To get all Field Definitions, see [Getting Field Definitions](/api/field-definitions/#getting-all-field-definitions)
 
-
-#### Mapping Field Definitions
+### Mapping Field Definitions
 
 When mapping field definitions between the environments there are two identifiers to consider:
 
@@ -300,7 +299,6 @@ To add a Product to your Product Feed, the API request requires the field defini
 4. Get a list of all fields definitions from the Demo environment.
 5. Search for the string identifiers to be mapped and add their corresponding field identifier to your configuration table.
 
-<br />
 **Table 2:** Mapping Fields Between Environments
 
 | Your Definition | String ID | ID in Demo | ID in Production |
@@ -310,18 +308,19 @@ To add a Product to your Product Feed, the API request requires the field defini
 | Packing Depth | Packaging Depth  | 177 | 143 |
 
 
-## 2.3 Add a Product
+### 2.3 Add a Product
 
 >
 > Example Request
 >
 
-```javascript
+```
 POST https://productlibrarydemo.iqmetrix.net/v1/ProductFeeds(34)/Products 
 Authorization: Bearer (Access Token)
 Accept: application/json
 Content-Type: application/json
-
+```
+```
 {
     "Classification": {
         "TreeId": 1,
@@ -383,8 +382,10 @@ Content-Type: application/json
 > Example Response
 >
 
-```javascript
+```
 HTTP 200 OK Content-Type: application/json
+```
+```
 {
     "Id": 17,
     "Classification": {
@@ -403,26 +404,16 @@ HTTP 200 OK Content-Type: application/json
             "Description": "Online retailer"
         }
     ],
-    "Fields": [
-        {
-        ...
-        }
-    ],
-    "Assets": [
-        {
-        ...
-        }
-    ],
+    "Fields": [],
+    "Assets": [],
     "LastModifiedByVendorUtc": null,
     "ModelName": "Agent18 SlimShield Case for iPhone 6"
 }
 ```
 
-
 Now that you have a list of Field Definitions and Classifications, there are also optional parameters to enter for your Products. Ensure your products have, at minimum, a ModelName as this field will be used to import your products into the iQmetrix platform.
 
 We can now combine the information gathered from the previous steps to [Adding a Product to your Product Feed](/api/product-feed/#adding-a-product-to-a-feed)
-
 
 **ModelName Mapping:**
 
@@ -430,7 +421,6 @@ The `ModelName` field should be specific enough that variations of one product s
 
 The table below shows results from actual entries versus the expected entry.
 
-<br />
 **Table 3:** ModelName Mapping Examples
 
 | Actual | Expected | 
@@ -440,13 +430,11 @@ The table below shows results from actual entries versus the expected entry.
 | Shell and Holster for Apple iPhone 6 | iPhone 6/6s Hip Case+ |
 | Data Cable | microUSB 72" Charge-sync Cord |
 
-
 **Required Fields:**
 
 * `Product Name` - Since there is a Manufacturer field, the manufacturer doesn't need to be apart of the product name.
 * `Long Description` - Supports up to ~20,000 characters, but products typically use 2,000 characters at most. Formatting should be handled with HTML tags.
 * `MSRP` - Requires value and currency code (e.g. 35.99 CAD, 24.00 USD).
-
 
 **Recommendations:**
 
@@ -460,14 +448,14 @@ The table below shows results from actual entries versus the expected entry.
  * Black, Blue, Brown, Gray, Green, Orange, Pink, Purple, Red, Translucent, Turquoise, White, Yellow, Gold, Silver, Bronze, Multicolor, Pattern
 
 
+### Optional: Remove/Update a Product
 
-## Optional: Remove/Update a Product
 
 >
 > Example Request
 >
 
-```csharp
+```
 DELETE https://productlibrarydemo.iqmetrix.net/v1/ProductFeeds(34)/Products(17)
 Authorization: Bearer (Access Token)
 Accept: application/json
@@ -477,10 +465,9 @@ Accept: application/json
 > Example Response
 >
 
-```csharp
+```
 HTTP 204 No Content
 ```
-
 
 Each Product entered into the Product Feed will have a corresponding ID from the response. The steps below describe how to remove or update products that are **still** in the Product feed, and have not been curated yet.
 
@@ -491,7 +478,7 @@ Should a product have already been curated, then simply add the product to the P
 
 
 
-# Step 3 - Product Subscription
+## Step 3 - Product Subscription
 
 While the [Product Content Feed](/api/product-feed) provides iQmetrix with details of your products, the [Product Subscription Feed](/api/product-subscription) is similar to an RSS feed. In this case, retailers subscribe to your feed to get a list of your latest dropship products. 
 
@@ -503,10 +490,9 @@ Once a retailer is subscribed your feed(s), they will see the products available
 
 Synchronization of these feeds occurs nightly, updating all of your subscribed retailers with the products you have added or removed from your feeds, allowing you to control which products are available for dropship. 
 
-<br />
 **Figure 3:** Illustrates supplier pushing product rules to their various companies. 
 
-![Alt product subscription](/images/product-subscription.jpg)
+<img src="http://developers.iqmetrix.com/images/product-subscription.jpg" alt="product subscription" />
 
 
 #### Example Scenario
@@ -526,18 +512,19 @@ Finally on Wednesday morning, the supplier removes 1 product, leaving the Subscr
 The following morning, subscribed retailers now have 9 products.
 
 
-## 3.1 Add Products
+### 3.1 Add Products
 
 >
 > Example Request
 >
 
-```javascript
+```
 PUT https://productsubscriptionsdemo.iqmetrix.net/v1/subscribablelists(2c7dccd9-49ba-42ac-bffb-edcc08f40773)
 Authorization: Bearer (Access Token)
 Accept: application/json
 Content-Type: application/json
-
+```
+```
 {
     "EntityId": 60455,
     "Name": "Joe's Product List",
@@ -556,8 +543,10 @@ Content-Type: application/json
 > Example Response
 >
 
-```javascript
+```
 HTTP 200 OK Content-Type: application/json
+```
+```
 {
     "Id": "2c7dccd9-49ba-42ac-bffb-edcc08f40773",
     "EntityId": 60455,
@@ -576,9 +565,8 @@ HTTP 200 OK Content-Type: application/json
 }
 ```
 
-{{note}}The new product list in the payload replaces the old product list. Any matching old products (determined by Vendor SKU) will have their slug and version data copied over into the new products.{{end}}
+The new product list in the payload replaces the old product list. Any matching old products (determined by Vendor SKU) will have their slug and version data copied over into the new products.
 
-<br />
 **Table 4:** Product Feed Variables
 
 | Parameter | Value |
@@ -592,15 +580,13 @@ HTTP 200 OK Content-Type: application/json
 
 To add products, see [Updating Products in a Subscribable List](/api/product-subscription/#updating-products-in-a-subscribable-list). 
 
-
-
-## 3.2 Get Your Company IDs
+### 3.2 Get Your Company IDs
 
 >
 > Example Request
 >
 
-```csharp    
+```
 GET https://productsubscriptionsdemo.iqmetrix.net/v1/subscribablelists(2c7dccd9-49ba-42ac-bffb-edcc08f40773)
 Authorization: Bearer (Access Token)
 Accept: application/json
@@ -610,8 +596,10 @@ Accept: application/json
 > Example Response
 >
 
-```javascript
+```
 HTTP 200 OK Content-Type: application/json
+```
+```
 {
     "ListId": "2c7dccd9-49ba-42ac-bffb-edcc08f40773",
     "Companies": [
@@ -619,38 +607,38 @@ HTTP 200 OK Content-Type: application/json
             "Id": 60454,
             "Name": "Company 1",
             "DateSubscribedUtc": "2015-10-01T18:46:25.774Z"
-        },
-        ...
+        }
     ]
 }
 ```
+
 
 For the remaining steps, you <strong>must</strong> know the Company IDs for the companies you will be interacting with. 
 
 You can get a list of all your companies via [Getting All Companies in a Product Subscription](/api/product-subscription/#getting-all-companies-in-a-product-subscription).
 
 
-# Step 4 - Supplier Availability
+## Step 4 - Supplier Availability
 
 The [Supplier Availability](/api/supplier-availability) provides iQmetrix with a continuously updated cache of product availability.  This will allow iQmetrix to inform customers of the availability of a product.  Once a product is marked as unavailable by a supplier, iQmetrix will mark this product as unavailable to prevent future purchases.
 
-<br />
 **Figure 4:** Illustrates supplier pushing their product availability to be viewed by companies. 
 
-![Alt supplier availability](/images/supplier-availability.jpg)
+<img src="http://developers.iqmetrix.com/images/supplier-availability.jpg" alt="supplier availability" />
 
-## 4.1 Configure Availability
+### 4.1 Configure Availability
 
 >
 > Example Request
 >
 
-```javascript
+```
 POST https://dropshipsdemo.iqmetrix.net/v1/Suppliers(60455)/Availability
 Authorization: Bearer (Access Token)
 Accept: application/json
 Content-Type: application/json
-
+```
+```
 {
     "Products": [
         {
@@ -660,13 +648,16 @@ Content-Type: application/json
         }
     ]
 }
+```
 
 >
 > Example Response
 >
 
-```javascript
+```
 HTTP 200 OK Content-Type: application/json
+```
+```
 {
     "Id": "a84549a1-3b0d-4ca6-b27f-65136957309b",
     "Products": [
@@ -683,26 +674,29 @@ To configure product availability, see [Configuring Product Availability](/api/s
 
 
 
-# Step 5 - Cost Feed
+
+## Step 5 - Cost Feed
 
 The [Cost Feed](/api/cost-feed) allows you to continually provide wholesale costs for the various products you supply for your companies, based on the product’s Vendor SKU (the same SKU found from the Product Content Feed). 
 
-<br />
 **Figure 5:** Illustrates supplier pushing their product cost to be viewed by companies. 
 
-![Alt cost feed](images/cost-feed.jpg)
+<img src="http://developers.iqmetrix.com/images/cost-feed.jpg" class=".img-responsive" alt="cost feed" />
 
-## 5.1 Add Product Cost
+### 5.1 Add Product Cost
 
 >
 > Example Request
 >
 
-```javascript
+
+```
 POST https://dropshipdemo.iqmetrix.net/v1/Suppliers(1324)/Cost
 Authorization: Bearer (Access Token)
 Accept: application/json
 Content-Type: application/json
+```
+```
 {
     "Products": [
         {
@@ -722,8 +716,10 @@ Content-Type: application/json
 > Example Response
 >
 
-```javascript
+```
 HTTP 202 Accepted Content-Type: application/json
+```
+```
 {
     "Id": "91a57ddb-2d42-402b-85b4-fe327a347313",
     "Products": [
@@ -744,29 +740,18 @@ Every Product must have an associated cost and a list of companies to apply the 
 
 You must add product costs to the cost feed via [Adding Products to Cost Feed](/api/cost-feed/#adding-a-product-to-cost-feed). 
 
-
-# Step 6 - Provide Shipping Options
-
-You must provide a [Shipping Options](/api/shipping-options) API to iQmetrix. Your options will then be displayed to the customer. 
-
-Once an order has been created, shipping options will be requested via the SACCS service. 
-
-<aside class="notice">The <strong>SACCS service</strong> is a shipping options arbitrator between end customer products (e.g. RQ) and iQmetrix services. The SACCS service will first call out the Supplier Availability service to determine whether or not the products are available, and pass this information to the Shipping service. Then the Shipping service will request shipping options via your API and includes the shipping address' postal code.</aside>
-
-<br />
-**Figure 6:** Illustrates high-level interaction diagram of an iQmetrix product attempting to obtain a supplier's shipping options. 
-
-![Alt shipping options](images/shipping-options.jpg)
+## Step 6 - Provide Shipping Options
 
 >
 > Example Request
 >
 
-```javascript
+```
 POST /ShippingOptions HTTP/1.1
 Host: https://api.supplier.com
 Content-Type: application/json
-
+```
+```
 {
     "CompanyId": 123,
     "PostalCode": "V6B5Y1",
@@ -784,8 +769,10 @@ Content-Type: application/json
 > Example Response
 >
 
-```javascript
+```
 HTTP 200 OK Content-Type: application/json
+```
+```
 {
     "ShippingOptions": [
         {
@@ -794,13 +781,21 @@ HTTP 200 OK Content-Type: application/json
             "Cost": 7.94,
             "EstimatedTransitTime": "1 hour",
             "Currency": "CAD"
-        },
-        ...
+        }
     ]
 }
 ```
 
+You must provide a [Shipping Options](/api/shipping-options) API to iQmetrix. Your options will then be displayed to the customer. 
 
-# Step 7 - Next Steps
+Once an order has been created, shipping options will be requested via the SACCS service. 
+
+The **SACCS service** is a shipping options arbitrator between end customer products (e.g. RQ) and iQmetrix services. The SACCS service will first call out the Supplier Availability service to determine whether or not the products are available, and pass this information to the Shipping service. Then the Shipping service will request shipping options via your API and includes the shipping address' postal code.
+
+**Figure 6:** Illustrates high-level interaction diagram of an iQmetrix product attempting to obtain a supplier's shipping options. 
+
+<img src="http://developers.iqmetrix.com/images/shipping-options.jpg" class=".img-responsive" alt="shipping options" />
+
+## Step 7 - Next Steps
 
 Now that you have completed the basic steps for working with feeds in the iQmetrix API, you can start the integration process from the [Dropship Order Management Guide](/guides/dropship-order-guide). 
