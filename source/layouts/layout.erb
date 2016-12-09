@@ -20,10 +20,10 @@ under the License.
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title><%= current_page.data.title %> " | " <%= config.site_title %></title>
+    <title><%= current_page.data.title %> | <%= config.site_title %></title>
 
     <style>
-      <%= Rouge::Themes::Base16::Monokai.render(:scope => '.highlight') %>
+      /*<%= Rouge::Themes::Base16::Monokai.render(:scope => '.highlight') %>*/
     </style>
     <%= stylesheet_link_tag :screen, media: :screen %>
     <%= stylesheet_link_tag :print, media: :print %>
@@ -37,17 +37,32 @@ under the License.
   <body class="<%= page_classes %>" data-languages="<%=h language_tabs.map{ |lang| lang.is_a?(Hash) ? lang.keys.first : lang }.to_json %>">
 
     <div class="fixed-top">
-      <a class="navbar-logo" href="http://www.iqmetrix.com"><img src="/images/splash/iqmetrix-logo-white.png" alt="Brand"/></a>
+      <a class="navbar-logo" href="/"><img src="/images/splash/iqmetrix-logo-white.png" alt="Brand"/></a>
       <div class="navbar-right">
         <ul class="topnav" id="myTopnav">
-          <li><a class="active" href="/">HOMEPAGE</a></li>
-          <li><a href="/api/changelog">CHANGELOG</a></li>
-          <li><a href="mailto:apisupport@iqmetrix.com?subject=Support">SUPPORT</a></li>
+          <li><a class="active" href="/">PRODUCTS</a></li>
+          <li><a href="/api/changelog">API REFERENCE</a></li>
+          <li><a href="/api/changelog">CORE CONCEPTS &amp; GUIDES</a></li>
+          <li><a href="/api/changelog">PARTNERS</a></li>
+          <li><a href="mailto:apisupport@iqmetrix.com?subject=Support">CONTACT</a></li>
           <li class="icon">
             <a href="javascript:void(0);" style="font-size:15px;" onclick="myFunction()">☰</a>
           </li>
         </ul>
       </div>
+    </div>
+    <div class="breadcrumb">
+      <ol>
+        <li><a href="{{"/api/" | prepend: site.url}}">API REFERENCE</a></li>
+        <li>></li>
+        <li>API DOCUMENTATION</li>
+        <li>></li>
+        <li class="active">CUSTOMER RELATIONSHIP MANAGEMENT (CRM)</li>
+      </ol>
+    </div>
+    <div class="title">
+      <h1>API Documentation</h1>
+      <p>In depth reference documentation for iQmetrix API's.</p>
     </div>
 
     <a href="#" id="nav-button">
@@ -57,7 +72,7 @@ under the License.
       </span>
     </a>
     <div class="tocify-wrapper">
-      <%= image_tag "logo.png" %>
+      <!-- <%= image_tag "logo.png" %> -->
       <% if language_tabs %>
         <div class="lang-selector">
           <% language_tabs.each do |lang| %>
@@ -69,12 +84,12 @@ under the License.
           <% end %>
         </div>
       <% end %>
-      <% if current_page.data.search %>
+      <!-- <% if current_page.data.search %>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
         <ul class="search-results"></ul>
-      <% end %>
+      <% end %> -->
       <div id="toc">
       </div>
       <% if current_page.data.toc_footers %>
