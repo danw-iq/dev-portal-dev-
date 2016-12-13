@@ -187,7 +187,7 @@ Products in Product Library may have an associated Manufacturer.
 
 To find the appropriate Manufacturer for the Product, you can use [Getting All Manufacturers](/api/entity-store/#getting-all-manufacturers).
 
-<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip: </b>
+ <div class='bs-callout alert-success'>
 If you can't find a matching Manufacturer, contact <a href="mailto:apisupport@iqmetrix.com?subject=Support">API Support</a>
 </div>
 

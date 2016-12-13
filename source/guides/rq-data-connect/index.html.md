@@ -340,7 +340,7 @@ Enter the Request URL into the URL box and click OK.
 
 Ensure the Request URL includes `Response=Xml` so Excel can load the data. 
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note: </b>Response=Excel is not used as it outputs a binary file</div>
+<div class='bs-callout alert-info'>Response=Excel is not used as it outputs a binary file</div>
 
 <img class="popUpImage" src="http://developers.iqmetrix.com/images/rq-data-connect/from-web.png" alt="Enter URL" />
 

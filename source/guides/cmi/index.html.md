@@ -143,7 +143,7 @@ To create a purchase order for a store, you must know its `StoreID`.
 The request <a href='/api/cmi/#getting-all-cmi-enabled-stores'>Getting a Store List</a> is used to get a list of all CMI enabled stores for a company.
 
 
-<div class='bs-callout bs-callout-info'>
+<div class='bs-callout alert-info'>
 From the response the StoreID value <code>36</code> will be used in the following steps.
 </div>
 
@@ -241,7 +241,7 @@ For this example the Product Sales Report will be run for the Cornwall West stor
 * StartDate value `01/01/2016` for January 1st, 2016
 * EndDate value `01/30/2016` for January 30th, 2016
 
-<div class='bs-callout bs-callout-info'>
+<div class='bs-callout alert-info'>
 From the response the VendorSKU value <code>WMGCMSSL12</code> will be used in the following steps.
 </div>
 
@@ -482,7 +482,7 @@ When created, the Purchase Order will appear in the Inventory section of RQ.
 
 <img class="popUpImage" title="Purchase Order in RQ" src="http://developers.iqmetrix.com/images/vmi/cmi-receipt.png"/> 
 
-<div class='bs-callout bs-callout-info'>
+<div class='bs-callout alert-info'>
 From the response the PurchaseOrderID value <code>28890f70-6fc9-4a9b-9458-410a8d08502d</code> will be used in the following steps.
 </div>
 

@@ -293,7 +293,7 @@ You must update order status in the dropship order feed via [Updating Order Stat
 
 ### Optional: Partially Shipping an Order
 
-It is **highly recommended** to only perform complete orders and mitigate the use of partial shipments.
+<div class='bs-callout alert-info'> It is <strong>highly recommended</strong> to only perform complete orders and mitigate the use of partial shipments. </div>
 
 Partial shipments are supported but are currently limited. It is **highly recommended** to ship a complete order, rather than a partially shipped order.
 

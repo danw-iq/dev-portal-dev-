@@ -71,7 +71,7 @@ Updating a Location in Endless Aisle involves...
 
 ## Step 1 - Getting the Location Identifier
 
-<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip: </b>
+ <div class='bs-callout alert-success'>
 If you already know the Identifier of the Location you want to update, you can skip this step
 </div>
 

@@ -9,7 +9,7 @@ The following document outlines the APIs and calls required for integrating a Po
 
 Each segment in this guide will provide high-level concepts before describing examples of the API call required. The images shown in this guide are from the RQ Dropship Wizard and are meant for illustrative purposes only.
 
-Hybrid orders, where virtual and physical products are contained in the same order, are not covered in this guide.
+<div class='bs-callout alert-warning'>Hybrid orders, where virtual and physical products are contained in the same order, are not covered in this guide.</div>
 
 **Figure 1:** Illustrates the suggested flow for retailers to process a dropship order in their POS.
 
@@ -435,7 +435,7 @@ The JSON request would appear similar to the figure below.
 
 The next step is to [retrieve shipping options](/api/saccs/#retrieving-shipping-options) from the vendor. 
 
-The Shipping Aggregator also verifies the availability of the requested catalog items. If an item is **Out of Stock**, then you must prevent this order from continuing.
+<div class='bs-callout alert-warning'>The Shipping Aggregator also verifies the availability of the requested catalog items. If an item is <strong>Out of Stock</strong>, then you must prevent this order from continuing.</div>
 
 
 ### Step 4.1 - Retrieve the Shipping Options

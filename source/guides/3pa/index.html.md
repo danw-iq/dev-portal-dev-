@@ -7,7 +7,9 @@ search: true
 
 This guide describes how you can integrate your existing domain logins with iQmetrix products using **Third Party Authentication (3PA)**.
 
-**Third Party Authentication (3PA)** is an iQmetrix term referring to the ability of a user to access an iQmetrix product using an external mechanism.
+<div class='bs-callout alert-info'>
+<strong>Third Party Authentication (3PA)</strong> is an iQmetrix term referring to the ability of a user to access an iQmetrix product using an external mechanism.
+</div>
 
 While this guide is intended to be identity provider agnostic, the examples included are specific to **Microsoft Active Directory Federation Services** for consistency.
 
@@ -28,15 +30,18 @@ You may be interested in this guide if you want to...
 * Allow your users to log into RQ with their Identity Provider credentials
 * Manage your users in a single place 
 
-An **Identity Provider (IdP)** is responsible for providing identifiers for users interacting with a system.
+<div class='bs-callout alert-info'>
+An <strong>Identity Provider (IdP)</strong> is responsible for providing identifiers for users interacting with a system.
+</div>
 
 ## How Does Third Party Authentication Work?
 
 3PA involves creating a **trusted relationship** between two systems which can enable your users to log into iQmetrix products with their Identity Provider credentials. This is commonly known as **Single Sign On**.
 
-**Single Sign On (SSO)** permits a user to enter one name and password to access multiple applications. <br/>
+<div class='bs-callout alert-info'>
+<strong>Single Sign On (SSO)</strong> permits a user to enter one name and password to access multiple applications. <br/>
 One popular example of SSO is the "Log In With Facebook" button used by many websites to allow users access to a website without creating an account.
-
+</div>
 
 ##### Example
 
@@ -79,9 +84,7 @@ Your Account Manager will need the following information to configure Third Part
 * URL of your Identity Provider
 * An account within the Identity Provider created for RQ support personnel
 
-
 ##### Example
-
 
 ADFS would require an ADFS Web Application Proxy with iQmetrix added as a Relaying Party Trust.
 
@@ -91,7 +94,9 @@ ADFS would require an ADFS Web Application Proxy with iQmetrix added as a Relayi
 
 There are many different versions of SAML, but iQmetrix only supports SAML using **WS-Trust**.
 
-**WS-Trust** or Web Services Trust Language is a specification that uses secure messaging to create a trusted relationships between applications.
+<div class='bs-callout alert-info'>
+<strong>WS-Trust</strong> or Web Services Trust Language is a specification that uses secure messaging to create a trusted relationships between applications.
+</div>
 
 ### Why Not SAML 2.0?
 
@@ -398,7 +403,9 @@ Notes:
 
 It may be possible to support custom claims if further user information is required, see [Adding Additional RQ Fields to an Employee](#adding-additional-rq-fields-to-an-employee).
 
+<div class='bs-callout alert-info'>
 To learn more about Employee Custom Fields, see <a href='https://support.iqmetrix.com/hc/en-us/articles/228837927-Settings-Employees#Employee_Custom_Fields_Setup'>Employee Custom Fields Setup</a>
+</div>
 
 | ClaimType | Required in RQ? | Required in Hub? | Populates Field | Example |
 |:----------|:----------------|:-----------------|:----------------|:--------|
@@ -420,7 +427,9 @@ To learn more about Employee Custom Fields, see <a href='https://support.iqmetri
 
 You can auto-provision fields not listed above using attributes. For company-specific Custom fields, the `rqCustomField` prefix is required.
 
-Before adding additional fields, discuss your requirements with your Account Manager to ensure they will appear in RQ.
+<div class='bs-callout alert-info'>
+Before adding additional fields, discuss your requirements with your Account Manager to ensure they will appear in RQ
+</div>
 
 | Claim | Value | Description |
 |:------|:------|:------------|

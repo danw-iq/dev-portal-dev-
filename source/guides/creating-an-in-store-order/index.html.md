@@ -35,7 +35,10 @@ To use this guide, the following steps must be completed:
 * Your [Product Library](http://developers.iqmetrix.com/concepts/product-library/), or physical inventory for your store(s), must be set up
 * Your [Company Tree](http://developers.iqmetrix.com/concepts/company-tree/), representing company structure (stores, groups, divisions, etc), must be created
 
+ <div class='bs-callout alert-success'>
 If the above steps are not complete or you are not sure, contact <a href="mailto:apisupport@iqmetrix.com?subject=Support">Support</a>.
+</div>
+
 
 # Before You Begin
 
