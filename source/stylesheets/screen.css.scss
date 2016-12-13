@@ -774,6 +774,25 @@ tr>td:first-child {
   color: #aa0011;
 }
 
+
+/* Styling to callouts and alerts */
+.bs-callout {
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 4px;
+  width: 47%;
+}
+
+.alert-info { border-left-color: #5bc0de; }
+.alert-success { border-left-color: #dff0d8; }
+.alert-warning { border-left-color: #fcf8e3; }
+
+@media (max-width: 761px) {
+  .bs-callout { width: 95% }
+}
+
 /////////////////////////////////////////////////////////////////////////////// 
 // CUSTOM NAVBAR 
 ///////////////////////////////////////////////////////////////////////////////

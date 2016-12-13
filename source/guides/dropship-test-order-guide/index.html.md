@@ -22,7 +22,9 @@ To use this guide, the following steps must be completed:
 * You will have been given **user credentials** for a test company.
 * You have filled in the environment data from the provided <a href="http://developers.iqmetrix.com/files/postmanEnv.postman_environment">Postman Environment</a>. See the screenshot below.
 
+ <div class='bs-callout alert-success'>
 If the above steps are not complete or you are not sure, contact <a href="mailto:apisupport@iqmetrix.com?subject=Dropship Order Test Data">API Support</a>.
+</div>
 
 
 ## Postman Example
