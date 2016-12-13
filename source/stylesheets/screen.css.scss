@@ -314,7 +314,7 @@ html, body {
     background-color: $examples-bg;
     position: absolute;
     right: 0;
-    top: 48px; /*0;*/
+    top: 12px; /*48px;*/ /*0;*/
     bottom: 0;
     /*margin-bottom: -48px;*/
   }
@@ -936,12 +936,26 @@ a {
   z-index: 1030;
   border: 0;
   position: fixed;
+  background-color: white;
+
+  ol {
+    padding-left: 12px;
+  }
 
   li {
     float: left;
     padding-left: 10px;
     list-style-type: none;
     text-decoration: none;
+
+    a {
+      color: #337ab7;
+      text-decoration: none;
+    }
+  }
+
+  .active {
+    color: grey;
   }
 }
 
@@ -951,4 +965,7 @@ a {
   z-index: 1030;
   border: 0;
   position: fixed;
+  background-color: white;
+  width: 100%;
+  padding-left: 10px;
 }

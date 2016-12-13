@@ -53,9 +53,9 @@ under the License.
     </div>
     <div class="breadcrumb">
       <ol>
-        <li><a href="{{"/api/" | prepend: site.url}}">API REFERENCE</a></li>
+        <li><a href="/api/">API REFERENCE</a></li>
         <li>></li>
-        <li>API DOCUMENTATION</li>
+        <li><a href="">API DOCUMENTATION</a></li>
         <li>></li>
         <li class="active">CUSTOMER RELATIONSHIP MANAGEMENT (CRM)</li>
       </ol>
@@ -84,12 +84,12 @@ under the License.
           <% end %>
         </div>
       <% end %>
-      <!-- <% if current_page.data.search %>
+      <% if current_page.data.search %>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
         <ul class="search-results"></ul>
-      <% end %> -->
+      <% end %>
       <div id="toc">
       </div>
       <% if current_page.data.toc_footers %>
